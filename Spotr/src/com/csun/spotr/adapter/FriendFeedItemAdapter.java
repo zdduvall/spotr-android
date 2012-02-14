@@ -8,6 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.webkit.WebSettings.ZoomDensity;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TableRow;
@@ -50,6 +54,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		TextView textViewContent;
 		TextView textViewDetail;
 		ImageView imageViewSnapPicture;
+		WebView webview;
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -63,6 +68,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_content);
 			holder.textViewDetail = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_detail);
 			holder.imageViewSnapPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_snap_picture);
+			holder.webview = (WebView) convertView.findViewById(R.id.friend_list_feed_item_xml_webview);
 			convertView.setTag(holder);
 		}
 		else {
@@ -73,6 +79,21 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		holder.textViewUsername.setText(items.get(position).getFriendName());
 		holder.textViewPlaceName.setText("@ " + items.get(position).getPlaceName());
 		holder.textViewTime.setText("about " + items.get(position).getActivityTime());
+		
+		WebSettings webSettings = holder.webview.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setPluginsEnabled(true);
+		webSettings.setDefaultZoom(ZoomDensity.FAR);
+		webSettings.setBuiltInZoomControls(true);
+		holder.webview.setWebViewClient(new Helper());
+		
+		if (items.get(position).getShareUrl().equals("")) {
+			holder.webview.setVisibility(View.GONE);
+		}
+		else {
+			holder.webview.setVisibility(View.VISIBLE);
+			holder.webview.loadUrl(items.get(position).getShareUrl());
+		}
 		
 		if (items.get(position).getChallengeType() == Challenge.Type.CHECK_IN) {
 			holder.textViewContent.setText("check-in");
@@ -103,5 +124,13 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		
 		return convertView;
+	}
+	
+	private class Helper extends WebViewClient {
+		@Override
+	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+	        view.loadUrl(url);
+	        return true;
+	    }
 	}
 }

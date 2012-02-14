@@ -96,6 +96,7 @@ public class FriendListFeedActivity
 					for (int i = 0; i < array.length(); ++i) { 
 						String snapPictureUrl = null;
 						String userPictureUrl = null;
+						String shareUrl = null;
 						
 						if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
 							snapPictureUrl = array.getJSONObject(i).getString("activity_tbl_snap_picture_url");
@@ -103,6 +104,15 @@ public class FriendListFeedActivity
 						
 						if(array.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
 							userPictureUrl = array.getJSONObject(i).getString("users_tbl_user_image_url");
+						}
+						
+						if(array.getJSONObject(i).has("activity_tbl_share_url")) {
+							shareUrl = array.getJSONObject(i).getString("activity_tbl_share_url");
+							Log.d(TAG, shareUrl);
+						}
+						else {
+							shareUrl = "";
+							Log.d(TAG, "what the hell?");
 						}
 						
 						publishProgress(
@@ -120,6 +130,7 @@ public class FriendListFeedActivity
 										.activitySnapPictureUrl(snapPictureUrl)
 										.friendPictureUrl(userPictureUrl)
 										.activityComment(array.getJSONObject(i).getString("activity_tbl_comment"))
+										.shareUrl(shareUrl)
 											.build());
 					}
 				}
