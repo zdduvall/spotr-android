@@ -234,8 +234,8 @@ public class PlaceInfoActivity
 		TextView description = (TextView) findViewById(R.id.place_info_xml_textview_description);
 		description.setText(p.getAddress());
 
-		TextView location = (TextView) findViewById(R.id.place_info_xml_textview_location);
-		location.setText("[" + Double.toString(p.getLatitude()) + ", " + Double.toString(p.getLongitude()) + "]");
+		//TextView location = (TextView) findViewById(R.id.place_info_xml_textview_location);
+		//location.setText("[" + Double.toString(p.getLatitude()) + ", " + Double.toString(p.getLongitude()) + "]");
 
 		TextView url = (TextView) findViewById(R.id.place_info_xml_textview_url);
 		url.setText(p.getWebsiteUrl());
@@ -252,8 +252,8 @@ public class PlaceInfoActivity
 			}
 		});
 
-		ImageView image = (ImageView) findViewById(R.id.place_info_xml_imageview_picture);
-		image.setImageResource(R.drawable.ic_launcher);
+		//ImageView image = (ImageView) findViewById(R.id.place_info_xml_imageview_picture);
+		//image.setImageResource(R.drawable.ic_launcher);
 
 		Button phoneButton = (Button) findViewById(R.id.place_info_xml_button_phone_number);
 		phoneButton.setText(p.getPhoneNumber());
