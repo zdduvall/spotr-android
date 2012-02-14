@@ -14,17 +14,32 @@
         android:textColor="#000000"
         android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/place_xml_edittext_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true" >
-    </EditText>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#FAB002" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+	
+	    <EditText
+	        android:id="@+id/place_xml_edittext_search"
+	        android:layout_width="200dp"
+	        android:layout_height="wrap_content"
+	        android:drawSelectorOnTop="true"
+	        android:gravity="center"
+	        android:background="@drawable/edit_text_border_selector"
+	        android:singleLine="true"
+	        android:textColor="@drawable/edit_text_font_color_selector" >
+	    </EditText>
+	    
+	    <Button
+	        android:id="@+id/place_xml_button_refresh"
+	        style="@style/TreasureButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="right"
+	        android:enabled="false" 
+	        android:text="Refresh" />
+    
+	</LinearLayout>
 
     <TextView
         android:id="@+id/place_xml_textview_search_title"
@@ -34,26 +49,12 @@
         android:textColor="#000000"
         android:text="Nearby Places"
         android:textStyle="bold" />
-
+
     <ListView
         android:id="@+id/place_xml_listview_places"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:background="@android:color/white" >
     </ListView>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#FAB002" />
-
-    <Button
-        android:id="@+id/place_xml_button_refresh"
-        style="@style/TreasureButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:enabled="false"
-        android:text="Refresh" />
 
 </LinearLayout>
