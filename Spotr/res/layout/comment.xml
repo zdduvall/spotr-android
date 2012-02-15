@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#d8dfea"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/comment_xml_listview"
+        android:layout_width="match_parent"
+        android:layout_height="400dp" >
+    </ListView>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/comment_xml_edittext_user_comment"
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.49"
+            android:inputType="textMultiLine" >
+        </EditText>
+
+        <Button
+            android:id="@+id/comment_xml_button_post"
+            style="@style/TreasureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -18,6 +18,7 @@ public class FriendFeedItem {
 	private String friendPictureUrl = null;
 	private String activityComment;
 	private String shareUrl;
+	private int likes = 0;
 
 	public static class Builder {
 		// required parameters
@@ -35,6 +36,7 @@ public class FriendFeedItem {
 		private String friendPictureUrl = null;
 		private String activityComment;
 		private String shareUrl;
+		private int likes;
 
 		public Builder(int activityId, int friendId, String friendName, Challenge.Type challengeType, String activityTime, String placeName) {
 			this.activityId = activityId;
@@ -74,6 +76,13 @@ public class FriendFeedItem {
 			this.shareUrl = shareUrl;
 			return this;
 		}
+		
+		public Builder likes(int likes) {
+			this.likes = likes;
+			return this;
+		}
+		
+		
 
 		public FriendFeedItem build() {
 			return new FriendFeedItem(this);
@@ -94,6 +103,15 @@ public class FriendFeedItem {
 		this.friendPictureUrl = builder.friendPictureUrl;
 		this.activityComment = builder.activityComment;
 		this.shareUrl = builder.shareUrl;
+		this.likes = builder.likes;
+	}
+
+	public int getLikes() {
+		return likes;
+	}
+
+	public void setLikes(int likes) {
+		this.likes = likes;
 	}
 
 	public String getShareUrl() {

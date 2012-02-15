@@ -4,19 +4,23 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.csun.spotr.CommentActivity;
 import com.csun.spotr.R;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
@@ -26,9 +30,11 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	private List<FriendFeedItem> items;
 	private static LayoutInflater inflater;
 	public ImageLoader imageLoader;
+	private Context context;
 	private ItemViewHolder holder;
 	
 	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items) {
+		this.context = context;
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader(context.getApplicationContext());
@@ -54,10 +60,12 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		TextView textViewContent;
 		TextView textViewDetail;
 		ImageView imageViewSnapPicture;
+		Button buttonComment;
+		Button buttonLike;
 		WebView webview;
 	}
 	
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.friend_list_feed_item, null);
 			holder = new ItemViewHolder();
@@ -69,6 +77,8 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewDetail = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_detail);
 			holder.imageViewSnapPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_snap_picture);
 			holder.webview = (WebView) convertView.findViewById(R.id.friend_list_feed_item_xml_webview);
+			holder.buttonComment = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_comment);
+			holder.buttonLike = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_like);
 			convertView.setTag(holder);
 		}
 		else {
@@ -123,6 +133,21 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewDetail.setVisibility(View.GONE);
 		}
 		
+		holder.buttonComment.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(context.getApplicationContext(), CommentActivity.class);
+				context.startActivity(intent);
+			}
+		});
+		
+		holder.buttonLike.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				items.get(position).setLikes(items.get(position).getLikes() + 1);
+				notifyDataSetChanged();
+			}
+		});
+		
+		holder.buttonLike.setText("Like + " + Integer.toString(items.get(position).getLikes()));
 		return convertView;
 	}
 	

@@ -2,23 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    
-    android:background="#C0C0C0" >
-
-
+    android:background="#C0C0C0"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:orientation="horizontal" >
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="5dp" >
+
             <TableRow android:layout_gravity="center_horizontal" >
+
                 <!-- Title of the Location -->
+
                 <TextView
                     android:id="@+id/place_info_xml_textview_name"
                     android:layout_width="wrap_content"
@@ -39,8 +40,11 @@
                     android:maxLines="2"
                     android:textColor="#2e3436" />
             </TableRow>
-            <TableRow >
+
+            <TableRow>
+
                 <!-- Link for Google Map View -->
+
                 <TextView
                     android:id="@+id/place_info_xml_textview_url"
                     android:layout_width="wrap_content"
@@ -51,7 +55,7 @@
         </TableLayout>
     </LinearLayout>
 
-<!-- Phone number button -->
+    <!-- Phone number button -->
 
     <Button
         android:id="@+id/place_info_xml_button_phone_number"
@@ -62,20 +66,23 @@
         android:paddingLeft="10dp"
         android:textSize="25sp" />
 
-<!-- Border -->
+    <!-- Border -->
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="4dp"
         android:layout_marginTop="4dp"
         android:background="#eeeeec" />
-<!-- Map View -->
+    <!-- Map View -->
+
     <com.google.android.maps.MapView
         android:id="@+id/place_info_xml_mapview"
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:apiKey="0kqsfxjLdh6ggN9sWrcd75tQQA_2JugZxhGcElQ"
         android:clickable="true" />
-<!-- Border -->
+    <!-- Border -->
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="4dp"
