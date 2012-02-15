@@ -35,7 +35,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	private ItemViewHolder holder;
 	
 	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items) {
-		this.context = context;
+		this.context = context.getApplicationContext();
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader(context.getApplicationContext());
@@ -140,6 +140,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 				Bundle extras = new Bundle();
 				extras.putInt("activity_id", items.get(position).getActivityId());
 				Intent intent = new Intent(context.getApplicationContext(), CommentActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.putExtras(extras);
 				context.startActivity(intent);
 			}
