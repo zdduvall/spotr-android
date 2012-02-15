@@ -25,10 +25,14 @@
     
     <!-- Colors -->
     <color name="aluminum1">#eeeeec</color>
+    <color name="aluminum2">#d3d7cf</color>
+    <color name="aluminum3">#babdb6</color>
     <color name="aluminum4">#888a85</color>
     <color name="aluminum5">#555753</color>
     <color name="aluminum6">#2e3436</color>
+    <color name="watermelonRed">#ff4444</color>
     <color name="darkTurquoise">#33b5e5</color>
+    <color name="twitterGrey">#e5e5e5</color>
     <!-- End Colors -->
     
     <!-- Title Bar -->
@@ -62,9 +66,9 @@
         
     <!-- Main Menu -->
     <style name="MainMenuButton">
-        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:drawablePadding">6dp</item>
         <item name="android:textSize">16sp</item>
@@ -85,19 +89,22 @@
     <style name="MissionsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:dividerHeight">20dp</item>
-        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">@color/aluminum1</item>
+        <item name="android:footerDividersEnabled">false</item>
         <item name="android:scrollbars">none</item>
-        <item name="android:background">@color/aluminum1</item>
+        <item name="android:background">@drawable/rectangle_rounded_corners</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
     
     <style name="MissionRow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">200dp</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:background">@drawable/spots_mission_selector</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@drawable/spots_mission_selector_top</item>
     </style>
     
     <style name="MissionIcon">
@@ -121,7 +128,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_horizontal|right</item>
-        <item name="android:textSize">48sp</item>
+        <item name="android:textSize">40sp</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:textColor">@color/aluminum1</item>
     </style>
@@ -184,8 +191,5 @@
         <item name="android:shadowRadius">1</item>
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
-    </style>
-    
-    
-    
+    </style>  
 </resources>
