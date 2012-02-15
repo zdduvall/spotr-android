@@ -67,19 +67,19 @@
             android:text="Spot It"
             android:onClick="getActivity" />
         
-        <!-- Spot_It Button -->
+        <!-- Weapons Button -->
         <Button
             android:id="@+id/main_menu_btn_weapons"
             style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_ping"
+            android:drawableTop="@drawable/ic_main_menu_weapons"
             android:text="Weapons"
             android:onClick="getActivity" />
         
-          <!-- Spot_It Button -->
+        <!-- Inbox Button -->
         <Button
             android:id="@+id/main_menu_btn_inbox"
             style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_quests"
+            android:drawableTop="@drawable/ic_main_menu_inbox"
             android:text="Inbox"
             android:onClick="getActivity" />
         
@@ -90,14 +90,6 @@
         style="@style/NotificationHandle"
         android:layout_alignParentBottom="true" >
     </LinearLayout>
-        
-        
-<!--    <com.csun.spotr.custom_gui.DraggableGridView -->
-<!--         android:id="@+id/main_menu_xml_gridview_maingrid" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" > -->
-        
-<!--     </com.csun.spotr.custom_gui.DraggableGridView> -->
     
     <SlidingDrawer 
         android:id="@+id/main_menu_xml_slider"
@@ -106,16 +98,6 @@
         android:layout_height="fill_parent"
         android:handle="@+id/main_menu_xml_slide_handle"
         android:content="@+id/main_menu_xml_slide_content" >
-       
-<!--         <Button  -->
-<!--             android:id="@+id/main_menu_xml_slide_handle" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:background="@drawable/ic_main_menu_notifications" > -->
-<!--             android:textColor="#2d2c2c" -->
-<!--             android:textStyle="bold" -->
-<!--             android:text="@string/main_menu_xml_slider_notification_str" > -->
-<!--         </Button> -->
            
         <ImageView
              android:id="@id/main_menu_xml_slide_handle"
