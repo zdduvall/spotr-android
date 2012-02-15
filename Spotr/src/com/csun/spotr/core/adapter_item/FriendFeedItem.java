@@ -17,7 +17,7 @@ public class FriendFeedItem {
 	private String activitySnapPictureUrl = null;
 	private String friendPictureUrl = null;
 	private String activityComment;
-	private String shareUrl;
+	private String shareUrl = "";
 	private int likes = 0;
 
 	public static class Builder {
@@ -35,7 +35,7 @@ public class FriendFeedItem {
 		private String activitySnapPictureUrl = null;
 		private String friendPictureUrl = null;
 		private String activityComment;
-		private String shareUrl;
+		private String shareUrl = "";
 		private int likes;
 
 		public Builder(int activityId, int friendId, String friendName, Challenge.Type challengeType, String activityTime, String placeName) {

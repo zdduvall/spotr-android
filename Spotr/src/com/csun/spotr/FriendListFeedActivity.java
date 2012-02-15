@@ -106,13 +106,11 @@ public class FriendListFeedActivity
 							userPictureUrl = array.getJSONObject(i).getString("users_tbl_user_image_url");
 						}
 						
-						if(array.getJSONObject(i).has("activity_tbl_share_url")) {
+						if(array.getJSONObject(i).has("activity_tbl_share_url") && !array.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
 							shareUrl = array.getJSONObject(i).getString("activity_tbl_share_url");
-							Log.d(TAG, shareUrl);
 						}
 						else {
 							shareUrl = "";
-							Log.d(TAG, "what the hell?");
 						}
 						
 						publishProgress(

@@ -2,11 +2,11 @@ package com.csun.spotr.adapter;
 
 import java.util.List;
 
+import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.R;
 import com.csun.spotr.util.ImageLoader;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +15,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserItemAdapter extends BaseAdapter {
+public class CommentItemAdapter extends BaseAdapter {
 	private Context context;
-	private List<UserItem> items;
+	private List<Comment> items;
 	private static LayoutInflater inflater = null;
 	public ImageLoader imageLoader;
 	private ItemViewHolder holder;
 
-	public UserItemAdapter(Context context, List<UserItem> items) {
+	public CommentItemAdapter(Context context, List<Comment> items) {
 		this.context = context.getApplicationContext();
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -42,24 +42,31 @@ public class UserItemAdapter extends BaseAdapter {
 	}
 
 	public static class ItemViewHolder {
-		TextView textViewName;
+		TextView textViewUsername;
 		ImageView imageViewPicture;
+		TextView textViewTime;
+		TextView textViewContent;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.user_item, null);
+			convertView = inflater.inflate(R.layout.comment_item, null);
 			holder = new ItemViewHolder();
-			holder.textViewName = (TextView) convertView.findViewById(R.id.user_item_xml_textview_name);
-			holder.imageViewPicture = (ImageView) convertView.findViewById(R.id.user_item_xml_imageview_picture);
+			holder.textViewUsername = (TextView) convertView.findViewById(R.id.comment_item_xml_textview_post_comments_user_name);
+			holder.imageViewPicture = (ImageView) convertView.findViewById(R.id.comment_item_xml_textview_post_comments_user_picture);
+			holder.textViewTime = (TextView) convertView.findViewById(R.id.comment_item_xml_textview_post_comments_time);
+			holder.textViewContent = (TextView) convertView.findViewById(R.id.comment_item_xml_textview_post_comments_content);
 			convertView.setTag(holder);
 		}
 		else {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
 
-		holder.textViewName.setText(items.get(position).getUsername());
+		holder.textViewUsername.setText(items.get(position).getUsername());
+		holder.textViewTime.setText(items.get(position).getTime());
+		holder.textViewContent.setText(items.get(position).getContent());
 		imageLoader.displayImage(items.get(position).getPictureUrl(), holder.imageViewPicture);
+		
 		return convertView;
 	}
 }

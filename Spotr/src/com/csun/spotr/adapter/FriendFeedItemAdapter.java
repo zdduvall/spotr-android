@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,18 +91,19 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		holder.textViewPlaceName.setText("@ " + items.get(position).getPlaceName());
 		holder.textViewTime.setText("about " + items.get(position).getActivityTime());
 		
-		WebSettings webSettings = holder.webview.getSettings();
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setPluginsEnabled(true);
-		webSettings.setDefaultZoom(ZoomDensity.FAR);
-		webSettings.setBuiltInZoomControls(true);
-		holder.webview.setWebViewClient(new Helper());
+		
 		
 		if (items.get(position).getShareUrl().equals("")) {
 			holder.webview.setVisibility(View.GONE);
 		}
 		else {
 			holder.webview.setVisibility(View.VISIBLE);
+			WebSettings webSettings = holder.webview.getSettings();
+			webSettings.setJavaScriptEnabled(true);
+			webSettings.setPluginsEnabled(true);
+			webSettings.setDefaultZoom(ZoomDensity.FAR);
+			webSettings.setBuiltInZoomControls(true);
+			holder.webview.setWebViewClient(new Helper());
 			holder.webview.loadUrl(items.get(position).getShareUrl());
 		}
 		
@@ -135,7 +137,10 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		
 		holder.buttonComment.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				Bundle extras = new Bundle();
+				extras.putInt("activity_id", items.get(position).getActivityId());
 				Intent intent = new Intent(context.getApplicationContext(), CommentActivity.class);
+				intent.putExtras(extras);
 				context.startActivity(intent);
 			}
 		});

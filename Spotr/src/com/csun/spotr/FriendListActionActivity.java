@@ -256,7 +256,7 @@ public class FriendListActionActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "SnapPictureTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "SnapPictureTask.doInBackGround(String... datas) : ", "JSON error parsing data" + e.toString());
 			}
 			return false;
 		}

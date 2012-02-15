@@ -70,7 +70,8 @@
         <WebView
             android:id="@+id/friend_list_feed_item_xml_webview"
             android:layout_width="230dp"
-            android:layout_height="280dp" />
+            android:layout_height="280dp" 
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
