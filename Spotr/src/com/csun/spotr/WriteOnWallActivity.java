@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,8 +41,11 @@ public class WriteOnWallActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.write_on_wall);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 		
 		buttonPost = (Button) findViewById(R.id.write_on_wall_xml_button_submit);
 		editTextMessage = (EditText) findViewById(R.id.write_on_wall_xml_edittext_message_box);
