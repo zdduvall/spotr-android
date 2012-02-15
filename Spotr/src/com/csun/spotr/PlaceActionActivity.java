@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.csun.spotr.adapter.PlaceActionItemAdapter;
 import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Place;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -49,12 +50,17 @@ public class PlaceActionActivity
 	private static final 	String 					TAG = "(PlaceActionActivity)";
 	private static final 	String 					GET_CHALLENGES_URL = "http://107.22.209.62/android/get_challenges_from_place.php";
 	private static final	String 					DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
+	private static final 	String 					GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
+
 	
-	public 					int 					currentPlaceId;
+	public 					int 					currentPlaceId = 0;
 	public 					int 					currentChosenItem;
 	public 					ListView 				list = null;
 	private					PlaceActionItemAdapter	adapter = null;
 	private 				List<Challenge> 		challengeList = new ArrayList<Challenge>();
+	
+	private 				Button 					buttonMoreInfo;
+
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,13 +72,34 @@ public class PlaceActionActivity
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 
+
+		// spot more info button
+		buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
+
+		// Intent intent = new Intent(getApplicationContext(),PlaceInfoActivity.class);
+
+
+		
+		buttonMoreInfo.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				Bundle extras = new Bundle();
+				extras.putInt("place_id", currentPlaceId);
+				Intent intent = new Intent(PlaceActionActivity.this.getApplicationContext(), PlaceInfoActivity.class);
+				intent.putExtras(extras);
+				startActivity(intent);
+				
+			}
+		});
+		
+		
+		
 		// initialize list view of challenges
 		list = (ListView) findViewById(R.id.place_action_xml_listview_actions);
 		adapter = new PlaceActionItemAdapter(this, challengeList);
 		
 		// add top padding to first item and add bottom padding to last item
-//		TextView padding = new TextView(getApplicationContext());
-//		padding.setHeight(0);
+		TextView padding = new TextView(getApplicationContext());
+		padding.setHeight(0);
 		
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
 		buttonTreasure.setOnClickListener(new OnClickListener() {
@@ -83,8 +110,8 @@ public class PlaceActionActivity
 		});
 		
 		
-//		list.addHeaderView(padding, null, false);
-//		list.addFooterView(padding, null, false);
+		list.addHeaderView(padding, null, false);
+		list.addFooterView(padding, null, false);
 		list.setAdapter(adapter);
 				
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -135,6 +162,9 @@ public class PlaceActionActivity
 			}
 		});
 		
+		// run GetPlaceDetailTask
+		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
+
 		// run GetChallengeTask
 		new GetChallengesTask(PlaceActionActivity.this).execute();
 	}
@@ -276,6 +306,68 @@ public class PlaceActionActivity
 			ref.clear();
 		}
 	}
+
+	private static class GetPlaceDetailTask 
+	extends AsyncTask<Void, Integer, Place> 
+		implements IAsyncTask<PlaceActionActivity> {
+	
+	private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
+	private WeakReference<PlaceActionActivity> ref;
+	
+	public GetPlaceDetailTask(PlaceActionActivity a) {
+		attach(a);
+	}
+
+	@Override
+	protected Place doInBackground(Void... voids) {
+		placeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+		JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, placeData);
+		Place place = null;
+		try {
+			// create a place
+			place = new Place.Builder(
+			// required parameters
+				array.getJSONObject(0).getDouble("spots_tbl_longitude"),
+				array.getJSONObject(0).getDouble("spots_tbl_latitude"), 
+				array.getJSONObject(0).getInt("spots_tbl_id"))
+				// optional parameters
+				.name(array.getJSONObject(0).getString("spots_tbl_name"))
+				.address(array.getJSONObject(0).getString("spots_tbl_description")).build();
+			
+			if (array.getJSONObject(0).has("spots_tbl_phone")) {
+				place.setPhoneNumber(array.getJSONObject(0).getString("spots_tbl_phone"));
+			}
+			
+			if (array.getJSONObject(0).has("spots_tbl_url")) {
+				place.setWebsiteUrl(array.getJSONObject(0).getString("spots_tbl_url"));
+			}
+		}
+		catch (JSONException e) {
+			Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data" + e.toString());
+		}
+		return place;
+	}
+
+	@Override
+	protected void onPreExecute() {
+
+	}
+
+	@Override
+	protected void onPostExecute(final Place p) {
+		ref.get().updatePlaceDetailAsyncTaskProgress(p);
+		detach();
+	}
+
+	public void attach(PlaceActionActivity a) {
+		ref = new WeakReference<PlaceActionActivity>(a);
+	}
+
+	public void detach() {
+		ref.clear();
+	}
+}
+
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -326,6 +418,57 @@ public class PlaceActionActivity
 		challengeList.add(c);
 		adapter.notifyDataSetChanged();
 	}
+	
+
+	public void updatePlaceDetailAsyncTaskProgress(final Place p) {
+		TextView name = (TextView) findViewById(R.id.place_activity_xml_textview_name);
+		name.setText(p.getName());
+
+		TextView description = (TextView) findViewById(R.id.place_activity_xml_textview_description);
+		description.setText(p.getAddress());
+
+		//TextView location = (TextView) findViewById(R.id.place_info_xml_textview_location);
+		//location.setText("[" + Double.toString(p.getLatitude()) + ", " + Double.toString(p.getLongitude()) + "]");
+		
+		/*
+		TextView url = (TextView) findViewById(R.id.place_info_xml_textview_url);
+		url.setText(p.getWebsiteUrl());
+
+		url.setClickable(true);
+		url.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Bundle extras = new Bundle();
+				extras.putString("place_web_url", p.getWebsiteUrl());
+				Log.v(TAG, p.getWebsiteUrl());
+				Intent intent = new Intent(getApplicationContext(), WebviewActivity.class);
+				intent.putExtras(extras);
+				startActivity(intent);
+			}
+		});
+
+		//ImageView image = (ImageView) findViewById(R.id.place_info_xml_imageview_picture);
+		//image.setImageResource(R.drawable.ic_launcher);
+
+		Button phoneButton = (Button) findViewById(R.id.place_info_xml_button_phone_number);
+		phoneButton.setText(p.getPhoneNumber());
+
+		final String phoneUrl = "tel:" + p.getPhoneNumber().replaceAll("-", "").replace("(", "").replace(")", "").replace(" ", "");
+		Log.v(TAG, phoneUrl);
+
+		phoneButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
+				startActivity(intent);
+			}
+		});
+
+		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
+		itemizedOverlay.addOverlay(overlay, p);
+		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
+		mapController.setZoom(16);
+		*/
+	}
+
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {

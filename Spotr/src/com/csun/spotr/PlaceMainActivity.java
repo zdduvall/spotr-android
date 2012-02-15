@@ -65,6 +65,7 @@ public class PlaceMainActivity extends TabActivity {
 				.setContent(intent);
 		tabHost.addTab(spec);
 
+		/*
 		intent = new Intent().setClass(this, PlaceInfoActivity.class);
 		// pass this extra to PlaceInfoActivity
 		intent.putExtras(extras);
@@ -79,6 +80,7 @@ public class PlaceMainActivity extends TabActivity {
 		tabHost.addTab(spec);
 		// set current tab to action
 		tabHost.setCurrentTab(0);
+		*/
 	}
 	
 	@Override
