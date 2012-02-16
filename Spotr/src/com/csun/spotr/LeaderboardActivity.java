@@ -1,6 +1,5 @@
 package com.csun.spotr;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,35 +34,26 @@ import android.graphics.Color;
 import android.widget.Button;
 
 import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.LeaderboardItemAdapter;
 import com.csun.spotr.core.User;
 
-/**
- * Description:
- * 		Display all users with points and ranking 
- */
-public class LeaderboardActivity 
-	extends Activity 
-		implements IActivityProgressUpdate<User> {
-	
-	private static final 	String 						TAG = "(LeaderboardActivity)";
-	private static final 	String 						GET_USERS_URL = "http://107.22.209.62/android/get_users.php";
-	
-	private 				ListView 					listview = null;
-	private 				LeaderboardItemAdapter 		adapter = null;
-	private 				List<User> 					userList = new ArrayList<User>();
+public class LeaderboardActivity extends Activity {
+	private static final String TAG = "(LeaderboardActivity)";
+	private static final String GET_USERS_URL = "http://107.22.209.62/android/get_users.php";
+	private ListView listview = null;
+	private LeaderboardItemAdapter adapter = null;
+	private List<User> userList = new ArrayList<User>();
+	private boolean small_view = false;
+	private int button_position;//for debugging
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.leaderboard);
-		
 		// initialize list view
 		listview = (ListView) findViewById(R.id.leaderboard_xml_listview_users);
-		adapter = new LeaderboardItemAdapter(getApplicationContext(), userList);
+		adapter = new LeaderboardItemAdapter(LeaderboardActivity.this, userList);
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -70,40 +61,77 @@ public class LeaderboardActivity
 			}
 		});
 		
-		new GetUsersTask(this).execute();
+		new GetUsersTask().execute();
+		
+		Button buttonChangeView = (Button) findViewById(R.id.leaderboard_xml_button_change_view);
+		buttonChangeView.setOnClickListener(new OnClickListener() {
+			public void onClick(final View v) {
+				// run new task
+				if(small_view == false)
+				{
+					small_view = true;
+					userList.clear();
+					adapter.notifyDataSetChanged();
+				}
+				else
+				{
+					small_view = false;
+					userList.clear();
+					adapter.notifyDataSetChanged();
+				}
+					
+				
+				listview.post(new Runnable() {
+					public void run() {
+						new GetUsersTask().execute();
+				}});
+				 
+			}
+		});
 		
 		Button buttonWhere = (Button) findViewById(R.id.leaderboard_xml_button_where_am_i);
 		buttonWhere.setOnClickListener(new OnClickListener() {
 			public void onClick(final View v) {
 				// run new task
+				button_position = CurrentUser.getSelectedPosition();
+				System.out.println("button position: " + button_position);//for debugging
+				listview.setSelector(R.drawable.leaderboard_listview_users_backgroundselected);
+				listview.setSelection(button_position);
+/*
 				listview.post(new Runnable() {
 					public void run() {
-						listview.setSelection(CurrentUser.getSelectedPosition());
-						listview.getChildAt(CurrentUser.getSelectedPosition()).setBackgroundColor(Color.RED);
-						v.setEnabled(false);
-						v.setBackgroundColor(color.transparent);
-				}});
+						//listview.setFocusable(true);
+						//listview.setSelection(button_position);
+						//listview.requestFocus(button_position);
+						//listview.getChildAt(button_position);
+						//listview.getFocusedChild().setBackgroundColor(Color.BLUE);
+						listview.getChildAt(button_position).setBackgroundResource(R.drawable.leaderboard_listview_users_backgroundselected);
+						//v.setEnabled(false);
+						//v.setBackgroundColor(color.transparent);
+						System.out.println("position on button click: " + button_position);//for debugging
+				}}); */
 			}
 		});
 	}
 	
-	private static class GetUsersTask 
-		extends AsyncTask<Void, User, Boolean> 
-			implements IAsyncTask<LeaderboardActivity> {
-		
-		private WeakReference<LeaderboardActivity> ref;
-		
-		public GetUsersTask(LeaderboardActivity a) {
-			attach(a);
-		}
-		
+	private class GetUsersTask extends AsyncTask<Void, User, Boolean> {
+		private  ProgressDialog progressDialog = null;
 		@Override
 		protected void onPreExecute() {
+			// display waiting dialog
+			progressDialog = new ProgressDialog(LeaderboardActivity.this);
+			progressDialog.setMessage("Loading...");
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog.show();
 		}
 		
 		@Override
-	    protected void onProgressUpdate(User... u) {
-			ref.get().updateAsyncTaskProgress(u[0]);
+	    protected void onProgressUpdate(User... users) {
+			progressDialog.dismiss();
+			userList.add(users[0]);
+			adapter.notifyDataSetChanged();
+			// adapter.notifyDataSetInvalidated();
 	    }
 		
 		@Override
@@ -111,7 +139,66 @@ public class LeaderboardActivity
 			JSONArray array = JsonHelper.getJsonArrayFromUrl(GET_USERS_URL);
 			if (array != null) { 
 				try {
+					
+					User current_user = CurrentUser.getCurrentUser();
+					int position = current_user.getRank();
+					String name = current_user.getUsername();
+					System.out.println(position); //for debugging
+					System.out.println(name); //for debugging
+
+					
 					for (int i = 0; i < array.length(); ++i) { 
+							
+								new User.Builder(
+									// required parameters
+									array.getJSONObject(i).getInt("users_tbl_id"),
+									array.getJSONObject(i).getString("users_tbl_username"),
+									array.getJSONObject(i).getString("users_tbl_password"))
+										// optional parameters
+										.challengesDone(array.getJSONObject(i).getInt("users_tbl_challenges_done"))
+										.placesVisited(array.getJSONObject(i).getInt("users_tbl_places_visited"))
+										.points(array.getJSONObject(i).getInt("users_tbl_points"))
+										.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
+											.build();
+								String current_name = array.getJSONObject(i).getString("users_tbl_username");
+								System.out.println("name for rank: " + current_name);//for debugging
+								if(current_name.equalsIgnoreCase(name)) {
+									position = array.getJSONObject(i).getInt("users_tbl_rank");
+									CurrentUser.setSelectedPostion(position);
+									System.out.println("position changed");//for debugging
+								}
+									
+
+									
+						}
+					System.out.println("CurrentUser position: " + CurrentUser.getSelectedPosition());//for debugging
+					int end_list = position + 10;
+					if(position < 10)
+						position = 10;
+					if(end_list > array.length())
+						end_list = array.length();
+					
+					System.out.println(position); //for debugging
+					
+					if(small_view == true)
+						for (int i = position - 10; i < end_list; ++i)
+						{
+							publishProgress(
+								new User.Builder(
+									// required parameters
+									array.getJSONObject(i).getInt("users_tbl_id"),
+									array.getJSONObject(i).getString("users_tbl_username"),
+									array.getJSONObject(i).getString("users_tbl_password"))
+										// optional parameters
+										.challengesDone(array.getJSONObject(i).getInt("users_tbl_challenges_done"))
+										.placesVisited(array.getJSONObject(i).getInt("users_tbl_places_visited"))
+										.points(array.getJSONObject(i).getInt("users_tbl_points"))
+										.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
+											.build());
+						}
+					if(small_view == false)
+						for (int i = 0; i < array.length(); ++i)
+						{
 						publishProgress(
 							new User.Builder(
 								// required parameters
@@ -124,7 +211,8 @@ public class LeaderboardActivity
 									.points(array.getJSONObject(i).getInt("users_tbl_points"))
 									.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
 										.build());
-					}
+						}
+					
 				}
 				catch (JSONException e) {
 					Log.e(TAG + "GetFriendTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
@@ -138,15 +226,9 @@ public class LeaderboardActivity
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
-			detach();
-		}
+			progressDialog.dismiss();
+			
 
-		public void attach(LeaderboardActivity a) {
-			ref = new WeakReference<LeaderboardActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
 		}
 	}
 	
@@ -193,10 +275,5 @@ public class LeaderboardActivity
     public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
         super.onDestroy();
-	}
-
-	public void updateAsyncTaskProgress(User u) {
-		userList.add(u);
-		adapter.notifyDataSetChanged();
 	}
 }

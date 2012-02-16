@@ -10,12 +10,11 @@
         android:layout_height="wrap_content"
         android:background="#1BAFE0"
         android:orientation="horizontal">
-
+
         <TextView
             android:id="@+id/leaderboard_xml_textview_rank"
-            android:layout_width="fill_parent"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:paddingRight="2dp"
             android:text="Rank"
             android:textColor="#000000"
@@ -57,19 +56,29 @@
             android:textColor="#000000"
             android:textStyle="bold" />
     </LinearLayout>
-
+
     <ListView
-        android:layout_below="@id/leaderboard_xml_linearlayout_title"
         android:id="@+id/leaderboard_xml_listview_users"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="wrap_content"
+      
+        android:listSelector="@drawable/leaderboard_listview_users_backgroundselected"
+        android:layout_above="@+id/leaderboard_xml_linearlayout_bottom_control"
+        android:layout_below="@id/leaderboard_xml_linearlayout_title" >
 
+    </ListView>
+  <!--android:listSelector="@drawable/leaderboard_listview_users_background"-->
     <LinearLayout
         android:id="@+id/leaderboard_xml_linearlayout_bottom_control"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/leaderboard_xml_button_change_view"
+            android:layout_width="155dp"
+            android:layout_height="wrap_content"
+            android:text="Change View" />
 
         <Button
             android:id="@+id/leaderboard_xml_button_where_am_i"
