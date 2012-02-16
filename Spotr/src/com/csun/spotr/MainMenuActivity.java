@@ -82,8 +82,8 @@ public class MainMenuActivity
 		});
 	
 		// populating Notification with friend request 
-		GetFriendRequestTask task = new GetFriendRequestTask(this);
-		task.execute();
+		// GetFriendRequestTask task = new GetFriendRequestTask(this);
+		// task.execute();
 	}
 	
 	public void getActivity(View mainMenuButton) {

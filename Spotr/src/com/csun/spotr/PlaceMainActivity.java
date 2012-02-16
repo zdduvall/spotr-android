@@ -92,9 +92,6 @@ public class PlaceMainActivity extends TabActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent = new Intent("com.csun.spotr.MainMenuActivity");
-		startActivity(intent);
-		finish();
 		return true;
 	}
 }

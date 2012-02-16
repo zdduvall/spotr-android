@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
@@ -34,12 +37,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class LoginActivity 
-	extends Activity {
+	extends Activity 
+		implements IActivityProgressUpdate<Integer> {
 	
 	private static final String TAG = "(LoginActivity)";
 	private static final String LOGIN_URL = "http://107.22.209.62/android/login.php";
-	private final int LOGIN_ERROR = 0;
-	private final int CONNECTION_ERROR = 1;
+	private final static int LOGIN_ERROR = 0;
+	private final static int CONNECTION_ERROR = 1;
 	
 	private EditText edittextUsername;
 	private EditText edittextPassword;
@@ -102,7 +106,7 @@ public class LoginActivity
 		
 		buttonSignup.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent("com.csun.spotr.SignupActivity"));
+				startActivity(new Intent(getApplicationContext(), SignupActivity.class));
 				finish();
 			}
 		});
@@ -118,8 +122,7 @@ public class LoginActivity
 		
 		edittextPassword.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (event.getAction() == KeyEvent.ACTION_DOWN &&
-						keyCode == KeyEvent.KEYCODE_ENTER) {
+				if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
 					performLogin();
 					return true;
 				}
@@ -130,7 +133,7 @@ public class LoginActivity
 	}
 	
 	protected void performLogin() {
-		task = new LoginTask();
+		task = new LoginTask(this, edittextUsername.getText().toString(), edittextPassword.getText().toString(), savePassword, LOGIN_URL);
 		task.execute();
 	}
 
@@ -169,54 +172,61 @@ public class LoginActivity
 		finish();
 	}
 	
-	public class LoginTask extends AsyncTask<Void, Integer, Boolean> {
-		private List<NameValuePair> loginData = new ArrayList<NameValuePair>();
-		@Override
-		protected void onPreExecute() {
-			// make a pair of data for HttpPost 
-			loginData.add(new BasicNameValuePair("username", edittextUsername.getText().toString().trim()));
-			loginData.add(new BasicNameValuePair("password", edittextPassword.getText().toString().trim()));
+	private static class LoginTask 
+		extends AsyncTask<Void, Integer, Integer> 
+			implements IAsyncTask<LoginActivity> {
+		
+		private String username;
+		private String password; 
+		private boolean isSavedPassword;
+		private WeakReference<LoginActivity> ref;
+		private String url;
+		
+		public LoginTask(LoginActivity a, String username, String password, boolean isSavedPassword, String url) {
+			attach(a);
+			this.username = username;
+			this.password = password;
+			this.isSavedPassword = isSavedPassword;
+			this.url = url;
 		}
 		
 		@Override
-		protected Boolean doInBackground(Void... voids) {
+		protected void onPreExecute() {
+		}
+		
+		@Override
+		protected Integer doInBackground(Void... voids) {
+			List<NameValuePair> datas = new ArrayList<NameValuePair>();
+			datas.add(new BasicNameValuePair("username", username));
+			datas.add(new BasicNameValuePair("password", password));
 			// get data from the our database 
-			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(LOGIN_URL, loginData);
-			int userId;
+			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(LOGIN_URL, datas);
+			int userId = -1;
 			try {
 				userId = json.getInt("result");
-				// fail to login
-				if (userId == -1)
-					return false;
-				
-				if (savePassword) {
-					editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-					editor.putBoolean("savePassword", true);
-					editor.putString("username", edittextUsername.getText().toString());
-					editor.putString("password", edittextPassword.getText().toString());
-					editor.commit();
-				}
-				// set current user
-				CurrentUser.setCurrentUser(
-					userId, 
-					edittextUsername.getText().toString(), 
-					edittextPassword.getText().toString());
 			}
 			catch (Exception e) {
 				Log.e(TAG + "LoginTask.doInBackground(Void... voids)", "JSON error parsing data" + e.toString());
 			}
-			return true;
+			return userId;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result == false) {
-				showDialog(LOGIN_ERROR);
+		protected void onPostExecute(Integer userId) {
+			if (userId == -1) {
+				ref.get().showDialog(0);
 			}
 			else {
-				startActivity(new Intent("com.csun.spotr.MainMenuActivity"));
-				finish();
+				ref.get().updateAsyncTaskProgress(userId);
 			}
+		}
+
+		public void attach(LoginActivity a) {
+			ref = new WeakReference<LoginActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
 		}
 	}
 	
@@ -228,10 +238,6 @@ public class LoginActivity
 	    }
 
 	    return super.onKeyDown(keyCode, event);
-	}
-	
-	public LoginTask getLoginTask() {
-		return task;
 	}
 	
 	private boolean isNetworkAvailableAndConnected() {
@@ -248,4 +254,20 @@ public class LoginActivity
 		}
 		return true;
 	}
+
+	public void updateAsyncTaskProgress(Integer id) {
+		if (savePassword) {
+			editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
+			editor.putBoolean("savePassword", true);
+			editor.putString("username", edittextUsername.getText().toString());
+			editor.putString("password", edittextPassword.getText().toString());
+			editor.commit();
+		}
+		
+		// set current user
+		CurrentUser.setCurrentUser(id, edittextUsername.getText().toString(), edittextPassword.getText().toString());
+		startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+		finish();
+	}
+	
 }

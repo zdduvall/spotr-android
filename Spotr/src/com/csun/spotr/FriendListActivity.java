@@ -60,7 +60,7 @@ public class FriendListActivity
 		listview = (ListView) findViewById(R.id.friend_list_main_xml_listview_friends);
 
 		// set up list view adapter
-		adapter = new UserItemAdapter(this, userItemList);
+		adapter = new UserItemAdapter(this.getApplicationContext(), userItemList);
 		listview.setAdapter(adapter);
 		listview.setVisibility(View.VISIBLE);
 
@@ -129,6 +129,9 @@ public class FriendListActivity
 			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, clientData);
 			if (userJsonArray != null) {
 				try {
+					if (ref.get().task.isCancelled()) {
+						return true;
+					}
 					for (int i = 0; i < userJsonArray.length(); ++i) {
 						publishProgress(
 							new UserItem(
@@ -227,5 +230,12 @@ public class FriendListActivity
 						}).create();
 		}
 		return null;
+	}
+	
+	@Override 
+	public void onBackPressed() {
+		task.cancel(true);
+		Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+		startActivity(intent);
 	}
 }

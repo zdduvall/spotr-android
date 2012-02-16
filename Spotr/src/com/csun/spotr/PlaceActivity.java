@@ -82,12 +82,11 @@ public class PlaceActivity
 		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent("com.csun.spotr.PlaceMainActivity");
+				Intent intent = new Intent(getApplicationContext(), PlaceMainActivity.class);
 				Bundle extras = new Bundle();
 				extras.putInt("place_id", placeItemList.get(position).getId());
 				intent.putExtras(extras);
 				startActivity(intent);
-				onPause();
 			}
 		});
 		

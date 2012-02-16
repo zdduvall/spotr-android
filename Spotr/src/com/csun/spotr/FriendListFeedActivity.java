@@ -48,6 +48,7 @@ public class FriendListFeedActivity
 	private 				List<FriendFeedItem> 		friendFeedList = new ArrayList<FriendFeedItem>();
 	private 				ListView 					listview = null;
 	private 				FriendFeedItemAdapter 		adapter = null;
+	private					GetFriendFeedTask 			task = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,8 @@ public class FriendListFeedActivity
 			}
 		});
 		
-		new GetFriendFeedTask(this).execute();
+		task = new GetFriendFeedTask(this);
+		task.execute();
     }
     
     private static class GetFriendFeedTask 
@@ -98,7 +100,7 @@ public class FriendListFeedActivity
     				for (int i = 0; i < array.length(); ++i) { 
     					
     					if (isCancelled()) {
-    						break;
+    						return true;
     					}
     					
     					String snapPictureUrl = null;
@@ -229,5 +231,12 @@ public class FriendListFeedActivity
 	public void updateAsyncTaskProgress(FriendFeedItem f) {
 		friendFeedList.add(f);
 		adapter.notifyDataSetChanged();
+	}
+	
+	@Override 
+	public void onBackPressed() {
+		task.cancel(true);
+		Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+		startActivity(intent);
 	}
 }

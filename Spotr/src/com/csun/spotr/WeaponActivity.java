@@ -26,7 +26,7 @@ import com.csun.spotr.util.JsonHelper;
  * Description:
  * 		Display user's weapons
  */
-public class WeaponActivity 
+public class TreasureActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Weapon> {
 	
