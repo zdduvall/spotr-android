@@ -33,7 +33,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-public class LoginActivity extends Activity {
+public class LoginActivity 
+	extends Activity {
+	
 	private static final String TAG = "(LoginActivity)";
 	private static final String LOGIN_URL = "http://107.22.209.62/android/login.php";
 	private final int LOGIN_ERROR = 0;

@@ -175,7 +175,7 @@ public class QuestActionActivity
 					for (int i = 0; i < array.length(); ++i) {
 						if (!array.getJSONObject(i).getString("challenges_tbl_type").equals("OTHER")) {
 							publishProgress(								
-							new Challenge.Builder(
+								new Challenge.Builder(
 									// required parameters
 									array.getJSONObject(i).getInt("challenges_tbl_id"),
 									Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")),

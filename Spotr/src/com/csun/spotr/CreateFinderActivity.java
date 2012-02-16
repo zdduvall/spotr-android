@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.csun.spotr.singleton.CurrentDateTime;
 import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.UploadFileHelper;
@@ -41,6 +42,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class CreateFinderActivity extends Activity {
 	private static final String TAG = "(CreateLostItemActivity)";
@@ -160,24 +162,21 @@ public class CreateFinderActivity extends Activity {
 	}
 
 	// We need the user's points to determine how many he/she can distribute
-	private static class GetUserPoints extends AsyncTask<Void, Integer, Boolean> {
-		private WeakReference<CreateFinderActivity> refActivity;
+	private static class GetUserPoints 
+		extends AsyncTask<Void, Integer, Boolean> 
+			implements IAsyncTask<CreateFinderActivity> {
+		
+		private WeakReference<CreateFinderActivity> ref;
 		private List<NameValuePair> jsonList = new ArrayList<NameValuePair>();
-		private ProgressDialog progressDialog = null;
 		private int userId;
 
-		public GetUserPoints(Activity c, int id) {
-			refActivity = new WeakReference<CreateFinderActivity>((CreateFinderActivity) c);
+		public GetUserPoints(CreateFinderActivity a, int id) {
+			attach(a);
 			userId = id;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(refActivity.get());
-			progressDialog.setMessage("Loading...");
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
 		}
 
 		@Override
@@ -202,34 +201,38 @@ public class CreateFinderActivity extends Activity {
 		}
 
 		protected void onPostExecute(Boolean result) {
-			progressDialog.dismiss();
 			if (result == false) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(refActivity.get()).create();
-				dialogMessage.setTitle("Oops!");
-				dialogMessage.setMessage("Sorry " + CurrentUser.getCurrentUser().toString() + ", it seems there was an error.");
-				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				dialogMessage.show();
+				Toast.makeText(ref.get().getApplicationContext(), "Oops! There was an error", Toast.LENGTH_LONG);
 			}
+			
+			detach();
+		}
+
+		public void attach(CreateFinderActivity a) {
+			ref = new WeakReference<CreateFinderActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
 		}
 
 	}
 
-	private class SubmitLostItem extends AsyncTask<String, Integer, String> {
+	private static class SubmitLostItem 
+		extends AsyncTask<String, Integer, String> 
+			implements IAsyncTask<CreateFinderActivity> {
+		
 		private List<NameValuePair> lostItemData = new ArrayList<NameValuePair>();
-		private WeakReference<CreateFinderActivity> refActivity;
+		private WeakReference<CreateFinderActivity> ref;
 		private ProgressDialog progressDialog = null;
 
-		public SubmitLostItem(Activity c) {
-			refActivity = new WeakReference<CreateFinderActivity>((CreateFinderActivity) c);
+		public SubmitLostItem(CreateFinderActivity a) {
+			attach(a);
 		}
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(refActivity.get());
+			progressDialog = new ProgressDialog(ref.get());
 			progressDialog.setMessage("Loading...");
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(false);
@@ -267,27 +270,41 @@ public class CreateFinderActivity extends Activity {
 		protected void onPostExecute(String result) {
 			progressDialog.dismiss();
 			if (result.equals("success")) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(refActivity.get()).create();
+				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
 				dialogMessage.setTitle("Submission uploaded!");
 				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() + ", submission successful!" + 
 						"\n\nWould you like to review your item?");
+				
 				dialogMessage.setButton(Dialog.BUTTON_POSITIVE, "Sure!", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-						Intent intent = new Intent("com.csun.spotr.FinderActivity");
-						startActivity(intent);
-						finish();
+						Intent intent = new Intent();
+						ref.get().setResult(RESULT_OK, intent);
+						ref.get().finish();
 					}
 				});
+				
 				dialogMessage.setButton(Dialog.BUTTON_NEGATIVE, "No, thanks.", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-						finish();
+						Intent intent = new Intent();
+						ref.get().setResult(RESULT_CANCELED, intent);
+						ref.get().finish();
 					}
 				});
 				dialogMessage.show();
 			}
-			else Log.d(TAG, "Result = FAIL");
+			else {
+				Log.d(TAG, "Result = FAIL");
+			}
+		}
+
+		public void attach(CreateFinderActivity a) {
+			ref = new WeakReference<CreateFinderActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
 		}
 
 	}

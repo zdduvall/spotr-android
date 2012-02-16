@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,14 +19,19 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.csun.spotr.adapter.FinderItemAdapter;
 import com.csun.spotr.core.adapter_item.SeekingItem;
-import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
-public class FinderActivity extends Activity {
+public class FinderActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<SeekingItem> {
+	
 	private static final String TAG = "(FinderActivity)";
 	private static final String GET_FINDERS_URL = "http://107.22.209.62/android/get_finders.php";
 	private List<SeekingItem> items;
@@ -58,21 +62,30 @@ public class FinderActivity extends Activity {
 		
 		buttonCreateItem.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				int dummy = 0;
 				Intent intent = new Intent(getApplicationContext(), CreateFinderActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, dummy);
 			}
 		});
 		
-		new GetFindersTask().execute();
+		new GetFindersTask(this).execute();
 	}
 
-	private class GetFindersTask extends AsyncTask<Integer, SeekingItem, Boolean> {
+	private static class GetFindersTask 
+		extends AsyncTask<Integer, SeekingItem, Boolean> 
+			implements IAsyncTask<FinderActivity> {
+		
+		private WeakReference<FinderActivity> ref;
 		private ProgressDialog progressDialog = null;
 		private JSONArray jsonArray = null;
+		
+		public GetFindersTask(FinderActivity a) {
+			attach(a);
+		}
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(FinderActivity.this);
+			progressDialog = new ProgressDialog(ref.get());
 			progressDialog.setMessage("Loading items...");
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(false);
@@ -80,9 +93,8 @@ public class FinderActivity extends Activity {
 		}
 
 		@Override
-		protected void onProgressUpdate(SeekingItem... anItems) {
-			items.add(anItems[0]);
-			adapter.notifyDataSetChanged();
+		protected void onProgressUpdate(SeekingItem... s) {
+			ref.get().updateAsyncTaskProgress(s[0]);
 		}
 
 		@Override
@@ -110,15 +122,25 @@ public class FinderActivity extends Activity {
 		protected void onPostExecute(Boolean result) {
 			progressDialog.dismiss();
 			if (result == false) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(FinderActivity.this).create();
-				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
-				dialogMessage.setMessage("No items");
-				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				dialogMessage.show();
+				Toast.makeText(ref.get().getApplicationContext(), "No items", Toast.LENGTH_LONG);
+			}
+			detach();
+		}
+
+		public void attach(FinderActivity a) {
+			ref = new WeakReference<FinderActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 1) {
+			if (resultCode == RESULT_OK) {
+				items.clear();
+				new GetFindersTask(this).execute();
 			}
 		}
 	}
@@ -133,5 +155,10 @@ public class FinderActivity extends Activity {
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
 		super.onDestroy();
+	}
+
+	public void updateAsyncTaskProgress(SeekingItem s) {
+		items.add(s);
+		adapter.notifyDataSetChanged();
 	}
 }
