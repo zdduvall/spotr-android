@@ -1,51 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    >
-	<TextView
-	    android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quest challenges"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
-	    
-	<ListView
-        android:id="@+id/quest_action_xml_listview_quest_actions"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/white" >
-   	</ListView>
-   	
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="4dp"
-        android:background="#FAB002" />
-	
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Share that you are here"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@color/aluminum5" >
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="4dp"
-        android:background="#FAB002" />
-     
+<LinearLayout
+    	android:layout_width="fill_parent" 
+    	android:layout_height="120dp"
+    	android:orientation="horizontal"
+    	android:weightSum="1.0" >
+    
+    
+	    <!-- GENERAL PLACE INFO AREA -->
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="0px"
+			android:orientation="vertical" 
+			android:layout_weight=".80" >
+
+			<!-- Place Name -->
+			<TextView
+            	android:id="@+id/quest_action_xml_textview_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#CC3333"
+				android:textSize="15sp"
+				android:textStyle="bold" />
+			
+			<!-- Place description -->
+			<TextView
+                android:id="@+id/quest_action_xml_textview_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="9sp"
+                android:maxLines="2"
+                android:paddingBottom="15dp"
+                android:textColor="#CC3333" />
+
+			<Button
+			    android:id="@+id/quest_action_xml_button_moreinfo"
+			    android:layout_width="wrap_content"
+			    android:layout_height="35dp"
+				android:layout_alignParentBottom="true"
+				android:text="More Info" />
+		
+		</LinearLayout>
+		    		    
+		<!-- GAMES/ACTIONS AREA  -->
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="0px"
+			android:orientation="vertical" 
+			android:gravity="center_horizontal"
+			android:layout_weight=".20" >
+			
+			
+			<!-- TREASURE BUTTON  -->
+			<Button
+			    android:id="@+id/quest_action_xml_button_treasure"
+			    style="@style/TreasureButton"
+			    android:layout_width="46dp"
+			    android:layout_height="30dp"
+			    android:background="@drawable/treasure" />
+			
+			<!-- OTHER BUTTONS?  -->
+			
+		</LinearLayout>
+            
+	</LinearLayout>	
+    
+	<!-- Challenge List -->
+
     <ListView
         android:id="@+id/quest_action_xml_listview_actions"
-        android:layout_width="fill_parent"
-        android:layout_height="325dp"
-        android:background="@android:color/white" >
+        style="@style/MissionsList" >
     </ListView>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#FAB002" />
 
 </LinearLayout>

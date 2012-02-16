@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,17 +11,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.csun.spotr.adapter.PlaceActionItemAdapter;
-import com.csun.spotr.adapter.QuestActionItemAdapter;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,26 +32,32 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
-public class QuestActionActivity extends Activity {
-	private static final String TAG = "(QuestActionActivity)";
-	private static final String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_challenges_from_place.php";
-	private static final String DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
-	private int currentPlaceId;
-	private int currentChosenItem;
+/**
+ * Description:
+ * 		The Missions tab content in Spots.
+ */
+public class QuestActionActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<Challenge> {
 	
-	//for default challenge : check in, snap picture, write on wall...
-	private ListView list = null;	
-	private	PlaceActionItemAdapter adapter = null;	
-	private List<Challenge> challengeList = new ArrayList<Challenge>();
+	private static final 	String 					TAG = "(QuestActionActivity)";
+	private static final 	String 					GET_QUEST_CHALLENGES_URL = "http://107.22.209.62/android/get_quest_from_place.php";
+	private static final	String 					DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
+	private static final	int						DO_ACTION_ACTIVITY = 0;
 	
-	//for custom challenge.
-	private ListView questlist =null;
-	private PlaceActionItemAdapter questadapter = null;
-	private List<Challenge> customChallengeList = new ArrayList<Challenge>();
+	public 					int 					currentPlaceId;
+	public					int						currentSpotPosition;
+	public 					int 					currentChosenItem;
+	public 					ListView 				list = null;
+	private					PlaceActionItemAdapter	adapter = null;
+	private 				List<Challenge> 		challengeList = new ArrayList<Challenge>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,35 +66,39 @@ public class QuestActionActivity extends Activity {
 		setContentView(R.layout.quest_action);
 	
 		// get place id
+		Bundle extrasBundle = getIntent().getExtras();
+		currentPlaceId = extrasBundle.getInt("place_id");
+		currentSpotPosition = extrasBundle.getInt("position");
 		
-		currentPlaceId = this.getIntent().getExtras().getInt("place_id");
+		// initialize list view of challenges
+		list = (ListView) findViewById(R.id.quest_action_xml_listview_actions);
+		adapter = new PlaceActionItemAdapter(this, challengeList);
 		
-		//initialize list view of custom challenges
-		questlist = (ListView) findViewById(R.id.quest_action_xml_listview_quest_actions);
-		questadapter = new PlaceActionItemAdapter(QuestActionActivity.this, customChallengeList);
-		questlist.setAdapter(questadapter);
-		questlist.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				// TODO Auto-generated method stub
-				
+		// add top padding to first item and add bottom padding to last item
+		TextView padding = new TextView(getApplicationContext());
+		padding.setHeight(0);
+		
+		Button buttonTreasure = (Button) findViewById(R.id.quest_action_xml_button_treasure);
+		buttonTreasure.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), TreasureActivity.class);
+				startActivity(intent);
 			}
-			
 		});
 		
-		// initialize list view of default challenges
-		list = (ListView) findViewById(R.id.quest_action_xml_listview_actions);
-		adapter = new PlaceActionItemAdapter(QuestActionActivity.this, challengeList);
+		
+		list.addHeaderView(padding, null, false);
+		list.addFooterView(padding, null, false);
 		list.setAdapter(adapter);
+				
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Challenge c = challengeList.get(position);
+				Challenge c = (Challenge) list.getAdapter().getItem(position);//challengeList.get(position);
 				// set current item chosen so that later we can make some side effects
 				currentChosenItem = position;
 				
 				if (c.getType() == Challenge.Type.CHECK_IN) {
-					CheckInTask task = new CheckInTask();
+					CheckInTask task = new CheckInTask(QuestActionActivity.this);
 					task.execute(
 						Integer.toString(CurrentUser.getCurrentUser().getId()),
 						Integer.toString(currentPlaceId),
@@ -98,7 +112,8 @@ public class QuestActionActivity extends Activity {
 					extras.putString("spots_id", Integer.toString(currentPlaceId));
 					extras.putString("challenges_id", Integer.toString(c.getId()));
 					intent.putExtras(extras);
-					startActivity(intent);
+					startActivityForResult(intent, DO_ACTION_ACTIVITY);
+						
 				}
 				else if (c.getType() == Challenge.Type.SNAP_PICTURE) {
 					Intent intent = new Intent("com.csun.spotr.SnapPictureActivity");
@@ -107,7 +122,8 @@ public class QuestActionActivity extends Activity {
 					extras.putString("spots_id", Integer.toString(currentPlaceId));
 					extras.putString("challenges_id", Integer.toString(c.getId()));
 					intent.putExtras(extras);
-					startActivity(intent);
+					startActivityForResult(intent, DO_ACTION_ACTIVITY);
+					
 				}
 				else if (c.getType() == Challenge.Type.QUESTION_ANSWER) {
 					Intent intent = new Intent("com.csun.spotr.QuestionAnswerActivity");
@@ -117,47 +133,48 @@ public class QuestActionActivity extends Activity {
 					extras.putString("challenges_id", Integer.toString(c.getId()));
 					extras.putString("question_description", c.getDescription());
 					intent.putExtras(extras);
-					startActivity(intent);
+					startActivityForResult(intent,DO_ACTION_ACTIVITY);
 				}
 				else { // c.getType == Challenge.Type.OTHER 
-				
+					
 				}
 			}
 		});
 		
 		// run GetChallengeTask
-		new GetChallengesTask().execute();
+		new GetChallengesTask(QuestActionActivity.this).execute();
 	}
 	
-	private class GetChallengesTask extends AsyncTask<String, Challenge, Boolean> {
+	private static class GetChallengesTask 
+		extends AsyncTask<String, Challenge, Boolean> 
+			implements IAsyncTask<QuestActionActivity> {
+		
 		private List<NameValuePair> challengeData = new ArrayList<NameValuePair>();
-		@Override
-		protected void onPreExecute() {
+		private WeakReference<QuestActionActivity> ref;
+		
+		public GetChallengesTask(QuestActionActivity questActionActivity) {
+			attach(questActionActivity);
 		}
 		
 		@Override
-	    protected void onProgressUpdate(Challenge... challenges) {
-			if(challenges[0].getType().toString().equals("OTHER"))
-			{
-				customChallengeList.add(challenges[0]);
-				questadapter.notifyDataSetChanged();
-			}
-			else
-			{
-				challengeList.add(challenges[0]);
-				adapter.notifyDataSetChanged();
-			}
-			// adapter.notifyDataSetInvalidated();
+		protected void onPreExecute() {
+			
+		}
+		
+		@Override
+	    protected void onProgressUpdate(Challenge... c) {
+			ref.get().updateAsyncTaskProgress(c[0]);
 	    }
 
 		@Override
 		protected Boolean doInBackground(String... text) {
-			challengeData.add(new BasicNameValuePair("place_id", Integer.toString(currentPlaceId)));
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_DETAIL_URL, challengeData);
+			challengeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_CHALLENGES_URL, challengeData);
 			if (array != null) { 
 				try {
-					for (int i = 0; i < array.length(); ++i) {						
-						publishProgress(								
+					for (int i = 0; i < array.length(); ++i) {
+						if (!array.getJSONObject(i).getString("challenges_tbl_type").equals("OTHER")) {
+							publishProgress(								
 							new Challenge.Builder(
 									// required parameters
 									array.getJSONObject(i).getInt("challenges_tbl_id"),
@@ -167,8 +184,9 @@ public class QuestActionActivity extends Activity {
 										.name(array.getJSONObject(i).getString("challenges_tbl_name"))
 										.description(array.getJSONObject(i).getString("challenges_tbl_description"))
 											.build());
-						}						
-					}				
+						}
+					}
+				}
 				catch (JSONException e) {
 					Log.e(TAG + "GetChallengesTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 				}
@@ -178,24 +196,34 @@ public class QuestActionActivity extends Activity {
 				return false;
 			}
 		}
+
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if (result == false) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(QuestActionActivity.this).create();
-				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
-				dialogMessage.setMessage("There are no challenges at this place!");
-				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				dialogMessage.show();
-			}
+			detach();
+			
+			
 		}
+
+		public void attach(QuestActionActivity questActionActivity) {
+			ref = new WeakReference<QuestActionActivity>(questActionActivity);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+
 	}
 	
-	private class CheckInTask extends AsyncTask<String, Integer, String> {
+	private class CheckInTask 
+		extends AsyncTask<String, Integer, String> 
+			implements IAsyncTask<QuestActionActivity> {
+		
 		private List<NameValuePair> checkInData = new ArrayList<NameValuePair>();
+		private WeakReference<QuestActionActivity> ref;
+		
+		public CheckInTask(QuestActionActivity questActionActivity) {
+			attach(questActionActivity);
+		}
 
 		@Override
 		protected void onPreExecute() {
@@ -227,6 +255,7 @@ public class QuestActionActivity extends Activity {
 			checkInData.add(new BasicNameValuePair("challenges_id", ids[2]));
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(DO_CHECK_IN_URL, checkInData);
 			String result = "";
+			
 			try {
 				result = json.getString("result");
 			} 
@@ -239,58 +268,44 @@ public class QuestActionActivity extends Activity {
 		@Override
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
-				list.getChildAt(currentChosenItem).setBackgroundColor(Color.GRAY);
+				ref.get().list.getChildAt(ref.get().currentChosenItem).setBackgroundColor(Color.GRAY);
+				Intent data1 = new Intent();
+				
+				data1.setData(Uri.parse("done"));
+				setResult(RESULT_OK, data1);
 			}
+			else {
+				ref.get().showDialog(0);
+			}	
+			
+			detach();
 		}
-	}
-	
-	/*
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	        startActivity(new Intent(getApplicationContext(), LocalPlaceActivity.class));
-	        finish();
-	        return true;
-	    }
 
-	    return super.onKeyDown(keyCode, event);
-	}
-	*/
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-	
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
+		public void attach(QuestActionActivity questActionActivity) {
+			ref = new WeakReference<QuestActionActivity>(questActionActivity);
 		}
-		return true;
+
+		public void detach() {
+			ref.clear();
+		}
+
 	}
-    
-    @Override
+	
+	protected void onActivityResult(int requestCode, int resultCode,Intent data) {
+		if (requestCode == DO_ACTION_ACTIVITY) {
+			if (resultCode == RESULT_OK) {
+				Intent data1 = new Intent();
+				
+				data1.putExtra("position", currentSpotPosition);
+				
+				setResult(RESULT_OK, data1);
+				//---closes the activity---
+				finish();
+			}
+    	}
+		
+	}
+	    @Override
     public void onPause() {
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
@@ -300,5 +315,40 @@ public class QuestActionActivity extends Activity {
     public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
         super.onDestroy();
+	}
+
+	public void updateAsyncTaskProgress(Challenge c) {
+		challengeList.add(c);
+		adapter.notifyDataSetChanged();
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case 0:
+			return new 
+				AlertDialog.Builder(this)
+					.setIcon(R.drawable.error_circle)
+					.setTitle("Warning!")
+					.setMessage("You checked in recently. You can only check in once every 24 hours. :(!")
+					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							
+						}
+					}).create();
+		
+		case 1: 
+			return new 
+					AlertDialog.Builder(this)
+						.setIcon(R.drawable.error_circle)
+						.setTitle("Error Message")
+						.setMessage("<undefined>")
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								
+							}
+						}).create();
+		}
+		return null;
 	}
 }

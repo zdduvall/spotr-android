@@ -21,6 +21,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -109,7 +110,7 @@ public class SnapPictureActivity
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<SnapPictureActivity> {
 		
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
+		private List<NameValuePair> datas = new ArrayList<NameValuePair>();
 		private WeakReference<SnapPictureActivity> ref;
 		private String picturebyteCode;
 		
@@ -126,22 +127,22 @@ public class SnapPictureActivity
 		@Override
 		protected String doInBackground(Void... voids) {
 			// send encoded data to server
-			clientData.add(new BasicNameValuePair("image", picturebyteCode));
+			datas.add(new BasicNameValuePair("image", picturebyteCode));
 			
 			// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
 			// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
-			clientData.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
+			datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
 			
 			// send the rest of data
-			clientData.add(new BasicNameValuePair("users_id", ref.get().usersId));
-			clientData.add(new BasicNameValuePair("spots_id", ref.get().spotsId));
-			clientData.add(new BasicNameValuePair("challenges_id", ref.get().challengesId));
+			datas.add(new BasicNameValuePair("users_id", ref.get().usersId));
+			datas.add(new BasicNameValuePair("spots_id", ref.get().spotsId));
+			datas.add(new BasicNameValuePair("challenges_id", ref.get().challengesId));
 			
 			// TODO: comment should be added
-			clientData.add(new BasicNameValuePair("comment", ref.get().comment));
+			datas.add(new BasicNameValuePair("comment", ref.get().comment));
 			
 			// get JSON to check result
-			JSONObject json = UploadFileHelper.uploadFileToServer(SNAP_PICTURE_URL, clientData);
+			JSONObject json = UploadFileHelper.uploadFileToServer(SNAP_PICTURE_URL, datas);
 		
 			String result = "";
 			try {
@@ -157,6 +158,10 @@ public class SnapPictureActivity
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
 				Toast.makeText(ref.get().getApplicationContext(), "Upload picture done!", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent();
+				intent.setData(Uri.parse("done"));
+				ref.get().setResult(RESULT_OK, intent);
+				ref.get().finish();
 			}
 			
 			detach();

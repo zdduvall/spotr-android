@@ -17,6 +17,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -108,11 +109,12 @@ public class QuestionAnswerActivity extends Activity {
 		protected void onPostExecute(String result) {
 			progressDialog.dismiss();
 			if (result.equals("success")) {
-				Intent intent = new Intent("com.csun.spotr.PlaceMainActivity");
-				intent.putExtra("place_id", Integer.parseInt(spotsId));
-				startActivity(intent);
+				Intent intent = new Intent();
+				intent.setData(Uri.parse("done"));
+				setResult(RESULT_OK,intent);
 				finish();
 			}
+				
 		}
 	}
 	

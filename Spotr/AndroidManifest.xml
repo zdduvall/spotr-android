@@ -415,7 +415,9 @@
         <!-- QuestActivity -->
         <activity
             android:name=".QuestActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden" 
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="com.csun.spotr.QuestActivity" />
 
@@ -426,7 +428,9 @@
          <!-- QuestDetailActivity -->
         <activity
             android:name=".QuestDetailActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden" 
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="com.csun.spotr.QuestDetailActivity" />
 
@@ -437,7 +441,9 @@
            <!-- QuestActionActivity -->
         <activity
             android:name=".QuestActionActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden" 
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="com.csun.spotr.QuestActionActivity" />
 
