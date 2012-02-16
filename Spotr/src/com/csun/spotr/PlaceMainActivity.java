@@ -37,7 +37,7 @@ public class PlaceMainActivity extends TabActivity {
 		// get place_id extras from PlaceActivity/LocalPlaceActivity
 		Bundle extras = getIntent().getExtras();
 		// create an Intent to launch an Activity for the tab (to be reused)
-		intent = new Intent().setClass(this, PlaceActionActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), PlaceActionActivity.class);
 		// pass this extra to PlaceActionActivity
 		intent.putExtras(extras);
 
@@ -52,7 +52,7 @@ public class PlaceMainActivity extends TabActivity {
 		tabHost.addTab(spec);
 
 		// do the same for the other tabs
-		intent = new Intent().setClass(this, PlaceActivityActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), PlaceActivityActivity.class);
 		// pass this Extra to PlaceActivityActivity
 		intent.putExtras(extras);
 		

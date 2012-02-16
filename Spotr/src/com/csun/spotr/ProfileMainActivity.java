@@ -30,7 +30,7 @@ public class ProfileMainActivity extends TabActivity {
 		Bundle extras = getIntent().getExtras();
 		int currentUserId = extras.getInt("user_id");
 		// tab 1
-		intent = new Intent().setClass(this, ProfileActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), ProfileActivity.class);
 		// pass it to ProfileActivity
 		intent.putExtra("user_id", currentUserId);
 		
@@ -41,7 +41,7 @@ public class ProfileMainActivity extends TabActivity {
 		tabHost.addTab(spec);
 
 		// tab 2
-		intent = new Intent().setClass(this, LeaderboardActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), LeaderboardActivity.class);
 		spec = tabHost
 				.newTabSpec("leaderboard")
 				.setIndicator("Leaderboard", res.getDrawable(R.drawable.place_activity_tab))
@@ -49,7 +49,7 @@ public class ProfileMainActivity extends TabActivity {
 		tabHost.addTab(spec);
 
 		// tab 3
-		intent = new Intent().setClass(this, RewardActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), RewardActivity.class);
 		spec = tabHost
 				.newTabSpec("reward")
 				.setIndicator("Rewards", res.getDrawable(R.drawable.place_activity_tab))

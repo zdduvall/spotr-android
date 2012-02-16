@@ -1,10 +1,11 @@
 package com.csun.spotr.core.adapter_item;
 
 import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Comment;
 
 public class FriendFeedItem {
 	// required parameters
-	private final int activityId; 
+	private final int activityId;
 	private final int friendId;
 	private final String friendName;
 	private final Challenge.Type challengeType;
@@ -18,11 +19,13 @@ public class FriendFeedItem {
 	private String friendPictureUrl = null;
 	private String activityComment;
 	private String shareUrl = "";
-	private int likes = 0;
+	private int likes;
+	private int numberOfComments;
+	private Comment firstComment;
 
 	public static class Builder {
 		// required parameters
-		private final int activityId; 
+		private final int activityId;
 		private final int friendId;
 		private final String friendName;
 		private final Challenge.Type challengeType;
@@ -37,6 +40,8 @@ public class FriendFeedItem {
 		private String activityComment;
 		private String shareUrl = "";
 		private int likes;
+		private int numberOfComments;
+		private Comment firstComment;
 
 		public Builder(int activityId, int friendId, String friendName, Challenge.Type challengeType, String activityTime, String placeName) {
 			this.activityId = activityId;
@@ -71,18 +76,26 @@ public class FriendFeedItem {
 			this.activityComment = activityComment;
 			return this;
 		}
-		
+
 		public Builder shareUrl(String shareUrl) {
 			this.shareUrl = shareUrl;
 			return this;
 		}
-		
+
 		public Builder likes(int likes) {
 			this.likes = likes;
 			return this;
 		}
-		
-		
+
+		public Builder numberOfComments(int numberOfComments) {
+			this.numberOfComments = numberOfComments;
+			return this;
+		}
+
+		public Builder firstComment(Comment firstComment) {
+			this.firstComment = firstComment;
+			return this;
+		}
 
 		public FriendFeedItem build() {
 			return new FriendFeedItem(this);
@@ -104,6 +117,16 @@ public class FriendFeedItem {
 		this.activityComment = builder.activityComment;
 		this.shareUrl = builder.shareUrl;
 		this.likes = builder.likes;
+		this.numberOfComments = builder.numberOfComments;
+		this.firstComment = builder.firstComment;
+	}
+
+	public int getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	public void setNumberOfComments(int numberOfComments) {
+		this.numberOfComments = numberOfComments;
 	}
 
 	public int getLikes() {
@@ -184,6 +207,14 @@ public class FriendFeedItem {
 
 	public String getPlaceName() {
 		return placeName;
+	}
+
+	public Comment getFirstComment() {
+		return firstComment;
+	}
+
+	public void setFirstComment(Comment firstComment) {
+		this.firstComment = firstComment;
 	}
 
 	@Override

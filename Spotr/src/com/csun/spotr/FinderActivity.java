@@ -28,6 +28,10 @@ import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
+/*
+ * Description:
+ * 		Display lost items
+ */
 public class FinderActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<SeekingItem> {

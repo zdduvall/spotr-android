@@ -18,12 +18,14 @@ import android.webkit.WebSettings.ZoomDensity;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.csun.spotr.CommentActivity;
 import com.csun.spotr.R;
 import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
 import com.csun.spotr.util.ImageLoader;
 
@@ -63,7 +65,17 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		ImageView imageViewSnapPicture;
 		Button buttonComment;
 		Button buttonLike;
+		TextView textViewTotalComments;
 		WebView webview;
+		
+		/*
+		 * 1st comment
+		 */
+		LinearLayout firstLayout;
+		ImageView firstImageViewUserPicture;
+		TextView firstTextViewUsername;
+		TextView firstTextViewTime;
+		TextView firstTextViewContent;
 	}
 	
 	public View getView(final int position, View convertView, ViewGroup parent) {
@@ -80,6 +92,17 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.webview = (WebView) convertView.findViewById(R.id.friend_list_feed_item_xml_webview);
 			holder.buttonComment = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_comment);
 			holder.buttonLike = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_like);
+			holder.textViewTotalComments = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_number_of_comments);
+			
+			/*
+			 * 1st comment
+			 */
+			holder.firstImageViewUserPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_picture);
+			holder.firstTextViewUsername = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_username);
+    		holder.firstTextViewTime = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_time);
+    		holder.firstTextViewContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_content);
+    		holder.firstLayout = (LinearLayout) convertView.findViewById(R.id.friend_list_feed_item_xml_linearlayout_1st_comment);
+    		
 			convertView.setTag(holder);
 		}
 		else {
@@ -90,8 +113,6 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		holder.textViewUsername.setText(items.get(position).getFriendName());
 		holder.textViewPlaceName.setText("@ " + items.get(position).getPlaceName());
 		holder.textViewTime.setText("about " + items.get(position).getActivityTime());
-		
-		
 		
 		if (items.get(position).getShareUrl().equals("")) {
 			holder.webview.setVisibility(View.GONE);
@@ -154,6 +175,29 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		});
 		
 		holder.buttonLike.setText("Like + " + Integer.toString(items.get(position).getLikes()));
+		holder.textViewTotalComments.setText(Integer.toString(items.get(position).getNumberOfComments()) + " comments.");
+		
+		Comment c = items.get(position).getFirstComment(); 
+		if (c.getId() != 1) {
+			holder.firstLayout.setVisibility(View.VISIBLE);
+			holder.firstImageViewUserPicture.setVisibility(View.VISIBLE);
+			holder.firstTextViewUsername.setVisibility(View.VISIBLE);
+			holder.firstTextViewTime.setVisibility(View.VISIBLE);
+			holder.firstTextViewContent.setVisibility(View.VISIBLE);
+			
+			imageLoader.displayImage(c.getPictureUrl(), holder.firstImageViewUserPicture);
+			holder.firstTextViewUsername.setText(c.getUsername());
+			holder.firstTextViewTime.setText(c.getTime());
+			holder.firstTextViewContent.setText(c.getContent());
+		}
+		else {
+			holder.firstLayout.setVisibility(View.GONE);
+			holder.firstImageViewUserPicture.setVisibility(View.GONE);
+			holder.firstTextViewUsername.setVisibility(View.GONE);
+			holder.firstTextViewTime.setVisibility(View.GONE);
+			holder.firstTextViewContent.setVisibility(View.GONE);
+		}
+		
 		return convertView;
 	}
 	

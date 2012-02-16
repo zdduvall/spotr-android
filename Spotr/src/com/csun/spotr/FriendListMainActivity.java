@@ -33,7 +33,7 @@ public class FriendListMainActivity
 		Intent intent; 
 
 		// Create an Intent to launch an Activity for the tab (to be reused)
-		intent = new Intent().setClass(this, FriendListActivity.class); 
+		intent = new Intent().setClass(getApplicationContext(), FriendListActivity.class); 
 		// Initialize a TabSpec for each tab and add it to the TabHost
 		spec = tabHost
 				.newTabSpec("All Friends")
@@ -42,14 +42,14 @@ public class FriendListMainActivity
 		tabHost.addTab(spec);
 
 		// Do the same for the other tabs
-		intent = new Intent().setClass(this, FriendListActionActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), FriendListActionActivity.class);
 		spec = tabHost
 				.newTabSpec("Find")
 				.setIndicator("Find", res.getDrawable(R.drawable.place_activity_tab))
 				.setContent(intent);
 		tabHost.addTab(spec);
 
-		intent = new Intent().setClass(this, FriendListFeedActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), FriendListFeedActivity.class);
 		spec = tabHost
 				.newTabSpec("Friend Feeds")
 				.setIndicator("Friend Feeds", res.getDrawable(R.drawable.place_activity_tab))
