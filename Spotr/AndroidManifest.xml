@@ -401,12 +401,12 @@
             </intent-filter>
         </activity>
 
-        <!-- CreateLostItemActivity -->
+        <!-- CreateFinderActivity -->
         <activity
-            android:name=".CreateLostItemActivity"
+            android:name=".CreateFinderActivity"
             android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
-                <action android:name="com.csun.spotr.CreateLostItemActivity" />
+                <action android:name="com.csun.spotr.CreateFinderActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

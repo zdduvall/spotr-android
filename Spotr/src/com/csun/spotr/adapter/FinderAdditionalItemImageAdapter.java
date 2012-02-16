@@ -26,7 +26,7 @@ public class FinderAdditionalItemImageAdapter extends BaseAdapter {
 		this.context = c;
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = new ImageLoader(context.getApplicationContext());
+		imageLoader = new ImageLoader(c.getApplicationContext());
 		TypedArray ta = context.obtainStyledAttributes(R.styleable.galery_style);
 		background = ta.getResourceId(R.styleable.galery_style_android_galleryItemBackground, 1);
 		ta.recycle();

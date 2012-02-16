@@ -4,52 +4,60 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/finder_item_detail_xml_name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
+        android:text="Name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/finder_item_detail_xml_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="No name found." />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/finder_item_detail_xml_desc_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
+        android:text="Description"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/finder_item_detail_xml_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="No item description found." />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/finder_item_detail_xml_user_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
+        android:text="Posted by"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/finder_item_detail_xml_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="No username found." />
+    
+    <TextView
+        android:id="@+id/finder_item_detail_xml_points_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reward Value"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/finder_item_detail_xml_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No reward value found." />
 
     <Gallery
         android:id="@+id/finder_item_detail_xml_gallery"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <RatingBar
-        android:id="@+id/ratingBar1"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

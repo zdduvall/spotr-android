@@ -3,8 +3,6 @@ package com.csun.spotr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -19,19 +17,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.csun.spotr.adapter.FinderItemAdapter;
-import com.csun.spotr.adapter.UserItemAdapter;
 import com.csun.spotr.core.adapter_item.SeekingItem;
-import com.csun.spotr.core.adapter_item.UserItem;
-import com.csun.spotr.custom_gui.DraggableGridView;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.util.JsonHelper;
 
@@ -66,7 +58,7 @@ public class FinderActivity extends Activity {
 		
 		buttonCreateItem.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), CreateLostItemActivity.class);
+				Intent intent = new Intent(getApplicationContext(), CreateFinderActivity.class);
 				startActivity(intent);
 			}
 		});
