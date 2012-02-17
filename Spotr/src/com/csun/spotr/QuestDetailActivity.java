@@ -11,10 +11,9 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +21,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.csun.spotr.core.adapter_item.QuestDetailItem;
 import com.csun.spotr.singleton.CurrentUser;
@@ -35,21 +34,23 @@ import com.csun.spotr.adapter.QuestDetailItemAdapter;
 public class QuestDetailActivity extends Activity {
 	private static final String TAG = "(QuestDetailActivity)";
 	private static final String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
+	private static final String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
 	private ListView questDetailListView;
 	private QuestDetailItemAdapter questDetailItemAdapter;
 	private List<QuestDetailItem> questDetailList = new ArrayList<QuestDetailItem>();
 
 	private int questId;
 	private int questPoints = 0;
-	private int questCompleted = 0;
-	private int numQuest = 0;
-	private int spotId;
+	private int spotCompleted = 0;
+	private static int numQuest = 0;
+	private int spotId = 0;
 
 	static final int DO_SPOT_CHALLENGE = 1;
 
 	private TextView playernameTextView;
 	private TextView pointsTextView;
 	private TextView challengedoneTextView;
+	private ProgressBar progressbar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,19 +69,27 @@ public class QuestDetailActivity extends Activity {
 		playernameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_playername);
 		pointsTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_points);
 		challengedoneTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_challengedone);
+		progressbar = (ProgressBar) findViewById(R.id.quest_detail_progressBar);
 
 		playernameTextView.setText(CurrentUser.getCurrentUser().getUsername());
-
+	//	progressbar.setProgress(questCompleted/numQuest);
+		
 		// handle event when click on specific quest
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
-				Bundle extras = new Bundle();
-				extras.putInt("place_id", questDetailList.get(position).getId());
-				extras.putInt("position", position);
-				intent.putExtras(extras);
-				startActivityForResult(intent, DO_SPOT_CHALLENGE);
-
+			//	if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
+				//{
+					
+				//}
+				//else
+				{
+					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
+					Bundle extras = new Bundle();
+					extras.putInt("place_id", questDetailList.get(position).getId());
+					extras.putInt("position", position);
+					intent.putExtras(extras);
+					startActivityForResult(intent, DO_SPOT_CHALLENGE);
+				}
 			}
 		});
 
@@ -92,7 +101,7 @@ public class QuestDetailActivity extends Activity {
 
 	}
 
-	private class GetQuestDetailTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
+	private static class GetQuestDetailTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
 
 		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<QuestDetailActivity> ref;
@@ -118,8 +127,8 @@ public class QuestDetailActivity extends Activity {
 			// send user id
 			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
 			// send quest id
-			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(questId)));
-			clientData.add(new BasicNameValuePair("spot_id", Integer.toString(spotId)));
+			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
+			clientData.add(new BasicNameValuePair("spot_id", Integer.toString(ref.get().spotId)));
 			// retrieve data from server
 			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_DETAIL_URL, clientData);
 			if (userJsonArray != null) {
@@ -138,7 +147,8 @@ public class QuestDetailActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			challengedoneTextView.setText(Integer.toString(questCompleted) + "/" + Integer.toString(numQuest));
+			ref.get().challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
+			ref.get().progressbar.setProgress(100*ref.get().spotCompleted/numQuest);
 			detach();
 		}
 
@@ -151,6 +161,34 @@ public class QuestDetailActivity extends Activity {
 		}
 	}
 
+	private static class GiveQuestPointTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
+
+		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
+		private WeakReference<QuestDetailActivity> ref;
+		private JSONArray userJsonArray = null;
+		
+		public GiveQuestPointTask(QuestDetailActivity a) {
+			attach(a);
+		}
+		public void attach(QuestDetailActivity a) {
+			ref = new WeakReference<QuestDetailActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+
+		@Override
+		protected Boolean doInBackground(Integer... params) {
+			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			// send quest id
+			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
+			// retrieve data from server
+			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, clientData);
+			
+			return null;
+		}
+	}
 	@Override
 	public void onPause() {
 		Log.v(TAG, "I'm paused");
@@ -160,7 +198,7 @@ public class QuestDetailActivity extends Activity {
 	public void updateAsyncTaskProgress(QuestDetailItem q) {
 		questDetailList.add(q);
 		if (q.getStatus().equalsIgnoreCase("done")) {
-			this.questCompleted++;
+			this.spotCompleted++;
 		}
 		questDetailItemAdapter.notifyDataSetChanged();
 	}
@@ -170,10 +208,54 @@ public class QuestDetailActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				int position = data.getExtras().getInt("position");
 				spotId = questDetailList.get(position).getId();
+				if (this.spotCompleted == numQuest-1)
+				{
+					this.showDialog(0);
+					new GiveQuestPointTask(this).execute();
+				}
+				this.spotCompleted = 0;
 				questDetailList.clear();
 				questDetailItemAdapter.notifyDataSetChanged();
 				new GetQuestDetailTask(this).execute();
 			}
 		}
+	}
+	
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case 0:
+			return new 
+				AlertDialog.Builder(this)
+					.setIcon(R.drawable.ic_main_menu_treasure_pressed)
+					.setTitle("Congratulation!")
+					.setMessage("You have completed the quest!!!")
+					.setPositiveButton("Quest List", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							Intent data1 = new Intent();
+							setResult(RESULT_OK, data1);
+							finish();
+							
+						}
+					})
+					.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dialog.dismiss();
+							}
+						}).create();
+					
+		
+		case 1: 
+			return new 
+					AlertDialog.Builder(this)
+						.setIcon(R.drawable.error_circle)
+						.setTitle("Error Message")
+						.setMessage("<undefined>")
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								
+							}
+						}).create();
+		}
+		return null;
 	}
 }

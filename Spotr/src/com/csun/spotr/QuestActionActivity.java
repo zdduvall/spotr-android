@@ -104,6 +104,7 @@ public class QuestActionActivity
 						Integer.toString(currentPlaceId),
 						Integer.toString(c.getId())
 					);
+					
 				}
 				else if (c.getType() == Challenge.Type.WRITE_ON_WALL) {
 					Intent intent = new Intent("com.csun.spotr.WriteOnWallActivity");
@@ -214,7 +215,7 @@ public class QuestActionActivity
 
 	}
 	
-	private class CheckInTask 
+	private static class CheckInTask 
 		extends AsyncTask<String, Integer, String> 
 			implements IAsyncTask<QuestActionActivity> {
 		
@@ -268,11 +269,12 @@ public class QuestActionActivity
 		@Override
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
-				ref.get().list.getChildAt(ref.get().currentChosenItem).setBackgroundColor(Color.GRAY);
+				//ref.get().list.getChildAt(ref.get().currentChosenItem).setBackgroundColor(Color.GRAY);
 				Intent data1 = new Intent();
 				
 				data1.setData(Uri.parse("done"));
-				setResult(RESULT_OK, data1);
+				ref.get().setResult(RESULT_OK, data1);
+				//ref.get().finish();
 			}
 			else {
 				ref.get().showDialog(0);
@@ -333,7 +335,11 @@ public class QuestActionActivity
 					.setMessage("You checked in recently. You can only check in once every 24 hours. :(!")
 					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							
+							Intent data1 = new Intent();
+							data1.putExtra("position", currentSpotPosition);
+							setResult(RESULT_CANCELED, data1);
+							//---closes the activity---
+							//finish();
 						}
 					}).create();
 		
