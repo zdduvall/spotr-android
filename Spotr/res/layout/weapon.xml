@@ -8,16 +8,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40dp"
-        android:text="Weapons"
+        android:text="Power-ups"
         android:layout_gravity="center"
-        android:textColor="#E3D219"
+        android:textColor="#0e1f5b"
         android:textStyle="bold" />
 
     <ListView
         android:id="@+id/weapon_xml_listview_weapons"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#F2F2F2"
+        android:background="#d8dfea"
         />
 
 </LinearLayout>

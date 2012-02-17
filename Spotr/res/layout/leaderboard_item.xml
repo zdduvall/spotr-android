@@ -17,6 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
+        android:textColor="#0e1f5b"
 		/>
 
     <TextView
@@ -24,6 +25,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textColor="#0e1f5b"
         />
 
     <TextView
@@ -31,6 +33,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textColor="#0e1f5b"
         />
 
     <TextView
@@ -38,6 +41,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textColor="#dd3c10"
         />
 
 </LinearLayout>

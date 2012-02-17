@@ -9,6 +9,7 @@ import com.csun.spotr.util.ImageLoader;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +63,9 @@ public class WeaponAdapter extends BaseAdapter {
 		}
 
 		holder.textViewTitle.setText(items.get(position).getTitle());
-		holder.textViewPower.setText(Double.toString(items.get(position).getPointPercentage()));
-		holder.textViewTimesLeft.setText(Integer.toString(items.get(position).getTimesLeft()));
+		holder.textViewPower.setText("+" + Double.toString(100.0 * items.get(position).getPointPercentage()) + "%");
+		String source = "<b>times left: </b>" + Integer.toString(items.get(position).getTimesLeft());
+		holder.textViewTimesLeft.setText(Html.fromHtml(source));
 		imageLoader.displayImage(items.get(position).getIconUrl(), holder.imageViewIcon);
 		return convertView;
 	}

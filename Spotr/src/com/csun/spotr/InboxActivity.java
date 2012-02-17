@@ -73,7 +73,7 @@ public class InboxActivity
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(InboxActivity.this, inboxList.get(position).getMessage(), Toast.LENGTH_LONG).show();
+				Toast.makeText(InboxActivity.this.getApplicationContext(), inboxList.get(position).getMessage(), Toast.LENGTH_LONG).show();
 			}
 		});
 		
