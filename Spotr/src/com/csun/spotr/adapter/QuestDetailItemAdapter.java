@@ -62,10 +62,10 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 		holder.nameTextView.setText(items.get(position).getName());
 		
 		if (items.get(position).getStatus().equals("done")) {
-			holder.layout.setBackgroundColor(Color.CYAN);
+			holder.nameTextView.setTextColor(Color.CYAN);
 		}
 		else {
-			holder.layout.setBackgroundColor(Color.BLACK);
+			holder.nameTextView.setTextColor(Color.WHITE);
 		}
 		
 		holder.descriptionTextView.setText(items.get(position).getDescription());

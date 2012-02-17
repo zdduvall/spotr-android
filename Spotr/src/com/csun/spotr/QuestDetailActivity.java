@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,14 +43,17 @@ public class QuestDetailActivity extends Activity {
 	private int questId;
 	private int questPoints = 0;
 	private int questCompleted = 0;
-	private int numQuest = 0;
-	private int spotId;
+	private static int numQuest = 0;
+	private int spotId = 0;
 
 	static final int DO_SPOT_CHALLENGE = 1;
 
 	private TextView playernameTextView;
 	private TextView pointsTextView;
 	private TextView challengedoneTextView;
+	private ProgressBar progressbar;
+	
+	private int pStatus = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +72,11 @@ public class QuestDetailActivity extends Activity {
 		playernameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_playername);
 		pointsTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_points);
 		challengedoneTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_challengedone);
+		progressbar = (ProgressBar) findViewById(R.id.quest_detail_progressBar);
 
 		playernameTextView.setText(CurrentUser.getCurrentUser().getUsername());
-
+	//	progressbar.setProgress(questCompleted/numQuest);
+		
 		// handle event when click on specific quest
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,7 +98,7 @@ public class QuestDetailActivity extends Activity {
 
 	}
 
-	private class GetQuestDetailTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
+	private static class GetQuestDetailTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
 
 		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<QuestDetailActivity> ref;
@@ -118,8 +124,8 @@ public class QuestDetailActivity extends Activity {
 			// send user id
 			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
 			// send quest id
-			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(questId)));
-			clientData.add(new BasicNameValuePair("spot_id", Integer.toString(spotId)));
+			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
+			clientData.add(new BasicNameValuePair("spot_id", Integer.toString(ref.get().spotId)));
 			// retrieve data from server
 			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_DETAIL_URL, clientData);
 			if (userJsonArray != null) {
@@ -138,7 +144,10 @@ public class QuestDetailActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			challengedoneTextView.setText(Integer.toString(questCompleted) + "/" + Integer.toString(numQuest));
+			ref.get().challengedoneTextView.setText(Integer.toString(ref.get().questCompleted) + "/" + Integer.toString(numQuest));
+			ref.get().progressbar.setProgress(100*ref.get().questCompleted/numQuest);
+			//ref.get().questCompleted = 0;
+			//ref.get().questId = 0;
 			detach();
 		}
 
@@ -170,6 +179,7 @@ public class QuestDetailActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				int position = data.getExtras().getInt("position");
 				spotId = questDetailList.get(position).getId();
+				this.questCompleted = 0;
 				questDetailList.clear();
 				questDetailItemAdapter.notifyDataSetChanged();
 				new GetQuestDetailTask(this).execute();
