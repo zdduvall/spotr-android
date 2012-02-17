@@ -69,7 +69,7 @@ public class InboxItemAdapter extends BaseAdapter {
 		}
 
 		holder.textViewUsername.setText(items.get(position).getUsername());
-		holder.textViewTime.setText(items.get(position).getTime());
+		holder.textViewTime.setText(items.get(position).getTime().toString().substring(0, 10));
 		holder.textViewMessage.setText(items.get(position).getMessage());
 		imageLoader.displayImage(items.get(position).getUserPictureUrl(), holder.imageViewPicture);
 		

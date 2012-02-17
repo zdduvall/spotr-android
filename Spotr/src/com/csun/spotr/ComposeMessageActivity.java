@@ -55,7 +55,7 @@ public class ComposeMessageActivity extends Activity {
 		editTextMessage = (EditText) findViewById(R.id.compose_message_xml_edittext_message);
 		textViewCount = (TextView) findViewById(R.id.compose_message_xml_textview_character_count);
 		buttonSend = (Button) findViewById(R.id.compose_message_xml_button_send);
-		buttonSend.setClickable(false);
+		editTextTo.setEnabled(false);
 
 		buttonChooseUser.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -67,11 +67,8 @@ public class ComposeMessageActivity extends Activity {
 		editTextMessage.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				textViewCount.setText(String.valueOf(s.length()) + "/160");
-				if (s.length() > 160) {
-					editTextMessage.setEnabled(false);
-				}
-				else {
-					editTextMessage.setEnabled(true);
+				if (s.length() > 0 && editTextTo.getText().toString().length() > 0) {
+					buttonSend.setEnabled(true);
 				}
 			}
 
@@ -83,13 +80,6 @@ public class ComposeMessageActivity extends Activity {
 
 			}
 		});
-
-		if (canSend()) {
-			buttonSend.setClickable(true);
-		}
-		else {
-			buttonSend.setClickable(false);
-		}
 
 		buttonSend.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -148,7 +138,7 @@ public class ComposeMessageActivity extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				Toast.makeText(ref.get().getApplicationContext(), "Message is sent!", Toast.LENGTH_LONG).show();
+				Toast.makeText(ref.get().getApplicationContext(), "Message is sent!", Toast.LENGTH_SHORT).show();
 			}
 		}
 

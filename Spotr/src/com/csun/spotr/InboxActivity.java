@@ -8,11 +8,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.csun.spotr.adapter.CommentItemAdapter;
 import com.csun.spotr.adapter.InboxItemAdapter;
-import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.Inbox;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
@@ -25,6 +22,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -32,7 +30,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -72,7 +73,7 @@ public class InboxActivity
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
+				Toast.makeText(InboxActivity.this, inboxList.get(position).getMessage(), Toast.LENGTH_LONG).show();
 			}
 		});
 		
