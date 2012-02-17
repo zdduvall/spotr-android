@@ -11,6 +11,7 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class QuestDetailActivity extends Activity {
 
 	private int questId;
 	private int questPoints = 0;
-	private int questCompleted = 0;
+	private int spotCompleted = 0;
 	private static int numQuest = 0;
 	private int spotId = 0;
 
@@ -80,13 +81,19 @@ public class QuestDetailActivity extends Activity {
 		// handle event when click on specific quest
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
-				Bundle extras = new Bundle();
-				extras.putInt("place_id", questDetailList.get(position).getId());
-				extras.putInt("position", position);
-				intent.putExtras(extras);
-				startActivityForResult(intent, DO_SPOT_CHALLENGE);
-
+				if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
+				{
+					
+				}
+				else
+				{
+					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
+					Bundle extras = new Bundle();
+					extras.putInt("place_id", questDetailList.get(position).getId());
+					extras.putInt("position", position);
+					intent.putExtras(extras);
+					startActivityForResult(intent, DO_SPOT_CHALLENGE);
+				}
 			}
 		});
 
@@ -144,8 +151,8 @@ public class QuestDetailActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			ref.get().challengedoneTextView.setText(Integer.toString(ref.get().questCompleted) + "/" + Integer.toString(numQuest));
-			ref.get().progressbar.setProgress(100*ref.get().questCompleted/numQuest);
+			ref.get().challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
+			ref.get().progressbar.setProgress(100*ref.get().spotCompleted/numQuest);
 			//ref.get().questCompleted = 0;
 			//ref.get().questId = 0;
 			detach();
@@ -169,7 +176,8 @@ public class QuestDetailActivity extends Activity {
 	public void updateAsyncTaskProgress(QuestDetailItem q) {
 		questDetailList.add(q);
 		if (q.getStatus().equalsIgnoreCase("done")) {
-			this.questCompleted++;
+			this.spotCompleted++;
+			
 		}
 		questDetailItemAdapter.notifyDataSetChanged();
 	}
@@ -179,11 +187,54 @@ public class QuestDetailActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				int position = data.getExtras().getInt("position");
 				spotId = questDetailList.get(position).getId();
-				this.questCompleted = 0;
+				if (this.spotCompleted == numQuest)
+				{
+					this.showDialog(0);
+					
+				}
+				this.spotCompleted = 0;
 				questDetailList.clear();
 				questDetailItemAdapter.notifyDataSetChanged();
 				new GetQuestDetailTask(this).execute();
 			}
 		}
+	}
+	
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case 0:
+			return new 
+				AlertDialog.Builder(this)
+					.setIcon(R.drawable.ic_main_menu_treasure_pressed)
+					.setTitle("Congratulation!")
+					.setMessage("You have completed the quest!!!")
+					.setPositiveButton("Quest List", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							Intent data1 = new Intent();
+							setResult(RESULT_OK, data1);
+							finish();
+							
+						}
+					})
+					.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							dialog.dismiss();
+							}
+						}).create();
+					
+		
+		case 1: 
+			return new 
+					AlertDialog.Builder(this)
+						.setIcon(R.drawable.error_circle)
+						.setTitle("Error Message")
+						.setMessage("<undefined>")
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								
+							}
+						}).create();
+		}
+		return null;
 	}
 }

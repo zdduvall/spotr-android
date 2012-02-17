@@ -46,6 +46,7 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 		TextView descriptionTextView;
 	}
 
+	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.quest_item, null);
@@ -62,10 +63,12 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 		holder.nameTextView.setText(items.get(position).getName());
 		
 		if (items.get(position).getStatus().equals("done")) {
-			holder.nameTextView.setTextColor(Color.CYAN);
+			holder.nameTextView.setTextColor(Color.parseColor("#dd3c10"));
+			holder.layout.setClickable(false);
 		}
 		else {
-			holder.nameTextView.setTextColor(Color.WHITE);
+			holder.nameTextView.setTextColor(Color.parseColor("#3b5998"));
+			holder.layout.setClickable(true);
 		}
 		
 		holder.descriptionTextView.setText(items.get(position).getDescription());

@@ -19,6 +19,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#595454" />
+            android:textColor="#95a5c6" />
 
 </LinearLayout>

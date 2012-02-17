@@ -2,6 +2,7 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#eceff5"
     >
     
     <TableRow android:gravity="center_horizontal|fill_horizontal" >
@@ -18,16 +19,14 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="100"
-                android:text="wewew"
-                android:textColor="@android:color/white"
+                android:text=""
+                android:textColor="#3b5998"
                 android:textSize="40dp"
                 android:textStyle="bold" />
 
         </LinearLayout>
     </TableRow>
     <TableRow >
-
-
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -46,17 +45,14 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_launcher" />
 
-
-
-
-
-
             <TableLayout
                 android:layout_width="200dp"
                 android:layout_height="100dp"
                 android:layout_gravity="fill_vertical"
                 android:gravity="center_vertical"
-                android:stretchColumns="1" >
+                android:stretchColumns="1"
+                android:background="#cccccc" >
+                
 
                 <TableRow >
 
@@ -71,7 +67,7 @@
                         android:id="@+id/quest_detail_xml_textview_points"
                         android:gravity="right"
                         android:layout_marginRight="5dp"
-                        android:text="" />
+                        android:textColor="#dd3c10"/>
                 </TableRow>
 
                 <TableRow >
@@ -87,7 +83,7 @@
                         android:id="@+id/quest_detail_xml_textview_challengedone"
                         android:gravity="right"
                         android:layout_marginRight="5dp"
-                        android:text="" />
+                        android:textColor="#dd3c10" />
                 </TableRow>
 
                 <TableRow >
