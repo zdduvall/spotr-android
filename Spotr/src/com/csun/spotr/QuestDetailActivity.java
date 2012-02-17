@@ -12,10 +12,8 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +23,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.csun.spotr.core.adapter_item.QuestDetailItem;
 import com.csun.spotr.singleton.CurrentUser;
@@ -37,6 +34,7 @@ import com.csun.spotr.adapter.QuestDetailItemAdapter;
 public class QuestDetailActivity extends Activity {
 	private static final String TAG = "(QuestDetailActivity)";
 	private static final String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
+	private static final String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
 	private ListView questDetailListView;
 	private QuestDetailItemAdapter questDetailItemAdapter;
 	private List<QuestDetailItem> questDetailList = new ArrayList<QuestDetailItem>();
@@ -53,8 +51,6 @@ public class QuestDetailActivity extends Activity {
 	private TextView pointsTextView;
 	private TextView challengedoneTextView;
 	private ProgressBar progressbar;
-	
-	private int pStatus = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,11 +77,11 @@ public class QuestDetailActivity extends Activity {
 		// handle event when click on specific quest
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
-				{
+			//	if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
+				//{
 					
-				}
-				else
+				//}
+				//else
 				{
 					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
 					Bundle extras = new Bundle();
@@ -153,8 +149,6 @@ public class QuestDetailActivity extends Activity {
 		protected void onPostExecute(Boolean result) {
 			ref.get().challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
 			ref.get().progressbar.setProgress(100*ref.get().spotCompleted/numQuest);
-			//ref.get().questCompleted = 0;
-			//ref.get().questId = 0;
 			detach();
 		}
 
@@ -167,6 +161,34 @@ public class QuestDetailActivity extends Activity {
 		}
 	}
 
+	private static class GiveQuestPointTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
+
+		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
+		private WeakReference<QuestDetailActivity> ref;
+		private JSONArray userJsonArray = null;
+		
+		public GiveQuestPointTask(QuestDetailActivity a) {
+			attach(a);
+		}
+		public void attach(QuestDetailActivity a) {
+			ref = new WeakReference<QuestDetailActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+
+		@Override
+		protected Boolean doInBackground(Integer... params) {
+			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			// send quest id
+			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
+			// retrieve data from server
+			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, clientData);
+			
+			return null;
+		}
+	}
 	@Override
 	public void onPause() {
 		Log.v(TAG, "I'm paused");
@@ -177,7 +199,6 @@ public class QuestDetailActivity extends Activity {
 		questDetailList.add(q);
 		if (q.getStatus().equalsIgnoreCase("done")) {
 			this.spotCompleted++;
-			
 		}
 		questDetailItemAdapter.notifyDataSetChanged();
 	}
@@ -187,10 +208,10 @@ public class QuestDetailActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				int position = data.getExtras().getInt("position");
 				spotId = questDetailList.get(position).getId();
-				if (this.spotCompleted == numQuest)
+				if (this.spotCompleted == numQuest-1)
 				{
 					this.showDialog(0);
-					
+					new GiveQuestPointTask(this).execute();
 				}
 				this.spotCompleted = 0;
 				questDetailList.clear();

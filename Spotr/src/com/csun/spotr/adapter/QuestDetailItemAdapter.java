@@ -64,11 +64,11 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 		
 		if (items.get(position).getStatus().equals("done")) {
 			holder.nameTextView.setTextColor(Color.parseColor("#dd3c10"));
-			holder.layout.setClickable(false);
+			//holder.layout.setClickable(true);
 		}
 		else {
 			holder.nameTextView.setTextColor(Color.parseColor("#3b5998"));
-			holder.layout.setClickable(true);
+			holder.layout.setClickable(false);
 		}
 		
 		holder.descriptionTextView.setText(items.get(position).getDescription());
