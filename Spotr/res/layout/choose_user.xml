@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#d8dfea"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/choose_user_xml_edittext_user_comment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1">
+    </EditText>
+
+    <ListView
+        android:id="@+id/choose_user_xml_listview"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent" >
+    </ListView>
+
+</LinearLayout>

@@ -20,8 +20,9 @@ public class SpotrActivity extends Activity {
 		Button b1 = (Button) findViewById(R.id.test_login);
 		b1.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
-				Intent i = new Intent("com.csun.spotr.LoginActivity");
+				Intent i = new Intent(getApplicationContext(), LoginActivity.class);
 				startActivity(i);
+				finish();
 			}
 		});
 

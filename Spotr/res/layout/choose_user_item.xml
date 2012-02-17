@@ -1,0 +1,9 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/choose_user_item_xml_textview_username"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="#0e1f5b"
+    android:textStyle="bold"
+    android:textSize="14dp"
+    android:text="username" 
+ />

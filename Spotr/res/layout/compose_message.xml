@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#d8dfea"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/compose_message_xml_edittext_to"
+            android:layout_width="223dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.44"
+            android:hint="To: " >
+        </EditText>
+
+        <Button
+            android:id="@+id/compose_message_xml_button_choose_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/user_icon" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/compose_message_xml_textview_character_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0/160"
+        android:textColor="#000000"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/compose_message_xml_edittext_message"
+        android:layout_width="match_parent"
+        android:gravity="top"
+        android:maxLength="160"
+        android:layout_height="200dp"
+        android:inputType="textMultiLine" >
+
+    </EditText>
+
+    <Button
+        android:id="@+id/compose_message_xml_button_send"
+        style="@style/TreasureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send" />
+
+</LinearLayout>

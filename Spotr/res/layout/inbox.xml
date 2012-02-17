@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="#f7f7f7">
 
     <Button
         android:id="@+id/inbox_xml_button_compose"
@@ -11,9 +12,11 @@
         android:text="Compose Message" />
 
     <ListView
-        android:id="@+id/listView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:id="@+id/inbox_xml_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:background="#eceff5"
+        >
     </ListView>
 
 </LinearLayout>
