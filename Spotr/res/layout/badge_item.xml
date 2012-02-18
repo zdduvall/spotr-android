@@ -3,4 +3,5 @@
     android:layout_width="fill_parent"
     android:layout_height="300dp"
     android:layout_gravity="center"
+    android:background="@drawable/badge_shape"
     android:src="@drawable/ic_launcher" />
