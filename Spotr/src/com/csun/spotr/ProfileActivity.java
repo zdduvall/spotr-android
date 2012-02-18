@@ -78,10 +78,13 @@ public class ProfileActivity
 		adapter = new FriendFeedItemAdapter(this, feedList);
 		listview.setAdapter(adapter);
 		
-		
+		Bundle extrasBundle = getIntent().getExtras();
+		userId = extrasBundle.getInt("user_id");
 
-		task = new GetUserDetailTask(this);
-		task.execute();
+		if (userId != -1) {
+			task = new GetUserDetailTask(this, userId);
+			task.execute();
+		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -138,8 +141,10 @@ public class ProfileActivity
 			implements IAsyncTask<ProfileActivity> {
 		
 		private WeakReference<ProfileActivity> ref;
+		private int userId;
 		
-		public GetUserDetailTask(ProfileActivity a) {
+		public GetUserDetailTask(ProfileActivity a, int userId) {
+			this.userId = userId;
 			attach(a);
 		}
 		
@@ -152,7 +157,7 @@ public class ProfileActivity
 		@Override
 		protected User doInBackground(Void...voids) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
 			
 			// user's detail info
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_DETAIL_URL, data);

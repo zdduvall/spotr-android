@@ -180,7 +180,7 @@ public class FriendListActivity
 
 		myAlertDialog.setNegativeButton("View profile", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
-				Intent intent = new Intent("com.csun.spotr.FriendProfileActivity");
+				Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
 				Bundle extras = new Bundle();
 				extras.putInt("user_id", user.getId());
 				intent.putExtras(extras);
