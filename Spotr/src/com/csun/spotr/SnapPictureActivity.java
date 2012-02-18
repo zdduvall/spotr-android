@@ -110,7 +110,6 @@ public class SnapPictureActivity
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<SnapPictureActivity> {
 		
-		private List<NameValuePair> datas = new ArrayList<NameValuePair>();
 		private WeakReference<SnapPictureActivity> ref;
 		private String picturebyteCode;
 		
@@ -126,6 +125,8 @@ public class SnapPictureActivity
 
 		@Override
 		protected String doInBackground(Void... voids) {
+			
+			List<NameValuePair> datas = new ArrayList<NameValuePair>();
 			// send encoded data to server
 			datas.add(new BasicNameValuePair("image", picturebyteCode));
 			

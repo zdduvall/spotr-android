@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -17,11 +18,14 @@ import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.User;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
+import com.csun.spotr.singleton.CurrentDateTime;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
+import com.csun.spotr.util.UploadFileHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,6 +48,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Description:
@@ -57,6 +62,7 @@ public class ProfileActivity
 	private static final 	String 					GET_USER_DETAIL_URL = "http://107.22.209.62/android/get_user_detail.php";
 	private static final 	String 					GET_USER_FEEDS = "http://107.22.209.62/android/get_current_user_feeds.php";
 	private static final 	String 					GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
+	private static final    String					UPDATE_PICTURE_URL = "http://107.22.209.62/images/upload_user_picture.php";
 	
 	private static final 	int 					CAMERA_PICTURE = 111;
 	private static final 	int 					GALLERY_PICTURE = 222;
@@ -85,6 +91,14 @@ public class ProfileActivity
 			task = new GetUserDetailTask(this, userId);
 			task.execute();
 		}
+		
+		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
+		if (userId == CurrentUser.getCurrentUser().getId()) {
+			imageViewUserPicture.setClickable(true);
+		}
+		else {
+			imageViewUserPicture.setClickable(false);
+		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -103,6 +117,21 @@ public class ProfileActivity
 					temp.setImageBitmap(bitmapUserPicture);
 				}
 			}
+			
+			// create byte stream array
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			
+			// compress picture and add to stream (PNG)
+			bitmapUserPicture.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+			
+			// create raw data src
+			byte[] src = stream.toByteArray();
+			
+			// encode it
+			String byteCode = Base64.encodeBytes(src);
+			
+			UploadPictueTask task = new UploadPictueTask(this, byteCode);
+			task.execute();
 		}
 	}
 
@@ -180,6 +209,8 @@ public class ProfileActivity
 							.placesVisited(array.getJSONObject(0).getInt("users_tbl_places_visited"))
 							.points(array.getJSONObject(0).getInt("users_tbl_points"))
 							.imageUrl(array.getJSONObject(0).getString("users_tbl_user_image_url"))
+							.numFriends(array.getJSONObject(0).getInt("num_friends"))
+							.numBadges(array.getJSONObject(0).getInt("num_badges"))
 								.build();
 				
 				if (isCancelled()) {
@@ -271,6 +302,73 @@ public class ProfileActivity
 		}
 	}
 	
+	private static class UploadPictueTask 
+    	extends AsyncTask<Void, Integer, String> 
+    		implements IAsyncTask<ProfileActivity> {
+    	
+    	private WeakReference<ProfileActivity> ref;
+    	private String picturebyteCode;
+    	
+    	public UploadPictueTask(ProfileActivity a, String pbc) {
+    		attach(a);
+    		picturebyteCode = pbc;
+    	}
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		
+    	}
+    
+    	@Override
+    	protected String doInBackground(Void... voids) {
+    		List<NameValuePair> datas = new ArrayList<NameValuePair>();
+    		// send encoded data to server
+    		datas.add(new BasicNameValuePair("image", picturebyteCode));
+    		
+    		// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
+    		// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
+    		datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
+    		
+    		// send the rest of data
+    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+    		
+    		
+    		// get JSON to check result
+    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
+    		String result = "";
+    		try {
+    			result = json.getString("result");
+    		} 
+    		catch (JSONException e) {
+    			Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+    		}
+    		return result;
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(String result) {
+    		if (result.equals("success")) {
+    			/*
+    			Toast.makeText(ref.get().getApplicationContext(), "Upload picture done!", Toast.LENGTH_SHORT).show();
+    			Intent intent = new Intent();
+    			intent.setData(Uri.parse("done"));
+    			ref.get().setResult(RESULT_OK, intent);
+    			ref.get().finish();
+    			*/
+    		}
+    		
+    		detach();
+    	}
+    	
+    	public void attach(ProfileActivity a) {
+    		ref = new WeakReference<ProfileActivity>(a);
+    	}
+    	
+    	public void detach() {
+    		ref.clear();
+    	}
+    }
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -340,6 +438,9 @@ public class ProfileActivity
 			}
 		});
 		
+		TextView textViewName = (TextView) findViewById(R.id.profile_xml_textview_profilename);
+		textViewName.setText(u.getUsername());
+		
 		TextView textViewChallengesDone = (TextView) findViewById(R.id.profile_xml_textview_challenges_done);
 		textViewChallengesDone.setText(Integer.toString(u.getChallengesDone()));
 		
@@ -348,5 +449,11 @@ public class ProfileActivity
 		
 		TextView textViewPoints = (TextView) findViewById(R.id.profile_xml_textview_points);
 		textViewPoints.setText(Integer.toString(u.getPoints()));
+		
+		TextView textViewNumFriends = (TextView) findViewById(R.id.profile_xml_textview_numfriends);
+		textViewNumFriends.setText(Integer.toString(u.getNumFriends()));
+		
+		TextView textViewNumBadges = (TextView) findViewById(R.id.profile_xml_textview_numrewards);
+		textViewNumBadges.setText(Integer.toString(u.getNumBadges()));
 	}
 }
