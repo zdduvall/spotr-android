@@ -56,14 +56,7 @@ public class LeaderboardActivity extends Activity {
 		adapter = new LeaderboardItemAdapter(LeaderboardActivity.this, userList);
 		listview.setAdapter(adapter);
 		
-		new GetUsersTask().execute();
-				
-		Button buttonWhere = (Button) findViewById(R.id.leaderboard_xml_button_refresh);
-		buttonWhere.setOnClickListener(new OnClickListener() {
-			public void onClick(final View v) {
-				new GetUsersTask().execute();
-			}
-		});		
+		new GetUsersTask().execute();				
 	}
 	
 	private class GetUsersTask extends AsyncTask<Void, User, Boolean> {
@@ -184,7 +177,7 @@ public class LeaderboardActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
+		inflater.inflate(R.menu.leaderboard_menu, menu);
 		return true;
 	}
 	
@@ -209,6 +202,11 @@ public class LeaderboardActivity extends Activity {
 				intent = new Intent("com.csun.spotr.MainMenuActivity");
 				startActivity(intent);
 				finish();
+				break;
+			case R.id.options_menu_xml_item_refresh_icon:
+				userList.clear();
+				adapter.notifyDataSetChanged();
+				new GetUsersTask().execute();
 				break;
 		}
 		return true;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" 
+	android:layout_height="match_parent"
 	android:orientation="vertical" >
 
     <!-- Header -->    <include
@@ -11,27 +11,7 @@
     <!-- Player listings -->
     <ListView
         android:id="@+id/leaderboard_xml_listview_users"
-        android:layout_above="@+id/leaderboard_xml_linearlayout_bottom_control"
-        android:layout_below="@id/leaderboard_xml_header"
         style="@style/RankListing">
     </ListView>    
-  
-    <!-- Footer Buttons -->
-    <LinearLayout
-        android:id="@+id/leaderboard_xml_linearlayout_bottom_control"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:background="@color/aluminum1" >
-
-        <!-- Refresh -->
-        <Button
-            android:id="@+id/leaderboard_xml_button_refresh"
-            style="@style/TreasureButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/leaderboard_xml_refresh" />
-    </LinearLayout>
-
-</RelativeLayout>
+    
+</LinearLayout>
