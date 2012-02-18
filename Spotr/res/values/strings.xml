@@ -67,4 +67,10 @@
         <item>Sixteen</item>
     </string-array>
     <string name="place_action_item_xml_string_pts">pts</string>
+    <string name="leaderboard_xml_header_rank">RANK</string>
+    <string name="leaderboard_xml_header_username">PLAYER</string>
+    <string name="leaderboard_xml_header_CD">CD</string>
+    <string name="leaderboard_xml_header_PV">PV</string>
+    <string name="leaderboard_xml_header_points">PTS</string>
+    <string name="leaderboard_xml_refresh">Refresh</string>
 </resources>

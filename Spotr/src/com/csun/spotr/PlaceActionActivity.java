@@ -98,8 +98,8 @@ public class PlaceActionActivity
 		adapter = new PlaceActionItemAdapter(this, challengeList);
 		
 		// add top padding to first item and add bottom padding to last item
-		TextView padding = new TextView(getApplicationContext());
-		padding.setHeight(0);
+//		TextView padding = new TextView(getApplicationContext());
+//		padding.setHeight(0);
 		
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
 		buttonTreasure.setOnClickListener(new OnClickListener() {
@@ -110,13 +110,14 @@ public class PlaceActionActivity
 		});
 		
 		
-		list.addHeaderView(padding, null, false);
-		list.addFooterView(padding, null, false);
+//		list.addHeaderView(padding, null, false);
+//		list.addFooterView(padding, null, false);
 		list.setAdapter(adapter);
 				
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Challenge c = (Challenge) list.getAdapter().getItem(position);//challengeList.get(position);
+//				Challenge c = (Challenge) list.getAdapter().getItem(position);
+				Challenge c = (Challenge) challengeList.get(position);
 				// set current item chosen so that later we can make some side effects
 				currentChosenItem = position;
 								

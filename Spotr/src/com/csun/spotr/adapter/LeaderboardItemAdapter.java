@@ -9,6 +9,8 @@ import com.csun.spotr.singleton.CurrentUser;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +22,16 @@ public class LeaderboardItemAdapter extends BaseAdapter {
 	private List<User> items;
 	private static LayoutInflater inflater;
 	private ItemViewHolder holder;
+	private boolean isFound;
+	private int positionFound;
 	
 	public LeaderboardItemAdapter(Context c, List<User> items) {
 		super();
 		this.context = c.getApplicationContext();
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.items = items;
+		isFound = false;
+		positionFound = 0;
 	}
 
 	public int getCount() {
@@ -38,6 +44,11 @@ public class LeaderboardItemAdapter extends BaseAdapter {
 
 	public long getItemId(int position) {
 		return position;
+	}
+	
+	public void setPositionFound(int position) {
+		isFound = true;
+		positionFound = position;
 	}
 
 	private static class ItemViewHolder {
@@ -53,7 +64,8 @@ public class LeaderboardItemAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.leaderboard_item, null);
 			
 			if (items.get(position).getId() == CurrentUser.getCurrentUser().getId()) {
-				CurrentUser.setSelectedPostion(position);
+				// add 1 because we wish to set the rank, not the item's index in the list
+				CurrentUser.setRank(position + 1);
 			}
 			
 			holder = new ItemViewHolder();
@@ -73,6 +85,38 @@ public class LeaderboardItemAdapter extends BaseAdapter {
 		holder.textViewChallengesDone.setText(Integer.toString(items.get(position).getChallengesDone()));
 		holder.textViewPlacesVisited.setText(Integer.toString(items.get(position).getPlacesVisited()));
 		holder.textViewPoints.setText(Integer.toString(items.get(position).getPoints()));
+		
+		// check if current view belongs to a player's requested view
+		if (isFound && position == positionFound) {
+			holder.textViewRank.setTextColor(convertView.getResources().getColor(R.color.aluminum6));
+			holder.textViewUsername.setTextColor(convertView.getResources().getColor(R.color.aluminum6));
+			holder.textViewChallengesDone.setTextColor(convertView.getResources().getColor(R.color.aluminum6));
+			holder.textViewPlacesVisited.setTextColor(convertView.getResources().getColor(R.color.aluminum6));
+			holder.textViewPoints.setTextColor(convertView.getResources().getColor(R.color.aluminum6));
+			holder.textViewRank.setTypeface(null, Typeface.BOLD);
+			holder.textViewUsername.setTypeface(null, Typeface.BOLD);
+			holder.textViewChallengesDone.setTypeface(null, Typeface.BOLD);
+			holder.textViewPlacesVisited.setTypeface(null, Typeface.BOLD);
+			holder.textViewPoints.setTypeface(null, Typeface.BOLD);
+		}
+		else {
+			holder.textViewRank.setTextColor(convertView.getResources().getColor(R.color.aluminum4));
+			holder.textViewUsername.setTextColor(convertView.getResources().getColor(R.color.aluminum4));
+			holder.textViewChallengesDone.setTextColor(convertView.getResources().getColor(R.color.aluminum4));
+			holder.textViewPlacesVisited.setTextColor(convertView.getResources().getColor(R.color.aluminum4));
+			holder.textViewPoints.setTextColor(convertView.getResources().getColor(R.color.aluminum4));
+			holder.textViewRank.setTypeface(null, Typeface.NORMAL);
+			holder.textViewUsername.setTypeface(null, Typeface.NORMAL);
+			holder.textViewChallengesDone.setTypeface(null, Typeface.NORMAL);
+			holder.textViewPlacesVisited.setTypeface(null, Typeface.NORMAL);
+			holder.textViewPoints.setTypeface(null, Typeface.NORMAL);
+		}
+		
+		// alternate row color
+		if (position % 2 == 0)
+			convertView.setBackgroundResource(R.color.aluminum2);
+		else
+			convertView.setBackgroundResource(R.color.aluminum1);
 		return convertView;
 	}
 }

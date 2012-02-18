@@ -8,3 +8,4 @@
     <item 
     	android:drawable="@drawable/ic_tab_example_unselected"/>
 </selector>
+<!-- OLD TABS -->

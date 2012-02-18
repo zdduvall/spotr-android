@@ -5,7 +5,7 @@ import com.csun.spotr.core.User;
 public class CurrentUser {
 	private static final String	TAG = "(CurrentUser)";
 	private static User	user;
-	private static int selectedPostion = 0;
+	private static int rank = 0;
 	
 	public static synchronized void setCurrentUser(int id, String username, String password) {
 		user = new User.Builder(id, username, password).build();
@@ -15,11 +15,11 @@ public class CurrentUser {
 		return user;
 	}
 	
-	public static synchronized void setSelectedPostion(int position) {
-		selectedPostion = position;
+	public static synchronized void setRank(int position) {
+		rank = position;
 	}
 	
-	public static int getSelectedPosition() {
-		return selectedPostion;
+	public static int getRank() {
+		return rank;
 	}
 }

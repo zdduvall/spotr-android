@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/leaderboard_xml_linearlayout_title"
+	style="@style/LeaderboardRow.Header" >
+
+    <!-- Rank -->
+    <TextView
+        android:id="@+id/leaderboard_xml_textview_rank"
+        style="@style/LeaderboardRank.Header"
+        android:text="@string/leaderboard_xml_header_rank" />
+
+    <!-- Username -->
+    <TextView
+        android:id="@+id/leaderboard_xml_textview_username"
+        style="@style/LeaderboardUsername.Header"
+        android:text="@string/leaderboard_xml_header_username" />
+
+    <!-- Number of Challenges Done -->
+    <TextView
+        android:id="@+id/leaderboard_xml_textview_cd"
+        style="@style/LeaderboardStats.Header"
+        android:text="@string/leaderboard_xml_header_CD" />
+
+    <!-- Number of Places Visited -->
+    <TextView
+        android:id="@+id/leaderboard_xml_textview_pv"
+        style="@style/LeaderboardStats.Header"
+        android:text="@string/leaderboard_xml_header_PV" />
+
+    <!-- Points -->
+    <TextView
+        android:id="@+id/leaderboard_xml_textview_pts"
+        style="@style/LeaderboardStats.Points.Header"
+        android:text="@string/leaderboard_xml_header_points" />
+
+</LinearLayout>

@@ -2,91 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
-	android:orientation="vertical">
+	android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/leaderboard_xml_linearlayout_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#bdc7d8"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/leaderboard_xml_textview_rank"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:paddingRight="2dp"
-            android:text="Rank"
-            android:textColor="#3B0007"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/leaderboard_xml_textview_username"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Username"
-            android:textColor="#3B0007"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/leaderboard_xml_textview_cd"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="CD"
-            android:textColor="#3B0007"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/leaderboard_xml_textview_pv"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PV"
-            android:textColor="#3B0007"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/leaderboard_xml_textview_pts"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Pts"
-            android:textColor="#dd3c10"
-            android:textStyle="bold" />
-    </LinearLayout>
-
+    <!-- Header -->    <include
+        android:id="@+id/leaderboard_xml_header"
+        layout="@layout/leaderboard_header" />
+    
+    <!-- Player listings -->
     <ListView
         android:id="@+id/leaderboard_xml_listview_users"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#eceff5"
-      
-        android:listSelector="@drawable/leaderboard_listview_users_backgroundselected"
         android:layout_above="@+id/leaderboard_xml_linearlayout_bottom_control"
-        android:layout_below="@id/leaderboard_xml_linearlayout_title" >
-
-    </ListView>
-  <!--android:listSelector="@drawable/leaderboard_listview_users_background"-->
+        android:layout_below="@id/leaderboard_xml_header"
+        style="@style/RankListing">
+    </ListView>    
+  
+    <!-- Footer Buttons -->
     <LinearLayout
         android:id="@+id/leaderboard_xml_linearlayout_bottom_control"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@color/aluminum1" >
 
+        <!-- Refresh -->
         <Button
-            android:id="@+id/leaderboard_xml_button_change_view"
+            android:id="@+id/leaderboard_xml_button_refresh"
             style="@style/TreasureButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change View" />
-
-        <Button
-            android:id="@+id/leaderboard_xml_button_where_am_i"
-            style="@style/TreasureButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Where am I?" />
+            android:text="@string/leaderboard_xml_refresh" />
     </LinearLayout>
 
 </RelativeLayout>

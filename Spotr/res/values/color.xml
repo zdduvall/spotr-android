@@ -4,4 +4,19 @@
     <color name="candidate_recommended">#FFE35900</color>
     <color name="candidate_other">#ff808080</color>
     <color name="selectedbackground">#0000ff</color>
+    
+    <color name="aluminum1">#ffeeeeec</color>
+    <color name="aluminum2">#ffd3d7cf</color>
+    <color name="aluminum3">#ffbabdb6</color>
+    <color name="aluminum4">#ff888a85</color>
+    <color name="aluminum5">#ff555753</color>
+    <color name="aluminum6">#ff2e3436</color>
+    <color name="blue2">#ffe2f4fb</color>
+    <color name="red1">#ffffe4e4</color>
+    <color name="red2">#ffffcaca</color>
+    <color name="red5">#ffff7979</color>
+    <color name="watermelonRed">#ffff4444</color>
+    <color name="darkTurquoise">#ff33b5e5</color>
+    <color name="twitterGrey">#ffe5e5e5</color>
+    
 </resources>

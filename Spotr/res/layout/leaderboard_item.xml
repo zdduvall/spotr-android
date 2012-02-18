@@ -1,49 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:background="@color/aluminum6" >
+    android:id="@+id/leaderboard_item_xml"
+    style="@style/LeaderboardRow" >
 
+    <!-- Rank -->
     <TextView
         android:id="@+id/leaderboard_item_xml_textview_rank"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingRight="2dp"
-        android:textColor="@color/aluminum1" />
+        style="@style/LeaderboardRank" />
 
+    <!-- Username -->
     <TextView
         android:id="@+id/leaderboard_item_xml_textview_username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.5"
-        android:textColor="#0e1f5b"
-		/>
+        style="@style/LeaderboardUsername" />
 
+    <!-- Number of Challenges Done -->
     <TextView
         android:id="@+id/leaderboard_item_xml_textview_cd"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#0e1f5b"
-        />
+        style="@style/LeaderboardStats" />
 
+    <!-- Number of Places Visited -->
     <TextView
         android:id="@+id/leaderboard_item_xml_textview_pv"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#0e1f5b"
-        />
+        style="@style/LeaderboardStats" />
 
+    <!-- Points -->
     <TextView
         android:id="@+id/leaderboard_item_xml_textview_pts"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="#dd3c10"
-        />
+        style="@style/LeaderboardStats.Points" />
 
 </LinearLayout>

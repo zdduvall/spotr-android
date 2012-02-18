@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -45,73 +46,24 @@ public class LeaderboardActivity extends Activity {
 	private LeaderboardItemAdapter adapter = null;
 	private List<User> userList = new ArrayList<User>();
 	private boolean small_view = false;
-	private int button_position;//for debugging
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.leaderboard);
 		// initialize list view
-		listview = (ListView) findViewById(R.id.leaderboard_xml_listview_users);
+		listview = (ListView) findViewById(R.id.leaderboard_xml_listview_users);		
 		adapter = new LeaderboardItemAdapter(LeaderboardActivity.this, userList);
 		listview.setAdapter(adapter);
-		listview.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// handle click 
-			}
-		});
 		
 		new GetUsersTask().execute();
-		
-		Button buttonChangeView = (Button) findViewById(R.id.leaderboard_xml_button_change_view);
-		buttonChangeView.setOnClickListener(new OnClickListener() {
-			public void onClick(final View v) {
-				// run new task
-				if(small_view == false)
-				{
-					small_view = true;
-					userList.clear();
-					adapter.notifyDataSetChanged();
-				}
-				else
-				{
-					small_view = false;
-					userList.clear();
-					adapter.notifyDataSetChanged();
-				}
-					
 				
-				listview.post(new Runnable() {
-					public void run() {
-						new GetUsersTask().execute();
-				}});
-				 
-			}
-		});
-		
-		Button buttonWhere = (Button) findViewById(R.id.leaderboard_xml_button_where_am_i);
+		Button buttonWhere = (Button) findViewById(R.id.leaderboard_xml_button_refresh);
 		buttonWhere.setOnClickListener(new OnClickListener() {
 			public void onClick(final View v) {
-				// run new task
-				button_position = CurrentUser.getSelectedPosition();
-				System.out.println("button position: " + button_position);//for debugging
-				listview.setSelector(R.drawable.leaderboard_listview_users_backgroundselected);
-				listview.setSelection(button_position);
-/*
-				listview.post(new Runnable() {
-					public void run() {
-						//listview.setFocusable(true);
-						//listview.setSelection(button_position);
-						//listview.requestFocus(button_position);
-						//listview.getChildAt(button_position);
-						//listview.getFocusedChild().setBackgroundColor(Color.BLUE);
-						listview.getChildAt(button_position).setBackgroundResource(R.drawable.leaderboard_listview_users_backgroundselected);
-						//v.setEnabled(false);
-						//v.setBackgroundColor(color.transparent);
-						System.out.println("position on button click: " + button_position);//for debugging
-				}}); */
+				new GetUsersTask().execute();
 			}
-		});
+		});		
 	}
 	
 	private class GetUsersTask extends AsyncTask<Void, User, Boolean> {
@@ -143,9 +95,6 @@ public class LeaderboardActivity extends Activity {
 					User current_user = CurrentUser.getCurrentUser();
 					int position = current_user.getRank();
 					String name = current_user.getUsername();
-					System.out.println(position); //for debugging
-					System.out.println(name); //for debugging
-
 					
 					for (int i = 0; i < array.length(); ++i) { 
 							
@@ -161,25 +110,20 @@ public class LeaderboardActivity extends Activity {
 										.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
 											.build();
 								String current_name = array.getJSONObject(i).getString("users_tbl_username");
-								System.out.println("name for rank: " + current_name);//for debugging
 								if(current_name.equalsIgnoreCase(name)) {
 									position = array.getJSONObject(i).getInt("users_tbl_rank");
-									CurrentUser.setSelectedPostion(position);
-									System.out.println("position changed");//for debugging
+									CurrentUser.setRank(position);
 								}
 									
 
 									
 						}
-					System.out.println("CurrentUser position: " + CurrentUser.getSelectedPosition());//for debugging
 					int end_list = position + 10;
 					if(position < 10)
 						position = 10;
 					if(end_list > array.length())
 						end_list = array.length();
-					
-					System.out.println(position); //for debugging
-					
+										
 					if(small_view == true)
 						for (int i = position - 10; i < end_list; ++i)
 						{
@@ -226,6 +170,11 @@ public class LeaderboardActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
+			// highlight player row and put it in view
+			int rank = CurrentUser.getRank();
+			adapter.setPositionFound(rank - 1);
+			listview.setSelection(rank - 1);
+
 			progressDialog.dismiss();
 			
 
