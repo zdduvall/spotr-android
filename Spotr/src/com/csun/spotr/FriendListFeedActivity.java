@@ -234,6 +234,16 @@ public class FriendListFeedActivity
 	}
 	
 	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			task.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+		
+	@Override 
 	public void onBackPressed() {
 		task.cancel(true);
 		Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
