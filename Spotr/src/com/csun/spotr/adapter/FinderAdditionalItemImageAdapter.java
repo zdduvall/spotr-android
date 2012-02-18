@@ -27,8 +27,8 @@ public class FinderAdditionalItemImageAdapter extends BaseAdapter {
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader(c.getApplicationContext());
-		TypedArray ta = context.obtainStyledAttributes(R.styleable.galery_style);
-		background = ta.getResourceId(R.styleable.galery_style_android_galleryItemBackground, 1);
+		TypedArray ta = context.obtainStyledAttributes(R.styleable.gallery_style);
+		background = ta.getResourceId(R.styleable.gallery_style_android_galleryItemBackground, 1);
 		ta.recycle();
 	}
 
@@ -59,8 +59,8 @@ public class FinderAdditionalItemImageAdapter extends BaseAdapter {
 			viewHolder = (ItemViewHolder) convertView.getTag();
 		}
 
-        viewHolder.imageViewPicture.setLayoutParams(new Gallery.LayoutParams(150, 100));
-        viewHolder.imageViewPicture.setScaleType(ImageView.ScaleType.FIT_XY);
+        viewHolder.imageViewPicture.setLayoutParams(new Gallery.LayoutParams(300, 300));
+        viewHolder.imageViewPicture.setScaleType(ImageView.ScaleType.CENTER);
         viewHolder.imageViewPicture.setBackgroundResource(background);
 		imageLoader.displayImage(items.get(position), viewHolder.imageViewPicture);
 		return convertView;

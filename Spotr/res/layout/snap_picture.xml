@@ -34,7 +34,7 @@
         android:layout_width="fill_parent"
         android:layout_height="232dp"
         android:layout_gravity="center"
-        android:gravity="center | bottom"
+        android:gravity="center"
         android:padding="5dip"
         android:src="@drawable/just_s_shadow" />
     
@@ -43,7 +43,7 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal"
 	    android:paddingTop="15dp"
-	    android:gravity="center | bottom" >
+	    android:gravity="center" >
     <!-- I put border margins between the two buttons to allow for a little spacing in between -->     <Button
         android:id="@+id/snap_picture_xml_button_go"
         android:layout_width="wrap_content"
