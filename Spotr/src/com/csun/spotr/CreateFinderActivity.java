@@ -84,8 +84,6 @@ public class CreateFinderActivity extends Activity {
 		buttonSubmit = (Button) findViewById(R.id.create_lost_item_xml_button_upload);
 		imageViewPicture = (ImageView) findViewById(R.id.create_lost_item_xml_imageview_item_images);
 
-		editTextName.setHint("Enter lost item's name here.");
-		editTextDescription.setHint("Describe the item in as much detail as you can here.");
 		editTextPoints.setText(Integer.toString(itemPoints));
 
 		buttonSelectImage.setOnClickListener(new OnClickListener() {
