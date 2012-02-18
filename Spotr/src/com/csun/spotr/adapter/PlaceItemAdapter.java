@@ -58,7 +58,7 @@ public class PlaceItemAdapter extends BaseAdapter {
 		}
 
 		holder.nameTextView.setText(items.get(position).getName());
-		holder.typesTextView.setText(items.get(position).getAddress());
+		holder.typesTextView.setText(items.get(position).getAddress());		
 		return convertView;
 	}
 }
