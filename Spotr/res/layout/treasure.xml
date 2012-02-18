@@ -43,53 +43,61 @@
         android:layout_gravity="center"
         android:src="@drawable/hottub" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="From"
-        android:textColor="#3b5998"
-        android:textSize="14dp"
-        android:textStyle="bold" />
+        android:background="@drawable/my_border"
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/treasure_xml_textview_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Small Text"
-        android:textSize="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Expiration Date"
-        android:textColor="#3b5998"
-        android:textSize="14dp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/treasure_xml_textview_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/treasure_xml_textview_expiration_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Small Text"
-        android:textSize="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expiration Date"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Bar Code"
-        android:textColor="#3b5998"
-        android:textSize="14dp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/treasure_xml_textview_expiration_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/treasure_xml_textview_barcode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Small Text"
-        android:textColor="#dd3c10"
-        android:textSize="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Bar Code"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/treasure_xml_textview_barcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Small Text"
+            android:textColor="#dd3c10"
+            android:textSize="12dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
