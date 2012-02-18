@@ -266,7 +266,7 @@ public class LoginActivity
 		
 		// set current user
 		CurrentUser.setCurrentUser(id, edittextUsername.getText().toString(), edittextPassword.getText().toString());
-		startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+		startActivity(new Intent("com.csun.spotr.MainMenuActivity"));
 		finish();
 	}
 	

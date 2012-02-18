@@ -9,9 +9,14 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.csun.spotr.adapter.FriendFeedItemAdapter;
 import com.csun.spotr.adapter.ProfileItemAdapter;
+import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.User;
+import com.csun.spotr.core.adapter_item.FriendFeedItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -46,57 +51,50 @@ import android.widget.TextView;
  */
 public class ProfileActivity 
 	extends Activity 
-		implements IActivityProgressUpdate<User> {
+		implements IActivityProgressUpdate<FriendFeedItem> {
 	
 	private static final 	String 					TAG = "(ProfileActivity)";
 	private static final 	String 					GET_USER_DETAIL_URL = "http://107.22.209.62/android/get_user_detail.php";
+	private static final 	String 					GET_USER_FEEDS = "http://107.22.209.62/android/get_current_user_feeds.php";
+	private static final 	String 					GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
+	
 	private static final 	int 					CAMERA_PICTURE = 111;
 	private static final 	int 					GALLERY_PICTURE = 222;
 	
-	private 				ListView 				list = null;
-	private 				ProfileItemAdapter		adapter = null;
-	private 				GetUserDetailTask 		task = null;
+	private 				ListView 				listview;
+	private 				FriendFeedItemAdapter   adapter;
+	private					List<FriendFeedItem>    feedList;
 	private 				Bitmap 					bitmapUserPicture = null;
-	
-	public 					ImageView 				imageViewUserPicture = null;
-	public 					ImageLoader 			imageLoader;
-	public 					TextView 				textViewChallengesDone = null;
-	public 					TextView 				textViewPlacesVisited = null;
-	public 					TextView 				textViewPoints = null;
-	public 					List<String> 			headers = new ArrayList<String>();
-	public 					List<String> 			bodies = new ArrayList<String>();
+	private					GetUserDetailTask		task;
 				
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
+		
+		feedList = new ArrayList<FriendFeedItem>();
+		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
+		adapter = new FriendFeedItemAdapter(this, feedList);
+		listview.setAdapter(adapter);
 
-		imageLoader = new ImageLoader(getApplicationContext());
-		
-		imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
-		imageViewUserPicture.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				startDialog();
-			}
-		});
-		
-		task = new GetUserDetailTask(ProfileActivity.this);
+		task = new GetUserDetailTask(this);
 		task.execute();
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		ImageView temp = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == GALLERY_PICTURE) {
 				Uri selectedImageUri = data.getData();
 				String selectedImagePath = getPath(selectedImageUri);
 				bitmapUserPicture = BitmapFactory.decodeFile(selectedImagePath);
-				imageViewUserPicture.setImageBitmap(bitmapUserPicture);
+				temp.setImageBitmap(bitmapUserPicture);
 			}
 			else if (requestCode == CAMERA_PICTURE) {
 				if (data.getExtras() != null) {
 					// here is the image from camera
 					bitmapUserPicture = (Bitmap) data.getExtras().get("data");
-					imageViewUserPicture.setImageBitmap(bitmapUserPicture);
+					temp.setImageBitmap(bitmapUserPicture);
 				}
 			}
 		}
@@ -133,25 +131,35 @@ public class ProfileActivity
 	}
 
 	private static class GetUserDetailTask 
-		extends AsyncTask<Void, Integer, User> 
+		extends AsyncTask<Void, FriendFeedItem, User> 
 			implements IAsyncTask<ProfileActivity> {
 		
-		private List<NameValuePair> userData = new ArrayList<NameValuePair>();
 		private WeakReference<ProfileActivity> ref;
-		private JSONArray array = null;
 		
 		public GetUserDetailTask(ProfileActivity a) {
 			attach(a);
 		}
 		
 		@Override
-		protected void onPreExecute() {
-		}
+    	protected void onProgressUpdate(FriendFeedItem... f) {
+			Log.v(TAG, "Did you go here?");
+    		ref.get().updateAsyncTaskProgress(f[0]);
+        }
 
 		@Override
 		protected User doInBackground(Void...voids) {
-			userData.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_DETAIL_URL, userData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			
+			// user's detail info
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_DETAIL_URL, data);
+			
+			// user's feeds
+			JSONArray feedArray = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_FEEDS, data);
+			
+			// comments in user's feed
+			JSONArray commentArray;
+			
 			User user = null;
 			try {
 				user = new User.Builder( 
@@ -165,6 +173,70 @@ public class ProfileActivity
 							.points(array.getJSONObject(0).getInt("users_tbl_points"))
 							.imageUrl(array.getJSONObject(0).getString("users_tbl_user_image_url"))
 								.build();
+				
+				if (isCancelled()) {
+					return user;
+				}
+				
+				for (int i = 0; i < feedArray.length(); ++i) { 
+    				String snapPictureUrl = null;
+    				String userPictureUrl = null;
+    				String shareUrl = null;
+    				
+    				if (Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
+    					snapPictureUrl = feedArray.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+    				}
+    				
+    				if(feedArray.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
+    					userPictureUrl = feedArray.getJSONObject(i).getString("users_tbl_user_image_url");
+    				}
+    				
+    				if(feedArray.getJSONObject(i).has("activity_tbl_share_url") && !feedArray.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
+    					shareUrl = feedArray.getJSONObject(i).getString("activity_tbl_share_url");
+    				}
+    				else {
+    					shareUrl = "";
+    				}
+    				
+    				FriendFeedItem ffi = 
+    					new FriendFeedItem.Builder(
+    							// required parameters
+    							feedArray.getJSONObject(i).getInt("activity_tbl_id"),
+    							0, // not used
+    							feedArray.getJSONObject(i).getString("users_tbl_username"),
+    							Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")),
+    							feedArray.getJSONObject(i).getString("activity_tbl_created"),
+    							feedArray.getJSONObject(i).getString("spots_tbl_name"))
+    								// optional parameters
+    								.challengeName(feedArray.getJSONObject(i).getString("challenges_tbl_name"))
+    								.challengeDescription(feedArray.getJSONObject(i).getString("challenges_tbl_description"))
+    								.activitySnapPictureUrl(snapPictureUrl)
+    								.friendPictureUrl(userPictureUrl)
+    								.activityComment(feedArray.getJSONObject(i).getString("activity_tbl_comment"))
+    								.shareUrl(shareUrl)
+    								.numberOfComments(feedArray.getJSONObject(i).getInt("activity_tbl_total_comments"))
+    								.likes(feedArray.getJSONObject(i).getInt("activity_tbl_likes"))
+    									.build();
+    				
+    				
+    				data.clear();
+    				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
+    				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+    				
+    				Comment firstComment = new Comment(-1, "", "", "", "");
+    				
+    				if (commentArray != null) {
+    					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
+    					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
+    					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
+    					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
+    					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
+    				}
+    				
+    				ffi.setFirstComment(firstComment);
+    				publishProgress(ffi);
+				}
+				
 			}
 			catch (JSONException e) {
 				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data" + e.toString());
@@ -175,7 +247,7 @@ public class ProfileActivity
 		@Override
 		protected void onPostExecute(final User u) {
 			if (u != null) {
-				ref.get().updateAsyncTaskProgress(u);
+				ref.get().updateUserView(u);
 			}
 			detach();
 		}
@@ -241,29 +313,30 @@ public class ProfileActivity
         super.onDestroy();
 	}
 
-	public void updateAsyncTaskProgress(User u) {
+	public void updateAsyncTaskProgress(FriendFeedItem f) {
+		feedList.add(f);
+		adapter.notifyDataSetChanged();
+	}
+	
+	public void updateUserView(User u) {
+		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
+		
+		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
 		imageLoader.displayImage(u.getImageUrl(), imageViewUserPicture);
 		
-		textViewChallengesDone = (TextView) findViewById(R.id.profile_xml_textview_challenges_done);
+		imageViewUserPicture.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startDialog();
+			}
+		});
+		
+		TextView textViewChallengesDone = (TextView) findViewById(R.id.profile_xml_textview_challenges_done);
 		textViewChallengesDone.setText(Integer.toString(u.getChallengesDone()));
 		
-		textViewPlacesVisited = (TextView) findViewById(R.id.profile_xml_textview_places_visited);
+		TextView textViewPlacesVisited = (TextView) findViewById(R.id.profile_xml_textview_places_visited);
 		textViewPlacesVisited.setText(Integer.toString(u.getPlacesVisited()));
 		
-		textViewPoints = (TextView) findViewById(R.id.profile_xml_textview_points);
+		TextView textViewPoints = (TextView) findViewById(R.id.profile_xml_textview_points);
 		textViewPoints.setText(Integer.toString(u.getPoints()));
-		
-		headers = new ArrayList<String>();
-		bodies = new ArrayList<String>();
-		
-		headers.add("Name");
-		bodies.add(u.getUsername());
-		headers.add("Password");
-		bodies.add(u.getPassword());
-		
-		list = (ListView) findViewById(R.id.profile_xml_listview_items);
-		adapter = new ProfileItemAdapter(getApplicationContext(), headers, bodies);
-		list.setAdapter(adapter);
-		
 	}
 }
