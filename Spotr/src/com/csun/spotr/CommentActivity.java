@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -49,7 +50,7 @@ public class CommentActivity
 	private 				List<Comment> 			commentList = new ArrayList<Comment>();
 	private 				int 					activityId;
 	private 				int 					userId;
-
+	public 				 GetCommentTask 		task = null;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
@@ -71,8 +72,9 @@ public class CommentActivity
 
 			}
 		});
-
-		new GetCommentTask(this).execute(activityId);
+		
+		task = new GetCommentTask(this);
+		task.execute(activityId);
 
 		buttonPost.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -116,6 +118,9 @@ public class CommentActivity
 
 			if (array != null) {
 				try {
+					if (ref.get().task.isCancelled()) {
+						return true;
+					}
 					for (int i = 0; i < array.length(); ++i) {
 						publishProgress(
 							new Comment(
@@ -217,5 +222,14 @@ public class CommentActivity
 	public void resetListViewData() {
 		commentList.clear();
 		adapter.notifyDataSetChanged();
+	}
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			task.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

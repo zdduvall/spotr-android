@@ -272,15 +272,13 @@ public class MainMenuActivity
 		return true;
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	        startActivity(new Intent("com.csun.spotr.LoginActivity"));
-	        finish();
-	        return true;
-	    }
-
-	    return super.onKeyDown(keyCode, event);
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			super.finish();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	public void updateAsyncTaskProgress(FriendRequestItem f) {

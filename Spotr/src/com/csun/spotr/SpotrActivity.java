@@ -2,6 +2,7 @@ package com.csun.spotr;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,24 +16,18 @@ public class SpotrActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-
-		Button b1 = (Button) findViewById(R.id.test_login);
-		b1.setOnClickListener(new OnClickListener() {
-			public void onClick(View arg0) {
-				Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-				startActivity(i);
-				finish();
-			}
-		});
-
-		Button b2 = (Button) findViewById(R.id.test_challenge);
-		b2.setOnClickListener(new OnClickListener() {
-			public void onClick(View arg0) {
-				Intent i = new Intent("com.csun.spotr.ChallengeActivity");
-				startActivity(i);
-			}
-		});
+		SharedPreferences refs = getSharedPreferences("Spotr", MODE_PRIVATE);
+		Intent i;
+		if(refs.equals(null))
+		{
+			i = new Intent(getApplicationContext(), LoginActivity.class);
+		}
+		else
+		{
+			i = new Intent(getApplicationContext(), LoginActivity.class);
+		}
+		startActivity(i);
+		finish();
 	}
 	
 	@Override
