@@ -47,7 +47,7 @@ import android.widget.Toast;
 public class CreateFinderActivity extends Activity {
 	private static final String TAG = "(CreateLostItemActivity)";
 	private static final String GET_USER_POINTS_URL = "http://107.22.209.62/android/get_user_points.php";
-	private static final String SUBMIT_ITEM_URL = "http://107.22.209.62/android/submit_lost_item.php";
+	private static final String SUBMIT_ITEM_URL = "http://107.22.209.62/android/do_create_finder.php";
 
 	private static Integer userPoints = 0;
 	private static String itemName = null;

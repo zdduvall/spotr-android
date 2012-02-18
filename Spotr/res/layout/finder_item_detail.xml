@@ -59,5 +59,11 @@
         android:id="@+id/finder_item_detail_xml_gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    
+    <Button
+        android:id="@+id/finder_item_detail_xml_add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add another picture?" />
 
 </LinearLayout>
