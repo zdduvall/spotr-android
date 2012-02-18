@@ -66,6 +66,7 @@ public class ProfileActivity
 	private					List<FriendFeedItem>    feedList;
 	private 				Bitmap 					bitmapUserPicture = null;
 	private					GetUserDetailTask		task;
+	private 				int 					userId = -1;
 				
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,8 @@ public class ProfileActivity
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
 		adapter = new FriendFeedItemAdapter(this, feedList);
 		listview.setAdapter(adapter);
+		
+		
 
 		task = new GetUserDetailTask(this);
 		task.execute();
@@ -178,63 +181,65 @@ public class ProfileActivity
 					return user;
 				}
 				
-				for (int i = 0; i < feedArray.length(); ++i) { 
-    				String snapPictureUrl = null;
-    				String userPictureUrl = null;
-    				String shareUrl = null;
-    				
-    				if (Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
-    					snapPictureUrl = feedArray.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+				if (feedArray != null) {
+    				for (int i = 0; i < feedArray.length(); ++i) { 
+        				String snapPictureUrl = null;
+        				String userPictureUrl = null;
+        				String shareUrl = null;
+        				
+        				if (Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
+        					snapPictureUrl = feedArray.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+        				}
+        				
+        				if(feedArray.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
+        					userPictureUrl = feedArray.getJSONObject(i).getString("users_tbl_user_image_url");
+        				}
+        				
+        				if(feedArray.getJSONObject(i).has("activity_tbl_share_url") && !feedArray.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
+        					shareUrl = feedArray.getJSONObject(i).getString("activity_tbl_share_url");
+        				}
+        				else {
+        					shareUrl = "";
+        				}
+        				
+        				FriendFeedItem ffi = 
+        					new FriendFeedItem.Builder(
+        							// required parameters
+        							feedArray.getJSONObject(i).getInt("activity_tbl_id"),
+        							0, // not used
+        							feedArray.getJSONObject(i).getString("users_tbl_username"),
+        							Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")),
+        							feedArray.getJSONObject(i).getString("activity_tbl_created"),
+        							feedArray.getJSONObject(i).getString("spots_tbl_name"))
+        								// optional parameters
+        								.challengeName(feedArray.getJSONObject(i).getString("challenges_tbl_name"))
+        								.challengeDescription(feedArray.getJSONObject(i).getString("challenges_tbl_description"))
+        								.activitySnapPictureUrl(snapPictureUrl)
+        								.friendPictureUrl(userPictureUrl)
+        								.activityComment(feedArray.getJSONObject(i).getString("activity_tbl_comment"))
+        								.shareUrl(shareUrl)
+        								.numberOfComments(feedArray.getJSONObject(i).getInt("activity_tbl_total_comments"))
+        								.likes(feedArray.getJSONObject(i).getInt("activity_tbl_likes"))
+        									.build();
+        				
+        				
+        				data.clear();
+        				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
+        				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+        				
+        				Comment firstComment = new Comment(-1, "", "", "", "");
+        				
+        				if (commentArray != null) {
+        					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
+        					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
+        					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
+        					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
+        					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
+        				}
+        				
+        				ffi.setFirstComment(firstComment);
+        				publishProgress(ffi);
     				}
-    				
-    				if(feedArray.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
-    					userPictureUrl = feedArray.getJSONObject(i).getString("users_tbl_user_image_url");
-    				}
-    				
-    				if(feedArray.getJSONObject(i).has("activity_tbl_share_url") && !feedArray.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
-    					shareUrl = feedArray.getJSONObject(i).getString("activity_tbl_share_url");
-    				}
-    				else {
-    					shareUrl = "";
-    				}
-    				
-    				FriendFeedItem ffi = 
-    					new FriendFeedItem.Builder(
-    							// required parameters
-    							feedArray.getJSONObject(i).getInt("activity_tbl_id"),
-    							0, // not used
-    							feedArray.getJSONObject(i).getString("users_tbl_username"),
-    							Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")),
-    							feedArray.getJSONObject(i).getString("activity_tbl_created"),
-    							feedArray.getJSONObject(i).getString("spots_tbl_name"))
-    								// optional parameters
-    								.challengeName(feedArray.getJSONObject(i).getString("challenges_tbl_name"))
-    								.challengeDescription(feedArray.getJSONObject(i).getString("challenges_tbl_description"))
-    								.activitySnapPictureUrl(snapPictureUrl)
-    								.friendPictureUrl(userPictureUrl)
-    								.activityComment(feedArray.getJSONObject(i).getString("activity_tbl_comment"))
-    								.shareUrl(shareUrl)
-    								.numberOfComments(feedArray.getJSONObject(i).getInt("activity_tbl_total_comments"))
-    								.likes(feedArray.getJSONObject(i).getInt("activity_tbl_likes"))
-    									.build();
-    				
-    				
-    				data.clear();
-    				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-    				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
-    				
-    				Comment firstComment = new Comment(-1, "", "", "", "");
-    				
-    				if (commentArray != null) {
-    					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
-    					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
-    					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
-    					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
-    					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
-    				}
-    				
-    				ffi.setFirstComment(firstComment);
-    				publishProgress(ffi);
 				}
 				
 			}
