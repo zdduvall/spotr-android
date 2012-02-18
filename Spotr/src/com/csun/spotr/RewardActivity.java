@@ -60,6 +60,12 @@ public class RewardActivity
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(getApplicationContext(), RewardViewActivity.class);
+				intent.putExtra("id", badgeList.get(position).getId());
+				intent.putExtra("name", badgeList.get(position).getName());
+				intent.putExtra("description", badgeList.get(position).getDescription());
+				intent.putExtra("date", badgeList.get(position).getDate());
+				intent.putExtra("url", badgeList.get(position).getUrl());
+				intent.putExtra("points", badgeList.get(position).getPoints());
 				startActivity(intent);
 			}
 		});
@@ -108,7 +114,8 @@ public class RewardActivity
 								array.getJSONObject(i).getString("badges_tbl_name"),
 								array.getJSONObject(i).getString("badges_tbl_description"),
 								array.getJSONObject(i).getString("badges_tbl_img"),
-								array.getJSONObject(i).getString("badges_tbl_created")));
+								array.getJSONObject(i).getString("badges_tbl_created"),
+								array.getJSONObject(i).getInt("badges_tbl_points")));
 					}
 				}
 				catch (JSONException e) {

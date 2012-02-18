@@ -2,17 +2,26 @@ package com.csun.spotr.core;
 
 public class Badge {
 	private final int id;
-
 	private final String date;
 	private final String url;
 	private final String description;
+	private int points;
 
-	public Badge(int id, String name, String description, String url, String date) {
+	public Badge(int id, String name, String description, String url, String date, int points) {
 		this.id = id;
 		this.name = name;
 		this.date = date;
 		this.url = url;
 		this.description = description;
+		this.points = points;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 
 	private final String name;
