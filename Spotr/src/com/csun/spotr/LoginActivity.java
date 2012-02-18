@@ -83,6 +83,7 @@ public class LoginActivity
 		if (prefsSavePassword) {
 			edittextUsername.append(prefsUsername);
 			edittextPassword.append(prefsPassword);
+			performLogin();
 		}
 
 		checkVisible.setOnClickListener(new OnClickListener() {
@@ -230,16 +231,6 @@ public class LoginActivity
 		}
 	}
 	
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	        startActivity(new Intent(getApplicationContext(), SpotrActivity.class));
-	        finish();
-	        return true;
-	    }
-
-	    return super.onKeyDown(keyCode, event);
-	}
-	
 	private boolean isNetworkAvailableAndConnected() {
 		ConnectivityManager conManager =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
@@ -266,7 +257,7 @@ public class LoginActivity
 		
 		// set current user
 		CurrentUser.setCurrentUser(id, edittextUsername.getText().toString(), edittextPassword.getText().toString());
-		startActivity(new Intent("com.csun.spotr.MainMenuActivity"));
+		startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
 		finish();
 	}
 	

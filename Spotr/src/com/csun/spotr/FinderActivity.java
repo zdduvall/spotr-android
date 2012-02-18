@@ -81,7 +81,7 @@ public class FinderActivity
 		
 		private WeakReference<FinderActivity> ref;
 		private ProgressDialog progressDialog = null;
-		private JSONArray jsonArray = null;
+		
 		
 		public GetFindersTask(FinderActivity a) {
 			attach(a);
@@ -103,15 +103,15 @@ public class FinderActivity
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
-			jsonArray = JsonHelper.getJsonArrayFromUrl(GET_FINDERS_URL);
-			if (jsonArray != null) {
+			JSONArray array = JsonHelper.getJsonArrayFromUrl(GET_FINDERS_URL);
+			if (array != null) {
 				try {
-					for (int i = 0; i < jsonArray.length(); ++i) {
+					for (int i = 0; i < array.length(); ++i) {
 						publishProgress(
 							new SeekingItem(
-								jsonArray.getJSONObject(i).getInt("finder_tbl_id"), 
-								jsonArray.getJSONObject(i).getString("finder_tbl_name"), 
-								jsonArray.getJSONObject(i).getString("finder_tbl_image_url")));
+								array.getJSONObject(i).getInt("finder_tbl_id"), 
+								array.getJSONObject(i).getString("finder_tbl_name"), 
+								array.getJSONObject(i).getString("finder_tbl_image_url")));
 					}
 				}
 				catch (JSONException e) {

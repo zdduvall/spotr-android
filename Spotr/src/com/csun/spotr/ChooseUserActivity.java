@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -104,6 +105,9 @@ public class ChooseUserActivity
 			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
 			if (userJsonArray != null) {
 				try {
+					if(ref.get().task.isCancelled()){
+						return true;
+					}
 					for (int i = 0; i < userJsonArray.length(); ++i) {
 						publishProgress(
 							new UserItem(
@@ -144,7 +148,17 @@ public class ChooseUserActivity
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
-
+	
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			task.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
