@@ -83,6 +83,12 @@ public class PlaceActionItemAdapter extends BaseAdapter {
 		else
 			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
 		
+		if (position == 0)
+			convertView.setBackgroundResource(R.drawable.mission_selector_top);
+		else
+			convertView.setBackgroundResource(R.drawable.mission_selector);
+
+		
 		return convertView;
 	}
 }

@@ -104,14 +104,14 @@
         <item name="android:layout_height">200dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:padding">5dp</item>
-        <item name="android:background">@drawable/spots_mission_selector_top</item>
+        <item name="android:background">@drawable/mission_selector</item>
     </style>
     
     <style name="MissionIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
     </style>
-    
+		    
     <style name="MissionName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -192,4 +192,20 @@
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
     </style>  
+    
+    <!-- Me -->
+    <!-- Me: Leaderboard -->
+    <style name="leaderboard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">@color/aluminum1</item>
+    </style>
+    
+    <!-- Me: LeaderboardRow -->
+    <style name="leaderboardRow">
+        
+    </style>
+    <!-- End Me: LeaderboardRow -->
+    <!-- End Me: Leaderboard -->
 </resources>

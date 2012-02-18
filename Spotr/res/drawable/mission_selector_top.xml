@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:drawable="@drawable/rectangle_rounded_corners_alt_top"
+        android:drawable="@drawable/rectangle_rounded_corners_red_top"
         android:state_focused="false"
         android:state_pressed="true" />    
     <item
-        android:drawable="@drawable/rectangle_rounded_corners_alt_top"
+        android:drawable="@drawable/rectangle_rounded_corners_red_top"
         android:state_focused="true"
         android:state_pressed="false" />
     <item
-        android:drawable="@drawable/rectangle_rounded_corners"
+        android:drawable="@drawable/rectangle_rounded_corners_grey_top"
         android:state_focused="true"
         android:state_pressed="true" />
     <item
-        android:drawable="@drawable/rectangle_rounded_corners"
+        android:drawable="@drawable/rectangle_rounded_corners_grey_top"
         android:state_focused="false"
         android:state_pressed="false" />
 </selector>

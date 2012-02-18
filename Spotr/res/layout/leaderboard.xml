@@ -61,8 +61,9 @@
     <ListView
         android:layout_below="@id/leaderboard_xml_linearlayout_title"
         android:id="@+id/leaderboard_xml_listview_users"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
+<!-- 	    style="@style/leaderboard" -->
     </ListView>
 
     <LinearLayout

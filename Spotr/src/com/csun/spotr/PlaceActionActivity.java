@@ -92,7 +92,7 @@ public class PlaceActionActivity
 				Challenge c = (Challenge) list.getAdapter().getItem(position);//challengeList.get(position);
 				// set current item chosen so that later we can make some side effects
 				currentChosenItem = position;
-				
+								
 				if (c.getType() == Challenge.Type.CHECK_IN) {
 					CheckInTask task = new CheckInTask(PlaceActionActivity.this);
 					task.execute(
