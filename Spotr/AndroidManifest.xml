@@ -97,7 +97,8 @@
         <!-- Reward Activity -->
         <activity
             android:name=".RewardActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.csun.spotr.RewardActivity" />
 
@@ -108,7 +109,8 @@
         <!-- Reward View Activity -->
         <activity
             android:name=".RewardViewActivity"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.csun.spotr.RewardViewActivity" />
 

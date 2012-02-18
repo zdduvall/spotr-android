@@ -46,6 +46,7 @@ public class RewardActivity
 	private BadgeAdapter adapter;
 	private List<Badge> badgeList;
 	private GetBadgesTask task;
+	private int removePosition = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,9 @@ public class RewardActivity
 				intent.putExtra("date", badgeList.get(position).getDate());
 				intent.putExtra("url", badgeList.get(position).getUrl());
 				intent.putExtra("points", badgeList.get(position).getPoints());
-				startActivity(intent);
+				int dummy = 0;
+				startActivityForResult(intent, dummy);
+				removePosition = position;
 			}
 		});
 		
@@ -119,7 +122,7 @@ public class RewardActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetBadgesTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -192,5 +195,14 @@ public class RewardActivity
 	public void updateAsyncTaskProgress(Badge b) {
 		badgeList.add(b);
 		adapter.notifyDataSetChanged();
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 0) {
+			if (resultCode == RESULT_OK) {
+				badgeList.remove(removePosition);
+				adapter.notifyDataSetChanged();
+			}
+		}
 	}
 }
