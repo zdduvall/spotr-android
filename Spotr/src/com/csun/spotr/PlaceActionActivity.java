@@ -87,19 +87,8 @@ public class PlaceActionActivity
 				Intent intent = new Intent(PlaceActionActivity.this.getApplicationContext(), PlaceInfoActivity.class);
 				intent.putExtras(extras);
 				startActivity(intent);
-				
 			}
 		});
-		
-		
-		
-		// initialize list view of challenges
-		list = (ListView) findViewById(R.id.place_action_xml_listview_actions);
-		adapter = new PlaceActionItemAdapter(this, challengeList);
-		
-		// add top padding to first item and add bottom padding to last item
-//		TextView padding = new TextView(getApplicationContext());
-//		padding.setHeight(0);
 		
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
 		buttonTreasure.setOnClickListener(new OnClickListener() {
@@ -109,11 +98,12 @@ public class PlaceActionActivity
 			}
 		});
 		
+		// initialize list view of challenges
+		list = (ListView) findViewById(R.id.place_action_xml_listview_actions);
+		adapter = new PlaceActionItemAdapter(this, challengeList);
 		
-//		list.addHeaderView(padding, null, false);
-//		list.addFooterView(padding, null, false);
-		list.setAdapter(adapter);
 				
+		list.setAdapter(adapter);
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //				Challenge c = (Challenge) list.getAdapter().getItem(position);

@@ -71,27 +71,23 @@
     </style>
     <!-- End Main Menu -->
 
-    <!-- Spots -->
     <!-- Spots: Missions tab -->    
     <style name="MissionsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:dividerHeight">1dp</item>
-        <item name="android:divider">@color/aluminum1</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:scrollbars">none</item>
-        <item name="android:background">@drawable/rectangle_rounded_corners</item>
-        <item name="android:listSelector">@android:color/transparent</item>
-        <item name="android:drawSelectorOnTop">false</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:drawSelectorOnTop">false</item>
     </style>
     
     <style name="MissionRow">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:background">@drawable/mission_selector</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">7dp</item>
     </style>
     
     <style name="MissionIcon">
@@ -104,10 +100,9 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">marquee</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/aluminum1</item>
+        <item name="android:textColor">@color/aluminum5</item>
     </style>
     
     <style name="MissionPointValue">
@@ -117,7 +112,7 @@
         <item name="android:gravity">center_horizontal|right</item>
         <item name="android:textSize">40sp</item>
         <item name="android:textStyle">bold|italic</item>
-        <item name="android:textColor">@color/aluminum1</item>
+        <item name="android:textColor">@color/aluminum5</item>
     </style>
     
     <style name="MissionPointValueAbbrev">
@@ -126,10 +121,9 @@
         <item name="android:paddingRight">5dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum1</item>
+        <item name="android:textColor">@color/aluminum5</item>
     </style>
     <!-- End Spots: Missions tab -->
-    
     
     <!-- Spots: Missions Tab: Open Treasure Button-->
     <style name="TreasureButton">
@@ -232,7 +226,6 @@
         <item name="android:textColor">@color/aluminum6</item>  
     </style>    
     
-    
     <!-- Me: Leaderboard Stat Values -->
     <style name="LeaderboardStats">
         <item name="android:layout_width">0dp</item>
@@ -263,6 +256,5 @@
     <style name="LeaderboardStats.Points.Header">
         <item name="android:textStyle">bold</item>
     </style>
-    
     
 </resources>

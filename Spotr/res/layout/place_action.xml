@@ -1,80 +1,102 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/aluminum1"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:background="@color/aluminum5" >
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="15dp" >
 
-<LinearLayout
-    	android:layout_width="fill_parent" 
-    	android:layout_height="120dp"
-    	android:orientation="horizontal"
-    	android:weightSum="1.0" >
-    
-    
-	    <!-- GENERAL PLACE INFO AREA -->
-		<LinearLayout
-			android:layout_height="match_parent"
-			android:layout_width="0px"
-			android:orientation="vertical" 
-			android:layout_weight=".80" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_rounded_bevel_white"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1.0" >
 
-			<!-- Place Name -->
-			<TextView
-            	android:id="@+id/place_activity_xml_textview_name"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="#CC3333"
-				android:textSize="15sp"
-				android:textStyle="bold" />
-			
-			<!-- Place description -->
-			<TextView
+        <!-- GENERAL PLACE INFO AREA -->
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight=".80"
+            android:orientation="vertical" >
+
+            <!-- Place Name -->
+
+            <TextView
+                android:id="@+id/place_activity_xml_textview_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/aluminum5"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- Place description -->
+
+            <TextView
                 android:id="@+id/place_activity_xml_textview_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="9sp"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:paddingBottom="15dp"
-                android:textColor="#CC3333" />
+                android:textColor="@color/aluminum4"
+                android:textSize="11sp" />
 
-			<Button
-			    android:id="@+id/place_info_xml_button_moreinfo"
-			    android:layout_width="wrap_content"
-			    android:layout_height="35dp"
-				android:layout_alignParentBottom="true"
-				android:text="More Info" />
-		
-		</LinearLayout>
-		    		    
-		<!-- GAMES/ACTIONS AREA  -->
-		<LinearLayout
-			android:layout_height="match_parent"
-			android:layout_width="0px"
-			android:orientation="vertical" 
-			android:gravity="center_horizontal"
-			android:layout_weight=".20" >
-			
-			
-			<!-- TREASURE BUTTON  -->
-			<Button
-			    android:id="@+id/place_action_xml_button_treasure"
-			    style="@style/TreasureButton"
-			    android:layout_width="46dp"
-			    android:layout_height="30dp"
-			    android:background="@drawable/treasure" />
-			
-			<!-- OTHER BUTTONS?  -->
-			
-		</LinearLayout>
-            
-	</LinearLayout>	
-    
-	<!-- Challenge List -->
+            <Button
+                android:id="@+id/place_info_xml_button_moreinfo"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:text="More Info" />
+        </LinearLayout>
 
-    <ListView
-        android:id="@+id/place_action_xml_listview_actions"
-        style="@style/MissionsList" >
-    </ListView>
+        <!-- SPACER -->
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/aluminum4" />
+
+        <!-- GAMES/ACTIONS AREA -->
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight=".20"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <!-- TREASURE BUTTON -->
+
+            <Button
+                android:id="@+id/place_action_xml_button_treasure"
+                style="@style/TreasureButton"
+                android:layout_width="46dp"
+                android:layout_height="30dp"
+                android:background="@drawable/treasure" />
+
+            <!-- OTHER BUTTONS? -->
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Challenge List -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rectangle_rounded_bevel_white_alt"
+        android:paddingBottom="3dp"
+        android:paddingRight="1dp" >
+
+        <com.csun.spotr.custom_gui.RoundedRectListView
+            android:id="@+id/place_action_xml_listview_actions"
+            style="@style/MissionsList" >
+        </com.csun.spotr.custom_gui.RoundedRectListView>
+    </LinearLayout>
 
 </LinearLayout>
