@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/android:list"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@color/fb_background" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -15,39 +16,45 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#00AAED"
+            android:textColor="@color/fb_header"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/create_lost_item_xml_edittext_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Lost item's name" />
 
         <TextView
             android:id="@+id/create_lost_item_xml_textview_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Description"
+            android:hint="Lost item's description"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#00AAED"
+            android:textColor="@color/fb_header"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/create_lost_item_xml_edittext_description"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:hint="Lost item's description"
             android:inputType="textMultiLine" />
 
         <Button
             android:id="@+id/create_lost_item_xml_button_choose_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/TreasureButton"
             android:text="Choose images" />
 
         <ImageView
             android:id="@+id/create_lost_item_xml_imageview_item_images"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_gravity="center"
             android:src="@drawable/challenges" />
 
         <TextView
@@ -55,17 +62,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose reward points"
+            android:textColor="@color/fb_header"
+            android:layout_gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal" >
             
             <Button
                 android:id="@+id/create_lost_item_xml_button_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                style="@style/TreasureButton"
                 android:text="-" />
 
             <EditText
@@ -79,6 +91,7 @@
                 android:id="@+id/create_lost_item_xml_button_plus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TreasureButton"
                 android:text="+" />
 
         </LinearLayout>
@@ -88,6 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            style="@style/TreasureButton"
             android:text="Upload this item now?" />
     </LinearLayout>
 

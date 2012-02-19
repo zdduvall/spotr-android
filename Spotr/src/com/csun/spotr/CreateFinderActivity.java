@@ -47,7 +47,7 @@ import android.widget.Toast;
 public class CreateFinderActivity extends Activity {
 	private static final String TAG = "(CreateLostItemActivity)";
 	private static final String GET_USER_POINTS_URL = "http://107.22.209.62/android/get_user_points.php";
-	private static final String SUBMIT_ITEM_URL = "http://107.22.209.62/android/submit_lost_item.php";
+	private static final String SUBMIT_ITEM_URL = "http://107.22.209.62/android/do_create_finder.php";
 
 	private static Integer userPoints = 0;
 	private static String itemName = null;
@@ -84,8 +84,6 @@ public class CreateFinderActivity extends Activity {
 		buttonSubmit = (Button) findViewById(R.id.create_lost_item_xml_button_upload);
 		imageViewPicture = (ImageView) findViewById(R.id.create_lost_item_xml_imageview_item_images);
 
-		editTextName.setHint("Enter lost item's name here.");
-		editTextDescription.setHint("Describe the item in as much detail as you can here.");
 		editTextPoints.setText(Integer.toString(itemPoints));
 
 		buttonSelectImage.setOnClickListener(new OnClickListener() {

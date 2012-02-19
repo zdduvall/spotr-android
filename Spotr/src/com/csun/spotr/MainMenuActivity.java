@@ -78,12 +78,17 @@ public class MainMenuActivity
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				startDialog(position);
+				adapter.notifyDataSetChanged();
+				friendRequestList.remove(position);
+
+			//	listview.getChildAt((int) id).setVisibility(View.GONE);
+			//	listview.invalidate();
 			}
 		});
 	
 		// populating Notification with friend request 
-		// GetFriendRequestTask task = new GetFriendRequestTask(this);
-		// task.execute();
+		 GetFriendRequestTask task = new GetFriendRequestTask(this);
+		 task.execute();
 	}
 	
 	public void getActivity(View mainMenuButton) {
@@ -120,8 +125,8 @@ public class MainMenuActivity
 		 	intent = new Intent(getApplicationContext(), PingMapActivity.class);
 			startActivity(intent);   
 		}
-		else if (id == R.id.main_menu_btn_weapons) {
-			intent = new Intent(getApplicationContext(), WeaponActivity.class);
+		else if (id == R.id.main_menu_btn_inventory) {
+			intent = new Intent(getApplicationContext(), InventoryActivity.class);
 			startActivity(intent);   
 		}
 		else if (id == R.id.main_menu_btn_inbox) {
@@ -323,16 +328,22 @@ public class MainMenuActivity
 		myAlertDialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-				task.execute(ADD_FRIEND_URL);
+				if(friendRequestList.size() != 0)
+				{
+					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+					task.execute(ADD_FRIEND_URL);
+				}
 			}
 		});
 		
 		myAlertDialog.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+				if(friendRequestList.size() != 0)
+				{
 				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
 				task.execute(IGNORE_FRIEND_URL);
+				}
 			}
 		});
 		myAlertDialog.show();

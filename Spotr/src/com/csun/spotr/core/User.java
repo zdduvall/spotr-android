@@ -22,6 +22,8 @@ public class User {
 	private int placesVisited;
 	private int rank;
 	private String imageUrl;
+	private int numFriends;
+	private int numBadges;
 
 	public static class Builder {
 		// required parameters
@@ -36,6 +38,8 @@ public class User {
 		private int placesVisited;
 		private int rank;
 		private String imageUrl;
+		private int numFriends;
+		private int numBadges;
 
 		public Builder(int id, String username, String password) {
 			// required parameters
@@ -86,6 +90,16 @@ public class User {
 			return this;
 		}
 
+		public Builder numFriends(int f) {
+			this.numFriends = f;
+			return this;
+		}
+
+		public Builder numBadges(int b) {
+			this.numBadges = b;
+			return this;
+		}
+
 		public User build() {
 			return new User(this);
 		}
@@ -102,6 +116,8 @@ public class User {
 		this.placesVisited = builder.placesVisited;
 		this.rank = builder.rank;
 		this.imageUrl = builder.imageUrl;
+		this.numFriends = builder.numFriends;
+		this.numBadges = builder.numBadges;
 	}
 
 	public String getRealname() {
@@ -174,6 +190,22 @@ public class User {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public int getNumFriends() {
+		return numFriends;
+	}
+
+	public void setNumFriends(int numFriends) {
+		this.numFriends = numFriends;
+	}
+
+	public int getNumBadges() {
+		return numBadges;
+	}
+
+	public void setNumBadges(int numBadges) {
+		this.numBadges = numBadges;
 	}
 
 	@Override

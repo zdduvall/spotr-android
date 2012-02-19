@@ -12,26 +12,24 @@ import android.widget.Toast;
 
 public class SpotrActivity extends Activity {
 	private static final String TAG = "(SpotrActivity)";
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		SharedPreferences refs = getSharedPreferences("Spotr", MODE_PRIVATE);
 		Intent i;
-		if(refs.equals(null))
-		{
+		if (refs.equals(null)) {
 			i = new Intent(getApplicationContext(), LoginActivity.class);
 		}
-		else
-		{
+		else {
 			i = new Intent(getApplicationContext(), LoginActivity.class);
 		}
 		startActivity(i);
 		finish();
 	}
-	
+
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Toast.makeText(this, "Back one more time to exits!", Toast.LENGTH_LONG);
 			finish();

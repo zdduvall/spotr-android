@@ -475,7 +475,7 @@
         
          <!-- Treasure Activity -->
         <activity
-            android:name=".WeaponActivity"
+            android:name=".InventoryActivity"
             android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="com.csun.spotr.WeaponActivity" />

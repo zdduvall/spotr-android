@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -17,11 +18,14 @@ import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.User;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
+import com.csun.spotr.singleton.CurrentDateTime;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
+import com.csun.spotr.util.UploadFileHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,6 +48,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Description:
@@ -57,6 +62,7 @@ public class ProfileActivity
 	private static final 	String 					GET_USER_DETAIL_URL = "http://107.22.209.62/android/get_user_detail.php";
 	private static final 	String 					GET_USER_FEEDS = "http://107.22.209.62/android/get_current_user_feeds.php";
 	private static final 	String 					GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
+	private static final    String					UPDATE_PICTURE_URL = "http://107.22.209.62/images/upload_user_picture.php";
 	
 	private static final 	int 					CAMERA_PICTURE = 111;
 	private static final 	int 					GALLERY_PICTURE = 222;
@@ -66,6 +72,7 @@ public class ProfileActivity
 	private					List<FriendFeedItem>    feedList;
 	private 				Bitmap 					bitmapUserPicture = null;
 	private					GetUserDetailTask		task;
+	private 				int 					userId = -1;
 				
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +83,22 @@ public class ProfileActivity
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
 		adapter = new FriendFeedItemAdapter(this, feedList);
 		listview.setAdapter(adapter);
+		
+		Bundle extrasBundle = getIntent().getExtras();
+		userId = extrasBundle.getInt("user_id");
 
-		task = new GetUserDetailTask(this);
-		task.execute();
+		if (userId != -1) {
+			task = new GetUserDetailTask(this, userId);
+			task.execute();
+		}
+		
+		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
+		if (userId == CurrentUser.getCurrentUser().getId()) {
+			imageViewUserPicture.setClickable(true);
+		}
+		else {
+			imageViewUserPicture.setClickable(false);
+		}
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -97,6 +117,21 @@ public class ProfileActivity
 					temp.setImageBitmap(bitmapUserPicture);
 				}
 			}
+			
+			// create byte stream array
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			
+			// compress picture and add to stream (PNG)
+			bitmapUserPicture.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+			
+			// create raw data src
+			byte[] src = stream.toByteArray();
+			
+			// encode it
+			String byteCode = Base64.encodeBytes(src);
+			
+			UploadPictueTask task = new UploadPictueTask(this, byteCode);
+			task.execute();
 		}
 	}
 
@@ -135,8 +170,10 @@ public class ProfileActivity
 			implements IAsyncTask<ProfileActivity> {
 		
 		private WeakReference<ProfileActivity> ref;
+		private int userId;
 		
-		public GetUserDetailTask(ProfileActivity a) {
+		public GetUserDetailTask(ProfileActivity a, int userId) {
+			this.userId = userId;
 			attach(a);
 		}
 		
@@ -149,7 +186,7 @@ public class ProfileActivity
 		@Override
 		protected User doInBackground(Void...voids) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
 			
 			// user's detail info
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_DETAIL_URL, data);
@@ -172,69 +209,73 @@ public class ProfileActivity
 							.placesVisited(array.getJSONObject(0).getInt("users_tbl_places_visited"))
 							.points(array.getJSONObject(0).getInt("users_tbl_points"))
 							.imageUrl(array.getJSONObject(0).getString("users_tbl_user_image_url"))
+							.numFriends(array.getJSONObject(0).getInt("num_friends"))
+							.numBadges(array.getJSONObject(0).getInt("num_badges"))
 								.build();
 				
 				if (isCancelled()) {
 					return user;
 				}
 				
-				for (int i = 0; i < feedArray.length(); ++i) { 
-    				String snapPictureUrl = null;
-    				String userPictureUrl = null;
-    				String shareUrl = null;
-    				
-    				if (Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
-    					snapPictureUrl = feedArray.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+				if (feedArray != null) {
+    				for (int i = 0; i < feedArray.length(); ++i) { 
+        				String snapPictureUrl = null;
+        				String userPictureUrl = null;
+        				String shareUrl = null;
+        				
+        				if (Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
+        					snapPictureUrl = feedArray.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+        				}
+        				
+        				if(feedArray.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
+        					userPictureUrl = feedArray.getJSONObject(i).getString("users_tbl_user_image_url");
+        				}
+        				
+        				if(feedArray.getJSONObject(i).has("activity_tbl_share_url") && !feedArray.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
+        					shareUrl = feedArray.getJSONObject(i).getString("activity_tbl_share_url");
+        				}
+        				else {
+        					shareUrl = "";
+        				}
+        				
+        				FriendFeedItem ffi = 
+        					new FriendFeedItem.Builder(
+        							// required parameters
+        							feedArray.getJSONObject(i).getInt("activity_tbl_id"),
+        							0, // not used
+        							feedArray.getJSONObject(i).getString("users_tbl_username"),
+        							Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")),
+        							feedArray.getJSONObject(i).getString("activity_tbl_created"),
+        							feedArray.getJSONObject(i).getString("spots_tbl_name"))
+        								// optional parameters
+        								.challengeName(feedArray.getJSONObject(i).getString("challenges_tbl_name"))
+        								.challengeDescription(feedArray.getJSONObject(i).getString("challenges_tbl_description"))
+        								.activitySnapPictureUrl(snapPictureUrl)
+        								.friendPictureUrl(userPictureUrl)
+        								.activityComment(feedArray.getJSONObject(i).getString("activity_tbl_comment"))
+        								.shareUrl(shareUrl)
+        								.numberOfComments(feedArray.getJSONObject(i).getInt("activity_tbl_total_comments"))
+        								.likes(feedArray.getJSONObject(i).getInt("activity_tbl_likes"))
+        									.build();
+        				
+        				
+        				data.clear();
+        				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
+        				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+        				
+        				Comment firstComment = new Comment(-1, "", "", "", "");
+        				
+        				if (commentArray != null) {
+        					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
+        					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
+        					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
+        					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
+        					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
+        				}
+        				
+        				ffi.setFirstComment(firstComment);
+        				publishProgress(ffi);
     				}
-    				
-    				if(feedArray.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
-    					userPictureUrl = feedArray.getJSONObject(i).getString("users_tbl_user_image_url");
-    				}
-    				
-    				if(feedArray.getJSONObject(i).has("activity_tbl_share_url") && !feedArray.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
-    					shareUrl = feedArray.getJSONObject(i).getString("activity_tbl_share_url");
-    				}
-    				else {
-    					shareUrl = "";
-    				}
-    				
-    				FriendFeedItem ffi = 
-    					new FriendFeedItem.Builder(
-    							// required parameters
-    							feedArray.getJSONObject(i).getInt("activity_tbl_id"),
-    							0, // not used
-    							feedArray.getJSONObject(i).getString("users_tbl_username"),
-    							Challenge.returnType(feedArray.getJSONObject(i).getString("challenges_tbl_type")),
-    							feedArray.getJSONObject(i).getString("activity_tbl_created"),
-    							feedArray.getJSONObject(i).getString("spots_tbl_name"))
-    								// optional parameters
-    								.challengeName(feedArray.getJSONObject(i).getString("challenges_tbl_name"))
-    								.challengeDescription(feedArray.getJSONObject(i).getString("challenges_tbl_description"))
-    								.activitySnapPictureUrl(snapPictureUrl)
-    								.friendPictureUrl(userPictureUrl)
-    								.activityComment(feedArray.getJSONObject(i).getString("activity_tbl_comment"))
-    								.shareUrl(shareUrl)
-    								.numberOfComments(feedArray.getJSONObject(i).getInt("activity_tbl_total_comments"))
-    								.likes(feedArray.getJSONObject(i).getInt("activity_tbl_likes"))
-    									.build();
-    				
-    				
-    				data.clear();
-    				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-    				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
-    				
-    				Comment firstComment = new Comment(-1, "", "", "", "");
-    				
-    				if (commentArray != null) {
-    					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
-    					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
-    					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
-    					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
-    					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
-    				}
-    				
-    				ffi.setFirstComment(firstComment);
-    				publishProgress(ffi);
 				}
 				
 			}
@@ -260,6 +301,73 @@ public class ProfileActivity
 			ref.clear();
 		}
 	}
+	
+	private static class UploadPictueTask 
+    	extends AsyncTask<Void, Integer, String> 
+    		implements IAsyncTask<ProfileActivity> {
+    	
+    	private WeakReference<ProfileActivity> ref;
+    	private String picturebyteCode;
+    	
+    	public UploadPictueTask(ProfileActivity a, String pbc) {
+    		attach(a);
+    		picturebyteCode = pbc;
+    	}
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		
+    	}
+    
+    	@Override
+    	protected String doInBackground(Void... voids) {
+    		List<NameValuePair> datas = new ArrayList<NameValuePair>();
+    		// send encoded data to server
+    		datas.add(new BasicNameValuePair("image", picturebyteCode));
+    		
+    		// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
+    		// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
+    		datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
+    		
+    		// send the rest of data
+    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+    		
+    		
+    		// get JSON to check result
+    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
+    		String result = "";
+    		try {
+    			result = json.getString("result");
+    		} 
+    		catch (JSONException e) {
+    			Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+    		}
+    		return result;
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(String result) {
+    		if (result.equals("success")) {
+    			/*
+    			Toast.makeText(ref.get().getApplicationContext(), "Upload picture done!", Toast.LENGTH_SHORT).show();
+    			Intent intent = new Intent();
+    			intent.setData(Uri.parse("done"));
+    			ref.get().setResult(RESULT_OK, intent);
+    			ref.get().finish();
+    			*/
+    		}
+    		
+    		detach();
+    	}
+    	
+    	public void attach(ProfileActivity a) {
+    		ref = new WeakReference<ProfileActivity>(a);
+    	}
+    	
+    	public void detach() {
+    		ref.clear();
+    	}
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -330,6 +438,9 @@ public class ProfileActivity
 			}
 		});
 		
+		TextView textViewName = (TextView) findViewById(R.id.profile_xml_textview_profilename);
+		textViewName.setText(u.getUsername());
+		
 		TextView textViewChallengesDone = (TextView) findViewById(R.id.profile_xml_textview_challenges_done);
 		textViewChallengesDone.setText(Integer.toString(u.getChallengesDone()));
 		
@@ -338,5 +449,11 @@ public class ProfileActivity
 		
 		TextView textViewPoints = (TextView) findViewById(R.id.profile_xml_textview_points);
 		textViewPoints.setText(Integer.toString(u.getPoints()));
+		
+		TextView textViewNumFriends = (TextView) findViewById(R.id.profile_xml_textview_numfriends);
+		textViewNumFriends.setText(Integer.toString(u.getNumFriends()));
+		
+		TextView textViewNumBadges = (TextView) findViewById(R.id.profile_xml_textview_numrewards);
+		textViewNumBadges.setText(Integer.toString(u.getNumBadges()));
 	}
 }

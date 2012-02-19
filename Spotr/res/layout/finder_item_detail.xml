@@ -1,15 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" 
+    android:background="@color/fb_background"
     android:orientation="vertical">
+
 
     <TextView
         android:id="@+id/finder_item_detail_xml_name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/fb_header" />
+    
     <TextView
         android:id="@+id/finder_item_detail_xml_name"
         android:layout_width="wrap_content"
@@ -21,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description"
+        android:textColor="@color/fb_header"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -33,6 +37,7 @@
         android:id="@+id/finder_item_detail_xml_user_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/fb_header"
         android:text="Posted by"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -46,6 +51,7 @@
         android:id="@+id/finder_item_detail_xml_points_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/fb_header"
         android:text="Reward Value"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -59,5 +65,13 @@
         android:id="@+id/finder_item_detail_xml_gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    
+    <Button
+        android:id="@+id/finder_item_detail_xml_add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TreasureButton"
+        android:layout_gravity="center"
+        android:text="Add another picture?" />
 
 </LinearLayout>

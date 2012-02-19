@@ -26,7 +26,7 @@ import com.csun.spotr.util.JsonHelper;
  * Description:
  * 		Display user's weapons
  */
-public class WeaponActivity 
+public class InventoryActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Weapon> {
 	
@@ -51,13 +51,13 @@ public class WeaponActivity
 	
 	private static class GetWeaponTask 
 		extends AsyncTask<Integer, Weapon, Boolean> 
-			implements IAsyncTask<WeaponActivity> {
+			implements IAsyncTask<InventoryActivity> {
 		
 		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
-		private WeakReference<WeaponActivity> ref;
+		private WeakReference<InventoryActivity> ref;
 		private JSONArray array;
 
-		public GetWeaponTask(WeaponActivity a) {
+		public GetWeaponTask(InventoryActivity a) {
 			attach(a);
 		}
 		
@@ -101,8 +101,8 @@ public class WeaponActivity
 		protected void onPostExecute(Boolean result) {
 		}
 		
-		public void attach(WeaponActivity a) {
-			ref = new WeakReference<WeaponActivity>(a);
+		public void attach(InventoryActivity a) {
+			ref = new WeakReference<InventoryActivity>(a);
 		}
 		
 		public void detach() {
