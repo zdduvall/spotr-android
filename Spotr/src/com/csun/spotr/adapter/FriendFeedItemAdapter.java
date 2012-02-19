@@ -1,10 +1,17 @@
 package com.csun.spotr.adapter;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,20 +28,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.csun.spotr.CommentActivity;
+import com.csun.spotr.LocalMapViewActivity;
+import com.csun.spotr.LoginActivity;
 import com.csun.spotr.R;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.ImageLoader;
+import com.csun.spotr.util.JsonHelper;
 
 public class FriendFeedItemAdapter extends BaseAdapter {
+	private static final String TAG = "(FriendFeedItemAdapter)";
 	private List<FriendFeedItem> items;
 	private static LayoutInflater inflater;
 	public ImageLoader imageLoader;
 	private Context context;
 	private ItemViewHolder holder;
+
+	private static final String LIKE_ACTIVITY_URL = "http://107.22.209.62/android/do_like_activity.php";
 	
 	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items) {
 		this.context = context.getApplicationContext();
@@ -169,6 +184,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		
 		holder.buttonLike.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				new LikeActivityTask(FriendFeedItemAdapter.this).execute(items.get(position).getActivityId());
 				items.get(position).setLikes(items.get(position).getLikes() + 1);
 				notifyDataSetChanged();
 			}
@@ -207,5 +223,52 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	        view.loadUrl(url);
 	        return true;
 	    }
+	}
+	
+	private static class LikeActivityTask
+		extends AsyncTask<Integer, Void, Boolean> 
+			implements IAsyncTask<FriendFeedItemAdapter> {
+	
+		private WeakReference<FriendFeedItemAdapter> ref;
+		
+	
+		public LikeActivityTask(FriendFeedItemAdapter a) {
+			attach(a);
+		}
+	
+		@Override
+		protected void onPreExecute() {
+		}
+	
+		@Override
+		protected Boolean doInBackground(Integer... activity) {
+			List<NameValuePair> datas = new ArrayList<NameValuePair>();
+			datas.add(new BasicNameValuePair("activityId", activity[0].toString() ));
+			
+			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(LIKE_ACTIVITY_URL, datas);
+			String result = "";
+			try {
+				result = json.getString("result");
+				if (result.equals("success"))
+					return true;
+			}
+			catch (Exception e) {
+				Log.e(TAG + "LikeActivityTask.doInBackground(Void... voids)", "JSON error parsing data" + e.toString());
+			}
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			detach();
+		}
+
+		public void attach(FriendFeedItemAdapter a) {
+			ref = new WeakReference<FriendFeedItemAdapter>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
 	}
 }

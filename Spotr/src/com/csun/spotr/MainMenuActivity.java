@@ -125,8 +125,8 @@ public class MainMenuActivity
 		 	intent = new Intent(getApplicationContext(), PingMapActivity.class);
 			startActivity(intent);   
 		}
-		else if (id == R.id.main_menu_btn_weapons) {
-			intent = new Intent(getApplicationContext(), WeaponActivity.class);
+		else if (id == R.id.main_menu_btn_inventory) {
+			intent = new Intent(getApplicationContext(), InventoryActivity.class);
 			startActivity(intent);   
 		}
 		else if (id == R.id.main_menu_btn_inbox) {

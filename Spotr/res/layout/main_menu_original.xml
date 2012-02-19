@@ -67,12 +67,12 @@
             android:text="Spot It"
             android:onClick="getActivity" />
         
-        <!-- Weapons Button -->
+        <!-- Inventory Button -->
         <Button
-            android:id="@+id/main_menu_btn_weapons"
+            android:id="@+id/main_menu_btn_inventory"
             style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_weapons"
-            android:text="Weapons"
+            android:drawableTop="@drawable/ic_main_menu_inventory"
+            android:text="Inventory"
             android:onClick="getActivity" />
         
         <!-- Inbox Button -->
