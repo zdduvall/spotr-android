@@ -46,11 +46,6 @@ public class TreasureActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.treasure);
-	
-		ViewFlipper flipper = (ViewFlipper) findViewById(R.id.treasure_xml_viewflipper_flipper);
-		flipper.startFlipping();
-		flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
-		flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out));
 		
 		textViewName = (TextView) findViewById(R.id.treasure_xml_textview_name);
 		textViewCompany = (TextView) findViewById(R.id.treasure_xml_textview_company);

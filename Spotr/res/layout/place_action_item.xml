@@ -5,8 +5,7 @@
     <!-- mission icon -->
     <ImageView
         android:id="@+id/place_action_item_xml_imageview_action_icon"
-        style="@style/MissionIcon"
-        android:src="@drawable/ic_launcher" />
+        style="@style/MissionIcon" />
 
     <!-- mission name -->
     <TextView

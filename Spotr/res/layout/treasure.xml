@@ -1,95 +1,99 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#f7f7f7"
-    android:orientation="vertical" >
-
-    <ViewFlipper
-        android:id="@+id/treasure_xml_viewflipper_flipper"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:flipInterval="500" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Congratulation!"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold"
-            android:textColor="#0e1f5b"
-            android:textSize="20dp" />
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#dd3c10"
-            android:textSize="20dp" />
-    </ViewFlipper>
+    android:background="@color/aluminum1"
+    android:orientation="vertical"
+    android:paddingTop="25dp"
+    android:paddingBottom="25dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
 
     <TextView
         android:id="@+id/treasure_xml_textview_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:textColor="#0e1f5b"
         android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#0e1f5b" />
 
     <ImageView
         android:id="@+id/treasure_xml_imageview_icon"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:src="@drawable/hottub" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="From"
-        android:textColor="#3b5998"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:src="@drawable/hottub"
+        android:layout_marginBottom="20dp" />
+    
     <TextView
         android:id="@+id/treasure_xml_textview_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#cccccc"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/aluminum6" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expiration Date"
-        android:textColor="#3b5998"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/treasure_xml_textview_expiration_date"
-        android:layout_width="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="This is a block of text describing the item and congratulating you, the chosen one, for finding this long lost relic, whilst also warning you against using it, lest its overwhelming power strips you of your humanity, turning you into a bloodthirsty, raving lunatic, no longer recognizable by his loved ones--no more a man than this long-winded verbiage is sensible."
+        android:textColor="@color/aluminum4"
+        android:layout_marginBottom="20dp" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-       	android:textColor="#cccccc"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Bar Code"
-        android:textColor="#3b5998"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/treasure_xml_textview_barcode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#cccccc"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal" >
+                
+        <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:orientation="vertical" >
+	        
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Expires"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		        android:textColor="@color/aluminum6" />
+		
+		    <TextView
+		        android:id="@+id/treasure_xml_textview_expiration_date"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:textColor="@color/aluminum4" />
+	    </LinearLayout>
+	    
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+        
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Item Code"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		        android:textColor="@color/aluminum6" />
+		
+		    <TextView
+		        android:id="@+id/treasure_xml_textview_barcode"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:textColor="@color/aluminum4" />
+    
+	    </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal" >
 
         <Button
@@ -98,14 +102,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Facebook" />
+            android:text="Fackbook" />
 
         <Button
             android:id="@+id/treasure_xml_button_twitter"
             style="@style/TreasureButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Twitter" />
+            android:text="Twatter" />
     </LinearLayout>
 
 </LinearLayout>
