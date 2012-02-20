@@ -83,7 +83,7 @@ public class LoginActivity
 		if (prefsSavePassword) {
 			edittextUsername.append(prefsUsername);
 			edittextPassword.append(prefsPassword);
-			performLogin();
+			// performLogin();
 		}
 
 		checkVisible.setOnClickListener(new OnClickListener() {

@@ -35,25 +35,10 @@ public class TreasureActivity
 	
 	private static final 	String 			TAG = "(TreasureActivity)";
 	private static final 	String 			GET_RANDOM_TREASURE_URL = "http://107.22.209.62/android/get_treasure.php";
-	
-	private 				TextView 		textViewName;
-	private 				TextView 		textViewCompany;
-	private 				TextView 		textViewExpirationDate;
-	private 				TextView 		textViewBarcode;
-	private 				ImageView 		imageViewIcon;
-	private 				ImageLoader 	imageLoader;
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.treasure);
-		
-		textViewName = (TextView) findViewById(R.id.treasure_xml_textview_name);
-		textViewCompany = (TextView) findViewById(R.id.treasure_xml_textview_company);
-		textViewExpirationDate = (TextView) findViewById(R.id.treasure_xml_textview_expiration_date);
-		textViewBarcode = (TextView) findViewById(R.id.treasure_xml_textview_barcode);
-		imageViewIcon = (ImageView) findViewById(R.id.treasure_xml_imageview_icon);
-		
-		imageLoader = new ImageLoader(getApplicationContext());
 		
 		// get treasure 
 		new GetRandomTreasureTask(this).execute();
@@ -120,6 +105,13 @@ public class TreasureActivity
 	}
 	
 	public void updateAsyncTaskProgress(Treasure t) {
+		TextView textViewName = (TextView) findViewById(R.id.treasure_xml_textview_name);
+		TextView textViewCompany = (TextView) findViewById(R.id.treasure_xml_textview_company);
+		TextView textViewExpirationDate = (TextView) findViewById(R.id.treasure_xml_textview_expiration_date);
+		TextView textViewBarcode = (TextView) findViewById(R.id.treasure_xml_textview_barcode);
+		ImageView imageViewIcon = (ImageView) findViewById(R.id.treasure_xml_imageview_icon);
+		
+		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 		textViewName.setText(t.getName());
 		textViewCompany.setText(t.getCompany());
 		textViewExpirationDate.setText(t.getExpirationDate());
