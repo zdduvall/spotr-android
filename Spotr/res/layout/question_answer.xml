@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Question/Answer"
+        android:text="Riddle Me This"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#cc0000"
         android:textStyle="bold" />
@@ -66,6 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Please write your answer here"
+        android:maxLines="5"
+        android:maxLength="100"
         android:inputType="textMultiLine" >
 
         <requestFocus />
