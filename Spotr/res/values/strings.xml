@@ -73,4 +73,7 @@
     <string name="leaderboard_xml_header_PV">PV</string>
     <string name="leaderboard_xml_header_points">PTS</string>
     <string name="leaderboard_xml_refresh">Refresh</string>
+    
+     <!-- question/answer.xml -->
+    <string name="question_answer_xml_edittext_answer">Answer</string>
 </resources>
