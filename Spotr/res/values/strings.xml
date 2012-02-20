@@ -44,6 +44,11 @@
         <item>Main Menu View</item>
     </string-array>   
     
+    <!-- place.xml -->
+    <string name="place_xml_textview_find_str">Find</string>
+    <string name="place_xml_button_refresh_str">Refresh</string>
+    <string name="place_xml_textview_nearby_str">Nearby Places</string>
+    
     <!-- challenge.xml -->
     <string name="challenge_xml_button_sort_by">Sort by</string>
     

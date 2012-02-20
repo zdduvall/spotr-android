@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="17dp"
-        android:text="Find"
+        android:text="@string/place_xml_textview_find_str"
         android:textColor="#000000"
         android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="right"
 	        android:enabled="false" 
-	        android:text="Refresh" />
+	        android:text="@string/place_xml_button_refresh_str" />
     
 	</LinearLayout>
 
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:textSize="17dp"
         android:textColor="#000000"
-        android:text="Nearby Places"
+        android:text="@string/place_xml_textview_nearby_str"
         android:textStyle="bold" />
 
     <ListView
