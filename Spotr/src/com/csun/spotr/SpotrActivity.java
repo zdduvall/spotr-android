@@ -24,6 +24,7 @@ public class SpotrActivity extends Activity {
 		else {
 			i = new Intent(getApplicationContext(), LoginActivity.class);
 		}
+		
 		startActivity(i);
 		finish();
 	}

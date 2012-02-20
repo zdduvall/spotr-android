@@ -24,7 +24,7 @@
         android:textColor="#000000"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
-	<ScrollView 
+			<ScrollView 
     		android:layout_width="fill_parent"
     		android:layout_height="wrap_content"
     		android:orientation="vertical" >
@@ -42,7 +42,7 @@
             		android:drawSelectorOnTop="true"
             		android:gravity="center"
             		android:background="@drawable/edit_text_border_selector"
-				    android:textColor="@drawable/edit_text_font_color_selector"
+				    		android:textColor="@drawable/edit_text_font_color_selector"
             		android:maxLength="400" />
 
         		<Button
