@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class SnapPictureActivity
 	private static final 	String 			TAG = "(SnapPictureActivity)";
 	private static final 	String 			SNAP_PICTURE_URL = "http://107.22.209.62/images/upload_picture.php";
 	
-	private 				Button 			buttonGo = null;
+	private 				ImageView       buttonGo = null;
 	private 				Button 			buttonNext = null;
 	private 				ImageView 		imageViewPreview = null;
 	private 				Bitmap 			takenPictureBitmap = null;
@@ -66,7 +67,7 @@ public class SnapPictureActivity
 		// dummy comment
 		comment = "hello snap picture";
 		// initialize two buttons	
-		buttonGo = (Button) findViewById(R.id.snap_picture_xml_button_go);
+		buttonGo = (ImageView) findViewById(R.id.snap_picture_xml_imageview_go);
 		buttonNext = (Button) findViewById(R.id.snap_picture_xml_button_next);
 		// initialize image view
 		imageViewPreview = (ImageView) findViewById(R.id.snap_picture_xml_imageview_preview_picture);
@@ -77,7 +78,7 @@ public class SnapPictureActivity
 			}
 		});
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {

@@ -2,59 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_clouds"
+    android:background="@color/aluminum1"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/write_on_wall_xml_textview_title"
+        android:id="@+id/write_on_wall_xml_textview_character_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Write On Wall"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0/160"
         android:textColor="#000000"
+        android:textSize="14dp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/write_on_wall_xml_textview_description"
+    <EditText
+        android:id="@+id/write_on_wall_xml_edittext_message_box"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:maxLength="160" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/write_on_wall_xml_edittext_link"
+            android:layout_width="227dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.60"
+            android:gravity="top"
+            android:inputType="textUri"
+            android:maxLength="160" />
+
+        <Button
+            android:id="@+id/write_on_wall_xml_button_choose_link"
+            style="@style/TreasureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Link" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/write_on_wall_xml_button_submit"
+        style="@style/TreasureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Share with us what you think!"
-        android:layout_gravity="center"
-        android:textColor="#000000"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-			<ScrollView 
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:orientation="vertical" >
+        android:text="Post" />
 
-    		<LinearLayout
-        		android:layout_width="fill_parent"
-        		android:layout_height="fill_parent"
-        		android:orientation="vertical" >
-
-        		<EditText
-        		    android:id="@+id/write_on_wall_xml_edittext_message_box"
-            		android:layout_width="match_parent"
-            		android:layout_height="wrap_content"
-            		android:inputType="textMultiLine"
-            		android:drawSelectorOnTop="true"
-            		android:gravity="center"
-            		android:background="@drawable/edit_text_border_selector"
-				    		android:textColor="@drawable/edit_text_font_color_selector"
-            		android:maxLength="400" />
-
-        		<Button
-            			android:id="@+id/write_on_wall_xml_button_submit"
-            			style="@style/TreasureButton"
-            			android:layout_width="wrap_content"
-            			android:layout_height="wrap_content"
-            			android:layout_gravity="center"
-            			android:text="Post your message?" />
-
-    		</LinearLayout>
-
-	</ScrollView>
-	
 </LinearLayout>
