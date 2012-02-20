@@ -2,28 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/aluminum1" >
 
-    <EditText
-        android:id="@+id/friend_list_action_xml_edittext_search"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Type a name"
-        android:singleLine="true" 
-        />
+        android:orientation="horizontal"
+        android:padding="10dp" >
+        
+	    <EditText
+	        android:id="@+id/friend_list_action_xml_edittext_search"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="3"
+	        android:hint="John Doe"
+	        android:singleLine="true" 
+	        />
+	
+	    <Button
+	        android:id="@+id/friend_list_action_xml_button_search"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="Search" 
+	        />
 
-    <Button
-        android:id="@+id/friend_list_action_xml_button_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Do a Search" 
-        />
-
-    <ListView
+    </LinearLayout>
+    
+    <com.csun.spotr.custom_gui.RoundedRectListView
         android:id="@+id/friend_list_action_xml_listview_search_friends"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@android:color/white" >
-    </ListView>
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+         >
+    </com.csun.spotr.custom_gui.RoundedRectListView>
 
 </LinearLayout>

@@ -6,10 +6,13 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 /**
  * Description:
@@ -34,17 +37,23 @@ public class FriendListMainActivity
 
 		// Create an Intent to launch an Activity for the tab (to be reused)
 		intent = new Intent().setClass(getApplicationContext(), FriendListActivity.class); 
+	    View customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
+	    TextView tv = (TextView) customTabView.findViewById(R.id.tabText);
+	    tv.setText("Friends");
 		spec = tabHost
-				.newTabSpec("All Friends")
-				.setIndicator("All Friends", res.getDrawable(R.drawable.place_activity_tab))
+				.newTabSpec("Friends")
+				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
 
 		// Initialize a TabSpec for each tab and add it to the TabHost
 		intent = new Intent().setClass(getApplicationContext(), FriendListFeedActivity.class);
+		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
+	    tv = (TextView) customTabView.findViewById(R.id.tabText);
+	    tv.setText("Chatter");
 		spec = tabHost
-				.newTabSpec("Friend Feeds")
-				.setIndicator("Friend Feeds", res.getDrawable(R.drawable.place_activity_tab))
+				.newTabSpec("Chatter")
+				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
 		// set current tab to action
@@ -53,9 +62,12 @@ public class FriendListMainActivity
 	
 		// Do the same for the other tabs
 		intent = new Intent().setClass(getApplicationContext(), FriendListActionActivity.class);
+		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
+	    tv = (TextView) customTabView.findViewById(R.id.tabText);
+	    tv.setText("Find");
 		spec = tabHost
 				.newTabSpec("Find")
-				.setIndicator("Find", res.getDrawable(R.drawable.place_activity_tab))
+				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
 
