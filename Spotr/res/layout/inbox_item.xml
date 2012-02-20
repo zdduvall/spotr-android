@@ -11,7 +11,9 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginRight="6dp"
-        android:src="@drawable/ic_launcher" />
+        android:scaleType="centerCrop"
+        android:background="@drawable/user_default"
+        android:src="@drawable/user_default" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -28,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-        				android:layout_alignParentTop="true"
+                android:layout_alignParentTop="true"
                 android:text="username"
                 android:textColor="@android:color/black"
                 android:textSize="12dp"
@@ -38,9 +40,9 @@
                 android:id="@+id/inbox_item_xml_textview_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 days ago"
                 android:layout_alignParentRight="true"
-        				android:layout_alignParentTop="true"
+                android:layout_alignParentTop="true"
+                android:text="2 days ago"
                 android:textColor="#919191"
                 android:textSize="10dp" />
         </RelativeLayout>

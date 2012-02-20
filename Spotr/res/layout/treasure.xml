@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#f7f7f7"
     android:orientation="vertical" >
 
     <ViewFlipper
@@ -12,17 +13,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Congratulation! You just earned a Spotr treasure, enjoy your gift!"
+            android:text="Congratulation!"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
-            android:textColor="#E0601B"
+            android:textColor="#0e1f5b"
             android:textSize="20dp" />
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#E0601B"
+            android:textColor="#dd3c10"
             android:textSize="20dp" />
     </ViewFlipper>
 
@@ -31,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textColor="#0e1f5b"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -45,26 +47,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="From"
+        android:textColor="#3b5998"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/treasure_xml_textview_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
+        android:textColor="#cccccc"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Expiration Date"
+        android:textColor="#3b5998"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/treasure_xml_textview_expiration_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
+       	android:textColor="#cccccc"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -72,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Bar Code"
+        android:textColor="#3b5998"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -79,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Small Text"
+        android:textColor="#cccccc"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <LinearLayout

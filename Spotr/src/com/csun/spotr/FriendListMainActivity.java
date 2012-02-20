@@ -32,10 +32,14 @@ public class FriendListMainActivity
 		FlingableTabHost.TabSpec spec; 
 		Intent intent; 
 
-
-		
 		// Create an Intent to launch an Activity for the tab (to be reused)
 		intent = new Intent().setClass(getApplicationContext(), FriendListActivity.class); 
+		spec = tabHost
+				.newTabSpec("All Friends")
+				.setIndicator("All Friends", res.getDrawable(R.drawable.place_activity_tab))
+				.setContent(intent);
+		tabHost.addTab(spec);
+
 		// Initialize a TabSpec for each tab and add it to the TabHost
 		intent = new Intent().setClass(getApplicationContext(), FriendListFeedActivity.class);
 		spec = tabHost
@@ -46,12 +50,7 @@ public class FriendListMainActivity
 		// set current tab to action
 		tabHost.setCurrentTab(0);
 		
-		spec = tabHost
-				.newTabSpec("All Friends")
-				.setIndicator("All Friends", res.getDrawable(R.drawable.place_activity_tab))
-				.setContent(intent);
-		tabHost.addTab(spec);
-
+	
 		// Do the same for the other tabs
 		intent = new Intent().setClass(getApplicationContext(), FriendListActionActivity.class);
 		spec = tabHost

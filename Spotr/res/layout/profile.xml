@@ -32,12 +32,12 @@
             android:id="@+id/profile_xml_imageview_user_picture"
             android:layout_width="120sp"
             android:layout_height="120sp"
+            android:background="#FFFFFF"
             android:adjustViewBounds="true"
-            android:background="#434343"
             android:clickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher" >
-        </ImageView>
+            android:src="@drawable/user_default"
+           	/> 
 
         <View
             android:layout_width="1dip"

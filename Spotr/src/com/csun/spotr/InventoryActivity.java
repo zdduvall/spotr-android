@@ -10,9 +10,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.csun.spotr.adapter.WeaponAdapter;
@@ -23,36 +31,41 @@ import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 /**
- * Description:
- * 		Display user's weapons
+ * Description: Display user's weapons
  */
 public class InventoryActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Weapon> {
-	
-	private static final 	String 					TAG = "(WeaponActivity)";
-	private static final 	String 					GET_WEAPON_URL = "http://107.22.209.62/android/get_weapons.php";
-	
-	private 			 	ListView 				listview;
-	private 				WeaponAdapter 			adapter;
-	private					List<Weapon> 			weaponList = new ArrayList<Weapon>();
-	
+
+	private static final String TAG = "(WeaponActivity)";
+	private static final String GET_WEAPON_URL = "http://107.22.209.62/android/get_weapons.php";
+
+	private ListView listview;
+	private WeaponAdapter adapter;
+	private List<Weapon> weaponList = new ArrayList<Weapon>();
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.weapon);
-		
+
 		listview = (ListView) findViewById(R.id.weapon_xml_listview_weapons);
 		adapter = new WeaponAdapter(this, weaponList);
 		listview.setAdapter(adapter);
 		
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				showDialog(0);
+			}
+		});
+		
+
 		new GetWeaponTask(this).execute();
 	}
 
-	
 	private static class GetWeaponTask 
 		extends AsyncTask<Integer, Weapon, Boolean> 
 			implements IAsyncTask<InventoryActivity> {
-		
+
 		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<InventoryActivity> ref;
 		private JSONArray array;
@@ -60,7 +73,7 @@ public class InventoryActivity
 		public GetWeaponTask(InventoryActivity a) {
 			attach(a);
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 		}
@@ -81,12 +94,10 @@ public class InventoryActivity
 					for (int i = 0; i < array.length(); ++i) {
 						publishProgress(
 							new Weapon(
-								array.getJSONObject(i).getInt("weapon_tbl_id"),
-								array.getJSONObject(i).getString("weapon_tbl_title"),
-								array.getJSONObject(i).getString("weapon_tbl_icon_url"),
-								array.getJSONObject(i).getDouble("weapon_tbl_point_percentage"),
-								array.getJSONObject(i).getInt("users_weapon_tbl_times_left")));
-							
+								array.getJSONObject(i).getInt("weapon_tbl_id"), 
+								array.getJSONObject(i).getDouble("weapon_tbl_percent"), 
+								array.getJSONObject(i).getInt("weapon_tbl_num_uses")));
+
 					}
 				}
 				catch (JSONException e) {
@@ -100,19 +111,33 @@ public class InventoryActivity
 		@Override
 		protected void onPostExecute(Boolean result) {
 		}
-		
+
 		public void attach(InventoryActivity a) {
 			ref = new WeakReference<InventoryActivity>(a);
 		}
-		
+
 		public void detach() {
 			ref.clear();
 		}
 	}
 
-
 	public void updateAsyncTaskProgress(Weapon u) {
 		weaponList.add(u);
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Choose an option").setCancelable(true).setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		}).setNegativeButton("View", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+			}
+		});
+		return builder.create();
 	}
 }

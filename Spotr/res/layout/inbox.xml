@@ -9,8 +9,10 @@
         android:id="@+id/inbox_xml_textview_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="                      Inbox"
+        android:text="Inbox"
         android:textColor="#cc0000"
+        android:textStyle="bold"
+        android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button

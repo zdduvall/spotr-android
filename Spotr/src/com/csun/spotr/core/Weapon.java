@@ -1,54 +1,38 @@
 package com.csun.spotr.core;
 
 public class Weapon {
-	private final int id;
-	private String title;
-	private String iconUrl;
-	private int timesLeft;
-	private double pointPercentage;
-	
-	public Weapon(int id, String title, String iconUrl, double pointPercentage, int timesLeft) {
+	private int id;
+	private int numUses;
+	private double percent;
+
+	public Weapon(int id, double percent, int numUses) {
 		this.id = id;
-		this.title = title;
-		this.iconUrl = iconUrl;
-		this.pointPercentage = pointPercentage;
-		this.timesLeft = timesLeft;
-	}
-
-	public int getTimesLeft() {
-		return timesLeft;
-	}
-
-	public void setTimesLeft(int timesLeft) {
-		this.timesLeft = timesLeft;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getIconUrl() {
-		return iconUrl;
-	}
-
-	public void setIconUrl(String iconUrl) {
-		this.iconUrl = iconUrl;
-	}
-
-	public double getPointPercentage() {
-		return pointPercentage;
-	}
-
-	public void setPointPercentage(double pointPercentage) {
-		this.pointPercentage = pointPercentage;
+		this.percent = percent;
+		this.numUses = numUses;
 	}
 
 	public int getId() {
 		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getNumUses() {
+		return numUses;
+	}
+
+	public void setNumUses(int numUses) {
+		this.numUses = numUses;
+	}
+
+	public double getPercent() {
+		return percent;
+	}
+
+	public void setPercent(double percent) {
+		this.percent = percent;
 	}
 
 	@Override
@@ -56,7 +40,10 @@ public class Weapon {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + numUses;
+		long temp;
+		temp = Double.doubleToLongBits(percent);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -71,17 +58,16 @@ public class Weapon {
 		Weapon other = (Weapon) obj;
 		if (id != other.id)
 			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		}
-		else if (!title.equals(other.title))
+		if (numUses != other.numUses)
+			return false;
+		if (Double.doubleToLongBits(percent) != Double.doubleToLongBits(other.percent))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Weapon [id=" + id + ", title=" + title + ", iconUrl=" + iconUrl + ", pointPercentage=" + pointPercentage + "]";
+		return "Weapon [id=" + id + ", numUses=" + numUses + ", percent=" + percent + "]";
 	}
+
 }

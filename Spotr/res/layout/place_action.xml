@@ -48,7 +48,9 @@
             <Button
                 android:id="@+id/place_info_xml_button_moreinfo"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:textStyle="bold"
                 android:layout_alignParentBottom="true"
                 android:text="More Info" />
         </LinearLayout>
@@ -76,7 +78,7 @@
                 style="@style/TreasureButton"
                 android:layout_width="46dp"
                 android:layout_height="30dp"
-                android:background="@drawable/treasure" />
+                android:background="@drawable/mission_treasure" />
 
             <!-- OTHER BUTTONS? -->
 
