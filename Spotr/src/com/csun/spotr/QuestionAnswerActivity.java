@@ -58,7 +58,8 @@ public class QuestionAnswerActivity extends Activity {
 		textViewQuestion = (TextView) findViewById(R.id.question_answer_xml_textview_question);
 		textViewQuestion.setText(challengeQuestion);
 		
-		editTextAnswer = (EditText) findViewById(R.id.question_answer_xml_edittext_answer);
+		editTextAnswer = (EditText) findViewById(R.id.question_answer_xml_edittext_your_answer);
+		
 		buttonSubmit = (Button) findViewById(R.id.question_answer_xml_button_submit);
 		buttonSubmit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
