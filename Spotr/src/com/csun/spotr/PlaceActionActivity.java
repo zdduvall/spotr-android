@@ -33,6 +33,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -77,8 +79,6 @@ public class PlaceActionActivity
 		buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
 
 		// Intent intent = new Intent(getApplicationContext(),PlaceInfoActivity.class);
-
-
 		
 		buttonMoreInfo.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
@@ -91,6 +91,7 @@ public class PlaceActionActivity
 		});
 		
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
+		buttonTreasure.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate)) ;
 		buttonTreasure.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), TreasureActivity.class);

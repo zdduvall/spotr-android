@@ -56,10 +56,7 @@ public class FriendListMainActivity
 				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
-		// set current tab to action
-		tabHost.setCurrentTab(0);
 		
-	
 		// Do the same for the other tabs
 		intent = new Intent().setClass(getApplicationContext(), FriendListActionActivity.class);
 		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
@@ -71,6 +68,8 @@ public class FriendListMainActivity
 				.setContent(intent);
 		tabHost.addTab(spec);
 
+		
+		tabHost.setCurrentTab(0);
 	}
 	
 	@Override

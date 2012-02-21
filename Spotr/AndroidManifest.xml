@@ -527,6 +527,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+         <!-- Add Web Link Activity -->
+        <activity
+            android:name=".AddWebLinkActivity"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.AddWebLinkActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
 
         <!-- Google Map API -->

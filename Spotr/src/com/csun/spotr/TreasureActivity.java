@@ -82,6 +82,8 @@ public class TreasureActivity
 				}
 				catch (JSONException e) {
 					Log.e(TAG + "GetRandomTreasureTask.doInBackGround(Void... voids) : ", "JSON error parsing data" + e.toString());
+					
+					
 				}
 				return true;
 			}

@@ -2,70 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/aluminum1"
     android:gravity="center|top"
-    android:orientation="vertical"
-    android:background="@drawable/background_clouds" >
+    android:orientation="vertical" >
 
-    <!-- TextView
-        android:id="@+id/snap_picture_xml_textview_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Snap A Picture"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="18pt"
-        android:textColor="#00AAED"
-        android:textStyle="bold" / -->
-
-    <!-- Designed scroll view in case someone slides phone open or picture is too large -->
-    <ScrollView 
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:orientation="vertical" >
-    		
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="73dp" >
-
-    <ImageView
-        android:id="@+id/snap_picture_xml_imageview_preview_picture"
-        android:layout_width="fill_parent"
-        android:layout_height="232dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:padding="5dip"
-        android:src="@drawable/just_s_shadow" />
-    
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:paddingTop="15dp"
-	    android:gravity="center" >
-    <!-- I put border margins between the two buttons to allow for a little spacing in between -->     <Button
-        android:id="@+id/snap_picture_xml_button_go"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@layout/snap_picture_button_shape"
-        android:text="SNAP IT!"
-        android:layout_marginRight="5dip"
-        android:padding="25dip" />
-    
-    <Button
-        android:id="@+id/snap_picture_xml_button_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@layout/snap_picture_button_shape"
-        android:text="UPLOAD!"
-        android:padding="25dip"
-        android_layout_marginLeft="5dip"
-        android:enabled="false" />
+        android:paddingTop="20dp" >
+
+        <ImageView
+            android:id="@+id/snap_picture_xml_imageview_preview_picture"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/snap_picture_frame_icon" />
+
+        <ImageView
+            android:id="@+id/snap_picture_xml_imageview_go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dip"
+            android:src="@drawable/snap_picture_button_icon" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/snap_picture_xml_edittext_link"
+                android:layout_width="227dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.60"
+                android:gravity="top"
+                android:inputType="textUri"
+                android:maxLength="160" />
+
+            <Button
+                android:id="@+id/snap_picture_xml_button_choose_link"
+                style="@style/TreasureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Link" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="15dp" >
+
+            <Button
+                android:id="@+id/snap_picture_xml_button_next"
+                style="@style/TreasureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload" />
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-    </ScrollView>
-    
+
 </LinearLayout>

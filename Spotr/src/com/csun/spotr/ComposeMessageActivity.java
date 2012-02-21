@@ -41,8 +41,6 @@ public class ComposeMessageActivity extends Activity {
 	
 	private EditText editTextTo;
 	private EditText editTextMessage;
-	private TextView textViewCount;
-	private Button buttonSend;
 	private int toUserId = -1;
 	private SendMessageTask task = null;
 
@@ -53,8 +51,8 @@ public class ComposeMessageActivity extends Activity {
 		final Button buttonChooseUser = (Button) findViewById(R.id.compose_message_xml_button_choose_user);
 		editTextTo = (EditText) findViewById(R.id.compose_message_xml_edittext_to);
 		editTextMessage = (EditText) findViewById(R.id.compose_message_xml_edittext_message);
-		textViewCount = (TextView) findViewById(R.id.compose_message_xml_textview_character_count);
-		buttonSend = (Button) findViewById(R.id.compose_message_xml_button_send);
+		final TextView textViewCount = (TextView) findViewById(R.id.compose_message_xml_textview_character_count);
+		final Button buttonSend = (Button) findViewById(R.id.compose_message_xml_button_send);
 		editTextTo.setEnabled(false);
 
 		buttonChooseUser.setOnClickListener(new OnClickListener() {

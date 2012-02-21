@@ -65,7 +65,7 @@ public class PlaceActivityActivity
 		currentPlaceId = extrasBundle.getInt("place_id");
 		
 		listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
-		adapter = new FriendFeedItemAdapter(getApplicationContext(), placeFeedList);
+		adapter = new FriendFeedItemAdapter(getApplicationContext(), placeFeedList, false);
 		listview.setAdapter(adapter);
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {

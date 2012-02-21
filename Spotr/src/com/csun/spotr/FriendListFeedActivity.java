@@ -56,7 +56,7 @@ public class FriendListFeedActivity
 		setContentView(R.layout.friend_list_feed);
 		
 		listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
-		adapter = new FriendFeedItemAdapter(this.getApplicationContext(), friendFeedList);
+		adapter = new FriendFeedItemAdapter(this.getApplicationContext(), friendFeedList, false);
 		listview.setAdapter(adapter);
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
@@ -241,12 +241,5 @@ public class FriendListFeedActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-		
-	@Override 
-	public void onBackPressed() {
-		task.cancel(true);
-		Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-		startActivity(intent);
 	}
 }
