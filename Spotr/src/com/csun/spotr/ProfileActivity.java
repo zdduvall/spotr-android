@@ -40,6 +40,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -81,7 +82,7 @@ public class ProfileActivity
 		
 		feedList = new ArrayList<FriendFeedItem>();
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
-		adapter = new FriendFeedItemAdapter(this, feedList);
+		adapter = new FriendFeedItemAdapter(this, feedList, true);
 		listview.setAdapter(adapter);
 		
 		Bundle extrasBundle = getIntent().getExtras();
@@ -185,6 +186,10 @@ public class ProfileActivity
 
 		@Override
 		protected User doInBackground(Void...voids) {
+			if (isCancelled()) {
+				return null;
+			}
+			
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
 			
@@ -455,5 +460,15 @@ public class ProfileActivity
 		
 		TextView textViewNumBadges = (TextView) findViewById(R.id.profile_xml_textview_numrewards);
 		textViewNumBadges.setText(Integer.toString(u.getNumBadges()));
+	}
+	
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			task.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

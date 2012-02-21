@@ -48,14 +48,16 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	public ImageLoader imageLoader;
 	private Context context;
 	private ItemViewHolder holder;
+	private boolean me;
 
 	private static final String LIKE_ACTIVITY_URL = "http://107.22.209.62/android/do_like_activity.php";
 	
-	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items) {
+	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items, boolean me) {
 		this.context = context.getApplicationContext();
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader(context.getApplicationContext());
+		this.me = me;
 	}
 
 	public int getCount() {
@@ -212,6 +214,11 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.firstTextViewUsername.setVisibility(View.GONE);
 			holder.firstTextViewTime.setVisibility(View.GONE);
 			holder.firstTextViewContent.setVisibility(View.GONE);
+		}
+		
+		if (me) {
+			holder.buttonComment.setEnabled(false);
+			holder.buttonLike.setEnabled(false);
 		}
 		
 		return convertView;
