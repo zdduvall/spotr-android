@@ -33,10 +33,6 @@ import android.widget.TextView;
 public class QuestionAnswerActivity extends Activity {
 	private static final String TAG = "(SnapPictureActivity)";
 	private static final String QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
-	private TextView textViewQuestion = null;
-	private EditText editTextAnswer = null; 
-	private Button buttonSubmit = null;
-	private JSONObject json = null;
 	private QuestionAnswerTask task = null;
 	private String usersId;
 	private String spotsId;
@@ -55,12 +51,13 @@ public class QuestionAnswerActivity extends Activity {
 		challengesId = extras.getString("challenges_id");
 		challengeQuestion = extras.getString("question_description");
 	
-		textViewQuestion = (TextView) findViewById(R.id.question_answer_xml_textview_question);
+		TextView textViewQuestion = (TextView) findViewById(R.id.question_answer_xml_textview_question);
 		textViewQuestion.setText(challengeQuestion);
 		
-		editTextAnswer = (EditText) findViewById(R.id.question_answer_xml_edittext_your_answer);
+		final TextView editTextAnswer = (EditText) findViewById(R.id.question_answer_xml_edittext_your_answer);
+		Button buttonSubmit = (Button) findViewById(R.id.question_answer_xml_button_submit);
+		Button buttonLink = (Button) findViewById(R.id.question_answer_xml_button_choose_link);
 		
-		buttonSubmit = (Button) findViewById(R.id.question_answer_xml_button_submit);
 		buttonSubmit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				userAnswer = editTextAnswer.getText().toString().trim();
@@ -73,12 +70,19 @@ public class QuestionAnswerActivity extends Activity {
 				}
 			}
 		});
+		
+		buttonLink.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				int dummy = 0;
+				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
+				startActivityForResult(intent, 0);
+			}
+		});
 	}
 
 	private class QuestionAnswerTask extends AsyncTask<Void, Integer, String> {
 		ProgressDialog progressDialog = new ProgressDialog(QuestionAnswerActivity.this);
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
-		
+	
 		@Override
 		protected void onPreExecute() {
 			// display waiting dialog
@@ -91,11 +95,12 @@ public class QuestionAnswerActivity extends Activity {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			clientData.add(new BasicNameValuePair("users_id", usersId));
-			clientData.add(new BasicNameValuePair("spots_id", spotsId));
-			clientData.add(new BasicNameValuePair("challenges_id", challengesId));
-			clientData.add(new BasicNameValuePair("user_answer", userAnswer));
-			json = JsonHelper.getJsonObjectFromUrlWithData(QUESTION_ANSWER_URL, clientData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("users_id", usersId));
+			data.add(new BasicNameValuePair("spots_id", spotsId));
+			data.add(new BasicNameValuePair("challenges_id", challengesId));
+			data.add(new BasicNameValuePair("user_answer", userAnswer));
+			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(QUESTION_ANSWER_URL, data);
 			String result = "";
 			try {
 				result = json.getString("result");
@@ -185,5 +190,16 @@ public class QuestionAnswerActivity extends Activity {
 				break;
 		}
 		return true;
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 0) {
+			if (resultCode == RESULT_OK) {
+				Bundle b = data.getExtras();
+				String url = b.getString("link");
+				EditText editTextUrl = (EditText) findViewById(R.id.question_answer_xml_edittext_link);
+				editTextUrl.setText(url);
+			}
+		}
 	}
 }

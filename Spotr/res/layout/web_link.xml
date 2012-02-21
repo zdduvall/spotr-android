@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/aluminum1"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <AutoCompleteTextView
+            android:id="@+id/web_link_xml_autocompletetextview_url"
+            android:layout_width="517dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.73"
+            android:singleLine="true"
+			>
+        </AutoCompleteTextView>
+
+        <Button
+            android:id="@+id/web_link_xml_button_go"
+            style="@style/TreasureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go" />
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/web_link_xml_webview"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp" />
+
+    <Button
+        android:id="@+id/web_link_xml_button_add_link"
+        style="@style/TreasureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Add" />
+
+</LinearLayout>

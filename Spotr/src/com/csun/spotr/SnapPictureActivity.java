@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -45,16 +46,12 @@ public class SnapPictureActivity
 	private static final 	String 			TAG = "(SnapPictureActivity)";
 	private static final 	String 			SNAP_PICTURE_URL = "http://107.22.209.62/images/upload_picture.php";
 	
-	private 				ImageView       buttonGo = null;
-	private 				Button 			buttonNext = null;
-	private 				ImageView 		imageViewPreview = null;
 	private 				Bitmap 			takenPictureBitmap = null;
-	
 	private 				String 			usersId;
 	private 				String 			spotsId;
 	private 				String 			challengesId;
 	private 				String 			comment;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,43 +64,65 @@ public class SnapPictureActivity
 		// dummy comment
 		comment = "hello snap picture";
 		// initialize two buttons	
-		buttonGo = (ImageView) findViewById(R.id.snap_picture_xml_imageview_go);
-		buttonNext = (Button) findViewById(R.id.snap_picture_xml_button_next);
-		// initialize image view
-		imageViewPreview = (ImageView) findViewById(R.id.snap_picture_xml_imageview_preview_picture);
-		buttonGo.setOnClickListener(new OnClickListener() {
+		
+		Button buttonLink = (Button) findViewById(R.id.snap_picture_xml_button_choose_link);
+		buttonLink.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+				int dummy = 0;
+				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
 				startActivityForResult(intent, 0);
 			}
 		});
+		
+		
+		final ImageView imageViewTakePicture = (ImageView) findViewById(R.id.snap_picture_xml_imageview_go);
+		imageViewTakePicture.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+				startActivityForResult(intent, 1);
+			}
+		});
+		
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			// here is the image from camera
-			takenPictureBitmap = (Bitmap) data.getExtras().get("data");
-			imageViewPreview.setImageBitmap(takenPictureBitmap);
-			// only enable this button when data is available
-			buttonNext.setEnabled(true);
-			buttonNext.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					// disable both buttons to avoid user hit the back button, then hit upload again
-					buttonNext.setEnabled(false);
-					buttonGo.setEnabled(false);
-					// start upload picture to server
-					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					// compress picture and add to stream (PNG)
-					takenPictureBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-					// create raw data src
-					byte[] src = stream.toByteArray();
-					// encode it
-					String byteCode = Base64.encodeBytes(src);
-					UploadPictueTask task = new UploadPictueTask(SnapPictureActivity.this, byteCode);
-					task.execute();
-				}
-			});
+		if (requestCode == 0) {
+			if (resultCode == RESULT_OK) {
+				Bundle b = data.getExtras();
+				String url = b.getString("link");
+				EditText editTextUrl = (EditText) findViewById(R.id.snap_picture_xml_edittext_link);
+				editTextUrl.setText(url);
+			}
+		
+		}
+		else {
+			if (resultCode == RESULT_OK) {
+				ImageView imageViewPreview = (ImageView) findViewById(R.id.snap_picture_xml_imageview_preview_picture);
+				// here is the image from camera
+				takenPictureBitmap = (Bitmap) data.getExtras().get("data");
+				// initialize image view
+				imageViewPreview.setImageBitmap(takenPictureBitmap);
+				final Button buttonUpload = (Button) findViewById(R.id.snap_picture_xml_button_next);
+				// only enable this button when data is available
+				buttonUpload.setEnabled(true);
+				buttonUpload.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						// disable both buttons to avoid user hit the back button, then hit upload again
+						buttonUpload.setEnabled(false);
+						// start upload picture to server
+						ByteArrayOutputStream stream = new ByteArrayOutputStream();
+						// compress picture and add to stream (PNG)
+						takenPictureBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+						// create raw data src
+						byte[] src = stream.toByteArray();
+						// encode it
+						String byteCode = Base64.encodeBytes(src);
+						UploadPictueTask task = new UploadPictueTask(SnapPictureActivity.this, byteCode);
+						task.execute();
+					}
+				});
+			}
 		}
 	}
 

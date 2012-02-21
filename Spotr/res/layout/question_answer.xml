@@ -23,6 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:textColor="#4D4D4D"
+            android:textStyle="bold"
             android:text="Question goes here"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
