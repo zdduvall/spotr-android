@@ -44,10 +44,6 @@ public class QuestActivity
 	private 				QuestItemAdapter 	adapter;
 	private 				List<QuestItem> 	questList = new ArrayList<QuestItem>();
 	
-	private 				TextView 			nameTextView;
-	private 				TextView 			placeTextView;
-	private 				TextView 			pointTextView;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +63,8 @@ public class QuestActivity
 				extras.putInt("quest_id",questList.get(position).getId());
 				extras.putInt("quest_points",questList.get(position).getPoints());
 				extras.putInt("numberChallenges", questList.get(position).getSpotnum());
+				extras.putString("quest_name", questList.get(position).getName());
+				extras.putString("quest_description", questList.get(position).getDescription());
 				intent.putExtras(extras);
 				startActivity(intent);
 			}
