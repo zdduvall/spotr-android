@@ -40,17 +40,18 @@ public class QuestDetailActivity extends Activity {
 	private List<QuestDetailItem> questDetailList = new ArrayList<QuestDetailItem>();
 
 	private int questId;
-	private int questPoints = 0;
 	private int spotCompleted = 0;
 	private static int numQuest = 0;
 	private int spotId = 0;
+	private String questName = null;
+	private String questDescription = null;
 
 	static final int DO_SPOT_CHALLENGE = 1;
 
-	private TextView playernameTextView;
-	private TextView pointsTextView;
 	private TextView challengedoneTextView;
 	private ProgressBar progressbar;
+	private TextView questNameTextView = null;
+	private TextView questDescriptionTextView = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,20 +59,24 @@ public class QuestDetailActivity extends Activity {
 		setContentView(R.layout.quest_detail);
 
 		questId = this.getIntent().getExtras().getInt("quest_id");
-		questPoints = this.getIntent().getExtras().getInt("quest_points");
 		numQuest = this.getIntent().getExtras().getInt("numberChallenges");
-
+		questName = this.getIntent().getExtras().getString("quest_name");
+		questDescription = this.getIntent().getExtras().getString("quest_description");
+		
 		questDetailListView = (ListView) findViewById(R.id.quest_detail_xml_listview_quest_list);
 		questDetailItemAdapter = new QuestDetailItemAdapter(this.getApplicationContext(), questDetailList);
 		questDetailListView.setAdapter(questDetailItemAdapter);
 
 		// initialize detail description of specific quest
-		playernameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_playername);
-		pointsTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_points);
 		challengedoneTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_challengedone);
 		progressbar = (ProgressBar) findViewById(R.id.quest_detail_progressBar);
+		questNameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_name);
+		questDescriptionTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_description);
+		
+		questNameTextView.setText(questName);
+		questDescriptionTextView.setText(questDescription);
 
-		playernameTextView.setText(CurrentUser.getCurrentUser().getUsername());
+		//playernameTextView.setText(CurrentUser.getCurrentUser().getUsername());
 	//	progressbar.setProgress(questCompleted/numQuest);
 		
 		// handle event when click on specific quest
@@ -95,7 +100,6 @@ public class QuestDetailActivity extends Activity {
 
 		new GetQuestDetailTask(this).execute();
 
-		pointsTextView.setText(Integer.toString(questPoints));
 		// challengedoneTextView.setText(Integer.toString(questCompleted) + "/"
 		// + Integer.toString(numQuest));
 
