@@ -113,12 +113,14 @@ public class PlaceActionActivity
 				currentChosenItem = position;
 								
 				if (c.getType() == Challenge.Type.CHECK_IN) {
-					CheckInTask task = new CheckInTask(PlaceActionActivity.this);
-					task.execute(
-						Integer.toString(CurrentUser.getCurrentUser().getId()),
-						Integer.toString(currentPlaceId),
-						Integer.toString(c.getId())
-					);
+					Intent intent = new Intent(getApplicationContext(), CheckInActivity.class);
+					startActivity(intent);
+					
+					// CheckInTask task = new CheckInTask(PlaceActionActivity.this);
+					// task.execute(
+					//	Integer.toString(CurrentUser.getCurrentUser().getId()),
+					//	Integer.toString(currentPlaceId),
+					//	Integer.toString(c.getId()));
 				}
 				else if (c.getType() == Challenge.Type.WRITE_ON_WALL) {
 					Intent intent = new Intent("com.csun.spotr.WriteOnWallActivity");

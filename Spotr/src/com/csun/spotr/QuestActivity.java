@@ -44,10 +44,6 @@ public class QuestActivity
 	private 				QuestItemAdapter 	adapter;
 	private 				List<QuestItem> 	questList = new ArrayList<QuestItem>();
 	
-	private 				TextView 			nameTextView;
-	private 				TextView 			placeTextView;
-	private 				TextView 			pointTextView;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,21 +54,17 @@ public class QuestActivity
 		listview.setAdapter(adapter);
 		
 		//initialize detail description of specific quest
-		nameTextView = (TextView) findViewById(R.id.quest_xml_textview_quest_name);
-		placeTextView = (TextView) findViewById(R.id.quest_xml_textview_places);
-		pointTextView = (TextView) findViewById(R.id.quest_xml_textview_rewards);
 		
 		//handle event when click on specific quest
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				nameTextView.setText(questList.get(position).getName());
-				placeTextView.setText(Integer.toString(questList.get(position).getSpotnum()));
-				pointTextView.setText(Integer.toString(questList.get(position).getPoints()));
 				Intent intent = new Intent("com.csun.spotr.QuestDetailActivity");
 				Bundle extras = new Bundle();
 				extras.putInt("quest_id",questList.get(position).getId());
 				extras.putInt("quest_points",questList.get(position).getPoints());
 				extras.putInt("numberChallenges", questList.get(position).getSpotnum());
+				extras.putString("quest_name", questList.get(position).getName());
+				extras.putString("quest_description", questList.get(position).getDescription());
 				intent.putExtras(extras);
 				startActivity(intent);
 			}

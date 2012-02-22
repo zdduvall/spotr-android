@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
@@ -30,15 +32,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class QuestionAnswerActivity extends Activity {
-	private static final String TAG = "(SnapPictureActivity)";
-	private static final String QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
-	private QuestionAnswerTask task = null;
-	private String usersId;
-	private String spotsId;
-	private String challengesId;
-	private String challengeQuestion;
-	private String userAnswer;
+/*
+ * Description
+ * 		Display question and let user response 
+ */
+public class QuestionAnswerActivity 
+	extends Activity {
+	
+	private static final 	String 					TAG = "(SnapPictureActivity)";
+	private static final 	String 					QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
+	
+	private 				String 					usersId;
+	private 				String 					spotsId;
+	private 				String 					challengesId;
+	private 				String 					challengeQuestion;
+	private 				String 					userAnswer;
+	private 				String 					link;
+	
+	private 				QuestionAnswerTask 		task = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,14 +66,17 @@ public class QuestionAnswerActivity extends Activity {
 		textViewQuestion.setText(challengeQuestion);
 		
 		final TextView editTextAnswer = (EditText) findViewById(R.id.question_answer_xml_edittext_your_answer);
+		final EditText editTextLink = (EditText) findViewById(R.id.question_answer_xml_edittext_link);
+		
 		Button buttonSubmit = (Button) findViewById(R.id.question_answer_xml_button_submit);
 		Button buttonLink = (Button) findViewById(R.id.question_answer_xml_button_choose_link);
 		
 		buttonSubmit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				userAnswer = editTextAnswer.getText().toString().trim();
+				link = editTextLink.getText().toString().trim();
 				if (userAnswer.length() > 0) {
-					task = new QuestionAnswerTask();
+					task = new QuestionAnswerTask(QuestionAnswerActivity.this, usersId, spotsId, challengesId, userAnswer, link);
 					task.execute();
 				}
 				else {
@@ -80,13 +94,31 @@ public class QuestionAnswerActivity extends Activity {
 		});
 	}
 
-	private class QuestionAnswerTask extends AsyncTask<Void, Integer, String> {
-		ProgressDialog progressDialog = new ProgressDialog(QuestionAnswerActivity.this);
+	private static class QuestionAnswerTask 
+		extends AsyncTask<Void, Integer, String> 
+			implements IAsyncTask<QuestionAnswerActivity> {
+		
+		private ProgressDialog progressDialog;
+		private WeakReference<QuestionAnswerActivity> ref;
+		private String usersId;
+		private String spotsId;
+		private String challengesId;
+		private String userAnswer;
+		private String link;
 	
+		public QuestionAnswerTask(QuestionAnswerActivity a, String usersId, String spotsId, String challengesId, String userAnswer, String link) {
+			attach(a);
+			this.usersId = usersId;
+			this.spotsId = spotsId;
+			this.challengesId = challengesId;
+			this.userAnswer = userAnswer;
+			this.link = link;
+		}
+		
 		@Override
 		protected void onPreExecute() {
 			// display waiting dialog
-			progressDialog = new ProgressDialog(QuestionAnswerActivity.this);
+			progressDialog = new ProgressDialog(ref.get());
 			progressDialog.setMessage("Uploading question...");
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(false);
@@ -96,10 +128,13 @@ public class QuestionAnswerActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			
 			data.add(new BasicNameValuePair("users_id", usersId));
 			data.add(new BasicNameValuePair("spots_id", spotsId));
 			data.add(new BasicNameValuePair("challenges_id", challengesId));
 			data.add(new BasicNameValuePair("user_answer", userAnswer));
+			data.add(new BasicNameValuePair("link", link));
+			
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(QUESTION_ANSWER_URL, data);
 			String result = "";
 			try {
@@ -117,10 +152,18 @@ public class QuestionAnswerActivity extends Activity {
 			if (result.equals("success")) {
 				Intent intent = new Intent();
 				intent.setData(Uri.parse("done"));
-				setResult(RESULT_OK,intent);
-				finish();
+				ref.get().setResult(RESULT_OK, intent);
+				ref.get().finish();
 			}
 				
+		}
+
+		public void attach(QuestionAnswerActivity a) {
+			ref = new WeakReference<QuestionAnswerActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
 		}
 	}
 	
