@@ -51,6 +51,7 @@ public class SnapPictureActivity
 	private 				String 			spotsId;
 	private 				String 			challengesId;
 	private 				String 			comment;
+	private 				String			link;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class SnapPictureActivity
 		usersId = extras.getString("users_id");
 		spotsId = extras.getString("spots_id");
 		challengesId = extras.getString("challenges_id");
+		
 		// dummy comment
 		comment = "hello snap picture";
 		// initialize two buttons	
@@ -118,7 +120,10 @@ public class SnapPictureActivity
 						byte[] src = stream.toByteArray();
 						// encode it
 						String byteCode = Base64.encodeBytes(src);
-						UploadPictueTask task = new UploadPictueTask(SnapPictureActivity.this, byteCode);
+						
+						EditText editTextLink = (EditText) findViewById(R.id.snap_picture_xml_edittext_link);
+						link = editTextLink.getText().toString();
+						UploadPictueTask task = new UploadPictueTask(SnapPictureActivity.this, byteCode, usersId, spotsId, challengesId, comment, link);
 						task.execute();
 					}
 				});
@@ -131,11 +136,21 @@ public class SnapPictureActivity
 			implements IAsyncTask<SnapPictureActivity> {
 		
 		private WeakReference<SnapPictureActivity> ref;
-		private String picturebyteCode;
+		private String pictureByteCode;
+		private String usersId;
+		private String spotsId;
+		private String challengesId;
+		private String comment;
+		private String link;
 		
-		public UploadPictueTask(SnapPictureActivity a, String pbc) {
+		public UploadPictueTask(SnapPictureActivity a, String pictureByteCode, String usersId, String spotsId, String challengesId, String comment, String link) {
 			attach(a);
-			picturebyteCode = pbc;
+			this.pictureByteCode = pictureByteCode;
+			this.usersId = usersId;
+			this.spotsId = spotsId;
+			this.challengesId = challengesId;
+			this.comment = comment;
+			this.link = link;
 		}
 		
 		@Override
@@ -148,19 +163,16 @@ public class SnapPictureActivity
 			
 			List<NameValuePair> datas = new ArrayList<NameValuePair>();
 			// send encoded data to server
-			datas.add(new BasicNameValuePair("image", picturebyteCode));
-			
+			datas.add(new BasicNameValuePair("image", pictureByteCode));
 			// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
 			// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
 			datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
-			
 			// send the rest of data
-			datas.add(new BasicNameValuePair("users_id", ref.get().usersId));
-			datas.add(new BasicNameValuePair("spots_id", ref.get().spotsId));
-			datas.add(new BasicNameValuePair("challenges_id", ref.get().challengesId));
-			
-			// TODO: comment should be added
-			datas.add(new BasicNameValuePair("comment", ref.get().comment));
+			datas.add(new BasicNameValuePair("users_id", usersId));
+			datas.add(new BasicNameValuePair("spots_id", spotsId));
+			datas.add(new BasicNameValuePair("challenges_id", challengesId));
+			datas.add(new BasicNameValuePair("comment", comment));
+			datas.add(new BasicNameValuePair("link", link));
 			
 			// get JSON to check result
 			JSONObject json = UploadFileHelper.uploadFileToServer(SNAP_PICTURE_URL, datas);

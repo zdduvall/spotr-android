@@ -1,5 +1,6 @@
 package com.csun.spotr;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
@@ -33,13 +35,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class WriteOnWallActivity extends Activity {
-	private static final String TAG = "(WriteOnWallActivity)";
-	private static final String WRITE_ON_WALL_URL = "http://107.22.209.62/android/do_write_on_wall.php";
-	private String usersId;
-	private String spotsId;
-	private String challengesId;
-	private String message;
+/*
+ * Description
+ * 		Post a message on to wall
+ */
+public class WriteOnWallActivity 
+		extends Activity {
+	
+	private static final 	String 		TAG = "(WriteOnWallActivity)";
+	private static final 	String 		WRITE_ON_WALL_URL = "http://107.22.209.62/android/do_write_on_wall.php";
+	
+	private 				String 		usersId;
+	private 				String 		spotsId;
+	private 				String 		challengesId;
+	private 				String 		message;
+	private 				String 		link;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +70,6 @@ public class WriteOnWallActivity extends Activity {
 		usersId = extras.getString("users_id");
 		spotsId = extras.getString("spots_id");
 		challengesId = extras.getString("challenges_id");
-		
 
 		editTextMessage.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -82,8 +91,10 @@ public class WriteOnWallActivity extends Activity {
 		buttonPost.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				message = editTextMessage.getText().toString();
+				EditText editTextUrl = (EditText) findViewById(R.id.write_on_wall_xml_edittext_link);
+				link = editTextUrl.getText().toString();
 				if (message.length() > 0) {
-					WriteOnWallTask task = new WriteOnWallTask();
+					WriteOnWallTask task = new WriteOnWallTask(WriteOnWallActivity.this, usersId, spotsId, challengesId, message, link);
 					task.execute();
 				}
 				else {
@@ -114,12 +125,31 @@ public class WriteOnWallActivity extends Activity {
 		dialogMessage.show();	
 	}
 	
-	private class WriteOnWallTask extends AsyncTask<Void, Integer, String> {
-		ProgressDialog progressDialog = new ProgressDialog(WriteOnWallActivity.this);
+	private static class WriteOnWallTask 
+		extends AsyncTask<Void, Integer, String> 
+			implements IAsyncTask<WriteOnWallActivity> {
+		
+		private WeakReference<WriteOnWallActivity> ref;
+		private ProgressDialog progressDialog;
+		private String usersId;
+		private String spotsId;
+		private String challengesId;
+		private String message;
+		private String link;
+		
+		public WriteOnWallTask(WriteOnWallActivity a, String usersId, String spotsId, String challengesId, String message, String link) {
+			attach(a);
+			this.usersId = usersId;
+			this.spotsId = spotsId;
+			this.challengesId = challengesId;
+			this.message = message;
+			this.link = link;
+		}
+		
 		@Override
 		protected void onPreExecute() {
 			// display waiting dialog
-			progressDialog = new ProgressDialog(WriteOnWallActivity.this);
+			progressDialog = new ProgressDialog(ref.get());
 			progressDialog.setMessage("Loading...");
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
@@ -129,10 +159,13 @@ public class WriteOnWallActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... voids) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			
 			data.add(new BasicNameValuePair("users_id", usersId));
 			data.add(new BasicNameValuePair("spots_id", spotsId));
 			data.add(new BasicNameValuePair("challenges_id", challengesId));
 			data.add(new BasicNameValuePair("comment", message));
+			data.add(new BasicNameValuePair("link", link));
+			
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(WRITE_ON_WALL_URL, data);
 			String result = "";
 			try {
@@ -150,9 +183,18 @@ public class WriteOnWallActivity extends Activity {
 			if (result.equals("success")) {
 				Intent intent = new Intent();
 				intent.setData(Uri.parse("done"));
-				setResult(RESULT_OK, intent);
-				finish();
+				ref.get().setResult(RESULT_OK, intent);
+				ref.get().finish();
 			}
+			
+			detach();
+		}
+		public void attach(WriteOnWallActivity a) {
+			ref = new WeakReference<WriteOnWallActivity>(a);
+		}
+		
+		public void detach() {
+			ref.clear();
 		}
 	}
 	@Override
