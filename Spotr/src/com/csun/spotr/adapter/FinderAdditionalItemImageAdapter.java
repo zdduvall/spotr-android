@@ -59,8 +59,8 @@ public class FinderAdditionalItemImageAdapter extends BaseAdapter {
 			viewHolder = (ItemViewHolder) convertView.getTag();
 		}
 
-        viewHolder.imageViewPicture.setLayoutParams(new Gallery.LayoutParams(300, 300));
-        viewHolder.imageViewPicture.setScaleType(ImageView.ScaleType.CENTER);
+        viewHolder.imageViewPicture.setLayoutParams(new Gallery.LayoutParams(500, 500));
+        viewHolder.imageViewPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
         viewHolder.imageViewPicture.setBackgroundResource(background);
 		imageLoader.displayImage(items.get(position), viewHolder.imageViewPicture);
 		return convertView;

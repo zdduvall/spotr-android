@@ -63,15 +63,32 @@
 
     <Gallery
         android:id="@+id/finder_item_detail_xml_gallery"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     
-    <Button
-        android:id="@+id/finder_item_detail_xml_add_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/TreasureButton"
-        android:layout_gravity="center"
-        android:text="Add another picture?" />
+    <RelativeLayout 
+        android:id="@+id/finder_item_detail_xml_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+	    <Button
+	        android:id="@+id/finder_item_detail_xml_button_add_image"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/TreasureButton"
+	        android:layout_gravity="left|center"
+	        android:text="Add picture?" />
+	    
+	    <Button
+	        android:id="@+id/finder_item_detail_xml_button_found"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/TreasureButton"
+	        android:layout_gravity="right|center"
+	        android:layout_toRightOf="@id/finder_item_detail_xml_button_add_image"
+	        android:text="I found it!" />
+    
+    </RelativeLayout>
 
 </LinearLayout>

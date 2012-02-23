@@ -17,9 +17,10 @@
         android:id="@+id/finder_xml_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-    		android:stretchMode="columnWidth"
-    		android:gravity="center"
-        android:numColumns="4" >
+    	android:stretchMode="columnWidth"
+    	android:scaleType="fitCenter"
+    	android:gravity="center"
+        android:numColumns="3" >
     </GridView>
 			
 </LinearLayout>
