@@ -37,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -53,8 +54,12 @@ public class FinderItemDetailActivity extends Activity {
 	private List<String> items = new ArrayList<String>();
 	private FinderAdditionalItemImageAdapter adapter;
 	private static int finderId = -1;
+	private GetFinderDetailTask getFinderDetailTask;
+	private GetFinderImagesTask getFinderImagesTask;
+	private SubmitAdditionalImageTask submitAdditionalImageTask;
 	
 	private Gallery gallery;
+	private Button buttonFound;
 	private Button buttonAddImage;
 	private TextView textViewName;
 	private TextView textViewDesc;
@@ -72,7 +77,8 @@ public class FinderItemDetailActivity extends Activity {
 		textViewUser = (TextView)findViewById(R.id.finder_item_detail_xml_user);
 		textViewPoints = (TextView)findViewById(R.id.finder_item_detail_xml_points);
 		gallery = (Gallery) findViewById(R.id.finder_item_detail_xml_gallery);
-		buttonAddImage = (Button) findViewById(R.id.finder_item_detail_xml_add_image);
+		buttonAddImage = (Button) findViewById(R.id.finder_item_detail_xml_button_add_image);
+		buttonFound = (Button) findViewById(R.id.finder_item_detail_xml_button_found);
 		
 		buttonAddImage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -82,12 +88,45 @@ public class FinderItemDetailActivity extends Activity {
 			}
 		});
 		
+		buttonFound.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AlertDialog dialogMessage = new AlertDialog.Builder(FinderItemDetailActivity.this).create();
+				dialogMessage.setTitle("Wait just a second.");
+				dialogMessage.setMessage("You're about to mark this item as found.\n\n" + 
+						"Are you sure you want to proceed?");
+				
+				dialogMessage.setButton(Dialog.BUTTON_POSITIVE, "Yes, I really found this", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent intent = new Intent(getApplicationContext(), FinderFoundActivity.class);
+						setResult(RESULT_OK, intent);
+						startActivity(intent);
+						finish();
+					}
+				});
+				
+				dialogMessage.setButton(Dialog.BUTTON_NEGATIVE, "No thanks!", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent intent = new Intent();
+						setResult(RESULT_OK, intent);
+						finish();
+					}
+				});
+				
+				dialogMessage.show();
+			}
+		});
+		
 		adapter = new FinderAdditionalItemImageAdapter(this, items);
 
 		gallery.setAdapter(adapter);
 		
-		new GetFinderDetailTask(this).execute();
-		new GetFinderImagesTask(this).execute();
+		getFinderDetailTask = new GetFinderDetailTask(this);
+		getFinderDetailTask.execute();
+		
+		getFinderImagesTask = new GetFinderImagesTask(this);
+		getFinderImagesTask.execute();
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -109,13 +148,13 @@ public class FinderItemDetailActivity extends Activity {
 				e.printStackTrace();
 			}
 			Options options = new Options();
-			options.inSampleSize = 2;
+			options.inSampleSize = 1;
 			Bitmap bitmap = BitmapFactory.decodeStream(in, null, options);
-			new SubmitAdditionalImage(FinderItemDetailActivity.this, bitmap).execute();
+			submitAdditionalImageTask = new SubmitAdditionalImageTask(FinderItemDetailActivity.this, bitmap);
 		}
 	}
 	
-	private static class SubmitAdditionalImage extends AsyncTask<String, Integer, String> 
+	private static class SubmitAdditionalImageTask extends AsyncTask<String, Integer, String> 
 	implements IAsyncTask<FinderItemDetailActivity> {
 	
 		private List<NameValuePair> finderImageData = new ArrayList<NameValuePair>();
@@ -123,7 +162,7 @@ public class FinderItemDetailActivity extends Activity {
 		private ProgressDialog progressDialog = null;
 		private Bitmap imageBitmap;
 	
-		public SubmitAdditionalImage(FinderItemDetailActivity a, Bitmap b) {
+		public SubmitAdditionalImageTask(FinderItemDetailActivity a, Bitmap b) {
 			attach(a);
 			imageBitmap = b;
 		}
@@ -139,7 +178,7 @@ public class FinderItemDetailActivity extends Activity {
 	
 		protected String doInBackground(String... params) {
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+			imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 			byte[] src = stream.toByteArray();
 
 			String imageBytecode = Base64.encodeBytes(src);
@@ -166,11 +205,11 @@ public class FinderItemDetailActivity extends Activity {
 			progressDialog.dismiss();
 			if (result.equals("success")) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
-				dialogMessage.setTitle("Submission uploaded!");
-				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() + ", submission successful!" + 
-						"\n\nWould you like to review your item?");
+				dialogMessage.setTitle("Image uploaded!");
+				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() 
+						+ ", image submission successful!");
 				
-				dialogMessage.setButton(Dialog.BUTTON_POSITIVE, "Sure!", new DialogInterface.OnClickListener() {
+				dialogMessage.setButton("Okay", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						Intent intent = new Intent();
@@ -179,14 +218,6 @@ public class FinderItemDetailActivity extends Activity {
 					}
 				});
 				
-				dialogMessage.setButton(Dialog.BUTTON_NEGATIVE, "No, thanks.", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Intent intent = new Intent();
-						ref.get().setResult(RESULT_CANCELED, intent);
-						ref.get().finish();
-					}
-				});
 				dialogMessage.show();
 			}
 			else {
@@ -210,8 +241,8 @@ public class FinderItemDetailActivity extends Activity {
 		private ProgressDialog progressDialog = null;
 		private JSONArray jsonArray = null;
 		
-		public GetFinderDetailTask(Activity c) {
-			refActivity = new WeakReference<FinderItemDetailActivity>((FinderItemDetailActivity)c);
+		public GetFinderDetailTask(FinderItemDetailActivity c) {
+			refActivity = new WeakReference<FinderItemDetailActivity>(c);
 		}
 		
 		@Override
@@ -324,5 +355,20 @@ public class FinderItemDetailActivity extends Activity {
 		textViewDesc.setText(description);
 		textViewUser.setText(userName);
 		textViewPoints.setText(points);
+	}
+	
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			if(getFinderDetailTask != null) 
+				getFinderDetailTask.cancel(true);
+			if(getFinderImagesTask != null)
+				getFinderImagesTask.cancel(true);
+			if(submitAdditionalImageTask != null)
+				submitAdditionalImageTask.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

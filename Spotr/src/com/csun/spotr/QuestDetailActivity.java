@@ -12,6 +12,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -31,7 +32,8 @@ import android.widget.TextView;
 import com.csun.spotr.core.Place;
 import com.csun.spotr.core.Place.Builder;
 import com.csun.spotr.core.adapter_item.QuestDetailItem;
-import com.csun.spotr.custom_gui.CustomItemizedOverlay;
+import com.csun.spotr.custom_gui.BalloonItemizedOverlay;
+import com.csun.spotr.custom_gui.CustomQuestItemizedOverlay;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -69,8 +71,8 @@ implements IActivityProgressUpdate<Place>{
 	private 				MapController mapController = null;
 	private					FineLocation fineLocation = new FineLocation();
 	public					Location lastKnownLocation = null;
-	public					CustomItemizedOverlay itemizedGreenOverlay = null;
-	public					CustomItemizedOverlay itemizedRedOverlay = null;
+	public					CustomQuestItemizedOverlay itemizedGreenOverlay = null;
+	public					CustomQuestItemizedOverlay itemizedRedOverlay = null;
 
 	static final 	int DO_SPOT_CHALLENGE = 1;
 
@@ -106,11 +108,11 @@ implements IActivityProgressUpdate<Place>{
 		mapOverlays = mapView.getOverlays();
 		Drawable drawablegreen = getResources().getDrawable(R.drawable.map_maker_green);
 		Drawable drawablered = getResources().getDrawable(R.drawable.map_maker_red);
-		itemizedGreenOverlay = new CustomItemizedOverlay(drawablegreen, mapView);
-		itemizedRedOverlay = new CustomItemizedOverlay(drawablered,mapView);
+		itemizedGreenOverlay = new CustomQuestItemizedOverlay(drawablegreen, mapView);
+		itemizedRedOverlay = new CustomQuestItemizedOverlay(drawablered,mapView);
 		mapOverlays.add(itemizedGreenOverlay);
 		mapOverlays.add(itemizedRedOverlay);
-
+		
 		// initialize detail description of specific quest
 		challengedoneTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_challengedone);
 		progressbar = (ProgressBar) findViewById(R.id.quest_detail_progressBar);
@@ -317,8 +319,7 @@ implements IActivityProgressUpdate<Place>{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == DO_SPOT_CHALLENGE) {
 			if (resultCode == RESULT_OK) {
-				int position = data.getExtras().getInt("position");
-				spotId = questDetailList.get(position).getId();
+				spotId = data.getExtras().getInt("spot_id");
 				if (this.spotCompleted == numQuest-1)
 				{
 					this.showDialog(0);
@@ -372,12 +373,57 @@ implements IActivityProgressUpdate<Place>{
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void updateAsyncTaskProgress(Place u) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public class CustomQuestItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
+		private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
+		private List<Place> places = new ArrayList<Place>();
+		private Context context;
+
+		public CustomQuestItemizedOverlay(Drawable defaultMarker, MapView mapView) {
+			super(boundCenter(defaultMarker), mapView);
+			context = mapView.getContext();
+			populate();
+		}
+
+		public void addOverlay(OverlayItem overlay, Place place) {
+			overlays.add(overlay);
+			places.add(place);
+			populate();
+		}
+
+		public void clear() {
+			overlays.clear();
+			places.clear();
+		}
+
+		@Override
+		protected OverlayItem createItem(int i) {
+			return overlays.get(i);
+		}
+
+		@Override
+		public int size() {
+			return overlays.size();
+		}
+
+		@Override
+		protected boolean onBalloonTap(int index, OverlayItem item) {
+			if (places.get(index).getId() != -1) {
+				Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
+				Bundle extras = new Bundle();
+				extras.putInt("place_id", places.get(index).getId());
+				
+				intent.putExtras(extras);
+				startActivityForResult(intent, DO_SPOT_CHALLENGE);
+			}
+			return true;
+		}
 	}
 }

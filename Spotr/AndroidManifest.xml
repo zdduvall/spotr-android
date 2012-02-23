@@ -550,7 +550,38 @@
             </intent-filter>
         </activity>
         
+		  <!-- Finder Main Activity -->
+        <activity
+            android:name=".FinderMainActivity"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.FinderMainActivity" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- User Finder Activity -->
+        <activity
+            android:name=".UserFinderActivity"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.UserFinderActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Finder Found Activity -->
+        <activity
+            android:name=".FinderFoundActivity"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.FinderFoundActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- Google Map API -->
         <uses-library android:name="com.google.android.maps" />

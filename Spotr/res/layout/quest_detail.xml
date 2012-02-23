@@ -116,7 +116,7 @@
     <com.google.android.maps.MapView
         android:id="@+id/quest_detail_xml_map"
         android:layout_width="fill_parent"
-        android:layout_height="390dp"
+        android:layout_height="fill_parent"
         android:apiKey="0A6iKMJ5qzvkWp6ABvWwMrWtzZYf8vkqzMX3O0A"
         android:clickable="true"
         android:paddingLeft="4dp"

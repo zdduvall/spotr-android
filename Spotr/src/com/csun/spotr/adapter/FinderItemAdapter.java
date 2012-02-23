@@ -49,7 +49,7 @@ public class FinderItemAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.seeking_item, null);
 			viewHolder = new ItemViewHolder();
 			viewHolder.imageViewPicture = (ImageView) convertView.findViewById(R.id.seeking_item_xml_imageview_item_picture);
-			viewHolder.imageViewPicture.setLayoutParams(new GridView.LayoutParams(85, 85));
+			viewHolder.imageViewPicture.setLayoutParams(new GridView.LayoutParams(100, 100));
             viewHolder.imageViewPicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
             viewHolder.imageViewPicture.setPadding(8, 8, 8, 8);
 			convertView.setTag(viewHolder);

@@ -22,7 +22,6 @@ import com.csun.spotr.util.UploadFileHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -270,10 +269,10 @@ public class CreateFinderActivity extends Activity {
 			if (result.equals("success")) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
 				dialogMessage.setTitle("Submission uploaded!");
-				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() + ", submission successful!" + 
-						"\n\nWould you like to review your item?");
+				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() 
+						+ ", submission successful.");
 				
-				dialogMessage.setButton(Dialog.BUTTON_POSITIVE, "Sure!", new DialogInterface.OnClickListener() {
+				dialogMessage.setButton("Okay", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						Intent intent = new Intent();
@@ -282,14 +281,6 @@ public class CreateFinderActivity extends Activity {
 					}
 				});
 				
-				dialogMessage.setButton(Dialog.BUTTON_NEGATIVE, "No, thanks.", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Intent intent = new Intent();
-						ref.get().setResult(RESULT_CANCELED, intent);
-						ref.get().finish();
-					}
-				});
 				dialogMessage.show();
 			}
 			else {
