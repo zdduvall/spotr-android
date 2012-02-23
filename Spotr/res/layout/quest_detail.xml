@@ -113,7 +113,10 @@
             android:text="View Spots" />
     </LinearLayout>
 
-    <com.google.android.maps.MapView
+    <include
+        android:id="@+id/quest_detail_xml_toolbar"
+        layout="@layout/toolbar" />
+    <com.google.android.maps.MapView
         android:id="@+id/quest_detail_xml_map"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

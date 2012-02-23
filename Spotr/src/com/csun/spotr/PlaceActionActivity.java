@@ -37,6 +37,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -391,6 +392,16 @@ public class PlaceActionActivity
 				intent = new Intent("com.csun.spotr.MainMenuActivity");
 				startActivity(intent);
 				finish();
+				break;
+				
+			case R.id.options_menu_xml_item_toolbar_icon:
+				HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.place_action_xml_toolbar);
+				if (toolbar.getVisibility() == View.VISIBLE) {
+					toolbar.setVisibility(View.GONE);
+				}
+				else {
+					toolbar.setVisibility(View.VISIBLE);
+				}
 				break;
 		}
 		return true;

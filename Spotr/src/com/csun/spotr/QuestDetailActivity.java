@@ -15,16 +15,19 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -426,4 +429,40 @@ implements IActivityProgressUpdate<Place>{
 			return true;
 		}
 	}
+	
+	 @Override
+		public boolean onOptionsItemSelected(MenuItem item) {
+			Intent intent;
+			switch (item.getItemId()) {
+				case R.id.options_menu_xml_item_setting_icon:
+					intent = new Intent("com.csun.spotr.SettingsActivity");
+					startActivity(intent);
+					finish();
+					break;
+				case R.id.options_menu_xml_item_logout_icon:
+					SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
+					editor.clear();
+					editor.commit();
+					intent = new Intent("com.csun.spotr.LoginActivity");
+					startActivity(intent);
+					finish();
+					break;
+				case R.id.options_menu_xml_item_mainmenu_icon:
+					intent = new Intent("com.csun.spotr.MainMenuActivity");
+					startActivity(intent);
+					finish();
+					break;
+					
+				case R.id.options_menu_xml_item_toolbar_icon:
+					HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.quest_detail_xml_toolbar);
+					if (toolbar.getVisibility() == View.VISIBLE) {
+						toolbar.setVisibility(View.GONE);
+					}
+					else {
+						toolbar.setVisibility(View.VISIBLE);
+					}
+					break;
+			}
+			return true;
+		}
 }

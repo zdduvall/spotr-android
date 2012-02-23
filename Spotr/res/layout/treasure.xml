@@ -1,7 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
-    
+
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -21,6 +21,10 @@
             android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#0e1f5b" />
+
+        <include
+            android:id="@+id/place_xml_toolbar"
+            layout="@layout/toolbar" />
 
         <ImageView
             android:id="@+id/treasure_xml_imageview_icon"
@@ -113,7 +117,7 @@
                 style="@style/TreasureButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Twatter" />
+                android:text="Twitter" />
         </LinearLayout>
     </LinearLayout>
 

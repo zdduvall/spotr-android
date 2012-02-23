@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.util.Log;
 
@@ -258,6 +259,16 @@ public class PlaceActivity
 		case R.id.options_menu_xml_item_mainmenu_icon :
 			intent = new Intent("com.csun.spotr.MainMenuActivity");
 			startActivity(intent);
+			break;
+			
+		case R.id.options_menu_xml_item_toolbar_icon:
+			HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.place_xml_toolbar);
+			if (toolbar.getVisibility() == View.VISIBLE) {
+				toolbar.setVisibility(View.GONE);
+			}
+			else {
+				toolbar.setVisibility(View.VISIBLE);
+			}
 			break;
 		}
 		return true;
