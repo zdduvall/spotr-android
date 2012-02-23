@@ -87,7 +87,7 @@
     <ListView
         android:id="@+id/quest_detail_xml_listview_quest_list"
         android:layout_width="fill_parent"
-        android:layout_height="0sp"
+        android:layout_height="120sp"
         android:background="#181818"
         android:cacheColorHint="@android:color/transparent" />
 
