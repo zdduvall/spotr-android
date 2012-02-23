@@ -298,7 +298,7 @@ public class QuestActionActivity
 			if (resultCode == RESULT_OK) {
 				Intent data1 = new Intent();
 				
-				data1.putExtra("position", currentSpotPosition);
+				data1.putExtra("spot_id", currentPlaceId);
 				
 				setResult(RESULT_OK, data1);
 				//---closes the activity---
