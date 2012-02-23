@@ -149,7 +149,7 @@ implements IActivityProgressUpdate<Place>{
 				mapController.animateTo(new GeoPoint(
 						(int) (lastKnownLocation.getLatitude() * 1E6),
 						(int) (lastKnownLocation.getLongitude() * 1E6)));
-				mapController.setZoom(16);
+				mapController.setZoom(17);
 			}	
 		});
 
@@ -169,23 +169,25 @@ implements IActivityProgressUpdate<Place>{
 				mapController.animateTo(new GeoPoint(
 						(int) (centerLatitude * 1E6),
 						(int) (centerLongitude * 1E6)));
-				mapController.setZoom(17);	
+				mapController.setZoom(16);	
 			}
 		});
 
 		// handle event when click on specific quest
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//	if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
-				//{
-
-				//}
-				//else
+					if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
+				{
+						
+				}
+				else
 				{
 					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
 					Bundle extras = new Bundle();
 					extras.putInt("place_id", questDetailList.get(position).getId());
 					extras.putInt("position", position);
+					extras.putString("name",questDetailList.get(position).getName());
+					extras.putString("description", questDetailList.get(position).getDescription());
 					intent.putExtras(extras);
 					startActivityForResult(intent, DO_SPOT_CHALLENGE);
 				}

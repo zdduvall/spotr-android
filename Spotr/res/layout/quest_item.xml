@@ -8,11 +8,12 @@
         android:name="@+id/quest_xml_image"
         android:layout_width="60sp"
         android:layout_height="60sp"
-        android:scaleType="fitXY"
         android:padding="2dp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_main_menu_quests_pressed" />
 
     <LinearLayout
+        android:id="@+id/quest_item_xml_linearlayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >

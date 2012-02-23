@@ -53,7 +53,7 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 			holder = new ItemViewHolder();
 			holder.layout = (LinearLayout) convertView.findViewById(R.id.quest_item_xml_linearlayout);
 			holder.nameTextView = (TextView) convertView.findViewById(R.id.quest_item_xml_textview_name);
-			holder.descriptionTextView = (TextView) convertView.findViewById(R.id.quest_item_xml_textview_description);
+			//holder.descriptionTextView = (TextView) convertView.findViewById(R.id.quest_item_xml_textview_description);
 			convertView.setTag(holder);
 		}
 		else {
@@ -64,14 +64,14 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 		
 		if (items.get(position).getStatus().equals("done")) {
 			holder.nameTextView.setTextColor(Color.parseColor("#dd3c10"));
-			//holder.layout.setClickable(true);
+			holder.layout.setClickable(true);
 		}
 		else {
 			holder.nameTextView.setTextColor(Color.parseColor("#3b5998"));
 			holder.layout.setClickable(false);
 		}
 		
-		holder.descriptionTextView.setText(items.get(position).getDescription());
+		//holder.descriptionTextView.setText(items.get(position).getDescription());
 
 		return convertView;
 	}
