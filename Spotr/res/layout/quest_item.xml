@@ -5,7 +5,7 @@
     android:orientation="horizontal" >
 
     <ImageView
-        android:name="@+id/quest_xml_image"
+        android:name="@+id/quest_item_xml_image"
         android:layout_width="60sp"
         android:layout_height="60sp"
         android:padding="2dp"

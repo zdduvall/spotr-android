@@ -7,14 +7,16 @@ public class QuestDetailItem {
 	private String status;
 	private final double longitude;
 	private final double latitude;
+	private final String url;
 	
-	public QuestDetailItem (int id, String name, String description, double longitude, double latitude, String status) {
+	public QuestDetailItem (int id, String name, String description, double longitude, double latitude, String status, String url) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.status = status;
+		this.url = url;
 	}
 	
 	public int getId() {
@@ -38,5 +40,9 @@ public class QuestDetailItem {
 	
 	public String getStatus(){
 		return status;
+	}
+	
+	public String getUrl() {
+		return url;
 	}
 }

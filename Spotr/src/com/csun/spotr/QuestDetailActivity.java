@@ -239,7 +239,8 @@ implements IActivityProgressUpdate<Place>{
 								userJsonArray.getJSONObject(i).getString("spots_tbl_description"),
 								userJsonArray.getJSONObject(i).getDouble("spots_tbl_longitude"),
 								userJsonArray.getJSONObject(i).getDouble("spots_tbl_latitude"),
-								userJsonArray.getJSONObject(i).getString("quest_user_tbl_status")								
+								userJsonArray.getJSONObject(i).getString("quest_user_tbl_status"),								
+								userJsonArray.getJSONObject(i).getString("spots_tbl_url")
 								));
 					}
 				}
