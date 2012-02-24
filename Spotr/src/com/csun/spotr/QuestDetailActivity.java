@@ -457,13 +457,6 @@ implements IActivityProgressUpdate<Place>{
 					break;
 					
 				case R.id.options_menu_xml_item_toolbar_icon:
-					HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.quest_detail_xml_toolbar);
-					if (toolbar.getVisibility() == View.VISIBLE) {
-						toolbar.setVisibility(View.GONE);
-					}
-					else {
-						toolbar.setVisibility(View.VISIBLE);
-					}
 					break;
 			}
 			return true;

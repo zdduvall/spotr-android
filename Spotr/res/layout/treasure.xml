@@ -22,10 +22,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#0e1f5b" />
 
-        <include
-            android:id="@+id/place_xml_toolbar"
-            layout="@layout/toolbar" />
-
         <ImageView
             android:id="@+id/treasure_xml_imageview_icon"
             android:layout_width="100dp"

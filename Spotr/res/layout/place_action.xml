@@ -85,10 +85,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        android:id="@+id/place_action_xml_toolbar"
-        layout="@layout/toolbar" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

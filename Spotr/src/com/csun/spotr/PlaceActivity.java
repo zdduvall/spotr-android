@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.util.Log;
 
@@ -37,6 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.csun.spotr.core.adapter_item.PlaceItem;
+import com.csun.spotr.custom_gui.ActionItem;
+import com.csun.spotr.custom_gui.ToolbarAction;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -64,6 +67,14 @@ public class PlaceActivity
 	private 					Location 			lastKnownLocation = null;
 	private 					FineLocation 		fineLocation = new FineLocation();
 	private 					Button 				refreshButton;
+	
+	private static final int 	ID_BONUS 	 = 1;
+	private static final int 	ID_LOAN 	 = 2;
+	private static final int 	ID_TELESCOPE = 3;
+	private static final int 	ID_TELEPORT  = 4;
+	private static final int 	ID_SNEAK 	 = 5;
+	private static final int 	ID_LUCK 	 = 6;	
+	private static final int 	ID_SHORTCUT  = 7;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +119,36 @@ public class PlaceActivity
 		});
 		
 		fineLocation.getLocation(this, locationResult);
+		
+		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
+		ActionItem itemLoan = new ActionItem(ID_LOAN, "Loan", getResources().getDrawable(R.drawable.pu_loan_32));
+        ActionItem itemLuck = new ActionItem(ID_LUCK, "Luck", getResources().getDrawable(R.drawable.pu_luck_32));
+        ActionItem itemShortcut = new ActionItem(ID_SHORTCUT, "Shortcut", getResources().getDrawable(R.drawable.pu_shortcut_32));
+        ActionItem itemSneakPeek = new ActionItem(ID_SNEAK, "Sneak", getResources().getDrawable(R.drawable.pu_sneak_peek_32));
+        ActionItem itemTeleport = new ActionItem(ID_TELEPORT, "Teleport", getResources().getDrawable(R.drawable.pu_teleport_32));
+        ActionItem itemTelescope = new ActionItem(ID_TELESCOPE, "Telescope", getResources().getDrawable(R.drawable.pu_telescope_32));
+        
+        itemBonus.setSticky(true);
+        
+        final ToolbarAction quickAction = new ToolbarAction(this, ToolbarAction.HORIZONTAL);
+		
+		//add action items into QuickAction
+        quickAction.addActionItem(itemBonus);
+		quickAction.addActionItem(itemLoan);
+        quickAction.addActionItem(itemLuck);
+        quickAction.addActionItem(itemShortcut);
+        quickAction.addActionItem(itemSneakPeek);
+        quickAction.addActionItem(itemTeleport);
+        quickAction.addActionItem(itemTelescope);
+        
+        ImageView tool = (ImageView) findViewById(R.id.place_xml_imageview_toolbar_button);
+        
+        tool.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				quickAction.show(v);
+				quickAction.setAnimStyle(ToolbarAction.ANIM_REFLECT);
+			}
+		});
 	}
 
 	public AlertDialog CreateAlert(String title, String message) {
@@ -262,7 +303,7 @@ public class PlaceActivity
 			break;
 			
 		case R.id.options_menu_xml_item_toolbar_icon:
-			HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.place_xml_toolbar);
+			HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.place_xml_imageview_toolbar_button);
 			if (toolbar.getVisibility() == View.VISIBLE) {
 				toolbar.setVisibility(View.GONE);
 			}
