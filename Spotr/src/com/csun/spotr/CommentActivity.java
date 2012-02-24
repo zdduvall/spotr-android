@@ -43,7 +43,7 @@ public class CommentActivity
 
 	private static final 	String 					TAG = "(CommentActivity)";
 	private static final 	String 					GET_COMMENTS_URL = "http://107.22.209.62/android/get_comments.php";
-	private static final 	String 					POST_COMMENT_URL = "http://107.22.209.62/android/do_post_comment.php";
+	private static final 	String 					POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
 
 	private 				ListView 				listview = null;
 	private 				CommentItemAdapter 		adapter = null;
