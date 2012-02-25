@@ -81,7 +81,9 @@ implements IActivityProgressUpdate<Place>{
 
 	static 	final 	int 	DO_SPOT_CHALLENGE = 1;
 	static	final	int 	RANGE_LIMIT = 500;
-	
+
+	static			boolean	flagMeButton = false;
+
 	private 				TextView challengedoneTextView;
 	private 				ProgressBar progressbar;
 	private 				TextView questNameTextView = null;
@@ -140,22 +142,25 @@ implements IActivityProgressUpdate<Place>{
 		meButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+				if(flagMeButton == false)
+				{
+					OverlayItem overlay = new OverlayItem(
+							new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
+									(int) (lastKnownLocation.getLongitude() * 1E6)),
+									"My Current Location",
+							"Hello");
+					Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
+					icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+					overlay.setMarker(icon);
 
-				OverlayItem overlay = new OverlayItem(
-						new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
-								(int) (lastKnownLocation.getLongitude() * 1E6)),
-								"My Current Location",
-						"Hello");
-				Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
-				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-				overlay.setMarker(icon);
 
+					Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
+					itemizedGreenOverlay.addOverlay(overlay,place);
 
-				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
-				itemizedGreenOverlay.addOverlay(overlay,place);
-
-				mapOverlays.add(new ImpactOverlay(new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
-						(int) (lastKnownLocation.getLongitude() * 1E6)), RANGE_LIMIT));
+					mapOverlays.add(new ImpactOverlay(new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
+							(int) (lastKnownLocation.getLongitude() * 1E6)), RANGE_LIMIT));
+					flagMeButton = true;
+				}
 
 				mapController.animateTo(new GeoPoint(
 						(int) (lastKnownLocation.getLatitude() * 1E6),
