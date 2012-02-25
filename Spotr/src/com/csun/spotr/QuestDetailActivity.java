@@ -9,13 +9,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -27,16 +30,14 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.csun.spotr.core.Place;
-import com.csun.spotr.core.Place.Builder;
 import com.csun.spotr.core.adapter_item.QuestDetailItem;
 import com.csun.spotr.custom_gui.BalloonItemizedOverlay;
-import com.csun.spotr.custom_gui.CustomQuestItemizedOverlay;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -51,13 +52,14 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.google.android.maps.Projection;
 
 public class QuestDetailActivity 
 extends MapActivity 
 implements IActivityProgressUpdate<Place>{
-	private static final 	String TAG = "(QuestDetailActivity)";
-	private static final 	String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
-	private static final 	String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
+	private static 	final 	String TAG = "(QuestDetailActivity)";
+	private static 	final 	String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
+	private static 	final 	String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
 	private 				ListView questDetailListView;
 	private 				QuestDetailItemAdapter questDetailItemAdapter;
 	private 				List<QuestDetailItem> questDetailList = new ArrayList<QuestDetailItem>();
@@ -77,8 +79,9 @@ implements IActivityProgressUpdate<Place>{
 	public					CustomQuestItemizedOverlay itemizedGreenOverlay = null;
 	public					CustomQuestItemizedOverlay itemizedRedOverlay = null;
 
-	static final 	int DO_SPOT_CHALLENGE = 1;
-
+	static 	final 	int 	DO_SPOT_CHALLENGE = 1;
+	static	final	int 	RANGE_LIMIT = 500;
+	
 	private 				TextView challengedoneTextView;
 	private 				ProgressBar progressbar;
 	private 				TextView questNameTextView = null;
@@ -115,7 +118,7 @@ implements IActivityProgressUpdate<Place>{
 		itemizedRedOverlay = new CustomQuestItemizedOverlay(drawablered,mapView);
 		mapOverlays.add(itemizedGreenOverlay);
 		mapOverlays.add(itemizedRedOverlay);
-		
+
 		// initialize detail description of specific quest
 		challengedoneTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_challengedone);
 		progressbar = (ProgressBar) findViewById(R.id.quest_detail_progressBar);
@@ -132,11 +135,12 @@ implements IActivityProgressUpdate<Place>{
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
-		//handle on lick event on Me Button
+		//handle on click event on Me Button
 
 		meButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+
 				OverlayItem overlay = new OverlayItem(
 						new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
 								(int) (lastKnownLocation.getLongitude() * 1E6)),
@@ -146,8 +150,12 @@ implements IActivityProgressUpdate<Place>{
 				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
 				overlay.setMarker(icon);
 
+
 				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
 				itemizedGreenOverlay.addOverlay(overlay,place);
+
+				mapOverlays.add(new ImpactOverlay(new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
+						(int) (lastKnownLocation.getLongitude() * 1E6)), RANGE_LIMIT));
 
 				mapController.animateTo(new GeoPoint(
 						(int) (lastKnownLocation.getLatitude() * 1E6),
@@ -179,9 +187,9 @@ implements IActivityProgressUpdate<Place>{
 		// handle event when click on specific quest
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
+				if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
 				{
-						
+
 				}
 				else
 				{
@@ -383,10 +391,9 @@ implements IActivityProgressUpdate<Place>{
 	}
 
 	public void updateAsyncTaskProgress(Place u) {
-		// TODO Auto-generated method stub
 
 	}
-	
+
 	public class CustomQuestItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 		private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 		private List<Place> places = new ArrayList<Place>();
@@ -421,44 +428,107 @@ implements IActivityProgressUpdate<Place>{
 
 		@Override
 		protected boolean onBalloonTap(int index, OverlayItem item) {
-			if (places.get(index).getId() != -1) {
-				Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
-				Bundle extras = new Bundle();
-				extras.putInt("place_id", places.get(index).getId());
-				
-				intent.putExtras(extras);
-				startActivityForResult(intent, DO_SPOT_CHALLENGE);
+
+			Location spot = new Location("Current Spot");
+			spot.setLongitude(places.get(index).getLongitude());
+			spot.setLatitude(places.get(index).getLatitude());
+
+			if (!item.getTitle().equalsIgnoreCase("My Current Location"))
+			{
+				if (spot.distanceTo(lastKnownLocation) < RANGE_LIMIT) {
+					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
+					Bundle extras = new Bundle();
+					extras.putInt("place_id", places.get(index).getId());
+
+					intent.putExtras(extras);
+					startActivityForResult(intent, DO_SPOT_CHALLENGE);
+				}
+				else
+				{
+					Toast.makeText(getApplicationContext(), "Keep walking, dude", Toast.LENGTH_SHORT).show();
+				}
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), "You are here!!", Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		}
 	}
-	
-	 @Override
-		public boolean onOptionsItemSelected(MenuItem item) {
-			Intent intent;
-			switch (item.getItemId()) {
-				case R.id.options_menu_xml_item_setting_icon:
-					intent = new Intent("com.csun.spotr.SettingsActivity");
-					startActivity(intent);
-					finish();
-					break;
-				case R.id.options_menu_xml_item_logout_icon:
-					SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-					editor.clear();
-					editor.commit();
-					intent = new Intent("com.csun.spotr.LoginActivity");
-					startActivity(intent);
-					finish();
-					break;
-				case R.id.options_menu_xml_item_mainmenu_icon:
-					intent = new Intent("com.csun.spotr.MainMenuActivity");
-					startActivity(intent);
-					finish();
-					break;
-					
-				case R.id.options_menu_xml_item_toolbar_icon:
-					break;
-			}
-			return true;
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.options_menu_xml_item_setting_icon:
+			intent = new Intent("com.csun.spotr.SettingsActivity");
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.options_menu_xml_item_logout_icon:
+			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
+			editor.clear();
+			editor.commit();
+			intent = new Intent("com.csun.spotr.LoginActivity");
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.options_menu_xml_item_mainmenu_icon:
+			intent = new Intent("com.csun.spotr.MainMenuActivity");
+			startActivity(intent);
+			finish();
+			break;
+
+			//case R.id.options_menu_xml_item_toolbar_icon:
+			//HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.quest_detail_xml_toolbar);
+			//if (toolbar.getVisibility() == View.VISIBLE) {
+			//toolbar.setVisibility(View.GONE);
+			//	}
+			//else {
+			//toolbar.setVisibility(View.VISIBLE);
+			//	}
+			//	break;
 		}
+		return true;
+	}
+
+	public static int metersToRadius(float meters, MapView map, double latitude) {
+		return (int) (map.getProjection().metersToEquatorPixels(meters) * (1 / Math
+				.cos(Math.toRadians(latitude))));
+	}
+	public class ImpactOverlay extends Overlay {
+
+		private int CIRCLERADIUS = 0;
+		private GeoPoint geopoint;
+		private int myCircleRadius;
+		Point point = new Point();
+		Paint circle = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+
+
+		public ImpactOverlay(GeoPoint point, int myRadius) {
+
+			geopoint = point;
+			CIRCLERADIUS = myRadius; 
+		}
+
+		@Override
+		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+
+			Projection projection = mapView.getProjection();
+			projection.toPixels(geopoint, point);
+
+			// the circle to mark the spot
+			circle.setColor(Color.parseColor("#33FF33"));
+			circle.setAlpha(122);
+
+			myCircleRadius = metersToRadius(CIRCLERADIUS, mapView,
+					(double) geopoint.getLatitudeE6() / 1000000);
+
+			canvas.drawCircle(point.x, point.y, myCircleRadius, circle);       
+
+		}
+
+
+	}
 }
