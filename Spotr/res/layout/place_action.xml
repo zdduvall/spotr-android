@@ -89,9 +89,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
-        android:background="@drawable/rectangle_rounded_bevel_white_alt"
-        android:paddingBottom="3dp"
-        android:paddingRight="1dp" >
+        android:background="@drawable/rectangle_rounded_grey"
+        android:paddingBottom="2dp" >
 
         <com.csun.spotr.custom_gui.RoundedRectListView
             android:id="@+id/place_action_xml_listview_actions"

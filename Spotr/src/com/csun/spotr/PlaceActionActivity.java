@@ -92,7 +92,7 @@ public class PlaceActionActivity
 		});
 		
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
-		buttonTreasure.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate)) ;
+//		buttonTreasure.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate)) ;
 		buttonTreasure.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), TreasureActivity.class);
