@@ -100,6 +100,8 @@ public class MainMenuActivity
 			startActivity(intent);
 		}
 		else if (id == R.id.main_menu_btn_map) {
+			intent = new Intent(getApplicationContext(), LocalMapViewActivity.class);
+			startActivity(intent);
 		}
 		else if (id == R.id.main_menu_btn_spot_it) {
 			intent = new Intent(getApplicationContext(), FinderActivity.class);
