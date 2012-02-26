@@ -124,7 +124,7 @@ public class LocalMapViewActivity
 				itemizedOverlay.addOverlay(ovl, place);
 
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
-				mapController.setZoom(18);
+				mapController.setZoom(19);
 			}
 		});
 

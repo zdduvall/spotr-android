@@ -43,7 +43,7 @@
         android:paddingRight="4dp"
         android:layout_width="fill_parent"
         android:layout_height="390dp"
-        android:apiKey="0kqsfxjLdh6ggN9sWrcd75tQQA_2JugZxhGcElQ"
+        android:apiKey="07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"
         android:clickable="true" />
 
 </LinearLayout>
