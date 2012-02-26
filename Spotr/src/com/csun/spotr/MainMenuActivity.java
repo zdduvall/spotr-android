@@ -53,7 +53,7 @@ public class MainMenuActivity
 		implements IActivityProgressUpdate<FriendRequestItem> {
 	
 	private static final 	String 						TAG = "(MainMenuActivity)";
-	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/get_friend_requests.php";
+	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/beta_get_friend_requests.php";
 	private static final 	String 						ADD_FRIEND_URL = "http://107.22.209.62/android/add_friend.php";
 	private static final 	String 						IGNORE_FRIEND_URL = "http://107.22.209.62/android/ignore_friend.php";
 	
@@ -77,12 +77,10 @@ public class MainMenuActivity
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startDialog(position);
-				adapter.notifyDataSetChanged();
-				friendRequestList.remove(position);
-
-			//	listview.getChildAt((int) id).setVisibility(View.GONE);
-			//	listview.invalidate();
+				startDialog(friendRequestList.get(position).getType());
+				
+				listview.getChildAt((int) id).setVisibility(View.GONE);
+				listview.invalidate();
 			}
 		});
 	
@@ -171,7 +169,8 @@ public class MainMenuActivity
 								array.getJSONObject(i).getInt("user_requests_tbl_friend_id"),
 								array.getJSONObject(i).getString("users_tbl_username"),
 								array.getJSONObject(i).getString("user_requests_tbl_friend_message"),
-								array.getJSONObject(i).getString("user_requests_tbl_time")));
+								array.getJSONObject(i).getString("user_requests_tbl_time"),
+								array.getJSONObject(i).getInt("user_requests_tbl_type")));
 					}
 				}
 				catch (JSONException e) {
@@ -237,7 +236,8 @@ public class MainMenuActivity
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result == true) {
-				Toast.makeText(ref.get().getApplicationContext(), "Friendship is upto date!", Toast.LENGTH_SHORT).show();
+				//commented out Toast text for now
+				//Toast.makeText(ref.get().getApplicationContext(), "Friendship is up to date!", Toast.LENGTH_SHORT).show();
 			}
 			detach();
 		}
@@ -304,8 +304,7 @@ public class MainMenuActivity
 							GetFriendRequestTask task = new GetFriendRequestTask(MainMenuActivity.this);
 							task.execute();
 						}
-					}).create();
-		
+					}).create();					
 		case 1: 
 			return new 
 					AlertDialog.Builder(this)
@@ -323,29 +322,80 @@ public class MainMenuActivity
 	
 	public void startDialog(final int position) {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
+		if(position == 1)
+		{ //This will generate a custom Dialog for accepting a message
 		myAlertDialog.setTitle("Request Dialog");
-		myAlertDialog.setMessage("Accept this message?");
+		myAlertDialog.setMessage("Accept this request?");
 		myAlertDialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-				if(friendRequestList.size() != 0)
-				{
-					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-					task.execute(ADD_FRIEND_URL);
-				}
+				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+				task.execute(ADD_FRIEND_URL);
+				
 			}
 		});
 		
 		myAlertDialog.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-				if(friendRequestList.size() != 0)
-				{
 				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
 				task.execute(IGNORE_FRIEND_URL);
-				}
+
 			}
 		});
 		myAlertDialog.show();
-	}
+		} // end if
+		else if(position == 2)
+		{	//This will generate a custom Dialog for the comment notification
+			myAlertDialog.setTitle("Comment");
+			myAlertDialog.setMessage("Go to profile now?");
+			myAlertDialog.setPositiveButton("Lets go!", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					Intent intent;
+					Bundle extras = new Bundle();
+					extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+					intent = new Intent(getApplicationContext(), ProfileMainActivity.class);
+					intent.putExtras(extras);
+					startActivity(intent);
+				}
+			});
+			
+			myAlertDialog.setNegativeButton("Hide", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+					task.execute(ADD_FRIEND_URL);
+				}
+			});
+			myAlertDialog.show();
+		} // end else if(pos == 2)
+		else
+		{	//anything else, for now will be treated as a reward.
+			myAlertDialog.setTitle("Rewards Dialog");
+			myAlertDialog.setMessage("View Rewards");
+			myAlertDialog.setPositiveButton("Lets go!", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					//Supposed to start a new intent that loads the RewardActivity, but doesn't seem to work YET
+					//Intent intent;
+					//Bundle extras = new Bundle();
+					//extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+					//intent = new Intent().setClass(getApplicationContext(), RewardActivity.class);
+					//intent.putExtras(extras);
+					//startActivity(intent);
+				}
+			});
+			
+			myAlertDialog.setNegativeButton("Hide", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+					//so it wont remove it from the notification slider. TEST purposes
+					//task.execute(ADD_FRIEND_URL);
+				}
+			});
+			myAlertDialog.show();
+		}
+	} //end startDialog(final int pos)
 }

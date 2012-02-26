@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#AED92E"
+    android:scrollbarStyle="outsideOverlay" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/toolbar_xml_button_bonus"
+            style="@style/ToolbarButton"
+            android:text="Bonus" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_telescope"
+            style="@style/ToolbarButton"
+            android:text="Telescope" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_teleport"
+            style="@style/ToolbarButton"
+            android:text="Teleport" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_prayer"
+            style="@style/ToolbarButton"
+            android:text="Prayer" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_luck"
+             style="@style/ToolbarButton"
+            android:text="Luck" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_sneak"
+            style="@style/ToolbarButton"
+            android:text="Sneak" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_shortcut"
+            style="@style/ToolbarButton"
+            android:text="Shortcut" />
+
+        <Button
+            android:id="@+id/toolbar_xml_button_loan"
+            style="@style/ToolbarButton"
+            android:text="Loan" />
+    </LinearLayout>
+
+</HorizontalScrollView>

@@ -57,8 +57,18 @@ public class FriendRequestItemAdapter extends BaseAdapter {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
 		holder.textViewOrder.setText(items.get(position).getFriendName());
-		holder.textViewMessage.setText(" has sent you a message \"" + items.get(position).getMessage() + "\"");
+		if(items.get(position).getType() == 1)
+		{
+			holder.textViewMessage.setText(" has sent you a request \"" + items.get(position).getMessage() + "\"");
+		}
+		else if(items.get(position).getType() == 2)
+		{
+			holder.textViewMessage.setText(" has replied to your comment.");
+		}
+		else //cuurently assumed reward
+			holder.textViewMessage.setText(" REWARD TIME!");
 		holder.textViewTime.setText(items.get(position).getTime());
+		
 		return convertView;
 	}
 }

@@ -45,7 +45,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:layout_height="390dp"
-        android:apiKey="0A6iKMJ5qzvkWp6ABvWwMrWtzZYf8vkqzMX3O0A"
+        android:apiKey="07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"
         android:clickable="true" />
 
 </LinearLayout>

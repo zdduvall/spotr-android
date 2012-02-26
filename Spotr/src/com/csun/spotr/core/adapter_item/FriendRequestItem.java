@@ -11,8 +11,25 @@ public class FriendRequestItem {
 		this.friendName = friendName;
 		this.message = message;
 		this.time = time;
+		this.type = 1;
+	}
+	/* Little test area. Adding a type variable
+	 * Author: Edgardo C.*/
+	private int type;
+	public FriendRequestItem(int friendId, String friendName, String message, String time, int type)
+	{
+		this.friendId = friendId;
+		this.friendName = friendName;
+		this.message = message;
+		this.time = time;
+		this.type = type;
 	}
 	
+	public int getType()
+	{
+		return type;
+	}
+	/* end little test area */
 	public int getFriendId() {
 		return friendId;
 	}

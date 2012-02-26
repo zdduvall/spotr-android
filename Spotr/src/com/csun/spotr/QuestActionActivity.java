@@ -22,19 +22,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -74,18 +67,14 @@ public class QuestActionActivity
 		list = (ListView) findViewById(R.id.quest_action_xml_listview_actions);
 		adapter = new PlaceActionItemAdapter(this, challengeList);
 		
+		TextView nameTextView = (TextView) findViewById(R.id.quest_action_xml_name);
+		TextView descriptionTextView = (TextView) findViewById(R.id.quest_action_xml_description);
+		
+		nameTextView.setText(extrasBundle.getString("name"));
+		descriptionTextView.setText(extrasBundle.getString("description"));
 		// add top padding to first item and add bottom padding to last item
 		TextView padding = new TextView(getApplicationContext());
 		padding.setHeight(0);
-		
-		Button buttonTreasure = (Button) findViewById(R.id.quest_action_xml_button_treasure);
-		buttonTreasure.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), TreasureActivity.class);
-				startActivity(intent);
-			}
-		});
-		
 		
 		list.addHeaderView(padding, null, false);
 		list.addFooterView(padding, null, false);
