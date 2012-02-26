@@ -36,6 +36,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ListView;
@@ -106,6 +107,7 @@ public class PlaceActionActivity
 		
 				
 		list.setAdapter(adapter);
+		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //				Challenge c = (Challenge) list.getAdapter().getItem(position);

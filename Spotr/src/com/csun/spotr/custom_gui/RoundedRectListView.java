@@ -53,5 +53,5 @@ public class RoundedRectListView extends ListView {
         canvas.clipPath(mClip);
         super.dispatchDraw(canvas);
         canvas.restore();
-    }
+    } 
 }
