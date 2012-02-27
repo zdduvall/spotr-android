@@ -81,4 +81,6 @@
     
      <!-- question/answer.xml -->
     <string name="question_answer_xml_edittext_answer">Answer</string>
+    <string name="spots_missions_info_button">More</string>
+    <string name="friend_search_button">Search</string>
 </resources>

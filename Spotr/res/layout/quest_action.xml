@@ -57,7 +57,7 @@
 
     <ListView
         android:id="@+id/quest_action_xml_listview_actions"
-        style="@style/MissionsList" >
+        style="@style/RoundedRectListView.MissionsList" >
     </ListView>
 
 </LinearLayout>

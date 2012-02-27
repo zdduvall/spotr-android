@@ -1,109 +1,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/aluminum1"
-    android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp" >
+    style="@style/SpotrGeneralBackground" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/shadow" >
-        
-	    <LinearLayout
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/rectangle_rounded_white"
-	        android:orientation="horizontal"
-	        android:padding="10dp"
-	        android:weightSum="1.0" >
-	
-	        <!-- GENERAL PLACE INFO AREA -->
-	
-	        <LinearLayout
-	            android:layout_width="0px"
-	            android:layout_height="match_parent"
-	            android:layout_weight=".80"
-	            android:orientation="vertical" >
-	
-	            <!-- Place Name -->
-	
-	            <TextView
-	                android:id="@+id/place_activity_xml_textview_name"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:textColor="@color/aluminum5"
-	                android:textSize="13sp"
-	                android:textStyle="bold" />
-	
-	            <!-- Place description -->
-	
-	            <TextView
-	                android:id="@+id/place_activity_xml_textview_description"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:maxLines="3"
-	                android:paddingBottom="10dp"
-	                android:textColor="@color/aluminum4"
-	                android:textSize="10sp" />
-	
-	            <Button
-	                android:id="@+id/place_info_xml_button_moreinfo"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_alignParentBottom="true"
-	                android:text="More Info"
-	                android:textSize="12sp"
-	                android:textStyle="normal" />
-	        </LinearLayout>
-	
-	        <!-- SPACER -->
-	
-	        <LinearLayout
-	            android:layout_width="1dp"
-	            android:layout_height="match_parent"
-	            android:background="@color/aluminum4" />
-	
-	        <!-- GAMES/ACTIONS AREA -->
-	
-	        <LinearLayout
-	            android:layout_width="0px"
-	            android:layout_height="match_parent"
-	            android:layout_weight=".20"
-	            android:gravity="center_horizontal"
-	            android:orientation="vertical" >
-	
-	            <!-- TREASURE BUTTON -->
-	
-	            <Button
-	                android:id="@+id/place_action_xml_button_treasure"
-	                style="@style/TreasureButton"
-	                android:layout_width="46dp"
-	                android:layout_height="30dp"
-	                android:background="@drawable/mission_treasure" />
-	
-	            <!-- OTHER BUTTONS? -->
-	
-	        </LinearLayout>
-	    </LinearLayout>
+    <!-- Place Info -->
+
+    <LinearLayout style="@style/LinearLayoutShadow.SpotsMissionsShortInfoContainer" >
+
+        <LinearLayout style="@style/LinearLayoutRounded.SpotsMissionsShortInfoContainer" >
+
+            <LinearLayout style="@style/LinearLayoutSpotsMissionsShortInfo" >
+
+                <TextView
+                    android:id="@+id/place_activity_xml_textview_name"
+                    style="@style/SpotsMissionsName" />
+
+                <TextView
+                    android:id="@+id/place_activity_xml_textview_description"
+                    style="@style/SpotsMissionsAddress" />
+
+                <Button
+                    android:id="@+id/place_info_xml_button_moreinfo"
+                    style="@style/SpotsMissionsInfoButton" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/VerticalSpacer" />
+
+            <LinearLayout style="@style/LinearLayoutMissionsShortInfoMisc" >
+
+                <Button
+                    android:id="@+id/place_action_xml_button_treasure"
+                    style="@style/SpotsMissionsTreasureButton" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- MISSIONS -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/shadow"
-        android:padding="5dp" >
-        
-	     <com.csun.spotr.custom_gui.RoundedRectListView
-	         android:id="@+id/place_action_xml_listview_actions"
-	         style="@style/MissionsList" />
-     
+    <!-- End Place Info -->
+
+
+    <!-- Missions List -->
+
+    <LinearLayout style="@style/LinearLayoutShadow.MissionsList" >
+
+        <com.csun.spotr.custom_gui.RoundedRectListView
+            android:id="@+id/place_action_xml_listview_actions"
+            style="@style/RoundedRectListView.MissionsList" />
     </LinearLayout>
+
+    <!-- End Missions List -->
 
 </LinearLayout>
