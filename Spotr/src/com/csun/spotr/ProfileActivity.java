@@ -46,6 +46,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -74,16 +75,38 @@ public class ProfileActivity
 	private 				Bitmap 					bitmapUserPicture = null;
 	private					GetUserDetailTask		task;
 	private 				int 					userId = -1;
+	private					Button					editButton;
+	private					View					friendsButton1;
+	private					View					friendsButton2;
+	private					View					friendsButton3;
+	private					View					badgeButton1;
+	private					View					badgeButton2;
+	private					View					badgeButton3;
+	private					OnClickListener			friendsClick;
+	private					OnClickListener			badgeClick;
+	private					String					imageLocation;
 				
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
 		
+		editButton = (Button) findViewById(R.id.profile_xml_button_edit);
+		//Views created to make entire area clickable
+		friendsButton1 = (View) findViewById(R.id.profile_xml_friends_1);
+		friendsButton2 = (View) findViewById(R.id.profile_xml_friends_2);
+		friendsButton3 = (View) findViewById(R.id.profile_xml_friends_3);
+		badgeButton1 = (View) findViewById(R.id.profile_xml_badges_1);
+		badgeButton2 = (View) findViewById(R.id.profile_xml_badges_2);
+		badgeButton3 = (View) findViewById(R.id.profile_xml_badges_3);
+		
+		
+		
 		feedList = new ArrayList<FriendFeedItem>();
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
 		adapter = new FriendFeedItemAdapter(this, feedList, true);
 		listview.setAdapter(adapter);
+		
 		
 		Bundle extrasBundle = getIntent().getExtras();
 		userId = extrasBundle.getInt("user_id");
@@ -94,12 +117,50 @@ public class ProfileActivity
 		}
 		
 		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
-		if (userId == CurrentUser.getCurrentUser().getId()) {
-			imageViewUserPicture.setClickable(true);
-		}
-		else {
+		imageViewUserPicture.setClickable(false);
+		if(imageViewUserPicture.isClickable())
 			imageViewUserPicture.setClickable(false);
-		}
+	
+		editButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				Intent intent;
+				Bundle extras = new Bundle();
+				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
+				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
+				extras.putString("imageUrl", imageLocation);
+				intent = new Intent("com.csun.spotr.ProfileEditActivity");
+				intent.putExtras(extras);
+				startActivity(intent);
+				finish();
+			}
+		});
+		
+
+		friendsClick = (new OnClickListener() {
+			public void onClick(View view) {
+				Intent intent;
+				intent = new Intent(getApplicationContext(), FriendListMainActivity.class);
+				startActivity(intent);
+				//finish();
+			}
+		});
+		
+		friendsButton1.setOnClickListener(friendsClick);
+		friendsButton2.setOnClickListener(friendsClick);
+		friendsButton3.setOnClickListener(friendsClick);
+		
+		badgeClick = (new OnClickListener() {
+			public void onClick(View view) {
+				Intent intent;
+				intent = new Intent(getApplicationContext(), RewardActivity.class);
+				startActivity(intent);
+				//finish();
+			}
+		});
+		badgeButton1.setOnClickListener(badgeClick);
+		badgeButton2.setOnClickListener(badgeClick);
+		badgeButton3.setOnClickListener(badgeClick);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -377,7 +438,7 @@ public class ProfileActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
+		inflater.inflate(R.menu.profile_setting_menu, menu);
 		return true;
 	}
 
@@ -401,6 +462,18 @@ public class ProfileActivity
 				break;
 			case R.id.options_menu_xml_item_mainmenu_icon:
 				intent = new Intent("com.csun.spotr.MainMenuActivity");
+				startActivity(intent);
+				finish();
+				break;
+			case R.id.profile_setting_menu_xml_edit:
+				intent = new Intent("com.csun.spotr.ProfileEditActivity");
+				Bundle extras = new Bundle();
+				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
+				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
+				extras.putString("imageUrl", imageLocation);
+				intent = new Intent("com.csun.spotr.ProfileEditActivity");
+				intent.putExtras(extras);
 				startActivity(intent);
 				finish();
 				break;
@@ -436,10 +509,23 @@ public class ProfileActivity
 		
 		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
 		imageLoader.displayImage(u.getImageUrl(), imageViewUserPicture);
+		imageLocation = u.getImageUrl();
 		
 		imageViewUserPicture.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startDialog();
+				/*
+				Intent intent;
+				Bundle extras = new Bundle();
+				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
+				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
+				extras.putString("imageUrl", imageLocation);
+				intent = new Intent("com.csun.spotr.ProfileEditActivity");
+				intent.putExtras(extras);
+				startActivity(intent);
+				finish();
+				*/
+				//startDialog();
 			}
 		});
 		
