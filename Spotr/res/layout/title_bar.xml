@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="50dip"
-    android:gravity="center_vertical"
-    android:background="@color/aluminum6" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TitleBarBackground" >
  
     <ImageView
         android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/title_bar_logo"
-        android:paddingLeft="5dip" />
- 
+        style="@style/TitleBarLogo" />
+     
 </LinearLayout>

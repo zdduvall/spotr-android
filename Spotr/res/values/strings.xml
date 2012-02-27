@@ -83,4 +83,13 @@
     <string name="question_answer_xml_edittext_answer">Answer</string>
     <string name="spots_missions_info_button">More</string>
     <string name="friend_search_button">Search</string>
+    <string name="main_menu_btn_me">Me</string>
+    <string name="main_menu_btn_map">Map</string>
+    <string name="main_menu_btn_friends">Friends</string>
+    <string name="main_menu_btn_quests">Quests</string>
+    <string name="main_menu_btn_spots">Spots</string>
+    <string name="main_menu_btn_ping">Ping</string>
+    <string name="main_menu_btn_spot_it">Spot It</string>
+    <string name="main_menu_btn_inventory">Inventory</string>
+    <string name="main_menu_btn_inbox">Inbox</string>
 </resources>

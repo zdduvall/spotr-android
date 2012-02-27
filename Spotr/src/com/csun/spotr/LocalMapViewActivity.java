@@ -21,6 +21,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
@@ -74,7 +76,7 @@ public class LocalMapViewActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.mapview);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 
 		// get map view
 		mapView = (MapView) findViewById(R.id.mapview_xml_map);
@@ -95,7 +97,7 @@ public class LocalMapViewActivity
 		changeViewButton = (Button) findViewById(R.id.mapview_xml_button_change_view);
 		listPlaceButton = (Button) findViewById(R.id.mapview_xml_button_places);
 		locateButton = (Button) findViewById(R.id.mapview_xml_button_locate);
-
+			
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
@@ -112,30 +114,24 @@ public class LocalMapViewActivity
 				startDialog();
 			}
 		});
-
-		// handle locate event
-		locateButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "My location", "Hello");
-				Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
-				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-				ovl.setMarker(icon);
-				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
-				itemizedOverlay.addOverlay(ovl, place);
-
-				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
-				mapController.setZoom(19);
-			}
-		});
-
-		// handle show display list event
-		listPlaceButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				new GetSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
-			}
-		});
 	}
+	
+	public void locate(View locateButton) {
+		OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "My location", "Hello");
+		Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
+		icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+		ovl.setMarker(icon);
+		Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
+		itemizedOverlay.addOverlay(ovl, place);
 
+		mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
+		mapController.setZoom(19);
+	}
+	
+	public void postPlaces(View placesButton) {
+		new GetSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
+	}
+	
 	private void startDialog() {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
 		myAlertDialog.setTitle("Map View Option");

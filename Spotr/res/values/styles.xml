@@ -24,7 +24,7 @@
     <!-- WHAT IS THIS I DON'T EVEN -->
 
 
-    <!-- Title Bar -->
+    <!-- Title Bar (DEPRECATED?)-->
     <style name="CustomWindowTitleBackground">
         <item name="android:background">@color/aluminum6</item>
     </style>
@@ -34,6 +34,46 @@
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
     <!-- End Title Bar -->
+    
+    
+    <!-- Title Bars -->
+    <style name="TitleBarBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/aluminum6</item>
+    </style>
+
+    <style name="TitleBarLogo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:src">@drawable/title_bar_logo</item>
+    </style>
+    
+    <style name="TitleBarMapLocateBtn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_toLeftOf">@id/title_bar_map_btn_places</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/ic_map_spot_me</item>
+        <item name="android:onClick">locate</item>
+    </style>
+    
+    <style name="TitleBarMapPlacesBtn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/ic_map_places</item>
+        <item name="android:onClick">postPlaces</item>
+    </style>
+    
+    
+    <!-- End Title Bars -->
 
 
     <!-- TabWidget -->
@@ -55,6 +95,13 @@
 
 
     <!-- Main Menu -->
+    <style name="Dashboard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_above">@id/spacer</item>
+        <item name="android:background">@drawable/background_clouds</item>
+    </style>    
+    
     <style name="MainMenuButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -66,10 +113,65 @@
         <item name="android:textColor">@color/aluminum6</item>
         <item name="android:background">@null</item>
     </style>
+    
+    <style name="MainMenuButton.Me">
+        <item name="android:drawableTop">@drawable/ic_main_menu_me</item>
+        <item name="android:text">@string/main_menu_btn_me</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Map">
+        <item name="android:drawableTop">@drawable/ic_main_menu_map</item>
+        <item name="android:text">@string/main_menu_btn_map</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Friends">
+        <item name="android:drawableTop">@drawable/ic_main_menu_friends</item>
+        <item name="android:text">@string/main_menu_btn_friends</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Quests">
+        <item name="android:drawableTop">@drawable/ic_main_menu_quests</item>
+        <item name="android:text">@string/main_menu_btn_quests</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
 
+    <style name="MainMenuButton.Spots">
+        <item name="android:drawableTop">@drawable/ic_main_menu_spots</item>
+        <item name="android:text">@string/main_menu_btn_spots</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Ping">
+        <item name="android:drawableTop">@drawable/ic_main_menu_ping</item>
+        <item name="android:text">@string/main_menu_btn_ping</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.SpotIt">
+        <item name="android:drawableTop">@drawable/ic_main_menu_spot_it</item>
+        <item name="android:text">@string/main_menu_btn_spot_it</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Inventory">
+        <item name="android:drawableTop">@drawable/ic_main_menu_inventory</item>
+        <item name="android:text">@string/main_menu_btn_inventory</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Inbox">
+        <item name="android:drawableTop">@drawable/ic_main_menu_inbox</item>
+        <item name="android:text">@string/main_menu_btn_inbox</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
     <style name="NotificationHandle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">25dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:background">@color/aluminum4</item>
     </style>
     <!-- End Main Menu -->
@@ -80,6 +182,7 @@
         <item name="android:layout_height">match_parent</item>
     </style>
     <!-- End Friends: Friends tab -->
+    
     
     <!-- Friends: Find tab-->
     <style name="FriendSearchBarContainer">
@@ -109,6 +212,58 @@
         <item name="android:layout_height">match_parent</item>
     </style>
     <!-- End Friends: Find tab-->
+
+
+    <!-- Map -->
+    <style name="SpotrGeneralBackground.Map">
+        <item name="android:padding">0dp</item>
+    </style>
+        
+    <style name="MapButtonsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>   
+    
+    <style name="VerticalSpacer.MapButtons">
+        <item name="android:background">@color/aluminum6</item>
+    </style>
+    
+    <style name="MapViewButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--         <item name="android:background">@color/darkTurquoise</item> -->
+<!--         <item name="android:layout_margin">0dp</item> -->
+        <item name="android:text">@string/mapview_xml_button_view_str</item>
+    </style>
+
+    <style name="MapLocateButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--         <item name="android:layout_margin">0dp</item> -->
+<!--         <item name="android:background">@color/darkTurquoise</item>       -->
+        <item name="android:enabled">false</item>
+        <item name="android:text">@string/mapview_xml_button_locate_str</item>
+    </style>
+    
+    <style name="MapPlacesButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--         <item name="android:layout_margin">0dp</item> -->
+<!--         <item name="android:background">@color/darkTurquoise</item> -->
+        <item name="android:enabled">false</item>
+        <item name="android:text">@string/mapview_xml_button_place_str</item>
+    </style>
+    
+    <style name="MapView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:apiKey">07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"</item>
+        <item name="android:clickable">true</item>
+    </style>
+    <!-- End Map -->
 
 
     <!-- Spots: Missions tab-->    
@@ -155,11 +310,6 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="VerticalSpacer">
-        <item name="android:layout_width">1dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/aluminum2</item>
-    </style>
 
     <style name="LinearLayoutMissionsShortInfoMisc">
         <item name="android:layout_width">0px</item>
@@ -485,6 +635,12 @@
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="android:background">@drawable/rectangle_rounded_white</item>        
+    </style>
+
+    <style name="VerticalSpacer">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/aluminum2</item>
     </style>
     <!-- End Misc -->
 
