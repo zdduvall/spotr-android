@@ -1,51 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="#00C1E8"
-	>
+    style="@style/SpotrGeneralBackground.Map" >
 
-    <TableLayout
-        android:layout_width="400dp"
-        android:layout_height="55dp" >
+    <!-- Button controls -->
 
-        <TableRow >
-            <Button
-                android:id="@+id/mapview_xml_button_change_view"
-                style="@style/TreasureButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/mapview_xml_button_view_str" />
+    <LinearLayout style="@style/MapButtonsContainer" >
 
-            <Button
-                android:id="@+id/mapview_xml_button_locate"
-                style="@style/TreasureButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:enabled="false"
-                android:text="@string/mapview_xml_button_locate_str" />
+        <Button
+            android:id="@+id/mapview_xml_button_change_view"
+            style="@style/MapViewButton" />
+        
+        <View 
+            style="@style/VerticalSpacer.MapButtons" />
+        
+        <Button
+            android:id="@+id/mapview_xml_button_locate"
+            style="@style/MapLocateButton" />
+        
+        <View 
+            style="@style/VerticalSpacer.MapButtons" />
+        
+        <Button
+            android:id="@+id/mapview_xml_button_places"
+            style="@style/MapPlacesButton" />
 
-            <Button
-                android:id="@+id/mapview_xml_button_places"
-                style="@style/TreasureButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:enabled="false"
-                android:text="@string/mapview_xml_button_place_str" />
-        </TableRow>
-    </TableLayout>
+    </LinearLayout>
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview_xml_map"
-        android:layout_width="fill_parent"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:layout_height="390dp"
-        android:apiKey="07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"
-        android:clickable="true" />
-
+        style="@style/MapView" />
 </LinearLayout>

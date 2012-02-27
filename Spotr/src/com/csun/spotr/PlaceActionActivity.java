@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ListView;
@@ -92,7 +94,6 @@ public class PlaceActionActivity
 		});
 		
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
-		buttonTreasure.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate)) ;
 		buttonTreasure.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), TreasureActivity.class);
@@ -106,6 +107,7 @@ public class PlaceActionActivity
 		
 				
 		list.setAdapter(adapter);
+		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //				Challenge c = (Challenge) list.getAdapter().getItem(position);
@@ -423,7 +425,8 @@ public class PlaceActionActivity
 		name.setText(p.getName());
 
 		TextView description = (TextView) findViewById(R.id.place_activity_xml_textview_description);
-		description.setText(p.getAddress());
+		String formattedAddress = formatAddress(p.getAddress());
+		description.setText(formattedAddress);//p.getAddress());
 
 		//TextView location = (TextView) findViewById(R.id.place_info_xml_textview_location);
 		//location.setText("[" + Double.toString(p.getLatitude()) + ", " + Double.toString(p.getLongitude()) + "]");
@@ -465,6 +468,30 @@ public class PlaceActionActivity
 		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
 		mapController.setZoom(16);
 		*/
+	}
+	
+	/**
+	 * NOTE: THIS IS A TEMPORARY IMPLEMENTATION
+	 * Formats an address string to have line breaks. 
+	 * @param address the string retrieved from the database
+	 * @return a nicely formatted string
+	 */
+	private String formatAddress(String address) {
+		String[] parts = address.split("\\, ");
+		
+		// Check that we get 4 substrings:
+		//	   1) street
+		//     2) city
+		//     3) state and zip
+		//     4) country --> ignored
+		// Otherwise, return the address unchanged. 
+		if (parts.length == 4) {
+			address = "";			
+			String[] stateAndZip = parts[2].split("\\ ");
+			address = parts[0] + "\n"
+					+ parts[1] + ", " + stateAndZip[0] + ", " + stateAndZip[1];		
+		}
+		return address;
 	}
 
 	

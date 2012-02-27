@@ -24,7 +24,7 @@
     <!-- WHAT IS THIS I DON'T EVEN -->
 
 
-    <!-- Title Bar -->
+    <!-- Title Bar (DEPRECATED?)-->
     <style name="CustomWindowTitleBackground">
         <item name="android:background">@color/aluminum6</item>
     </style>
@@ -34,6 +34,46 @@
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
     <!-- End Title Bar -->
+    
+    
+    <!-- Title Bars -->
+    <style name="TitleBarBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/aluminum6</item>
+    </style>
+
+    <style name="TitleBarLogo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:src">@drawable/title_bar_logo</item>
+    </style>
+    
+    <style name="TitleBarMapLocateBtn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_toLeftOf">@id/title_bar_map_btn_places</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/ic_map_spot_me</item>
+        <item name="android:onClick">locate</item>
+    </style>
+    
+    <style name="TitleBarMapPlacesBtn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/ic_map_places</item>
+        <item name="android:onClick">postPlaces</item>
+    </style>
+    
+    
+    <!-- End Title Bars -->
 
 
     <!-- TabWidget -->
@@ -55,6 +95,13 @@
 
 
     <!-- Main Menu -->
+    <style name="Dashboard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_above">@id/spacer</item>
+        <item name="android:background">@drawable/background_clouds</item>
+    </style>    
+    
     <style name="MainMenuButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -66,24 +113,225 @@
         <item name="android:textColor">@color/aluminum6</item>
         <item name="android:background">@null</item>
     </style>
+    
+    <style name="MainMenuButton.Me">
+        <item name="android:drawableTop">@drawable/ic_main_menu_me</item>
+        <item name="android:text">@string/main_menu_btn_me</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Map">
+        <item name="android:drawableTop">@drawable/ic_main_menu_map</item>
+        <item name="android:text">@string/main_menu_btn_map</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Friends">
+        <item name="android:drawableTop">@drawable/ic_main_menu_friends</item>
+        <item name="android:text">@string/main_menu_btn_friends</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Quests">
+        <item name="android:drawableTop">@drawable/ic_main_menu_quests</item>
+        <item name="android:text">@string/main_menu_btn_quests</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
 
+    <style name="MainMenuButton.Spots">
+        <item name="android:drawableTop">@drawable/ic_main_menu_spots</item>
+        <item name="android:text">@string/main_menu_btn_spots</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Ping">
+        <item name="android:drawableTop">@drawable/ic_main_menu_ping</item>
+        <item name="android:text">@string/main_menu_btn_ping</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.SpotIt">
+        <item name="android:drawableTop">@drawable/ic_main_menu_spot_it</item>
+        <item name="android:text">@string/main_menu_btn_spot_it</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Inventory">
+        <item name="android:drawableTop">@drawable/ic_main_menu_inventory</item>
+        <item name="android:text">@string/main_menu_btn_inventory</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
+    <style name="MainMenuButton.Inbox">
+        <item name="android:drawableTop">@drawable/ic_main_menu_inbox</item>
+        <item name="android:text">@string/main_menu_btn_inbox</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
+    
     <style name="NotificationHandle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">25dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:background">@color/aluminum4</item>
     </style>
     <!-- End Main Menu -->
-
-
-    <!-- Spots: Missions tab -->
-    <style name="MissionsList">
+    
+    <!-- Friends: Friends tab -->    
+    <style name="LinearLayoutShadow.FriendsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:dividerHeight">1dp</item>
-        <item name="android:footerDividersEnabled">false</item>
+    </style>
+    <!-- End Friends: Friends tab -->
+    
+    
+    <!-- Friends: Find tab-->
+    <style name="FriendSearchBarContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+    
+    <style name="FriendSearchBar">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    
+    <style name="FriendSearchButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:text">@string/friend_search_button</item>        
+    </style>
+    
+    <style name="LinearLayoutShadow.FriendsFindList">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    <!-- End Friends: Find tab-->
+
+
+    <!-- Map -->
+    <style name="SpotrGeneralBackground.Map">
+        <item name="android:padding">0dp</item>
+    </style>
+        
+    <style name="MapButtonsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>   
+    
+    <style name="VerticalSpacer.MapButtons">
+        <item name="android:background">@color/aluminum6</item>
+    </style>
+    
+    <style name="MapViewButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--         <item name="android:background">@color/darkTurquoise</item> -->
+<!--         <item name="android:layout_margin">0dp</item> -->
+        <item name="android:text">@string/mapview_xml_button_view_str</item>
+    </style>
+
+    <style name="MapLocateButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--         <item name="android:layout_margin">0dp</item> -->
+<!--         <item name="android:background">@color/darkTurquoise</item>       -->
+        <item name="android:enabled">false</item>
+        <item name="android:text">@string/mapview_xml_button_locate_str</item>
+    </style>
+    
+    <style name="MapPlacesButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--         <item name="android:layout_margin">0dp</item> -->
+<!--         <item name="android:background">@color/darkTurquoise</item> -->
+        <item name="android:enabled">false</item>
+        <item name="android:text">@string/mapview_xml_button_place_str</item>
+    </style>
+    
+    <style name="MapView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:apiKey">07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"</item>
+        <item name="android:clickable">true</item>
+    </style>
+    <!-- End Map -->
+
+
+    <!-- Spots: Missions tab-->    
+    <style name="LinearLayoutShadow.SpotsMissionsShortInfoContainer">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="LinearLayoutRounded.SpotsMissionsShortInfoContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="LinearLayoutSpotsMissionsShortInfo">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">0.8</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="SpotsMissionsName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/aluminum5</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SpotsMissionsAddress">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:textColor">@color/aluminum4</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="SpotsMissionsInfoButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:text">@string/spots_missions_info_button</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <style name="LinearLayoutMissionsShortInfoMisc">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">0.2</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="SpotsMissionsTreasureButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@null</item>
+        <item name="android:drawableTop">@drawable/mission_treasure</item>
+    </style>
+
+    <style name="LinearLayoutShadow.MissionsList">
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="RoundedRectListView.MissionsList">
         <item name="android:scrollbars">none</item>
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:drawSelectorOnTop">false</item>
     </style>
 
     <style name="MissionRow">
@@ -95,26 +343,28 @@
     </style>
 
     <style name="MissionIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">32sp</item>
+        <item name="android:layout_height">32sp</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="MissionName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_vertical|left</item>
+        <item name="android:paddingLeft">5dp</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/aluminum5</item>
     </style>
 
     <style name="MissionPointValue">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center_horizontal|right</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:textColor">@color/aluminum5</item>
     </style>
@@ -124,11 +374,9 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/aluminum5</item>
     </style>
-    <!-- End Spots: Missions tab -->
-
 
     <!-- Spots: Missions Tab: Open Treasure Button -->
     <style name="TreasureButton">
@@ -146,7 +394,9 @@
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
     </style>
-
+    <!-- End Spots: Missions tab -->
+    
+    
     <style name="ToolbarButton">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -273,11 +523,6 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:singleLine">true</item>
-        <!-- <item name="android:ellipsize">marquee</item> -->
-        <!-- <item name="android:marqueeRepeatLimit">marquee_forever</item> -->
-        <!-- <item name="android:focusable">true</item> -->
-        <!-- <item name="android:focusableInTouchMode">true</item> -->
-        <!-- <item name="android:scrollHorizontally">true</item> -->
         <item name="android:textColor">@color/aluminum6</item>
     </style>
 
@@ -359,5 +604,44 @@
         <item name="@android:windowEnterAnimation">@anim/pump_bottom</item>
         <item name="@android:windowExitAnimation">@anim/disappear</item>
     </style>
+
+    <!-- Misc -->
+    <style name="SpotrGeneralBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/aluminum1</item>
+        
+    </style>
+    <style name="LinearLayoutShadow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@drawable/shadow</item>
+    </style>
+
+    <style name="LinearLayoutRounded">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/rectangle_rounded_white</item>
+    </style>
+    
+    <style name="RoundedRectListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:divider">@color/aluminum2</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:footerDividersEnabled">false</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:background">@drawable/rectangle_rounded_white</item>        
+    </style>
+
+    <style name="VerticalSpacer">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/aluminum2</item>
+    </style>
+    <!-- End Misc -->
 
 </resources>

@@ -1,96 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
     <com.csun.spotr.custom_gui.DashboardLayout
         android:id="@+id/main_menu_xml_dashboard"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/background_clouds"
-        android:layout_above="@+id/spacer" >
+        style="@style/Dashboard" >
         
-        <!--  Me Button -->
         <Button
             android:id="@+id/main_menu_btn_me"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_me"
-            android:text="Me"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Me" />
         
-        <!--  Map Button -->
         <Button
             android:id="@+id/main_menu_btn_map"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_map"
-            android:text="Map"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Map" />
         
-        <!--  Friends Button -->
         <Button
             android:id="@+id/main_menu_btn_friends"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_friends"
-            android:text="Friends"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Friends" />
         
-        <!--  Quests Button -->
         <Button
             android:id="@+id/main_menu_btn_quests"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_quests"
-            android:text="Quests"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Quests" />
         
-        <!--  Spots Button -->
         <Button
             android:id="@+id/main_menu_btn_spots"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_spots"
-            android:text="Spots"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Spots" />
         
-        <!--  Ping Button -->
         <Button
             android:id="@+id/main_menu_btn_ping"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_ping"
-            android:text="Ping"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Ping" />
         
-        <!-- Spot_It Button -->
         <Button
             android:id="@+id/main_menu_btn_spot_it"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_spot_it"
-            android:text="Spot It"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.SpotIt" />
         
-        <!-- Inventory Button -->
         <Button
             android:id="@+id/main_menu_btn_inventory"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_inventory"
-            android:text="Inventory"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Inventory" />
         
-        <!-- Inbox Button -->
         <Button
             android:id="@+id/main_menu_btn_inbox"
-            style="@style/MainMenuButton"
-            android:drawableTop="@drawable/ic_main_menu_inbox"
-            android:text="Inbox"
-            android:onClick="getActivity" />
+            style="@style/MainMenuButton.Inbox" />
         
     </com.csun.spotr.custom_gui.DashboardLayout>
     
     <LinearLayout
-        android:id="@id/spacer"
-        style="@style/NotificationHandle"
-        android:layout_alignParentBottom="true" >
+        android:id="@+id/spacer"
+        style="@style/NotificationHandle" >
     </LinearLayout>
     
+    <!-- NOTE: Add to styles.xml -->
     <SlidingDrawer 
         android:id="@+id/main_menu_xml_slider"
         gravity="bottom"

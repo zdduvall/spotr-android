@@ -73,13 +73,13 @@ public class PlaceActionItemAdapter extends BaseAdapter {
 		holder.pointAbbrevTextView.setText(R.string.place_action_item_xml_string_pts);
 
 		if (items.get(position).getType() == Challenge.Type.CHECK_IN)
-			holder.iconImageView.setImageResource(R.drawable.mission_check_in);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_check_in);
 		else if (items.get(position).getType() == Challenge.Type.SNAP_PICTURE)
-			holder.iconImageView.setImageResource(R.drawable.mission_snap_picture);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_snap_picture);
 		else if (items.get(position).getType() == Challenge.Type.WRITE_ON_WALL)
-			holder.iconImageView.setImageResource(R.drawable.mission_write_on_wall);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_write_on_wall);
 		else if (items.get(position).getType() == Challenge.Type.QUESTION_ANSWER)
-			holder.iconImageView.setImageResource(R.drawable.mission_ask_question);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
 		else
 			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
 		
