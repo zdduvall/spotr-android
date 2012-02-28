@@ -23,6 +23,7 @@ import com.csun.spotr.util.FineLocation.LocationResult;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -188,14 +189,19 @@ public class FinderFoundActivity extends Activity {
 	
 		private List<NameValuePair> finderData = new ArrayList<NameValuePair>();
 		private WeakReference<FinderFoundActivity> ref;
-	
+		private ProgressDialog progressDialog = null;
+		
 		public FinderFoundTask(FinderFoundActivity a) {
 			attach(a);
 		}
 	
 		@Override
 		protected void onPreExecute() {
-	
+			progressDialog = new ProgressDialog(ref.get());
+			progressDialog.setMessage("Loading...");
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(false);
+			progressDialog.show();
 		}
 	
 		protected String doInBackground(String... params) {
@@ -229,6 +235,7 @@ public class FinderFoundActivity extends Activity {
 	
 		@Override
 		protected void onPostExecute(String result) {
+			progressDialog.dismiss();
 			if (result.equals("success")) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
 				dialogMessage.setTitle("Item marked as found!");
@@ -247,6 +254,21 @@ public class FinderFoundActivity extends Activity {
 				dialogMessage.show();
 			}
 			else {
+				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
+				dialogMessage.setTitle("Submission error");
+				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() 
+						+ ", there was an error processing.");
+				
+				dialogMessage.setButton("Okay", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent intent = new Intent();
+						ref.get().setResult(RESULT_OK, intent);
+						ref.get().finish();
+					}
+				});
+				
+				dialogMessage.show();
 				Log.d(TAG, "Result = FAIL");
 			}
 		}

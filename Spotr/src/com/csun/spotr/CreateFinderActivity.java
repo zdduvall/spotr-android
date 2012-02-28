@@ -24,6 +24,7 @@ import com.csun.spotr.util.FineLocation.LocationResult;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -50,7 +51,9 @@ public class CreateFinderActivity extends Activity {
 	private static final String TAG = "(CreateLostItemActivity)";
 	private static final String GET_USER_POINTS_URL = "http://107.22.209.62/android/get_user_points.php";
 	private static final String SUBMIT_ITEM_URL = "http://107.22.209.62/android/do_create_finder.php";
-
+	private static final int CAMERA_REQUEST_CODE = 0;
+	private static final int GALLERY_REQUEST_CODE = 1;
+	
 	private static Integer userPoints = 0;
 	private static String itemName = null;
 	private static String itemDesc = null;
@@ -100,9 +103,28 @@ public class CreateFinderActivity extends Activity {
 
 		buttonSelectImage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				i.setType("image/*");
-				startActivityForResult(i, 0);
+				AlertDialog dialogMessage = new AlertDialog.Builder(CreateFinderActivity.this).create();
+				dialogMessage.setTitle("Camera or Gallery");
+				dialogMessage.setMessage("Where do you want to upload your picture from?");
+				
+				dialogMessage.setButton(Dialog.BUTTON_POSITIVE, "Camera", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+						startActivityForResult(i, CAMERA_REQUEST_CODE);
+					}
+				});
+				
+				dialogMessage.setButton(Dialog.BUTTON_NEGATIVE, "Gallery", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+						i.setType("image/*");
+						startActivityForResult(i, GALLERY_REQUEST_CODE);
+					}
+				});
+				
+				dialogMessage.show();
 			}
 		});
 
@@ -148,26 +170,36 @@ public class CreateFinderActivity extends Activity {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-
+		
 		if (resultCode == RESULT_OK) {
-			Uri selectedImageUri = intent.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-			Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-
-			ContentResolver cr = getContentResolver();
-			InputStream in = null;
-			try {
-				in = cr.openInputStream(selectedImageUri);
+			if (requestCode == GALLERY_REQUEST_CODE) {
+				Uri selectedImageUri = intent.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	
+				Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
+				cursor.moveToFirst();
+	
+				ContentResolver cr = getContentResolver();
+				InputStream in = null;
+				try {
+					in = cr.openInputStream(selectedImageUri);
+				}
+				catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				Options options = new Options();
+				options.inSampleSize = 8;
+				bitmapPicture = BitmapFactory.decodeStream(in, null, options);
+				imageViewPicture.setImageBitmap(bitmapPicture);
 			}
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
+			
+			if (requestCode == CAMERA_REQUEST_CODE) {
+				bitmapPicture = (Bitmap) intent.getExtras().get("data");
+				imageViewPicture.setImageBitmap(bitmapPicture);
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+				imageViewPicture.setImageBitmap(bitmapPicture);
 			}
-			Options options = new Options();
-			options.inSampleSize = 8;
-			bitmapPicture = BitmapFactory.decodeStream(in, null, options);
-			imageViewPicture.setImageBitmap(bitmapPicture);
 		}
 	}
 
