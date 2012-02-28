@@ -5,64 +5,49 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/profile_edit_xml_button_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Done" />
-
     <TextView
         android:id="@+id/profile_edit_xml_textview_edit_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@color/aluminum3"
         android:gravity="center"
+        android:paddingBottom="5dp"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
-        android:text="Edit Page"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#0794B3"
-        android:textStyle="bold" />
+        android:paddingTop="5dp"
+        android:text="Edit Profile"
+        android:textColor="@color/aluminum6"
+        android:textSize="15dp" />
     
-    <ScrollView
-        android:id="@+id/profile_edit_xml_scrollview_edit_temp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-        
-    <RelativeLayout 
-        android:id="@+id/profile_edit_xml_relativeview_edit_temp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    
-    <ImageView
-        android:id="@+id/profile_edit_xml_imageview_user_picture"
-        android:layout_width="120sp"
-        android:layout_height="120sp"
-        android:adjustViewBounds="true"
-        android:background="#434343"
-        android:clickable="true"
-        android:scaleType="fitXY"
-        
-        android:src="@drawable/ic_launcher" />
-
     <ScrollView
         android:id="@+id/profile_edit_xml_scrollview_edit"
-        android:layout_below="@id/profile_edit_xml_imageview_user_picture"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:background="@color/aluminum2"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:paddingTop="10sp" >
 
-       
         <LinearLayout
             android:id="@+id/LinearLayout02"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:background="@color/aluminum3"
             android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/profile_edit_xml_imageview_user_picture"
+                android:layout_width="120sp"
+                android:layout_height="120sp"
+                android:src="@drawable/ic_main_menu_me_default"
+                android:layout_gravity="center" />
 
             <TextView
                 android:id="@+id/profile_edit_xml_textview_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nick Name"
-                android:textStyle="bold" />
+                android:text="Name"
+                android:textColor="@color/aluminum6" />
 
             <EditText
                 android:id="@+id/profile_edit_xml_edittext_name"
@@ -74,20 +59,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:textStyle="bold" />
+                android:textColor="@color/aluminum6" />
 
             <EditText
                 android:id="@+id/profile_edit_xml_edittext_email"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
-            
+
             <TextView
-                android:id="@+id/profile_edit_xml_textview_password"
+                android:id="@+id/profile_edit_xml_textview_education"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password"
-                android:textStyle="bold" />
-
+                android:text="Education"
+                android:textColor="@color/aluminum6" />
+            
             <EditText
                 android:id="@+id/profile_edit_xml_edittext_password"
                 android:layout_width="fill_parent"
@@ -97,8 +82,8 @@
                 android:id="@+id/profile_edit_xml_textview_education"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Education"
-                android:textStyle="bold" />
+                android:text="Password"
+                android:textColor="@color/aluminum6" />
 
             <EditText
                 android:id="@+id/profile_edit_xml_edittext_education"
@@ -110,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home Town"
-                android:textStyle="bold" />
+                android:textColor="@color/aluminum6" />
 
             <EditText
                 android:id="@+id/profile_edit_xml_edittext_hometown"
@@ -122,14 +107,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hobbies"
-                android:textStyle="bold" />
+                android:textColor="@color/aluminum6" />
 
             <EditText
                 android:id="@+id/profile_edit_xml_edittext_hobbies"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:background="@color/aluminum2"
+                android:orientation="vertical"
+                android:paddingTop="5sp" >
+
+                <Button
+                    android:id="@+id/profile_edit_xml_button_save"
+                    android:layout_width="100sp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:text="Save" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    </RelativeLayout>
-</ScrollView>
+
 </LinearLayout>

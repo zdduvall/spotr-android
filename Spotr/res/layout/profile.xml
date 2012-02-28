@@ -5,30 +5,57 @@
     android:background="#181818"
     android:orientation="vertical" >
 
-    <TableLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40sp"
-        android:background="#434343" >
-	<TableRow > 
-		<TextView
-            android:id="@+id/profile_xml_textview_profilename"
-            android:layout_marginLeft="1sp"
-            android:padding="4dp"
-            android:text="Name"
-            android:textSize="15sp" />
-		<Button
-		    android:id="@+id/profile_xml_button_edit"
-		    android:layout_marginRight="10sp"
-		    android:text="Edit Profile" 
-		    android:layout_height="35dp"
-		    />
-	</TableRow>
-    </TableLayout>
+        android:layout_height="25sp"
+        android:background="@color/aluminum3"
+        android:orientation="horizontal" >
+
+        <TableLayout
+            android:layout_width="280sp"
+            android:layout_height="match_parent" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/profile_xml_textview_profilename"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="1sp"
+                    android:padding="4dp"
+                    android:text="Name "
+                    android:textColor="@color/aluminum6"
+                    android:textSize="15sp" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="25sp"
+                android:paddingTop="2sp" >
+
+                <Button
+                    android:id="@+id/profile_xml_button_edit"
+                    android:layout_width="35sp"
+                    android:layout_height="25sp"
+                    android:layout_marginLeft="3sp"
+                    android:text="Edit"
+                    android:textColor="@color/aluminum6"
+                    android:textSize="7sp" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#808080" />
+        android:background="@color/aluminum4" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,16 +67,15 @@
             android:layout_width="120sp"
             android:layout_height="120sp"
             android:adjustViewBounds="true"
-            android:background="#434343"
-            android:clickable="false"
+            android:background="#FFFFFF"
+            android:clickable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher" >
-        </ImageView>
+            android:src="@drawable/user_default" />
 
         <View
-            android:layout_width="1dip"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#808080" />
+            android:background="@color/aluminum4" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,7 +85,7 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="120sp"
-                android:background="#434343" >
+                android:background="@color/aluminum1" >
 
                 <TableRow>
 
@@ -70,17 +96,18 @@
                         android:paddingLeft="5dp"
                         android:paddingTop="10dp"
                         android:text="Points"
-                        android:textColor="#cccccc"
+                        android:textColor="@color/aluminum6"
                         android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/profile_xml_textview_points"
-                        android:layout_marginLeft="20sp"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginRight="5sp"
                         android:gravity="right"
-                        android:text=""
-                        android:textColor="#ffff99"
-                        android:textSize="10sp" />
+                        android:text="00"
+                        android:textColor="@color/aluminum6"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow>
@@ -91,17 +118,18 @@
                         android:paddingBottom="2dp"
                         android:paddingLeft="5dp"
                         android:text="Challenges Done"
-                        android:textColor="#cccccc"
+                        android:textColor="@color/aluminum6"
                         android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/profile_xml_textview_challenges_done"
-                        android:layout_marginLeft="20sp"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginRight="5sp"
                         android:gravity="right"
-                        android:text=""
-                        android:textColor="#ffff99"
-                        android:textSize="10sp" />
+                        android:text="00"
+                        android:textColor="@color/aluminum6"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow>
@@ -112,17 +140,18 @@
                         android:paddingBottom="2dp"
                         android:paddingLeft="5dp"
                         android:text="Spots Visited"
-                        android:textColor="#cccccc"
+                        android:textColor="@color/aluminum6"
                         android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/profile_xml_textview_places_visited"
-                        android:layout_marginLeft="20sp"
+                        android:layout_marginLeft="30sp"
                         android:layout_marginRight="5sp"
                         android:gravity="right"
-                        android:text=""
-                        android:textColor="#ffff99"
-                        android:textSize="10sp" />
+                        android:text="00"
+                        android:textColor="@color/aluminum6"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <LinearLayout
@@ -142,7 +171,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="#808080" />
+                            android:background="@color/aluminum4" />
 
                         <TableRow
                             android:id="@+id/profile_xml_badges_2"
@@ -155,7 +184,7 @@
                                 android:id="@+id/profile_xml_badges_3"
                                 android:layout_width="30sp"
                                 android:layout_height="match_parent"
-                                android:background="#434343"
+                                android:background="@color/aluminum1"
                                 android:clickable="true"
                                 android:src="@drawable/awards" >
                             </ImageView>
@@ -165,16 +194,16 @@
                                 android:layout_marginLeft="10sp"
                                 android:gravity="right"
                                 android:text="00"
-                                android:textColor="#ff6666"
+                                android:textColor="@color/aluminum6"
                                 android:textSize="25sp" />
                         </TableRow>
                     </TableLayout>
 
                     <View
-                        android:layout_width="1dip"
+                        android:layout_width="1dp"
                         android:layout_height="50sp"
                         android:layout_gravity="bottom"
-                        android:background="#808080" />
+                        android:background="@color/aluminum4" />
 
                     <TableLayout
                         android:id="@+id/profile_xml_friends_1"
@@ -187,13 +216,12 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="#808080" />
+                            android:background="@color/aluminum4" />
 
                         <TableRow
                             android:id="@+id/profile_xml_friends_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:clickable="true"
                             android:paddingLeft="5dp"
                             android:paddingTop="10dp" >
 
@@ -201,7 +229,7 @@
                                 android:id="@+id/profile_xml_friends_3"
                                 android:layout_width="30sp"
                                 android:layout_height="match_parent"
-                                android:background="#434343"
+                                android:background="@color/aluminum1"
                                 android:clickable="true"
                                 android:src="@drawable/ic_main_menu_friends_default" >
                             </ImageView>
@@ -211,7 +239,7 @@
                                 android:layout_marginLeft="10sp"
                                 android:gravity="right"
                                 android:text="00"
-                                android:textColor="#f89665"
+                                android:textColor="@color/aluminum6"
                                 android:textSize="25sp" />
                         </TableRow>
                     </TableLayout>
@@ -223,13 +251,13 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="20sp"
-        android:background="#808080" >
+        android:background="@color/aluminum4" >
 
         <TextView
             android:layout_marginLeft="1sp"
             android:padding="4dp"
             android:text="Activity"
-            android:textColor="#000000"
+            android:textColor="@color/aluminum6"
             android:textSize="10sp"
             android:textStyle="bold" />
     </TableLayout>

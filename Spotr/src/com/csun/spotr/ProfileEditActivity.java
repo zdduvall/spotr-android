@@ -48,7 +48,7 @@ public class ProfileEditActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile_edit);
 		
-		doneButton = (Button) findViewById(R.id.profile_edit_xml_button_done);
+		doneButton = (Button) findViewById(R.id.profile_edit_xml_button_save);
 		edittextEmail = (EditText) findViewById(R.id.profile_edit_xml_edittext_email);
 		edittextPassword = (EditText) findViewById(R.id.profile_edit_xml_edittext_password);
 		Bundle extrasBundle = getIntent().getExtras();
