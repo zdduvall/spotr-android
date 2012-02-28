@@ -99,6 +99,7 @@ public class FinderItemDetailActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						Intent intent = new Intent(getApplicationContext(), FinderFoundActivity.class);
+						intent.putExtra("finder_id", finderId);
 						setResult(RESULT_OK, intent);
 						startActivity(intent);
 						finish();

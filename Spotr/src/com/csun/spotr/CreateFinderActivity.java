@@ -17,8 +17,10 @@ import com.csun.spotr.singleton.CurrentDateTime;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.Base64;
+import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.UploadFileHelper;
+import com.csun.spotr.util.FineLocation.LocationResult;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,6 +32,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,6 +58,8 @@ public class CreateFinderActivity extends Activity {
 	private static String itemBytecode = null;
 	private static String itemFile = null;
 	private static int userId = 0;
+	private static Location lastKnownLocation = null;
+	private static FineLocation fineLocation = new FineLocation();
 
 	private EditText editTextName;
 	private EditText editTextDescription;
@@ -84,6 +89,14 @@ public class CreateFinderActivity extends Activity {
 		imageViewPicture = (ImageView) findViewById(R.id.create_lost_item_xml_imageview_item_images);
 
 		editTextPoints.setText(Integer.toString(itemPoints));
+		
+		LocationResult locationResult = (new LocationResult() {
+			@Override
+			public void gotLocation(final Location location) {
+				lastKnownLocation = location;
+			}
+		});
+		fineLocation.getLocation(this, locationResult);
 
 		buttonSelectImage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -123,7 +136,7 @@ public class CreateFinderActivity extends Activity {
 				itemFile = CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png";
 				userId = CurrentUser.getCurrentUser().getId();
 
-				new SubmitLostItem(CreateFinderActivity.this).execute();
+				new SubmitFinder(CreateFinderActivity.this).execute();
 			}
 		});
 
@@ -215,15 +228,15 @@ public class CreateFinderActivity extends Activity {
 
 	}
 
-	private static class SubmitLostItem 
+	private static class SubmitFinder 
 		extends AsyncTask<String, Integer, String> 
 			implements IAsyncTask<CreateFinderActivity> {
 		
-		private List<NameValuePair> lostItemData = new ArrayList<NameValuePair>();
+		private List<NameValuePair> finderData = new ArrayList<NameValuePair>();
 		private WeakReference<CreateFinderActivity> ref;
 		private ProgressDialog progressDialog = null;
 
-		public SubmitLostItem(CreateFinderActivity a) {
+		public SubmitFinder(CreateFinderActivity a) {
 			attach(a);
 		}
 
@@ -237,21 +250,18 @@ public class CreateFinderActivity extends Activity {
 		}
 
 		protected String doInBackground(String... params) {
+			
+			
+			finderData.add(new BasicNameValuePair("name", itemName));
+			finderData.add(new BasicNameValuePair("desc", itemDesc));
+			finderData.add(new BasicNameValuePair("points", Integer.toString(itemPoints)));
+			finderData.add(new BasicNameValuePair("image", itemBytecode));
+			finderData.add(new BasicNameValuePair("filename", itemFile));
+			finderData.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
+			finderData.add(new BasicNameValuePair("latitude", Double.toString(lastKnownLocation.getLatitude())));
+			finderData.add(new BasicNameValuePair("longitude", Double.toString(lastKnownLocation.getLongitude())));
 
-			lostItemData.add(new BasicNameValuePair("name", itemName));
-			lostItemData.add(new BasicNameValuePair("desc", itemDesc));
-			lostItemData.add(new BasicNameValuePair("points", Integer.toString(itemPoints)));
-			lostItemData.add(new BasicNameValuePair("image", itemBytecode));
-			lostItemData.add(new BasicNameValuePair("filename", itemFile));
-			lostItemData.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
-
-			Log.d(TAG + ": itemName", itemName);
-			Log.d(TAG + ": itemDesc", itemDesc);
-			Log.d(TAG + ": itemBytecode", itemBytecode);
-			Log.d(TAG + ": itemFile", itemFile);
-			Log.d(TAG + ": userId", Integer.toString(userId));
-
-			JSONObject json = UploadFileHelper.uploadFileToServer(SUBMIT_ITEM_URL, lostItemData);
+			JSONObject json = UploadFileHelper.uploadFileToServer(SUBMIT_ITEM_URL, finderData);
 			String result = "";
 			try {
 				result = json.getString("result");

@@ -4,11 +4,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.csun.spotr.adapter.FinderItemAdapter;
 import com.csun.spotr.core.adapter_item.SeekingItem;
+import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
@@ -29,7 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class UserFinderActivity extends Activity implements IActivityProgressUpdate<SeekingItem> {
 	private static final String TAG = "(UserFinderActivity)";
-	private static final String GET_USER_FINDERS_URL = "http://107.22.209.62/android/get_finders.php";
+	private static final String GET_USER_FINDERS_URL = "http://107.22.209.62/android/get_user_finders.php";
 	private List<SeekingItem> items;
 	private GridView gridview;
 	private FinderItemAdapter adapter;
@@ -75,7 +78,7 @@ public class UserFinderActivity extends Activity implements IActivityProgressUpd
 		
 		private WeakReference<UserFinderActivity> ref;
 		private ProgressDialog progressDialog = null;
-		
+		private List<NameValuePair> userData = new ArrayList<NameValuePair>();
 		
 		public GetUserFindersTask(UserFinderActivity a) {
 			attach(a);
@@ -88,6 +91,8 @@ public class UserFinderActivity extends Activity implements IActivityProgressUpd
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(false);
 			progressDialog.show();
+			
+			userData.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
 		}
 
 		@Override
@@ -97,7 +102,7 @@ public class UserFinderActivity extends Activity implements IActivityProgressUpd
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
-			JSONArray array = JsonHelper.getJsonArrayFromUrl(GET_USER_FINDERS_URL);
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_FINDERS_URL, userData);
 			if (array != null) {
 				try {
 					for (int i = 0; i < array.length(); ++i) {
