@@ -91,6 +91,19 @@ public class MainMenuActivity
 		 task.execute();
 	}
 	
+	/**
+	 * Open the main menu activity (dashboard). If that activity is already
+	 * running, a new instance of that activity will not be launched--instead,
+	 * all activities on top of the old instance are removed as the old 
+	 * instance is brought to the top.
+	 * @param button the button clicked
+	 */
+	public void goToMainMenu(View button) {
+	    final Intent intent = new Intent(this, MainMenuActivity.class);
+	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity (intent);
+	}
+	
 	public void getActivity(View mainMenuButton) {
 		int id =  ((Button) mainMenuButton).getId();
 		Intent intent;

@@ -27,7 +27,7 @@ public class PlaceMainActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.place_main);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
 		
 		Resources res = getResources(); 
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
@@ -81,6 +81,19 @@ public class PlaceMainActivity extends TabActivity {
 		// set current tab to action
 		tabHost.setCurrentTab(0);
 		*/
+	}
+	
+	/**
+	 * Open the main menu activity (dashboard). If that activity is already
+	 * running, a new instance of that activity will not be launched--instead,
+	 * all activities on top of the old instance are removed as the old 
+	 * instance is brought to the top.
+	 * @param button the button clicked
+	 */
+	public void goToMainMenu(View button) {
+	    final Intent intent = new Intent(this, MainMenuActivity.class);
+	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity (intent);
 	}
 	
 	@Override

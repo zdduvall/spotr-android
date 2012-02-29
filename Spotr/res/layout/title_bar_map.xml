@@ -2,13 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/TitleBarBackground" >
  
-    <ImageView
-        android:id="@+id/header"
+    <ImageButton
         style="@style/TitleBarLogo" />
 
+    <View
+        android:id="@+id/title_bar_map_button_spacer_1"
+        style="@style/VerticalSpacer.Map1" />
+    
     <ImageButton
         android:id="@+id/title_bar_map_btn_locate"
         style="@style/TitleBarMapLocateBtn" />
+    
+    <View
+        android:id="@+id/title_bar_map_button_spacer_2"
+        style="@style/VerticalSpacer.Map2" />
     
     <ImageButton
         android:id="@+id/title_bar_map_btn_places"

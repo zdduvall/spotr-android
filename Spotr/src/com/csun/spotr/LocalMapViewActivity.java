@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
 import com.csun.spotr.singleton.CurrentUser;
@@ -67,72 +69,103 @@ public class LocalMapViewActivity
 	public 					Location 					lastKnownLocation = null;
 	public 					CustomItemizedOverlay 		itemizedOverlay = null;
 	
-	private 				Button 						changeViewButton;
-	private 				Button 						listPlaceButton;
-	private 				Button 						locateButton;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.mapview);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
-
-		// get map view
-		mapView = (MapView) findViewById(R.id.mapview_xml_map);
-		// get map controller
-		mapController = mapView.getController();
-		// set zoom button
-		mapView.setBuiltInZoomControls(true);
-		// get overlays
-		mapOverlays = mapView.getOverlays();
-		// get the display icon on map
-		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green);
-		// initialize overlay item
-		itemizedOverlay = new CustomItemizedOverlay(drawable, mapView);
-		// add them to the map
-		mapOverlays.add(itemizedOverlay);
-
-		// get the other 3 buttons
-		changeViewButton = (Button) findViewById(R.id.mapview_xml_button_change_view);
-		listPlaceButton = (Button) findViewById(R.id.mapview_xml_button_places);
-		locateButton = (Button) findViewById(R.id.mapview_xml_button_locate);
-			
+		
+		setupMapGraphics();
+		findLocation();			
+	}
+	
+	/**
+	 * Initialize the map view, along with associated icons and overlays.
+	 */
+	private void setupMapGraphics() {
+		mapView = (MapView) findViewById(R.id.mapview_xml_map); 					// get map view
+		mapController = mapView.getController(); 									// get map controller
+		mapView.setBuiltInZoomControls(true); 										// set zoom button
+		mapOverlays = mapView.getOverlays(); 										// get overlays
+		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green); // get the display icon on map
+		itemizedOverlay = new CustomItemizedOverlay(drawable, mapView); 			// initialize overlay item
+		mapOverlays.add(itemizedOverlay); 											// add them to the map
+	}
+	
+	/**
+	 * Retrieve current location. Upon finding the current location, set up
+	 * the locate and places buttons.
+	 */
+	private void findLocation() {
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
 				lastKnownLocation = location;
-				locateButton.setEnabled(true);
-				listPlaceButton.setEnabled(true);
+				activateLocateButton();
+				activatePlacesButton();
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
+	}
+	
+	/**
+	 * Set up the locate button to be clickable, to have a new image, and
+	 * to handle its click event.
+	 */
+	private void activateLocateButton() {
+		ImageButton locateButton = (ImageButton) findViewById(R.id.title_bar_map_btn_locate);
+		locateButton.setClickable(true);
+		locateButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_locate_enabled));
+		locateButton.setScaleType(ScaleType.FIT_XY);
+		locateButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "My location", "Hello");
+				Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
+				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+				ovl.setMarker(icon);
+				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
+				itemizedOverlay.addOverlay(ovl, place);
 
-		// handle change view event
-		changeViewButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				startDialog();
+				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
+				mapController.setZoom(19);				
+			}	
+		});
+	}
+	
+	/**
+	 * Set up the places button to be clickable, to have a new image, and
+	 * to handle its click event.
+	 */
+	private void activatePlacesButton() {
+		ImageButton placesButton = (ImageButton) findViewById(R.id.title_bar_map_btn_places);
+		placesButton.setClickable(true);
+		placesButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_places_enabled));
+		placesButton.setScaleType(ScaleType.FIT_XY);
+		placesButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				new GetSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
 			}
 		});
 	}
 	
-	public void locate(View locateButton) {
-		OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "My location", "Hello");
-		Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
-		icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-		ovl.setMarker(icon);
-		Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
-		itemizedOverlay.addOverlay(ovl, place);
-
-		mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
-		mapController.setZoom(19);
+	/**
+	 * Open the Main Menu activity (dashboard). If that activity is already
+	 * running, a new instance of that activity will not be launched--instead,
+	 * all activities on top of the old instance are removed as the old 
+	 * instance is brought to the top.
+	 * @param button the button clicked
+	 */
+	public void goToMainMenu(View button) {
+	    final Intent intent = new Intent(this, MainMenuActivity.class);
+	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity (intent);
 	}
 	
-	public void postPlaces(View placesButton) {
-		new GetSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
-	}
-	
-	private void startDialog() {
+	/**
+	 * A pop-up dialog for changing the map view type. 
+	 */
+	private void mapViewDialog() {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
 		myAlertDialog.setTitle("Map View Option");
 		myAlertDialog.setMessage("Pick a map view");
@@ -317,7 +350,7 @@ public class LocalMapViewActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
+		inflater.inflate(R.menu.map_menu, menu);
 		return true;
 	}
 
@@ -325,20 +358,23 @@ public class LocalMapViewActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon:
+		case R.id.map_menu_xml_item_setting_icon:
 			intent = new Intent("com.csun.spotr.SettingsActivity");
 			startActivity(intent);
 			break;
-		case R.id.options_menu_xml_item_logout_icon:
+		case R.id.map_menu_xml_item_logout_icon:
 			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
 			editor.clear();
 			editor.commit();
 			intent = new Intent("com.csun.spotr.LoginActivity");
 			startActivity(intent);
 			break;
-		case R.id.options_menu_xml_item_mainmenu_icon:
+		case R.id.map_menu_xml_item_mainmenu_icon:
 			intent = new Intent("com.csun.spotr.MainMenuActivity");
 			startActivity(intent);
+			break;
+		case R.id.map_menu_xml_item_mapview:
+			mapViewDialog();
 			break;
 		}
 		return true;

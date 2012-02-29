@@ -110,7 +110,6 @@ public class PlaceActionActivity
 		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Challenge c = (Challenge) list.getAdapter().getItem(position);
 				Challenge c = (Challenge) challengeList.get(position);
 				// set current item chosen so that later we can make some side effects
 				currentChosenItem = position;
