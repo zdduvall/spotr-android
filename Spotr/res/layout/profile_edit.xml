@@ -34,13 +34,14 @@
             android:layout_height="fill_parent"
             android:background="@color/aluminum3"
             android:orientation="vertical" >
-
+            
             <ImageView
                 android:id="@+id/profile_edit_xml_imageview_user_picture"
                 android:layout_width="120sp"
                 android:layout_height="120sp"
-                android:src="@drawable/ic_main_menu_me_default"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_main_menu_me_default" />
 
             <TextView
                 android:id="@+id/profile_edit_xml_textview_name"
@@ -67,10 +68,10 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/profile_edit_xml_textview_education"
+                android:id="@+id/profile_edit_xml_textview_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Education"
+                android:text="Password"
                 android:textColor="@color/aluminum6" />
             
             <EditText
@@ -82,7 +83,7 @@
                 android:id="@+id/profile_edit_xml_textview_education"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password"
+                android:text="Education"
                 android:textColor="@color/aluminum6" />
 
             <EditText
