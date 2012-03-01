@@ -101,7 +101,7 @@ public class PingMapActivity
 	
 	/**
 	 * Retrieve current location. Upon finding the current location, set up
-	 * the locate and places buttons.
+	 * the ping button.
 	 */
 	private void findLocation() {
 		LocationResult locationResult = (new LocationResult() {

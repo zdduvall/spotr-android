@@ -19,8 +19,10 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView.ScaleType;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.util.Log;
@@ -66,7 +68,7 @@ public class PlaceActivity
 	private 					List<PlaceItem> 	placeItemList = new ArrayList<PlaceItem>();
 	private 					Location 			lastKnownLocation = null;
 	private 					FineLocation 		fineLocation = new FineLocation();
-	private 					Button 				refreshButton;
+//	private 					Button 				refreshButton;
 	
 	private static final int 	ID_BONUS 	 = 1;
 	private static final int 	ID_LOAN 	 = 2;
@@ -81,7 +83,8 @@ public class PlaceActivity
 		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
-
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_places_nearby);
+		
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -100,24 +103,8 @@ public class PlaceActivity
 			}
 		});
 		
-		// register click event for refresh button
-		refreshButton = (Button) findViewById(R.id.place_xml_button_refresh);
-		refreshButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				new GetSpotsTask(PlaceActivity.this).execute();
-			}
-		});
-		
-		LocationResult locationResult = (new LocationResult() {
-			@Override
-			public void gotLocation(final Location location) {
-				lastKnownLocation = location;
-				refreshButton.setEnabled(true);
-			}
-		});
-		
-		fineLocation.getLocation(this, locationResult);
-		
+		findLocation(); // refresh button activated once location is found
+						
 		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
 		ActionItem itemLoan = new ActionItem(ID_LOAN, "Loan", getResources().getDrawable(R.drawable.pu_loan_32));
         ActionItem itemLuck = new ActionItem(ID_LUCK, "Luck", getResources().getDrawable(R.drawable.pu_luck_32));
@@ -145,6 +132,37 @@ public class PlaceActivity
 			public void onClick(View v) {
 				quickAction.show(v);
 				quickAction.setAnimStyle(ToolbarAction.ANIM_REFLECT);
+			}
+		});
+	}
+	
+	/**
+	 * Retrieve current location. Upon finding the current location, set up
+	 * the refresh button.
+	 */
+	private void findLocation() {
+		LocationResult locationResult = (new LocationResult() {
+			@Override
+			public void gotLocation(final Location location) {
+				lastKnownLocation = location;
+				activateRefreshButton();
+			}
+		});
+		fineLocation.getLocation(this, locationResult);
+	}
+	
+	/**
+	 * Set up the refresh button to be clickable, to have a new image, and
+	 * to handle its click event.
+	 */
+	private void activateRefreshButton() {
+		ImageButton refreshButton = (ImageButton) findViewById(R.id.title_bar_places_nearby_btn_refresh);
+		refreshButton.setClickable(true);
+		refreshButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_refresh_enabled));
+		refreshButton.setScaleType(ScaleType.FIT_XY);
+		refreshButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				new GetSpotsTask(PlaceActivity.this).execute();
 			}
 		});
 	}

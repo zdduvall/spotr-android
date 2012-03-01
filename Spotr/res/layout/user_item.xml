@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal"
-    android:padding="7dp" >
-
+    style="@style/UserItemRow" >
     <ImageView
         android:id="@+id/user_item_xml_imageview_picture"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginRight="6dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/user_default" 
-        android:gravity="center"/>
+        style="@style/UserItemAvatar" />
 
     <TextView
         android:id="@+id/user_item_xml_textview_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/aluminum6"
-        android:textSize="18sp"
-        android:gravity="center" />
+        style="@style/UserItemName" />
 
 </LinearLayout>

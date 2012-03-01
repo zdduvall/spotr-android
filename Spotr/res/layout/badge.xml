@@ -3,15 +3,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
+    android:background="@color/aluminum1"
     >
 
     <GridView
         android:id="@+id/badge_xml_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-    		android:stretchMode="columnWidth"
-    		android:gravity="center"
+    	android:stretchMode="columnWidth"
+    	android:gravity="center"
         android:numColumns="4" >
     </GridView>
 			

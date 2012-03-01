@@ -24,7 +24,7 @@
     <!-- WHAT IS THIS I DON'T EVEN -->
 
 
-    <!-- Title Bar (DEPRECATED?)-->
+    <!-- Title Bar Helper-->
     <style name="CustomWindowTitleBackground">
         <item name="android:background">@color/aluminum6</item>
     </style>
@@ -33,7 +33,7 @@
         <item name="android:windowTitleSize">50dip</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
-    <!-- End Title Bar -->
+    <!-- End Title Bar Helper-->
     
     
     <!-- Title Bars -->
@@ -278,8 +278,46 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
     </style>
+    
+    <style name="UserItemRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">7dp</item>
+    </style>
+    
+    <style name="UserItemAvatar">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    
+    <style name="UserItemName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/aluminum6</item>        
+    </style>
     <!-- End Friends: Friends tab -->
     
+    <!-- Friends: Chatter tab -->
+    <style name="FriendListFeedBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+    
+    <style name="FriendListFeedActual">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+    <!-- End Friends: Chatter tab -->
     
     <!-- Friends: Find tab-->
     <style name="FriendSearchBarContainer">
@@ -310,6 +348,58 @@
     </style>
     <!-- End Friends: Find tab-->
 
+    <!-- Spots: list of nearby places -->
+    <style name="VerticalSpacer.PlacesNearby">
+        <item name="android:layout_toLeftOf">@id/title_bar_places_nearby_btn_refresh</item>
+        <item name="android:background">@color/aluminum5</item>
+    </style>
+    
+    <style name="TitleBarPlacesNearbyRefreshBtn">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/ic_refresh_disabled</item>
+        <item name="android:clickable">false</item>
+    </style>
+    
+    <style name="SpotrGeneralBackground.Place">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/aluminum1</item>
+    </style>
+    
+    <style name="SpotsNearbySearchBarLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/place_xml_textview_find_str</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/aluminum5</item>
+    </style>
+    
+    <style name="SpotsNearbySearchBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    
+    <style name="SpotsNearbyResultsLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/place_xml_textview_nearby_str</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/aluminum5</item>
+    </style>
+    
+    <style name="SpotsNearbyResultsList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/aluminum3</item>
+    </style>
+    <!-- End Spots: list of nearby places -->
 
     <!-- Spots: Missions tab-->    
     <style name="LinearLayoutShadow.SpotsMissionsShortInfoContainer">
