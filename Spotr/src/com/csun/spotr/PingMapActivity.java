@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 import android.widget.EditText;
 
@@ -65,66 +67,80 @@ public class PingMapActivity
 	private 				MapController 				mapController = null;
 	private 				FineLocation 				fineLocation = new FineLocation();
 	private 				Location 					lastKnownLocation = null;
-	private 				Button 						buttonPing;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.ping_map);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_ping);
 
-		// get map view
-		mapView = (MapView) findViewById(R.id.ping_map_xml_map);
-		// get map controller
-		mapController = mapView.getController();
-		// set zoom button
-		mapView.setBuiltInZoomControls(true);
-		// get overlays
-		mapOverlays = mapView.getOverlays();
-		// get the display icon on map
-		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green);
-		// initialize overlay item
-		itemizedOverlay = new CustomItemizedOverlay(drawable, mapView);
-		// add them to the map
-		mapOverlays.add(itemizedOverlay);
-
-		// get the other 3 buttons
-		Button changeViewButton = (Button) findViewById(R.id.ping_map_xml_button_change_view);
-		buttonPing = (Button) findViewById(R.id.ping_map_xml_button_ping_me);
-		Button buttonShowFriends = (Button) findViewById(R.id.ping_map_xml_button_show_friends);
+		setupMapGraphics();
+		findLocation(); // ping button activated once location is found
 		
-		buttonPing.setEnabled(false);
-
-		LocationResult locationResult = (new LocationResult() {
-			@Override
-			public void gotLocation(final Location location) {
-				lastKnownLocation = location;
-				buttonPing.setEnabled(true);
-			}
-		});
-
-		fineLocation.getLocation(this, locationResult);
-
-		// handle change view event
-		changeViewButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				startDialog(0);
-			}
-		});
-		
-		buttonPing.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				startDialog(1);
-			}
-		});
-
-		// handle show display list event
-		buttonShowFriends.setOnClickListener(new OnClickListener() {
+		ImageButton friendsButton = (ImageButton) findViewById(R.id.title_bar_ping_btn_friends);
+		friendsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				new GetFriendLocationsTask(PingMapActivity.this).execute();
 			}
 		});
+	}
+	
+	/**
+	 * Initialize the map view, along with associated icons and overlays.
+	 */
+	private void setupMapGraphics() {
+		mapView = (MapView) findViewById(R.id.ping_map_xml_map);					// get map view
+		mapController = mapView.getController();									// get map controller
+		mapView.setBuiltInZoomControls(true);										// set zoom button
+		mapOverlays = mapView.getOverlays();										// get overlays
+		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green);	// get the display icon on map
+		itemizedOverlay = new CustomItemizedOverlay(drawable, mapView);				// initialize overlay item
+		mapOverlays.add(itemizedOverlay);											// add them to the map
+	}
+	
+	/**
+	 * Retrieve current location. Upon finding the current location, set up
+	 * the locate and places buttons.
+	 */
+	private void findLocation() {
+		LocationResult locationResult = (new LocationResult() {
+			@Override
+			public void gotLocation(final Location location) {
+				lastKnownLocation = location;
+				activatePingButton();
+			}
+		});
+		fineLocation.getLocation(this, locationResult);
+	}
+	
+	/**
+	 * Set up the ping button to be clickable, to have a new image, and 
+	 * to handle its click event.
+	 */
+	private void activatePingButton() {
+		ImageButton pingButton = (ImageButton) findViewById(R.id.title_bar_ping_btn_ping);
+		pingButton.setClickable(true);
+		pingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_ping_enabled));
+		pingButton.setScaleType(ScaleType.FIT_XY);
+		pingButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startDialog(1);
+			}
+		});
+	}
+	
+	/**
+	 * Open the Main Menu activity (dashboard). If that activity is already
+	 * running, a new instance of that activity will not be launched--instead,
+	 * all activities on top of the old instance are removed as the old 
+	 * instance is brought to the top.
+	 * @param button the button clicked
+	 */
+	public void goToMainMenu(View button) {
+	    final Intent intent = new Intent(this, MainMenuActivity.class);
+	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity (intent);
 	}
 
 	private void startDialog(int dialog) {
@@ -388,7 +404,7 @@ public class PingMapActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
+		inflater.inflate(R.menu.map_menu, menu);
 		return true;
 	}
 
@@ -396,20 +412,23 @@ public class PingMapActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon:
+		case R.id.map_menu_xml_item_setting_icon:
 			intent = new Intent("com.csun.spotr.SettingsActivity");
 			startActivity(intent);
 			break;
-		case R.id.options_menu_xml_item_logout_icon:
+		case R.id.map_menu_xml_item_logout_icon:
 			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
 			editor.clear();
 			editor.commit();
 			intent = new Intent("com.csun.spotr.LoginActivity");
 			startActivity(intent);
 			break;
-		case R.id.options_menu_xml_item_mainmenu_icon:
+		case R.id.map_menu_xml_item_mainmenu_icon:
 			intent = new Intent("com.csun.spotr.MainMenuActivity");
 			startActivity(intent);
+			break;
+		case R.id.map_menu_xml_item_mapview:
+			startDialog(0);
 			break;
 		}
 		return true;

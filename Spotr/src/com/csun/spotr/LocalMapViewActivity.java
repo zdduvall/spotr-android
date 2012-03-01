@@ -77,7 +77,7 @@ public class LocalMapViewActivity
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 		
 		setupMapGraphics();
-		findLocation();			
+		findLocation();	// locate and places buttons activated once location found		
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class LocalMapViewActivity
 	/**
 	 * A pop-up dialog for changing the map view type. 
 	 */
-	private void mapViewDialog() {
+	private void displayMapViewDialog() {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
 		myAlertDialog.setTitle("Map View Option");
 		myAlertDialog.setMessage("Pick a map view");
@@ -374,7 +374,7 @@ public class LocalMapViewActivity
 			startActivity(intent);
 			break;
 		case R.id.map_menu_xml_item_mapview:
-			mapViewDialog();
+			displayMapViewDialog();
 			break;
 		}
 		return true;

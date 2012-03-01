@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TitleBarBackground" >
+ 
+    <ImageButton
+        style="@style/TitleBarLogo" />
+
+    <View
+        android:id="@+id/title_bar_ping_button_spacer_1"
+        style="@style/VerticalSpacer.Ping1" />
+    
+    <ImageButton
+        android:id="@+id/title_bar_ping_btn_ping"
+        style="@style/TitleBarPingCurrentBtn" />
+    
+    <View
+        android:id="@+id/title_bar_ping_button_spacer_2"
+        style="@style/VerticalSpacer.Ping2" />
+    
+    <ImageButton
+        android:id="@+id/title_bar_ping_btn_friends"
+        style="@style/TitleBarPingFriendsBtn" />
+
+</RelativeLayout>
