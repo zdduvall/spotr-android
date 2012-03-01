@@ -11,7 +11,6 @@ import org.json.JSONException;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +23,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,7 +55,7 @@ import com.google.android.maps.Projection;
 
 public class QuestDetailActivity 
 extends MapActivity 
-implements IActivityProgressUpdate<Place>{
+implements IActivityProgressUpdate<QuestDetailItem>{
 	private static 	final 	String TAG = "(QuestDetailActivity)";
 	private static 	final 	String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
 	private static 	final 	String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
@@ -80,8 +78,8 @@ implements IActivityProgressUpdate<Place>{
 	public					CustomQuestItemizedOverlay itemizedGreenOverlay = null;
 	public					CustomQuestItemizedOverlay itemizedRedOverlay = null;
 
-	static 	final 	int 	DO_SPOT_CHALLENGE = 1;
-	static	final	int 	RANGE_LIMIT = 500;
+	static 	final 	int 	DO_SPOT_CHALLENGE = 1; // code number to send to child activity
+	static	final	int 	RANGE_LIMIT = 300; // range_limit of user, unit: meter
 
 	static			boolean	flagMeButton = false;
 
@@ -97,11 +95,13 @@ implements IActivityProgressUpdate<Place>{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest_detail);
 
+		// Get data from super activity
 		questId = this.getIntent().getExtras().getInt("quest_id");
 		numQuest = this.getIntent().getExtras().getInt("numberChallenges");
 		questName = this.getIntent().getExtras().getString("quest_name");
 		questDescription = this.getIntent().getExtras().getString("quest_description");
 
+		//Initialize for ListView
 		questDetailListView = (ListView) findViewById(R.id.quest_detail_xml_listview_quest_list);
 		questDetailItemAdapter = new QuestDetailItemAdapter(this.getApplicationContext(), questDetailList);
 		questDetailListView.setAdapter(questDetailItemAdapter);
@@ -131,6 +131,7 @@ implements IActivityProgressUpdate<Place>{
 		questNameTextView.setText(questName);
 		questDescriptionTextView.setText(questDescription);
 
+		// Get current user's location
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation (final Location location) {
@@ -138,8 +139,8 @@ implements IActivityProgressUpdate<Place>{
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
+		
 		//handle on click event on Me Button
-
 		meButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -190,7 +191,7 @@ implements IActivityProgressUpdate<Place>{
 			}
 		});
 
-		// handle event when click on specific quest
+		// handle event when click on specific spot in the ListView
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
@@ -282,11 +283,11 @@ implements IActivityProgressUpdate<Place>{
 		}
 	}
 
+	// An AsyncTask to update points of user when they complete the whole quest ---- just run only once.
 	private static class GiveQuestPointTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
 
 		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<QuestDetailActivity> ref;
-		private JSONArray userJsonArray = null;
 
 		public GiveQuestPointTask(QuestDetailActivity a) {
 			attach(a);
@@ -305,11 +306,12 @@ implements IActivityProgressUpdate<Place>{
 			// send quest id
 			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
 			// retrieve data from server
-			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, clientData);
+			JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, clientData);
 
 			return null;
 		}
 	}
+
 	
 	public void updateAsyncTaskProgress(QuestDetailItem q) {
 		questDetailList.add(q);
@@ -331,6 +333,7 @@ implements IActivityProgressUpdate<Place>{
 
 	}
 
+	// get Data back from child Activity, and run GiveQuestPointTask if complete the whole quest.
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == DO_SPOT_CHALLENGE) {
 			if (resultCode == RESULT_OK) {
@@ -348,6 +351,7 @@ implements IActivityProgressUpdate<Place>{
 		}
 	}
 
+	//Dialog to congratulate the user when they finish the whole quest--- Can link to get weapon activity later.
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case 0:
@@ -391,18 +395,13 @@ implements IActivityProgressUpdate<Place>{
 		return false;
 	}
 
-	public void updateAsyncTaskProgress(Place u) {
-
-	}
-
+	// Inner class to draw Overlay balloon over each spot of the quest in MapView
 	public class CustomQuestItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 		private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 		private List<Place> places = new ArrayList<Place>();
-		private Context context;
 
 		public CustomQuestItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 			super(boundCenter(defaultMarker), mapView);
-			context = mapView.getContext();
 			populate();
 		}
 
@@ -427,6 +426,7 @@ implements IActivityProgressUpdate<Place>{
 			return overlays.size();
 		}
 
+		// Handle event when user click on the spot in MapView. If in range_limit, they can do the mission at that spot, if not a TOAST will pop up.
 		@Override
 		protected boolean onBalloonTap(int index, OverlayItem item) {
 
@@ -451,12 +451,13 @@ implements IActivityProgressUpdate<Place>{
 			}
 			else
 			{
-				Toast.makeText(getApplicationContext(), "You are here!!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "I am here!!", Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		}
 	}
 
+	//this is bullsh*t, useless now, put it here to make my code longer, looks cool.
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
@@ -497,6 +498,8 @@ implements IActivityProgressUpdate<Place>{
 		return (int) (map.getProjection().metersToEquatorPixels(meters) * (1 / Math
 				.cos(Math.toRadians(latitude))));
 	}
+	
+	//inner class to draw transparent range_limit of user on the MAPVIEW
 	public class ImpactOverlay extends Overlay {
 
 		private int CIRCLERADIUS = 0;
@@ -505,17 +508,13 @@ implements IActivityProgressUpdate<Place>{
 		Point point = new Point();
 		Paint circle = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-
-
 		public ImpactOverlay(GeoPoint point, int myRadius) {
-
 			geopoint = point;
 			CIRCLERADIUS = myRadius; 
 		}
 
 		@Override
 		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-
 			Projection projection = mapView.getProjection();
 			projection.toPixels(geopoint, point);
 
@@ -527,24 +526,23 @@ implements IActivityProgressUpdate<Place>{
 					(double) geopoint.getLatitudeE6() / 1000000);
 
 			canvas.drawCircle(point.x, point.y, myCircleRadius, circle);       
-
 		}
 
-
 	}
 	@Override
-    public void onPause() {
+	public void onPause() {
 		Log.v(TAG, "I'm paused!");
-		
-        super.onPause();
+
+		super.onPause();
 	}
-	
+
 	@Override
-    public void onDestroy() {
+	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
+		super.onDestroy();
 	}
-	
+
+	//reset the flag, so that the MAPVIEW will draw range-indicator transparent circle again.
 	@Override 
 	public void onResume() {
 		flagMeButton = false;
