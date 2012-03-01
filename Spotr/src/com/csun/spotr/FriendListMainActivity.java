@@ -2,35 +2,27 @@ package com.csun.spotr;
 
 import com.csun.spotr.custom_gui.FlingableTabHost;
 
-import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 /**
  * Description:
  * 		Main tab host for friends
  */
-public class FriendListMainActivity 
-	extends BasicSpotrTabActivity {
+public class FriendListMainActivity extends BasicSpotrTabActivity {
 	
 	private static final String TAG = "(FriendListMainActivity)";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.friend_list);
-//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 		
-		Resources res = getResources(); 
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
 		FlingableTabHost.TabSpec spec; 
 		Intent intent; 
@@ -71,19 +63,6 @@ public class FriendListMainActivity
 		
 		tabHost.setCurrentTab(0);
 	}
-	
-//	/**
-//	 * Open the Main Menu activity (dashboard). If that activity is already
-//	 * running, a new instance of that activity will not be launched--instead,
-//	 * all activities on top of the old instance are removed as the old 
-//	 * instance is brought to the top.
-//	 * @param button the button clicked
-//	 */
-//	public void goToMainMenu(View button) {
-//	    final Intent intent = new Intent(this, MainMenuActivity.class);
-//	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//	    startActivity (intent);
-//	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

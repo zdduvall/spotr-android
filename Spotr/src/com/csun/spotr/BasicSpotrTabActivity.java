@@ -1,13 +1,15 @@
 package com.csun.spotr;
 
-import com.csun.spotr.custom_gui.FlingableTabHost;
 
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-
+/**
+* This class provides a foundation of basic features (e.g. Spotr's custom
+* title bar) upon which tab-activities can be built. 
+*/
 public class BasicSpotrTabActivity extends TabActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

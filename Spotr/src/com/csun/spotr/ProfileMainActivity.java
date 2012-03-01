@@ -2,17 +2,12 @@ package com.csun.spotr;
 
 import com.csun.spotr.custom_gui.FlingableTabHost;
 
-import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class ProfileMainActivity extends BasicSpotrTabActivity {
@@ -23,7 +18,6 @@ public class ProfileMainActivity extends BasicSpotrTabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place_main);
 		
-		Resources res = getResources(); 
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
 		FlingableTabHost.TabSpec spec; 
 		Intent intent; 

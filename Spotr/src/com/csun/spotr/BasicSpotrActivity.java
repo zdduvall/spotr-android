@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+/**
+ * This class provides a foundation of basic features (e.g. Spotr's custom
+ * title bar) upon which activities can be built. 
+ */
 public class BasicSpotrActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
