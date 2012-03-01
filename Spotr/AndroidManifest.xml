@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="preferExternal"
     package="com.csun.spotr"
-    android:versionCode="1"
+    android:versionCode="10"
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="10" />
@@ -352,6 +352,17 @@
             android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="com.csun.spotr.SnapPictureActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Snap Picture Challenge Activity -->
+        <activity
+            android:name=".SnapPictureChallengeActivity"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.SnapPictureChallengeActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

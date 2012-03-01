@@ -6,6 +6,7 @@ public class Challenge {
 		SNAP_PICTURE, 
 		WRITE_ON_WALL, 
 		QUESTION_ANSWER,
+		SNAP_PICTURE_CHALLENGE,
 		OTHER
 	};
 	
@@ -18,6 +19,8 @@ public class Challenge {
 			return Type.WRITE_ON_WALL;
 		else if (typeStr.equals("QUESTION_ANSWER"))
 			return Type.QUESTION_ANSWER;
+		else if (typeStr.equals("SNAP_PICTURE_CHALLENGE"))
+			return Type.SNAP_PICTURE_CHALLENGE;
 		else // (typeStr.equals("OTHER")) 
 			return Type.OTHER;
 	}

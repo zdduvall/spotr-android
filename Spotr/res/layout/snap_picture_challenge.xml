@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/aluminum1"
+    android:gravity="center|top"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dp" >
+		
+		<TextView
+          android:id="@+id/snap_picture_xml_snap_picture_challenge_description"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="1sp"
+          android:padding="4dp"
+          android:textColor="@color/aluminum6"
+          android:textSize="18sp" />
+        
+        <ImageView
+            android:id="@+id/snap_picture_xml_imageview_preview_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/snap_picture_frame_icon" />
+
+        <ImageView
+            android:id="@+id/snap_picture_xml_imageview_go"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dip"
+            android:src="@drawable/snap_picture_button_icon" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="15dp" >
+
+            <Button
+                android:id="@+id/snap_picture_xml_button_next"
+                style="@style/TreasureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

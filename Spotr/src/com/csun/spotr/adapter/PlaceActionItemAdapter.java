@@ -80,6 +80,10 @@ public class PlaceActionItemAdapter extends BaseAdapter {
 			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_write_on_wall);
 		else if (items.get(position).getType() == Challenge.Type.QUESTION_ANSWER)
 			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
+		else if (items.get(position).getType() == Challenge.Type.QUESTION_ANSWER)
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
+		else if (items.get(position).getType() == Challenge.Type.SNAP_PICTURE_CHALLENGE)
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
 		else
 			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
 		

@@ -115,14 +115,16 @@ public class PlaceActionActivity
 				currentChosenItem = position;
 								
 				if (c.getType() == Challenge.Type.CHECK_IN) {
+					/*
 					Intent intent = new Intent(getApplicationContext(), CheckInActivity.class);
 					startActivity(intent);
+					*/
 					
-					// CheckInTask task = new CheckInTask(PlaceActionActivity.this);
-					// task.execute(
-					//	Integer.toString(CurrentUser.getCurrentUser().getId()),
-					//	Integer.toString(currentPlaceId),
-					//	Integer.toString(c.getId()));
+					CheckInTask task = new CheckInTask(PlaceActionActivity.this);
+					task.execute(
+					Integer.toString(CurrentUser.getCurrentUser().getId()),
+					Integer.toString(currentPlaceId),
+					Integer.toString(c.getId()));
 				}
 				else if (c.getType() == Challenge.Type.WRITE_ON_WALL) {
 					Intent intent = new Intent("com.csun.spotr.WriteOnWallActivity");
@@ -138,6 +140,16 @@ public class PlaceActionActivity
 					Bundle extras = new Bundle();
 					extras.putString("users_id", Integer.toString(CurrentUser.getCurrentUser().getId()));
 					extras.putString("spots_id", Integer.toString(currentPlaceId));
+					extras.putString("challenges_id", Integer.toString(c.getId()));
+					intent.putExtras(extras);
+					startActivity(intent);
+				}
+				else if (c.getType() == Challenge.Type.SNAP_PICTURE_CHALLENGE) {
+					Intent intent = new Intent("com.csun.spotr.SnapPictureChallengeActivity");
+					Bundle extras = new Bundle();
+					extras.putString("users_id", Integer.toString(CurrentUser.getCurrentUser().getId()));
+					extras.putString("spots_id", Integer.toString(currentPlaceId));
+					extras.putString("description", c.getDescription());
 					extras.putString("challenges_id", Integer.toString(c.getId()));
 					intent.putExtras(extras);
 					startActivity(intent);

@@ -383,5 +383,6 @@ public class LocalMapViewActivity
 	public void updateAsyncTaskProgress(Place p) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
 		itemizedOverlay.addOverlay(overlay, p);
+		mapView.invalidate();
 	}
 }
