@@ -5,5 +5,7 @@
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview_xml_map"
+        android:apiKey="07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"
         style="@style/MapView" />
+    
 </LinearLayout>
