@@ -24,6 +24,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -309,12 +310,7 @@ implements IActivityProgressUpdate<Place>{
 			return null;
 		}
 	}
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused");
-		super.onPause();
-	}
-
+	
 	public void updateAsyncTaskProgress(QuestDetailItem q) {
 		questDetailList.add(q);
 		if (q.getStatus().equalsIgnoreCase("done")) {
@@ -535,5 +531,23 @@ implements IActivityProgressUpdate<Place>{
 		}
 
 
+	}
+	@Override
+    public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		
+        super.onPause();
+	}
+	
+	@Override
+    public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+        super.onDestroy();
+	}
+	
+	@Override 
+	public void onResume() {
+		flagMeButton = false;
+		super.onResume();
 	}
 }
