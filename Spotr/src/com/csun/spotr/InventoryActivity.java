@@ -13,11 +13,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -34,7 +36,7 @@ import com.csun.spotr.util.JsonHelper;
  * Description: Display user's weapons
  */
 public class InventoryActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<Weapon> {
 
 	private static final String TAG = "(WeaponActivity)";
@@ -46,7 +48,9 @@ public class InventoryActivity
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.weapon);
+//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 
 		listview = (ListView) findViewById(R.id.weapon_xml_listview_weapons);
 		adapter = new WeaponAdapter(this, weaponList);
@@ -61,6 +65,19 @@ public class InventoryActivity
 
 		new GetWeaponTask(this).execute();
 	}
+	
+//	/**
+//	 * Open the Main Menu activity (dashboard). If that activity is already
+//	 * running, a new instance of that activity will not be launched--instead,
+//	 * all activities on top of the old instance are removed as the old 
+//	 * instance is brought to the top.
+//	 * @param button the button clicked
+//	 */
+//	public void goToMainMenu(View button) {
+//	    final Intent intent = new Intent(this, MainMenuActivity.class);
+//	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	    startActivity (intent);
+//	}
 
 	private static class GetWeaponTask 
 		extends AsyncTask<Integer, Weapon, Boolean> 

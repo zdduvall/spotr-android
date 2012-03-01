@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -34,7 +35,7 @@ import com.csun.spotr.adapter.QuestItemAdapter;
  * 		Multiple challenges of multiple places 
  */
 public class QuestActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<QuestItem> {
 	
 	private static final 	String 				TAG = "(QuestActivity)";
@@ -47,8 +48,10 @@ public class QuestActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.quest);
-		
+//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
+
 		listview = (ListView) findViewById(R.id.quest_xml_listview_quest_list);
 		adapter = new QuestItemAdapter(getApplicationContext(), questList);
 		listview.setAdapter(adapter);
@@ -144,5 +147,19 @@ public class QuestActivity
 		questList.add(q);
 		adapter.notifyDataSetChanged();
 	}
+	
+//	/**
+//	 * Open the Main Menu activity (dashboard). If that activity is already
+//	 * running, a new instance of that activity will not be launched--instead,
+//	 * all activities on top of the old instance are removed as the old 
+//	 * instance is brought to the top.
+//	 * @param button the button clicked
+//	 */
+//	public void goToMainMenu(View button) {
+//	    final Intent intent = new Intent(this, MainMenuActivity.class);
+//	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	    startActivity (intent);
+//	}
+
 	
 }

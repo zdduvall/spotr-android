@@ -67,7 +67,7 @@ public class FriendListActionActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.friend_list_action);
+		setContentView(R.layout.friend_list_search);
 		
 		buttonSearch = (Button) findViewById(R.id.friend_list_action_xml_button_search);
 		editTextSearch = (EditText) findViewById(R.id.friend_list_action_xml_edittext_search);

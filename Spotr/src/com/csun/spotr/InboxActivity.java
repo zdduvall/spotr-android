@@ -42,7 +42,7 @@ import android.widget.AdapterView.OnItemClickListener;
  * 		Load messages from friends
  */
 public class InboxActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<Inbox> {
 
 	private static final 	String 					TAG = "(InboxActivity)";
@@ -55,7 +55,9 @@ public class InboxActivity
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);		
 		setContentView(R.layout.inbox);
+//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		listview = (ListView) findViewById(R.id.inbox_xml_listview);
@@ -80,6 +82,19 @@ public class InboxActivity
 		task = new GetInboxTask(this);
 		task.execute();
 	}
+	
+//	/**
+//	 * Open the Main Menu activity (dashboard). If that activity is already
+//	 * running, a new instance of that activity will not be launched--instead,
+//	 * all activities on top of the old instance are removed as the old 
+//	 * instance is brought to the top.
+//	 * @param button the button clicked
+//	 */
+//	public void goToMainMenu(View button) {
+//	    final Intent intent = new Intent(this, MainMenuActivity.class);
+//	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	    startActivity (intent);
+//	}
 
 	private static class GetInboxTask 
 		extends AsyncTask<Integer, Inbox, Boolean> 

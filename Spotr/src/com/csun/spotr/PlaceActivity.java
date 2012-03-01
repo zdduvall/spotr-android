@@ -54,7 +54,7 @@ import com.csun.spotr.adapter.PlaceItemAdapter;
  * Display all places around current phone's location
  */
 public class PlaceActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<PlaceItem> {
 	
 	private static final 		String 				TAG = "(PlaceActivity)";
@@ -80,9 +80,9 @@ public class PlaceActivity
 	public void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.place);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
+//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -274,6 +274,19 @@ public class PlaceActivity
 		}
 
 	}
+	
+//	/**
+//	 * Open the Main Menu activity (dashboard). If that activity is already
+//	 * running, a new instance of that activity will not be launched--instead,
+//	 * all activities on top of the old instance are removed as the old 
+//	 * instance is brought to the top.
+//	 * @param button the button clicked
+//	 */
+//	public void goToMainMenu(View button) {
+//	    final Intent intent = new Intent(this, MainMenuActivity.class);
+//	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	    startActivity (intent);
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

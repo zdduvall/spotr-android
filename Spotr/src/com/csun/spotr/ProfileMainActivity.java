@@ -15,15 +15,13 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-public class ProfileMainActivity extends TabActivity {
+public class ProfileMainActivity extends BasicSpotrTabActivity {
 	private final static String TAG = "(ProfileMainActivity)";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.place_main);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 		
 		Resources res = getResources(); 
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
@@ -74,7 +72,7 @@ public class ProfileMainActivity extends TabActivity {
 		// set current tab to action
 		tabHost.setCurrentTab(0);
 	}
-		
+			
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
