@@ -24,12 +24,9 @@ public class BasicSpotrActivity extends Activity {
 		setupTitleBar();
 	}
 	
-	private void setupTitleBar() {
+	protected void setupTitleBar() {
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		Typeface font = Typeface.createFromAsset(getAssets(), "Chantelli_Antiqua.ttf");
-		title.setTypeface(font);
-		title.setText("LOL");
-		
+		title.setText("potr");
 	}
 	
 	/**

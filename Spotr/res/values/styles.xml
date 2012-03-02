@@ -30,16 +30,17 @@
     </style>
 
     <style name="CustomTheme" parent="android:Theme">
-        <item name="android:windowTitleSize">50dip</item>
+        <item name="android:windowTitleSize">45dp</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
     <!-- End Title Bar Helper-->
     
     
-    <!-- Title Bars -->
+    <!-- Title Bars (Basic) -->
     <style name="TitleBarBackground">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:paddingLeft">5dp</item>
@@ -50,15 +51,15 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
     
-
     <style name="TitleBarLogo">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@null</item>
-        <item name="android:src">@drawable/ic_map_locate_default</item>
+        <item name="android:src">@drawable/ic_logo</item>
         <item name="android:onClick">goToMainMenu</item>
     </style>
     
@@ -67,18 +68,15 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">@null</item>
-<!--         <item name="android:shadowColor">@color/darkTurquoise</item> -->
-<!--         <item name="android:shadowRadius">3</item> -->
-<!--         <item name="android:shadowDx">3</item> -->
-<!--         <item name="android:shadowDy">3</item> -->
-        <item name="android:typeface">serif</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
     
     <style name="TitleBarActions">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:gravity">right</item>
+        <item name="android:gravity">right|center_vertical</item>
     </style>
     
     <style name="VerticalSpacer.TitleBar">

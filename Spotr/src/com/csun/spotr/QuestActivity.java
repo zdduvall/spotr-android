@@ -76,7 +76,8 @@ public class QuestActivity
 		new GetQuestTask(this).execute();
 	}
 	
-	private void setupTitleBar() {
+	@Override
+	protected void setupTitleBar() {
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
 		title.setText("Quests");
 	}
