@@ -5,11 +5,22 @@
     <!-- Navigation/Title -->
     <LinearLayout style="@style/TitleBarNav" >
         
-        <ImageButton style="@style/TitleBarLogo" />
-
+        <LinearLayout
+            android:id="@+id/title_bar_home_container"
+            style="@style/TitleBarHomeContainer" >
+        
+            <ImageView
+                android:id="@+id/title_bar_home_beacon"
+                style="@style/TitleBarHomeBeacon" />
+            
+	        <ImageView style="@style/TitleBarLogo" />
+	
+        </LinearLayout>
+        
         <TextView
             android:id="@+id/title_bar_title"
             style="@style/TitleBarTitle" />
+        
     </LinearLayout>
 
     <!-- Buttons -->

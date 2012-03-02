@@ -3,6 +3,7 @@ package com.csun.spotr;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +19,17 @@ public class BasicSpotrTabActivity extends TabActivity {
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.dummy_tab_host);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
+	
+		setupTitleBar();
+	}
+	
+	protected void setupTitleBar() {
+	}
+
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		getWindow().setFormat(PixelFormat.RGBA_8888);
 	}
 	
 	/**
@@ -28,6 +40,7 @@ public class BasicSpotrTabActivity extends TabActivity {
 	 * @param button the button clicked
 	 */
 	public void goToMainMenu(View button) {
+		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
 	    final Intent intent = new Intent(this, MainMenuActivity.class);
 	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    startActivity (intent);

@@ -28,6 +28,8 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 import android.widget.EditText;
@@ -86,6 +88,11 @@ public class PingMapActivity
 		});
 	}
 	
+	private void titleBarSetup() {
+		LinearLayout homeContainer = (LinearLayout) findViewById(R.id.title_bar_home_container);
+		homeContainer.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
+	}
+		
 	/**
 	 * Initialize the map view, along with associated icons and overlays.
 	 */
@@ -138,7 +145,10 @@ public class PingMapActivity
 	 * @param button the button clicked
 	 */
 	public void goToMainMenu(View button) {
-	    final Intent intent = new Intent(this, MainMenuActivity.class);
+		LinearLayout homeContainer = (LinearLayout) findViewById(R.id.title_bar_home_container);
+		homeContainer.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
+
+		final Intent intent = new Intent(this, MainMenuActivity.class);
 	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    startActivity (intent);
 	}

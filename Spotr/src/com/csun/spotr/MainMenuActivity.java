@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.util.Log;
@@ -68,6 +69,7 @@ public class MainMenuActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu_original);
 		
+		titleBarSetup();
 		
 		friendRequestList = new ArrayList<FriendRequestItem>();
 		listview = (ListView) findViewById(R.id.main_menu_xml_slide_content);
@@ -89,19 +91,14 @@ public class MainMenuActivity
 		 task.execute();
 	}
 	
-	/**
-	 * Open the main menu activity (dashboard). If that activity is already
-	 * running, a new instance of that activity will not be launched--instead,
-	 * all activities on top of the old instance are removed as the old 
-	 * instance is brought to the top.
-	 * @param button the button clicked
-	 */
-	public void goToMainMenu(View button) {
-	    final Intent intent = new Intent(this, MainMenuActivity.class);
-	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    startActivity (intent);
+	private void titleBarSetup() {
+		ImageView homeBeacon = (ImageView) findViewById(R.id.title_bar_home_beacon);
+		homeBeacon.setVisibility(View.INVISIBLE);
+		
+		LinearLayout homeContainer = (LinearLayout) findViewById(R.id.title_bar_home_container);
+		homeContainer.setClickable(false);
 	}
-	
+		
 	public void getActivity(View mainMenuButton) {
 		int id =  ((Button) mainMenuButton).getId();
 		Intent intent;

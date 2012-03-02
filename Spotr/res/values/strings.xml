@@ -92,4 +92,5 @@
     <string name="main_menu_btn_spot_it">Spot It</string>
     <string name="main_menu_btn_inventory">Inventory</string>
     <string name="main_menu_btn_inbox">Inbox</string>
+    <string name="title_bar_default_title">potr</string>
 </resources>

@@ -2,11 +2,11 @@ package com.csun.spotr;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 /**
  * This class provides a foundation of basic features (e.g. Spotr's custom
@@ -24,9 +24,16 @@ public class BasicSpotrActivity extends Activity {
 		setupTitleBar();
 	}
 	
-	protected void setupTitleBar() {
-		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("potr");
+	private void setupTitleBar() {	
+	}
+	
+	/**
+	 * Attempt to minimize banding.
+	 */
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		getWindow().setFormat(PixelFormat.RGBA_8888);
 	}
 	
 	/**
@@ -37,6 +44,7 @@ public class BasicSpotrActivity extends Activity {
 	 * @param button the button clicked
 	 */
 	public void goToMainMenu(View button) {
+		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
 	    final Intent intent = new Intent(this, MainMenuActivity.class);
 	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    startActivity (intent);
