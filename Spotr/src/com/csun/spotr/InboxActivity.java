@@ -57,6 +57,8 @@ public class InboxActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.inbox);
 
+		setupTitleBar();
+		
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		listview = (ListView) findViewById(R.id.inbox_xml_listview);
 		
@@ -79,6 +81,13 @@ public class InboxActivity
 		
 		task = new GetInboxTask(this);
 		task.execute();
+	}
+	
+	@Override
+	protected void setupTitleBar() {
+		super.setupTitleBar();
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("exts");
 	}
 
 	private static class GetInboxTask 

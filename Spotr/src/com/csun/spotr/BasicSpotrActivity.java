@@ -16,15 +16,13 @@ public class BasicSpotrActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.dummy);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
-	
-		setupTitleBar();
 	}
 	
-	private void setupTitleBar() {	
+	protected void setupTitleBar() {	
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
 	}
 	
 	/**

@@ -4,6 +4,7 @@
 
     <!-- Navigation/Title -->
     <LinearLayout style="@style/TitleBarNav" >
+        
         <LinearLayout
             android:id="@+id/title_bar_home_container"
             style="@style/TitleBarHomeContainer" >

@@ -76,9 +76,11 @@ public class QuestActivity
 		new GetQuestTask(this).execute();
 	}
 	
-	private void setupTitleBar() {
+	@Override
+	protected void setupTitleBar() {
+		super.setupTitleBar();
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("Quests");
+		title.setText("undial Quests");
 	}
 	
 	private static class GetQuestTask 

@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -50,7 +51,7 @@ public class FinderActivity
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar); */
 		
 		setContentView(R.layout.finder);
-
+		
 		buttonCreateItem = (Button) findViewById(R.id.finder_xml_button);
 		items = new ArrayList<SeekingItem>();
 		gridview = (GridView) findViewById(R.id.finder_xml_gridview);
@@ -75,8 +76,8 @@ public class FinderActivity
 		});
 		
 		new GetFindersTask(this).execute();
-	}
-
+	}	
+	
 	private static class GetFindersTask 
 		extends AsyncTask<Integer, SeekingItem, Boolean> 
 			implements IAsyncTask<FinderActivity> {

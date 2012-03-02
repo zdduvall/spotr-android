@@ -405,7 +405,7 @@
         <item name="android:background">@color/aluminum1</item>
     </style>
     
-    <style name="SpotsNearbySearchBarLabel">
+    <style name="SpotsSearchBarLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/place_xml_textview_find_str</item>
@@ -413,13 +413,13 @@
         <item name="android:textColor">@color/aluminum5</item>
     </style>
     
-    <style name="SpotsNearbySearchBar">
+    <style name="SpotsSearchBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:singleLine">true</item>
     </style>
     
-    <style name="SpotsNearbyResultsLabel">
+    <style name="SpotsResultsLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/place_xml_textview_nearby_str</item>
@@ -427,7 +427,7 @@
         <item name="android:textColor">@color/aluminum5</item>
     </style>
     
-    <style name="SpotsNearbyResultsList">
+    <style name="SpotsResultsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/aluminum3</item>

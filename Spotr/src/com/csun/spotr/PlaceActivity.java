@@ -25,11 +25,13 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.util.Log;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PixelFormat;
 
 import android.location.Location;
 
@@ -68,7 +70,6 @@ public class PlaceActivity
 	private 					List<PlaceItem> 	placeItemList = new ArrayList<PlaceItem>();
 	private 					Location 			lastKnownLocation = null;
 	private 					FineLocation 		fineLocation = new FineLocation();
-//	private 					Button 				refreshButton;
 	
 	private static final int 	ID_BONUS 	 = 1;
 	private static final int 	ID_LOAN 	 = 2;
@@ -83,7 +84,8 @@ public class PlaceActivity
 		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
+
+		setupTitleBar();
 		
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -104,7 +106,7 @@ public class PlaceActivity
 		});
 		
 		findLocation(); // refresh button activated once location is found
-						
+		
 		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
 		ActionItem itemLoan = new ActionItem(ID_LOAN, "Loan", getResources().getDrawable(R.drawable.pu_loan_32));
         ActionItem itemLuck = new ActionItem(ID_LUCK, "Luck", getResources().getDrawable(R.drawable.pu_luck_32));
@@ -135,6 +137,37 @@ public class PlaceActivity
 			}
 		});
 	}
+	
+	@Override
+	protected void setupTitleBar() {
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("luts found at:");
+	}
+	
+	/**
+	 * Attempt to minimize banding.
+	 */
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+	}
+	
+	/**
+	 * Open the Main Menu activity (dashboard). If that activity is already
+	 * running, a new instance of that activity will not be launched--instead,
+	 * all activities on top of the old instance are removed as the old 
+	 * instance is brought to the top.
+	 * @param button the button clicked
+	 */
+	public void goToMainMenu(View button) {
+		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
+	    final Intent intent = new Intent(this, MainMenuActivity.class);
+	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity (intent);
+	}
+
 	
 	/**
 	 * Retrieve current location. Upon finding the current location, set up

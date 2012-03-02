@@ -69,7 +69,7 @@ public class MainMenuActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu_original);
 		
-		titleBarSetup();
+		setupTitleBar();
 		
 		friendRequestList = new ArrayList<FriendRequestItem>();
 		listview = (ListView) findViewById(R.id.main_menu_xml_slide_content);
@@ -91,7 +91,9 @@ public class MainMenuActivity
 		 task.execute();
 	}
 	
-	private void titleBarSetup() {
+	@Override
+	protected void setupTitleBar() {
+		super.setupTitleBar();
 		ImageView homeBeacon = (ImageView) findViewById(R.id.title_bar_home_beacon);
 		homeBeacon.setVisibility(View.INVISIBLE);
 		

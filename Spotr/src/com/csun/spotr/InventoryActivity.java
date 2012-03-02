@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.csun.spotr.adapter.WeaponAdapter;
 import com.csun.spotr.core.Weapon;
@@ -50,6 +51,8 @@ public class InventoryActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.weapon);
 
+		setupTitleBar();
+		
 		listview = (ListView) findViewById(R.id.weapon_xml_listview_weapons);
 		adapter = new WeaponAdapter(this, weaponList);
 		listview.setAdapter(adapter);
@@ -63,7 +66,14 @@ public class InventoryActivity
 
 		new GetWeaponTask(this).execute();
 	}
-
+	
+	@Override
+	protected void setupTitleBar() {
+		super.setupTitleBar();
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("hit I Stole");
+	}
+	
 	private static class GetWeaponTask 
 		extends AsyncTask<Integer, Weapon, Boolean> 
 			implements IAsyncTask<InventoryActivity> {

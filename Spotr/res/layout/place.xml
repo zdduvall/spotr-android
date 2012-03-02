@@ -11,19 +11,19 @@
 
     <TextView
         android:id="@+id/place_xml_textview_find_place"
-        style="@style/SpotsNearbySearchBarLabel" />
+        style="@style/SpotsSearchBarLabel" />
 
     <EditText
         android:id="@+id/place_xml_edittext_search"
-        style="@style/SpotsNearbySearchBar" >
+        style="@style/SpotsSearchBar" >
     </EditText>
 
     <TextView
         android:id="@+id/place_xml_textview_search_title"
-        style="@style/SpotsNearbyResultsLabel" />
+        style="@style/SpotsResultsLabel" />
 
     <ListView
         android:id="@+id/place_xml_listview_places"
-        style="@style/SpotsNearbyResultsList" />
+        style="@style/SpotsResultsList" />
 
 </LinearLayout>

@@ -76,10 +76,16 @@ public class LocalMapViewActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.mapview);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 		
+		setupTitleBar();
 		setupMapGraphics();
 		findLocation();	// locate and places buttons activated once location found		
+	}
+	
+	private void setupTitleBar() {
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("pots On A Map");
 	}
 	
 	/**
