@@ -78,7 +78,7 @@ public class PingMapActivity
 		setupMapGraphics();
 		findLocation(); // ping button activated once location is found
 		
-		ImageButton friendsButton = (ImageButton) findViewById(R.id.title_bar_ping_btn_friends);
+		ImageButton friendsButton = (ImageButton) findViewById(R.id.title_bar_btn_ping_friends);
 		friendsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				new GetFriendLocationsTask(PingMapActivity.this).execute();
@@ -119,7 +119,7 @@ public class PingMapActivity
 	 * to handle its click event.
 	 */
 	private void activatePingButton() {
-		ImageButton pingButton = (ImageButton) findViewById(R.id.title_bar_ping_btn_ping);
+		ImageButton pingButton = (ImageButton) findViewById(R.id.title_bar_btn_ping);
 		pingButton.setClickable(true);
 		pingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_ping_enabled));
 		pingButton.setScaleType(ScaleType.FIT_XY);

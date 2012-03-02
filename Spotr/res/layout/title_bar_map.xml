@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/TitleBarBackground" >
- 
-    <ImageButton
-        style="@style/TitleBarLogo" />
 
-    <View
-        android:id="@+id/title_bar_map_button_spacer_1"
-        style="@style/VerticalSpacer.Map1" />
-    
-    <ImageButton
-        android:id="@+id/title_bar_map_btn_locate"
-        style="@style/TitleBarMapLocateBtn" />
-    
-    <View
-        android:id="@+id/title_bar_map_button_spacer_2"
-        style="@style/VerticalSpacer.Map2" />
-    
-    <ImageButton
-        android:id="@+id/title_bar_map_btn_places"
-        style="@style/TitleBarMapPlacesBtn" />
+    <!-- Navigation/Title -->
+    <LinearLayout style="@style/TitleBarNav" >
+        
+        <ImageButton style="@style/TitleBarLogo" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/title_bar_title"
+            style="@style/TitleBarTitle" />
+    </LinearLayout>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:id="@+id/title_bar_actions"
+        style="@style/TitleBarActions" >
+        
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+        <ImageButton
+            android:id="@+id/title_bar_map_btn_locate"
+            style="@style/TitleBarButton.MapLocate" />
+
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+        <ImageButton
+            android:id="@+id/title_bar_map_btn_places"
+            style="@style/TitleBarButton.MapPlaces" />
+    </LinearLayout>
+
+</LinearLayout>

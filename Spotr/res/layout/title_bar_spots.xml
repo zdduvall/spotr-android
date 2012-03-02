@@ -20,14 +20,8 @@
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton
-            android:id="@+id/title_bar_btn_ping"
-            style="@style/TitleBarButton.Ping" />
-
-        <View style="@style/VerticalSpacer.TitleBar" />
-
-        <ImageButton
-            android:id="@+id/title_bar_btn_ping_friends"
-            style="@style/TitleBarButton.PingFriends" />
+            android:id="@+id/title_bar_btn_spots_refresh"
+            style="@style/TitleBarButton.SpotsRefresh" />
     </LinearLayout>
 
 </LinearLayout>

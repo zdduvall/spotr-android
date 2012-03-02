@@ -83,7 +83,7 @@ public class PlaceActivity
 		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_places_nearby);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
 		
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -156,7 +156,7 @@ public class PlaceActivity
 	 * to handle its click event.
 	 */
 	private void activateRefreshButton() {
-		ImageButton refreshButton = (ImageButton) findViewById(R.id.title_bar_places_nearby_btn_refresh);
+		ImageButton refreshButton = (ImageButton) findViewById(R.id.title_bar_btn_spots_refresh);
 		refreshButton.setClickable(true);
 		refreshButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_refresh_enabled));
 		refreshButton.setScaleType(ScaleType.FIT_XY);

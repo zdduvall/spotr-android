@@ -49,6 +49,8 @@ public class QuestActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest);
+		
+		setupTitleBar();
 
 		listview = (ListView) findViewById(R.id.quest_xml_listview_quest_list);
 		adapter = new QuestItemAdapter(getApplicationContext(), questList);
@@ -72,6 +74,11 @@ public class QuestActivity
 		});
 		
 		new GetQuestTask(this).execute();
+	}
+	
+	private void setupTitleBar() {
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("Quests");
 	}
 	
 	private static class GetQuestTask 

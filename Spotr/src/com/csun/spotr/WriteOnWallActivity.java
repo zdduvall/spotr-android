@@ -40,7 +40,7 @@ import android.widget.TextView;
  * 		Post a message on to wall
  */
 public class WriteOnWallActivity 
-		extends Activity {
+		extends BasicSpotrActivity {
 	
 	private static final 	String 		TAG = "(WriteOnWallActivity)";
 	private static final 	String 		WRITE_ON_WALL_URL = "http://107.22.209.62/android/do_write_on_wall.php";
@@ -55,9 +55,7 @@ public class WriteOnWallActivity
 	public void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.write_on_wall);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 		
 		final Button buttonPost = (Button) findViewById(R.id.write_on_wall_xml_button_submit);
 		buttonPost.setEnabled(false);

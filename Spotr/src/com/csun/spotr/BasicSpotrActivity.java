@@ -2,9 +2,11 @@ package com.csun.spotr;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 /**
  * This class provides a foundation of basic features (e.g. Spotr's custom
@@ -17,7 +19,17 @@ public class BasicSpotrActivity extends Activity {
 		
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.dummy);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
+	
+		setupTitleBar();
+	}
+	
+	private void setupTitleBar() {
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		Typeface font = Typeface.createFromAsset(getAssets(), "Chantelli_Antiqua.ttf");
+		title.setTypeface(font);
+		title.setText("LOL");
+		
 	}
 	
 	/**

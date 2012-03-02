@@ -49,7 +49,7 @@ import android.widget.Button;
  * 		Main menu
  */
 public class MainMenuActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<FriendRequestItem> {
 	
 	private static final 	String 						TAG = "(MainMenuActivity)";
@@ -66,9 +66,7 @@ public class MainMenuActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main_menu_original);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
 		
 		
 		friendRequestList = new ArrayList<FriendRequestItem>();

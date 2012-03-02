@@ -15,19 +15,20 @@
     <!-- Buttons -->
     <LinearLayout
         android:id="@+id/title_bar_actions"
-        style="@style/TitleBarActions" >
+        style="@style/TitleBarActions"
+        android:visibility="gone" >  <!-- (invisible by default) -->
         
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton
-            android:id="@+id/title_bar_btn_ping"
-            style="@style/TitleBarButton.Ping" />
+            android:id="@+id/title_bar_btn_1"
+            style="@style/TitleBarButton" />
 
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton
-            android:id="@+id/title_bar_btn_ping_friends"
-            style="@style/TitleBarButton.PingFriends" />
+            android:id="@+id/title_bar_btn_2"
+            style="@style/TitleBarButton" />
     </LinearLayout>
 
 </LinearLayout>
