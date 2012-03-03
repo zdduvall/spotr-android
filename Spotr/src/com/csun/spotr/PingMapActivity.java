@@ -92,7 +92,7 @@ public class PingMapActivity
 	
 	private void setupTitleBar() {
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("talker");
+		title.setText("potr");
 	}
 	
 	/**

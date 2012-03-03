@@ -86,8 +86,6 @@ public class InboxActivity
 	@Override
 	protected void setupTitleBar() {
 		super.setupTitleBar();
-		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("exts");
 	}
 
 	private static class GetInboxTask 

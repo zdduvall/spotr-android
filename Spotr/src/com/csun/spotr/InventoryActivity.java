@@ -70,8 +70,6 @@ public class InventoryActivity
 	@Override
 	protected void setupTitleBar() {
 		super.setupTitleBar();
-		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("hit I Stole");
 	}
 	
 	private static class GetWeaponTask 

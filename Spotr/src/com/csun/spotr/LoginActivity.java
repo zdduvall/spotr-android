@@ -27,17 +27,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class LoginActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<Integer> {
 	
 	private static final String TAG = "(LoginActivity)";
@@ -56,8 +61,9 @@ public class LoginActivity
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
+		setupTitleBar();
 
 		prefs = getSharedPreferences("Spotr", MODE_PRIVATE);
 		prefsSavePassword = prefs.getBoolean("savePassword", false);
@@ -66,9 +72,8 @@ public class LoginActivity
 
 		CheckBox checkVisible = (CheckBox) findViewById(R.id.login_xml_checkbox_visible_characters);
 		CheckBox checkSavePassword = (CheckBox) findViewById(R.id.login_xml_checkbox_remember_password);
-		edittextPassword = (EditText) findViewById(R.id.login_xml_edittext_password_id);
-		edittextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		edittextUsername = (EditText) findViewById(R.id.login_xml_edittext_email_id);
+		edittextPassword = (EditText) findViewById(R.id.login_xml_edittext_password_id);
 		Button buttonLogin = (Button) findViewById(R.id.login_xml_button_login);
 		Button buttonSignup = (Button) findViewById(R.id.login_xml_button_signup);
 		
@@ -101,6 +106,10 @@ public class LoginActivity
 
 		buttonLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+//				AlphaAnimation alpha = new AlphaAnimation(1, 0.2f);
+//				alpha.setDuration(5000);
+//				Button button = (Button) v;
+//				button.startAnimation(alpha);
 				performLogin();
 			}
 		});
@@ -130,7 +139,16 @@ public class LoginActivity
 				return false;
 			}
 		});
-
+	}
+	
+	protected void setupTitleBar() {
+		super.setupTitleBar();
+		
+		ImageView homeBeacon = (ImageView) findViewById(R.id.title_bar_home_beacon);
+		homeBeacon.setVisibility(View.INVISIBLE);
+		
+		LinearLayout homeContainer = (LinearLayout) findViewById(R.id.title_bar_home_container);
+		homeContainer.setClickable(false);
 	}
 	
 	protected void performLogin() {
@@ -232,7 +250,7 @@ public class LoginActivity
 	}
 	
 	private boolean isNetworkAvailableAndConnected() {
-		ConnectivityManager conManager =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager conManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
 		if (networkInfo == null) {
 			return false;

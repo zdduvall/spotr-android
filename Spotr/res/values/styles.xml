@@ -137,6 +137,91 @@
     <!-- End TabWidget -->
 
 
+    <!-- Login -->
+    <style name="LoginBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
+        <item name="android:paddingBottom">40dp</item>
+        <item name="android:background">@color/vimeo_grey</item>
+    </style>
+    
+    <style name="TagLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:text">@string/login_xml_textview_tagline_str</item>
+        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+            
+    <style name="LoginEmail">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:hint">@string/login_xml_textview_email_str</item>
+    </style>
+    
+    <style name="LoginPassword">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:hint">@string/login_xml_textview_password_str</item>
+    </style>
+        
+    <style name="LogInButton">
+        <item name="android:layout_width">130dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:background">@drawable/button_blue</item>
+        <item name="android:text">@string/login_xml_button_login_str</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:shadowDx">-0.5</item>
+        <item name="android:shadowDy">-0.6</item>
+    </style>
+    
+    <style name="LoginFooter">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+    
+    <style name="LoginFooterText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/login_xml_ask_signup_str</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/aluminum5</item>
+    </style>
+    
+    <style name="SignUpButton">
+        <item name="android:layout_width">130dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_orange</item>
+        <item name="android:text">@string/login_xml_button_signup_str</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:shadowDx">-0.5</item>
+        <item name="android:shadowDy">-0.6</item>
+    </style>
+    <!-- End Login -->
+
+
     <!-- Main Menu -->
     <style name="Dashboard">
         <item name="android:layout_width">match_parent</item>
