@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LoginBackground" >
-
-    <TextView
-        style="@style/TagLine" />"
     
-    <EditText
-        android:id="@+id/login_xml_edittext_email_id"
-        style="@style/LoginEmail" >
+    <LinearLayout style="@style/LinearLayoutShadow.Login" >
+    
+	    <RelativeLayout style="@style/LoginIntro" >
+	        
+		    <TextView
+		        android:id="@+id/login_xml_tagline"
+		        style="@style/TagLine" />
+		        
+		    <Button
+		        android:id="@+id/login_xml_button_signup"
+		        style="@style/SignUpButton" />
+	    </RelativeLayout>
+    </LinearLayout>
+    
+    <LinearLayout style="@style/LoginInputFields" >
         
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/login_xml_edittext_password_id"
-        style="@style/LoginPassword" />
+	    <EditText
+	        android:id="@+id/login_xml_edittext_email_id"
+	        style="@style/LoginEmail" >
+	        
+	        <requestFocus />
+	    </EditText>
+	
+	    <EditText
+	        android:id="@+id/login_xml_edittext_password_id"
+	        style="@style/LoginPassword" />
+    </LinearLayout>
     
     <Button
         android:id="@+id/login_xml_button_login"
         style="@style/LogInButton" />
-    
-    <LinearLayout style="@style/LoginFooter">
-        
-	    <TextView style="@style/LoginFooterText" />
-	    
-	    <Button
-	        android:id="@+id/login_xml_button_signup"
-	        style="@style/SignUpButton" />
-    </LinearLayout>
     
         
     <!-- Temporarily invisible -->
