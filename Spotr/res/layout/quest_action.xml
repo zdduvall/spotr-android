@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#181818"
+    android:background="@color/aluminum2"
     android:orientation="vertical"
     android:padding="10dp" >
 
@@ -28,18 +28,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="4dp"
-                android:textColor="#cccccc"
+                android:textColor="@color/aluminum6"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="" />
 
             <TextView
                 android:id="@+id/quest_action_xml_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="4dp"
+                android:paddingLeft="6dp"
                 android:textColor="#95a5c6"
                 android:textSize="12dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="" />
         </LinearLayout>
 
         
@@ -47,11 +49,11 @@
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#333333"
+            android:background="@color/aluminum3"
             android:paddingLeft="4dp"
             android:text="Missions"
             android:textSize="15dp"
-            android:textColor="#cccccc"
+            android:textColor="@color/aluminum6"
             android:textStyle="bold" />
     <!-- Challenge List -->
 

@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40sp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="@color/aluminum3" >
 
         <ImageView
             android:layout_width="40sp"
@@ -18,10 +19,12 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="40sp"
+            android:paddingLeft="5sp"
             android:clickable="false"
             android:gravity="center_vertical"
-            android:text="Quests"
-            android:textSize="20sp" />
+            android:text="Available Quests"
+            android:textSize="20sp"
+            android:textColor="@color/aluminum6" />
     </LinearLayout>
 
     <ListView
@@ -29,6 +32,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="#808080"
-        android:background="#181818" />
+        android:background="@color/aluminum2" />
 
 </LinearLayout>

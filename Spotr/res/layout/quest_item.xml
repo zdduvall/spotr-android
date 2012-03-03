@@ -2,7 +2,8 @@
     android:id="@+id/quest_item_xml_linearlayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@color/aluminum2" >
 
     <ImageView
         android:name="@+id/quest_item_xml_image"
@@ -15,8 +16,9 @@
     <LinearLayout
         android:id="@+id/quest_item_xml_linearlayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="60sp"
+        android:orientation="vertical"
+        android:background="@color/aluminum1" >
 
         <TextView
             android:id="@+id/quest_item_xml_textview_name"
@@ -24,8 +26,13 @@
             android:layout_height="wrap_content"
             android:paddingLeft="8dip"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#cccccc"
-            android:textStyle="bold" />
+            android:textColor="@color/aluminum6"
+            android:textStyle="bold"
+            android:text="" />
+        
+        <ScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" >
 
         <TextView
             android:id="@+id/quest_item_xml_textview_description"
@@ -33,7 +40,10 @@
             android:layout_height="wrap_content"
             android:paddingLeft="8dip"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#95a5c6" />
+            android:textColor="#95a5c6"
+            android:text="" />
+        
+        </ScrollView>
     </LinearLayout>
 
 </LinearLayout>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#181818"
+    android:background="@color/aluminum2"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -30,8 +30,9 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dip"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#cccccc"
-                android:textStyle="bold" />
+                android:textColor="@color/aluminum6"
+                android:textStyle="bold"
+                android:text="" />
 
             <TextView
                 android:id="@+id/quest_detail_xml_textview_description"
@@ -64,14 +65,14 @@
                     android:layout_column="1"
                     android:layout_marginLeft="2sp"
                     android:text="Visited"
-                    android:textColor="#8E0808"
+                    android:textColor="@color/aluminum6"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/quest_detail_xml_textview_challengedone"
                     android:layout_marginRight="5sp"
                     android:gravity="right"
-                    android:textColor="#dd3c10" />
+                    android:textColor="@color/aluminum6" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
@@ -93,24 +94,26 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40sp"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/quest_detail_xml_me_button"
             style="@style/TreasureButton"
             android:layout_width="150sp"
-            android:layout_height="wrap_content"
+            android:layout_height="40sp"
             android:layout_gravity="center"
-            android:text="Me" />
+            android:text="Me"
+            android:textColor="@color/aluminum6" />
 
         <Button
             android:id="@+id/quest_detail_xml_spot_button"
             style="@style/TreasureButton"
             android:layout_width="155sp"
-            android:layout_height="wrap_content"
+            android:layout_height="40sp"
             android:layout_gravity="center"
-            android:text="View Spots" />
+            android:text="View Spots"
+            android:textColor="@color/aluminum6" />
     </LinearLayout>
 
     <com.google.android.maps.MapView
