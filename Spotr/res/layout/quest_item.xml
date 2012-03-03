@@ -11,14 +11,15 @@
         android:layout_height="60sp"
         android:padding="2dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_main_menu_quests_pressed" />
+        android:src="@drawable/ic_main_menu_quests_pressed"
+        android:background="@color/aluminum2"/>
 
     <LinearLayout
         android:id="@+id/quest_item_xml_linearlayout"
         android:layout_width="fill_parent"
-        android:layout_height="60sp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/aluminum1" >
+        android:background="@color/aluminum2" >
 
         <TextView
             android:id="@+id/quest_item_xml_textview_name"
@@ -28,11 +29,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/aluminum6"
             android:textStyle="bold"
-            android:text="" />
+            android:text="TEST" />
         
-        <ScrollView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent" >
 
         <TextView
             android:id="@+id/quest_item_xml_textview_description"
@@ -41,9 +39,8 @@
             android:paddingLeft="8dip"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#95a5c6"
-            android:text="" />
+            android:text="TEST" />
         
-        </ScrollView>
     </LinearLayout>
 
 </LinearLayout>

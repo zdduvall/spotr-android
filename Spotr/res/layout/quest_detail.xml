@@ -33,7 +33,11 @@
                 android:textColor="@color/aluminum6"
                 android:textStyle="bold"
                 android:text="" />
-
+            
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                
             <TextView
                 android:id="@+id/quest_detail_xml_textview_description"
                 android:layout_width="wrap_content"
@@ -41,6 +45,8 @@
                 android:paddingLeft="8dip"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#95a5c6" />
+            
+            </ScrollView>
         </LinearLayout>
     </LinearLayout>
 
