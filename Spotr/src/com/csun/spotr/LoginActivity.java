@@ -56,7 +56,7 @@ public class LoginActivity
 	private SharedPreferences.Editor editor;
 	private boolean prefsSavePassword = false;
 	private boolean passwordVisible = false;
-	private boolean savePassword = false;
+	private boolean savePassword = true;//false;
 	private LoginTask task = null;
 
 	public void onCreate(Bundle savedInstanceState) {
