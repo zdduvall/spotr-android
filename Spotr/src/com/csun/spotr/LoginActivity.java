@@ -61,7 +61,6 @@ public class LoginActivity
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login);
 		setupTitleBar();
 
@@ -106,10 +105,6 @@ public class LoginActivity
 
 		buttonLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-//				AlphaAnimation alpha = new AlphaAnimation(1, 0.2f);
-//				alpha.setDuration(5000);
-//				Button button = (Button) v;
-//				button.startAnimation(alpha);
 				performLogin();
 			}
 		});

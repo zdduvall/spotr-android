@@ -26,7 +26,7 @@
 
     <!-- Title Bar Helper-->
     <style name="CustomWindowTitleBackground">
-        <item name="android:background">@color/aluminum6</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="CustomTheme" parent="android:Theme">
@@ -71,6 +71,7 @@
         <item name="android:background">@null</item>
         <item name="android:src">@drawable/ic_home_beacon</item>
         <item name="android:scaleType">fitXY</item>
+        <item name="android:visibility">invisible</item>
     </style>
     
     <style name="TitleBarLogo">

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class SpotrActivity extends Activity {
 		else {
 			i = new Intent(getApplicationContext(), LoginActivity.class);
 		}
-		
+
 		startActivity(i);
 		finish();
 	}
