@@ -10,9 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,21 +19,17 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
@@ -45,7 +39,6 @@ import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.core.Place;
 import com.csun.spotr.custom_gui.CustomItemizedOverlay;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -216,7 +209,6 @@ public class LocalMapViewActivity
 		extends AsyncTask<Location, Place, Boolean> 
 			implements IAsyncTask<LocalMapViewActivity> {
 		
-		private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
 		private WeakReference<LocalMapViewActivity> ref;
 		
 		public GetSpotsTask(LocalMapViewActivity a) {
@@ -286,6 +278,8 @@ public class LocalMapViewActivity
 		
 		@Override
 		protected Boolean doInBackground(Location... locations) {
+			List<NameValuePair> placeData = new ArrayList<NameValuePair>();
+			
 			// send Google data to our server to update 'spots' table
 			JsonHelper.getJsonObjectFromUrlWithData(UPDATE_GOOGLE_PLACES_URL, constructGooglePlace(locations[0]));
 			
@@ -300,14 +294,14 @@ public class LocalMapViewActivity
 				try {
 					for (int i = 0; i < array.length(); ++i) {
 						publishProgress(
-								new Place.Builder(
-									// require parameters
-									array.getJSONObject(i).getDouble("spots_tbl_longitude"), 
-									array.getJSONObject(i).getDouble("spots_tbl_latitude"), 
-									array.getJSONObject(i).getInt("spots_tbl_id"))
-										// optional parameters
-										.name(array.getJSONObject(i).getString("spots_tbl_name"))
-										.address(array.getJSONObject(i).getString("spots_tbl_description")).build());
+							new Place.Builder(
+								// require parameters
+								array.getJSONObject(i).getDouble("spots_tbl_longitude"), 
+								array.getJSONObject(i).getDouble("spots_tbl_latitude"), 
+								array.getJSONObject(i).getInt("spots_tbl_id"))
+									// optional parameters
+									.name(array.getJSONObject(i).getString("spots_tbl_name"))
+									.address(array.getJSONObject(i).getString("spots_tbl_description")).build());
 					}
 				}
 				catch (JSONException e) {

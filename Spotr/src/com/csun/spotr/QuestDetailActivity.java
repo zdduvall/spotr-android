@@ -13,17 +13,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -37,6 +31,7 @@ import android.widget.Toast;
 import com.csun.spotr.core.Place;
 import com.csun.spotr.core.adapter_item.QuestDetailItem;
 import com.csun.spotr.custom_gui.BalloonItemizedOverlay;
+import com.csun.spotr.custom_gui.ImpactOverlay;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -51,45 +46,38 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-import com.google.android.maps.Projection;
 
 public class QuestDetailActivity 
-extends MapActivity 
-implements IActivityProgressUpdate<QuestDetailItem>{
-	private static 	final 	String TAG = "(QuestDetailActivity)";
-	private static 	final 	String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
-	private static 	final 	String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
-	private 				ListView questDetailListView;
-	private 				QuestDetailItemAdapter questDetailItemAdapter;
-	private 				List<QuestDetailItem> questDetailList = new ArrayList<QuestDetailItem>();
+	extends MapActivity 
+		implements IActivityProgressUpdate<QuestDetailItem>{
+	
+	private static final String TAG = "(QuestDetailActivity)";
+	private static final String GET_QUEST_DETAIL_URL = "http://107.22.209.62/android/get_quest_detail.php";
+	private static final String GIVE_QUEST_POINT_URL = "http://107.22.209.62/android/give_quest_point.php";
+	
+	private static int numQuest = 0;
+	
+	private ListView questDetailListView;
+	private QuestDetailItemAdapter questDetailItemAdapter;
+	private List<QuestDetailItem> questDetailList = new ArrayList<QuestDetailItem>();
 
-	private 				int questId;
-	private 				int spotCompleted = 0;
-	private static 			int numQuest = 0;
-	private 				int spotId = 0;
-	private 				String questName = null;
-	private 				String questDescription = null;
+	private int questId;
+	private int userId;
+	private int spotCompleted = 0;
+	private int spotId = 0;
+	private String questName = null;
+	private String questDescription = null;
 
-	private 				MapView mapView = null;
-	private 				List<Overlay> mapOverlays = null;
-	private 				MapController mapController = null;
-	private					FineLocation fineLocation = new FineLocation();
-	public					Location lastKnownLocation = null;
-	public					CustomQuestItemizedOverlay itemizedGreenOverlay = null;
-	public					CustomQuestItemizedOverlay itemizedRedOverlay = null;
+	private	FineLocation fineLocation = new FineLocation();
+	public	Location lastKnownLocation = null;
 
-	static 	final 	int 	DO_SPOT_CHALLENGE = 1; // code number to send to child activity
-	static	final	int 	RANGE_LIMIT = 300; // range_limit of user, unit: meter
-
-	static			boolean	flagMeButton = false;
-
-	private 				TextView challengedoneTextView;
-	private 				ProgressBar progressbar;
-	private 				TextView questNameTextView = null;
-	private 				TextView questDescriptionTextView = null;
-	private 				Button meButton;
-	private					Button viewSpotButton;
-
+	private static final int DO_SPOT_CHALLENGE = 1;  // code number to send to child activity
+	private static final int RANGE_LIMIT = 300;      // range_limit of user, unit: meter
+	private static boolean flagMeButton = false;
+	
+	private CustomQuestItemizedOverlay itemizedGreenOverlay;
+	private CustomQuestItemizedOverlay itemizedRedOverlay;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,67 +88,81 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		numQuest = this.getIntent().getExtras().getInt("numberChallenges");
 		questName = this.getIntent().getExtras().getString("quest_name");
 		questDescription = this.getIntent().getExtras().getString("quest_description");
+		userId = CurrentUser.getCurrentUser().getId();
 
-		//Initialize for ListView
 		questDetailListView = (ListView) findViewById(R.id.quest_detail_xml_listview_quest_list);
 		questDetailItemAdapter = new QuestDetailItemAdapter(this.getApplicationContext(), questDetailList);
 		questDetailListView.setAdapter(questDetailItemAdapter);
 
-		//Initialize Button
-		meButton = (Button) findViewById(R.id.quest_detail_xml_me_button);
-		viewSpotButton = (Button) findViewById(R.id.quest_detail_xml_spot_button);
+		/*
+		 * meButton & viewSpotButton are only enabled 
+		 * if location is available 
+		 */
+		final Button meButton = (Button) findViewById(R.id.quest_detail_xml_me_button);
+		final Button viewSpotButton = (Button) findViewById(R.id.quest_detail_xml_spot_button);
+		meButton.setEnabled(false);
+		viewSpotButton.setEnabled(false);
 
-		//Initialize Map View
-		mapView = (MapView) findViewById(R.id.quest_detail_xml_map);
-		mapController = mapView.getController();
+		// initialize Map View
+		final MapView mapView = (MapView) findViewById(R.id.quest_detail_xml_map);
+		final MapController mapController = mapView.getController();
 		mapView.setBuiltInZoomControls(true);
-		mapOverlays = mapView.getOverlays();
-		Drawable drawablegreen = getResources().getDrawable(R.drawable.map_maker_green);
-		Drawable drawablered = getResources().getDrawable(R.drawable.map_maker_red);
-		itemizedGreenOverlay = new CustomQuestItemizedOverlay(drawablegreen, mapView);
-		itemizedRedOverlay = new CustomQuestItemizedOverlay(drawablered,mapView);
+		
+		// add overlay 
+		final List<Overlay> mapOverlays = mapView.getOverlays();
+		
+		itemizedGreenOverlay = 
+			new CustomQuestItemizedOverlay(getResources().getDrawable(R.drawable.map_maker_green), mapView);
+		itemizedRedOverlay = 
+			new CustomQuestItemizedOverlay(getResources().getDrawable(R.drawable.map_maker_red), mapView);
+		
 		mapOverlays.add(itemizedGreenOverlay);
 		mapOverlays.add(itemizedRedOverlay);
 
 		// initialize detail description of specific quest
-		challengedoneTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_challengedone);
-		progressbar = (ProgressBar) findViewById(R.id.quest_detail_progressBar);
-		questNameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_name);
-		questDescriptionTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_description);
-
+		TextView questNameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_name);
+		TextView questDescriptionTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_description);
+		
 		questNameTextView.setText(questName);
 		questDescriptionTextView.setText(questDescription);
 
-		// Get current user's location
+		/*
+		 * If user's location is available
+		 * make meButton & viewSpotButton enable
+		 */
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation (final Location location) {
 				lastKnownLocation = location;
+				meButton.setEnabled(true);
+				viewSpotButton.setEnabled(true);
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
 		
 		//handle on click event on Me Button
 		meButton.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
-				if(flagMeButton == false)
-				{
+				if (flagMeButton == false) {
 					OverlayItem overlay = new OverlayItem(
-							new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
-									(int) (lastKnownLocation.getLongitude() * 1E6)),
-									"My Current Location",
-							"Hello");
+							new GeoPoint(	
+								(int) (lastKnownLocation.getLatitude() * 1E6),
+								(int) (lastKnownLocation.getLongitude() * 1E6)),
+								"My Current Location",
+								"Hello");
+					
 					Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
 					icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
 					overlay.setMarker(icon);
 
-
 					Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
 					itemizedGreenOverlay.addOverlay(overlay,place);
 
-					mapOverlays.add(new ImpactOverlay(new GeoPoint(	(int) (lastKnownLocation.getLatitude() * 1E6),
-							(int) (lastKnownLocation.getLongitude() * 1E6)), RANGE_LIMIT));
+					mapOverlays.add(
+						new ImpactOverlay(
+							new GeoPoint(	
+								(int) (lastKnownLocation.getLatitude() * 1E6),
+								(int) (lastKnownLocation.getLongitude() * 1E6)), RANGE_LIMIT));
 					flagMeButton = true;
 				}
 
@@ -173,20 +175,18 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 
 		//handle on click event when click on ViewSpot button
 		viewSpotButton.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
 				double centerLongitude = 0;
 				double centerLatitude = 0;
-				for (int i=0;i < questDetailList.size();i++)
-				{
+				
+				for (int i = 0; i < questDetailList.size(); i++) {
 					centerLongitude += questDetailList.get(i).getLongitude();
 					centerLatitude += questDetailList.get(i).getLatitude();
 				}
+				
 				centerLongitude = centerLongitude / questDetailList.size();
 				centerLatitude = centerLatitude / questDetailList.size();
-				mapController.animateTo(new GeoPoint(
-						(int) (centerLatitude * 1E6),
-						(int) (centerLongitude * 1E6)));
+				mapController.animateTo(new GeoPoint((int) (centerLatitude * 1E6), (int) (centerLongitude * 1E6)));
 				mapController.setZoom(16);	
 			}
 		});
@@ -194,12 +194,10 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		// handle event when click on specific spot in the ListView
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (questDetailList.get(position).getStatus().equalsIgnoreCase("done"))
-				{
+				if (questDetailList.get(position).getStatus().equalsIgnoreCase("done")) {
 
 				}
-				else
-				{
+				else {
 					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
 					Bundle extras = new Bundle();
 					extras.putInt("place_id", questDetailList.get(position).getId());
@@ -216,16 +214,15 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 
 	}
 
-	private static class GetQuestDetailTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
+	private static class GetQuestDetailTask 
+		extends AsyncTask<Integer, QuestDetailItem, Boolean> 
+			implements IAsyncTask<QuestDetailActivity> {
 
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<QuestDetailActivity> ref;
 
 		public GetQuestDetailTask(QuestDetailActivity a) {
 			attach(a);
 		}
-
-		private JSONArray userJsonArray = null;
 
 		@Override
 		protected void onPreExecute() {
@@ -239,24 +236,31 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			
 			// send user id
-			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			
 			// send quest id
-			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
-			clientData.add(new BasicNameValuePair("spot_id", Integer.toString(ref.get().spotId)));
+			data.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
+			
+			// send spot id
+			data.add(new BasicNameValuePair("spot_id", Integer.toString(ref.get().spotId)));
+			
 			// retrieve data from server
-			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_DETAIL_URL, clientData);
-			if (userJsonArray != null) {
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_DETAIL_URL, data);
+			
+			if (array != null) {
 				try {
-					for (int i = 0; i < userJsonArray.length(); ++i) {
-						publishProgress(new QuestDetailItem(userJsonArray.getJSONObject(i).getInt("spots_tbl_id"), 
-								userJsonArray.getJSONObject(i).getString("spots_tbl_name"), 
-								userJsonArray.getJSONObject(i).getString("spots_tbl_description"),
-								userJsonArray.getJSONObject(i).getDouble("spots_tbl_longitude"),
-								userJsonArray.getJSONObject(i).getDouble("spots_tbl_latitude"),
-								userJsonArray.getJSONObject(i).getString("quest_user_tbl_status"),								
-								userJsonArray.getJSONObject(i).getString("spots_tbl_url")
-								));
+					for (int i = 0; i < array.length(); ++i) {
+						publishProgress(
+							new QuestDetailItem(array.getJSONObject(i).getInt("spots_tbl_id"), 
+								array.getJSONObject(i).getString("spots_tbl_name"), 
+								array.getJSONObject(i).getString("spots_tbl_description"),
+								array.getJSONObject(i).getDouble("spots_tbl_longitude"),
+								array.getJSONObject(i).getDouble("spots_tbl_latitude"),
+								array.getJSONObject(i).getString("quest_user_tbl_status"),								
+								array.getJSONObject(i).getString("spots_tbl_url")));
 					}
 				}
 				catch (JSONException e) {
@@ -269,8 +273,10 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			ref.get().challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
-			ref.get().progressbar.setProgress(100*ref.get().spotCompleted/numQuest);
+			TextView challengedoneTextView = (TextView) (ref.get()).findViewById(R.id.quest_detail_xml_textview_challengedone);
+			challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
+			ProgressBar progressbar = (ProgressBar) (ref.get()).findViewById(R.id.quest_detail_progressBar);
+			progressbar.setProgress(100 * ref.get().spotCompleted / numQuest);
 			detach();
 		}
 
@@ -283,15 +289,40 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		}
 	}
 
-	// An AsyncTask to update points of user when they complete the whole quest ---- just run only once.
-	private static class GiveQuestPointTask extends AsyncTask<Integer, QuestDetailItem, Boolean> implements IAsyncTask<QuestDetailActivity> {
+	/*
+	 *  An AsyncTask to update points of user when they complete the whole quest 
+	 *  NOTE: just run only once.
+	 */
+	private static class GiveQuestPointTask 
+		extends AsyncTask<Void, Void, Void> 
+			implements IAsyncTask<QuestDetailActivity> {
 
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<QuestDetailActivity> ref;
+		private int userId;
+		private int questId;
 
-		public GiveQuestPointTask(QuestDetailActivity a) {
+		public GiveQuestPointTask(QuestDetailActivity a, int userId, int questId) {
 			attach(a);
+			this.userId = userId;
+			this.questId = questId;
 		}
+		
+		@Override
+		protected Void doInBackground(Void... voids) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			
+			// send user id
+			data.add(new BasicNameValuePair("id", Integer.toString(userId)));
+			
+			// send quest id
+			data.add(new BasicNameValuePair("quest_id", Integer.toString(questId)));
+			
+			// retrieve data from server
+			JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, data);
+			
+			return null;
+		}
+		
 		public void attach(QuestDetailActivity a) {
 			ref = new WeakReference<QuestDetailActivity>(a);
 		}
@@ -300,37 +331,26 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 			ref.clear();
 		}
 
-		@Override
-		protected Boolean doInBackground(Integer... params) {
-			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			// send quest id
-			clientData.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
-			// retrieve data from server
-			JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, clientData);
-
-			return null;
-		}
 	}
-
 	
 	public void updateAsyncTaskProgress(QuestDetailItem q) {
 		questDetailList.add(q);
+		
 		if (q.getStatus().equalsIgnoreCase("done")) {
 			this.spotCompleted++;
 		}
 
-		OverlayItem overlay = new OverlayItem(new GeoPoint((int)(q.getLatitude()*1E6), (int)(q.getLongitude()*1E6)),q.getName(),q.getDescription());
-		Place place = new Place.Builder(q.getLongitude(),q.getLatitude(),q.getId()).build();
-		if (q.getStatus().equalsIgnoreCase("done"))
-		{
+		OverlayItem overlay = new OverlayItem(new GeoPoint((int)(q.getLatitude()*1E6), (int)(q.getLongitude()*1E6)), q.getName(), q.getDescription());
+		Place place = new Place.Builder(q.getLongitude(), q.getLatitude(), q.getId()).build();
+		
+		if (q.getStatus().equalsIgnoreCase("done")) {
 			itemizedRedOverlay.addOverlay(overlay, place);
 		}
-		else
-		{
+		else {
 			itemizedGreenOverlay.addOverlay(overlay, place);
 		}
+		
 		questDetailItemAdapter.notifyDataSetChanged();
-
 	}
 
 	// get Data back from child Activity, and run GiveQuestPointTask if complete the whole quest.
@@ -338,11 +358,12 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		if (requestCode == DO_SPOT_CHALLENGE) {
 			if (resultCode == RESULT_OK) {
 				spotId = data.getExtras().getInt("spot_id");
-				if (this.spotCompleted == numQuest-1)
-				{
+				
+				if (this.spotCompleted == numQuest - 1) {
 					this.showDialog(0);
-					new GiveQuestPointTask(this).execute();
+					new GiveQuestPointTask(this, userId, questId).execute();
 				}
+				
 				this.spotCompleted = 0;
 				questDetailList.clear();
 				questDetailItemAdapter.notifyDataSetChanged();
@@ -351,7 +372,11 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		}
 	}
 
-	//Dialog to congratulate the user when they finish the whole quest--- Can link to get weapon activity later.
+	/*
+	 * Dialog to congratulate the user when they finish the whole quest--- 
+	 * Can link to get weapon activity later.(non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case 0:
@@ -395,7 +420,10 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		return false;
 	}
 
-	// Inner class to draw Overlay balloon over each spot of the quest in MapView
+	/*
+	 *  Inner class to draw Overlay balloon 
+	 *  over each spot of the quest in MapView
+	 */
 	public class CustomQuestItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 		private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 		private List<Place> places = new ArrayList<Place>();
@@ -426,126 +454,47 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 			return overlays.size();
 		}
 
-		// Handle event when user click on the spot in MapView. If in range_limit, they can do the mission at that spot, if not a TOAST will pop up.
+		/*
+		 *  Handle event when user click on the spot in MapView. 
+		 *  If in range_limit, they can do the mission at that spot, 
+		 *  if not a TOAST will pop up.(non-Javadoc)
+		 *  @see com.csun.spotr.custom_gui.BalloonItemizedOverlay#onBalloonTap(int, com.google.android.maps.OverlayItem)
+		 */
 		@Override
 		protected boolean onBalloonTap(int index, OverlayItem item) {
-
 			Location spot = new Location("Current Spot");
 			spot.setLongitude(places.get(index).getLongitude());
 			spot.setLatitude(places.get(index).getLatitude());
 
-			if (!item.getTitle().equalsIgnoreCase("My Current Location"))
-			{
+			if (!item.getTitle().equalsIgnoreCase("My Current Location")) {
 				if (spot.distanceTo(lastKnownLocation) < RANGE_LIMIT) {
 					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
 					Bundle extras = new Bundle();
 					extras.putInt("place_id", places.get(index).getId());
-
 					intent.putExtras(extras);
 					startActivityForResult(intent, DO_SPOT_CHALLENGE);
 				}
-				else
-				{
+				else {
 					Toast.makeText(getApplicationContext(), "Keep walking, dude", Toast.LENGTH_SHORT).show();
 				}
 			}
-			else
-			{
+			else {
 				Toast.makeText(getApplicationContext(), "I am here!!", Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		}
 	}
 
-	//this is bullsh*t, useless now, put it here to make my code longer, looks cool.
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon:
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_logout_icon:
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_mainmenu_icon:
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			finish();
-			break;
-
-			//case R.id.options_menu_xml_item_toolbar_icon:
-			//HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.quest_detail_xml_toolbar);
-			//if (toolbar.getVisibility() == View.VISIBLE) {
-			//toolbar.setVisibility(View.GONE);
-			//	}
-			//else {
-			//toolbar.setVisibility(View.VISIBLE);
-			//	}
-			//	break;
-		}
-		return true;
-	}
-
-	public static int metersToRadius(float meters, MapView map, double latitude) {
-		return (int) (map.getProjection().metersToEquatorPixels(meters) * (1 / Math
-				.cos(Math.toRadians(latitude))));
-	}
-	
-	//inner class to draw transparent range_limit of user on the MAPVIEW
-	public class ImpactOverlay extends Overlay {
-
-		private int CIRCLERADIUS = 0;
-		private GeoPoint geopoint;
-		private int myCircleRadius;
-		Point point = new Point();
-		Paint circle = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-		public ImpactOverlay(GeoPoint point, int myRadius) {
-			geopoint = point;
-			CIRCLERADIUS = myRadius; 
-		}
-
-		@Override
-		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-			Projection projection = mapView.getProjection();
-			projection.toPixels(geopoint, point);
-
-			// the circle to mark the spot
-			circle.setColor(Color.parseColor("#33FF33"));
-			circle.setAlpha(122);
-
-			myCircleRadius = metersToRadius(CIRCLERADIUS, mapView,
-					(double) geopoint.getLatitudeE6() / 1000000);
-
-			canvas.drawCircle(point.x, point.y, myCircleRadius, circle);       
-		}
-
-	}
 	@Override
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
-
 		super.onPause();
 	}
 
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-
-	//reset the flag, so that the MAPVIEW will draw range-indicator transparent circle again.
-	@Override 
-	public void onResume() {
 		flagMeButton = false;
-		super.onResume();
+		super.onDestroy();
 	}
 }

@@ -164,11 +164,10 @@ public class PlaceActivity
 	public void goToMainMenu(View button) {
 		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
 	    final Intent intent = new Intent(this, MainMenuActivity.class);
-	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    startActivity (intent);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity(intent);
 	}
 
-	
 	/**
 	 * Retrieve current location. Upon finding the current location, set up
 	 * the refresh button.
@@ -211,7 +210,6 @@ public class PlaceActivity
 		extends AsyncTask<Void, PlaceItem, Boolean> 
 			implements IAsyncTask<PlaceActivity> {
 		
-		private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
 		private WeakReference<PlaceActivity> ref;
 		
 		public GetSpotsTask(PlaceActivity a) {
@@ -281,6 +279,7 @@ public class PlaceActivity
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
+			List<NameValuePair> placeData = new ArrayList<NameValuePair>();
 			// send Google data to our server to update 'spots' table
 			JsonHelper.getJsonObjectFromUrlWithData(UPDATE_GOOGLE_PLACES_URL, constructGooglePlace());
 			

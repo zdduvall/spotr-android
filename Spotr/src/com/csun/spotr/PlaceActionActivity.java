@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,12 +33,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -52,20 +47,17 @@ public class PlaceActionActivity
 	extends Activity 
 		implements IActivityProgressUpdate<Challenge> {
 	
-	private static final 	String 					TAG = "(PlaceActionActivity)";
-	private static final 	String 					GET_CHALLENGES_URL = "http://107.22.209.62/android/get_challenges_from_place.php";
-	private static final	String 					DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
-	private static final 	String 					GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
+	private static final String TAG = "(PlaceActionActivity)";
+	private static final String GET_CHALLENGES_URL = "http://107.22.209.62/android/get_challenges_from_place.php";
+	private static final String DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
+	private static final String GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
 
 	
-	public 					int 					currentPlaceId = 0;
-	public 					int 					currentChosenItem;
-	public 					ListView 				list = null;
-	private					PlaceActionItemAdapter	adapter = null;
-	private 				List<Challenge> 		challengeList = new ArrayList<Challenge>();
-	
-	private 				Button 					buttonMoreInfo;
-
+	public int currentPlaceId = 0;
+	public int currentChosenItem;
+	public ListView list = null;
+	private	PlaceActionItemAdapter	adapter = null;
+	private List<Challenge> challengeList = new ArrayList<Challenge>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,12 +69,9 @@ public class PlaceActionActivity
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 
-
 		// spot more info button
-		buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
+		Button buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
 
-		// Intent intent = new Intent(getApplicationContext(),PlaceInfoActivity.class);
-		
 		buttonMoreInfo.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Bundle extras = new Bundle();
