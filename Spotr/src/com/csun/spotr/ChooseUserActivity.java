@@ -143,12 +143,6 @@ public class ChooseUserActivity
 		adapter.notifyDataSetChanged();
 	}
 
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-	
 	@Override 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -157,6 +151,12 @@ public class ChooseUserActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 	
 	@Override

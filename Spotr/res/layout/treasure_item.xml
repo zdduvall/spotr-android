@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/aluminum1"
+    android:orientation="vertical"
+    android:paddingBottom="25dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="25dp" >
+
+    <TextView
+        android:id="@+id/treasure_xml_textview_name"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#0e1f5b" />
+
+    <ImageView
+        android:id="@+id/treasure_xml_imageview_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/hottub" />
+
+    <TextView
+        android:id="@+id/treasure_xml_textview_company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/aluminum6" />
+
+    <TextView
+        android:id="@+id/treasure_xml_textview_expiration_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/aluminum4" />
+
+    <TextView
+        android:id="@+id/treasure_xml_textview_barcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/aluminum4" />
+
+</LinearLayout>

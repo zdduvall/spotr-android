@@ -31,6 +31,7 @@ public class SettingsActivity extends Activity {
 			}
 
 			public void onNothingSelected(AdapterView<?> arg0) {
+				
 			}
 
 		});

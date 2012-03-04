@@ -40,18 +40,13 @@ public class FriendListActivity
 	extends Activity 
 		implements IActivityProgressUpdate<UserItem> {
 	
-	private static final String 				TAG = "(FriendListActivity)";
-	private static final String 				GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
+	private static final String TAG = "(FriendListActivity)";
+	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
 	
-	private 			 ListView 				listview = null;
-	private 			 boolean 				loading = true;
-	private 			 int 					prevTotal = 0;
-	private final 		 int 					threshHold = 10;
-	private int 								counter = 0;
-	
-	public 				 UserItemAdapter 		adapter = null;
-	public 				 List<UserItem> 		userItemList = new ArrayList<UserItem>();
-	public 				 GetFriendsTask 		task = null;
+	private ListView listview = null;
+	public UserItemAdapter adapter = null;
+	public List<UserItem> userItemList = new ArrayList<UserItem>();
+	public GetFriendsTask task = null;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,7 +56,7 @@ public class FriendListActivity
 		listview = (ListView) findViewById(R.id.friend_list_main_xml_listview_friends);
 
 		// set up list view adapter
-		adapter = new UserItemAdapter(this.getApplicationContext(), userItemList);
+		adapter = new UserItemAdapter(this, userItemList);
 		listview.setAdapter(adapter);
 		listview.setVisibility(View.VISIBLE);
 
@@ -73,40 +68,23 @@ public class FriendListActivity
 		});
 
 		// initially, we load 10 items and show user immediately
-		task = new GetFriendsTask(this, true);
-		task.execute(counter);
+		task = new GetFriendsTask(this, 0);
+		task.execute();
 
 		// handle scrolling event
-		listview.setOnScrollListener(new OnScrollListener() {
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (loading) {
-					if (totalItemCount > prevTotal) {
-						loading = false;
-						prevTotal = totalItemCount;
-					}
-				}
-
-				if (!loading && ((totalItemCount - visibleItemCount) <= (firstVisibleItem + threshHold))) {
-					counter += 10;
-					loading = true;
-					new GetFriendsTask(FriendListActivity.this, false).execute(counter);
-				}
-			}
-
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-			}
-		});
+		listview.setOnScrollListener(new FeedOnScrollListener());
 	}
 
 	private static class GetFriendsTask 
-		extends AsyncTask<Integer, UserItem, Boolean> 
+		extends AsyncTask<Void, UserItem, Boolean> 
 			implements IAsyncTask<FriendListActivity> {
 		
 		private WeakReference<FriendListActivity> ref;
+		private int offset;
 
-		public GetFriendsTask(FriendListActivity a, boolean flag) {
+		public GetFriendsTask(FriendListActivity a, int offset) {
 			attach(a);
+			this.offset = offset;
 		}
 		
 		@Override
@@ -119,14 +97,14 @@ public class FriendListActivity
 		}
 
 		@Override
-		protected Boolean doInBackground(Integer... offsets) {
+		protected Boolean doInBackground(Void... voids) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			
 			// send user id
 			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
 			
 			// send offset
-			data.add(new BasicNameValuePair("offset", Integer.toString(offsets[0])));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
 			
 			// retrieve data from server
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
@@ -245,5 +223,37 @@ public class FriendListActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public class FeedOnScrollListener implements OnScrollListener {
+	    private int visibleThreshold = 10;
+	    private int currentPage = 0;
+	    private int previousTotal = 0;
+	    private boolean loading = true;
+	 
+	    public FeedOnScrollListener() {
+	    	
+	    }
+	    public FeedOnScrollListener(int visibleThreshold) {
+	        this.visibleThreshold = visibleThreshold;
+	    }
+	 
+	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	        if (loading) {
+	            if (totalItemCount > previousTotal) {
+	                loading = false;
+	                previousTotal = totalItemCount;
+	                currentPage += 10;
+	            }
+	        }
+	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+	            new GetFriendsTask(FriendListActivity.this, currentPage).execute();
+	            loading = true;
+	        }
+	    }
+	 
+	    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	    	// TODO : not use
+	    }
 	}
 }

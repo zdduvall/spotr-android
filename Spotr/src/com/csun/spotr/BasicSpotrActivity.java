@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
  * title bar) upon which activities can be built. 
  */
 public class BasicSpotrActivity extends Activity {
+	private static final String TAG = "(BasicSpotrActivity)";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,5 +49,17 @@ public class BasicSpotrActivity extends Activity {
 	    final Intent intent = new Intent(this, MainMenuActivity.class);
 	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    startActivity(intent);
+	}
+	
+	@Override
+	public void onPause() {
+		Log.v(TAG,"I'm paused");
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG,"I'm destroyed");
+		super.onPause();
 	}
 }

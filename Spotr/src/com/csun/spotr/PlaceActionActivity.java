@@ -85,7 +85,7 @@ public class PlaceActionActivity
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
 		buttonTreasure.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), TreasureActivity.class);
+				Intent intent = new Intent(getApplicationContext(), GenerateTreasureActivity.class);
 				startActivity(intent);
 			}
 		});

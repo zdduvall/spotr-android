@@ -41,16 +41,17 @@ public class CommentActivity
 	extends Activity 
 		implements IActivityProgressUpdate<Comment> {
 
-	private static final 	String 					TAG = "(CommentActivity)";
-	private static final 	String 					GET_COMMENTS_URL = "http://107.22.209.62/android/beta_get_comments.php";
-	private static final 	String 					POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
+	private static final String TAG = "(CommentActivity)";
+	private static final String GET_COMMENTS_URL = "http://107.22.209.62/android/beta_get_comments.php";
+	private static final String POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
 
-	private 				ListView 				listview = null;
-	private 				CommentItemAdapter 		adapter = null;
-	private 				List<Comment> 			commentList = new ArrayList<Comment>();
-	private 				int 					activityId;
-	private 				int 					userId;
-	public 				 GetCommentTask 		task = null;
+	private ListView listview = null;
+	private CommentItemAdapter adapter = null;
+	private List<Comment> commentList = new ArrayList<Comment>();
+	private int activityId;
+	private int userId;
+	public GetCommentTask task = null;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
@@ -231,5 +232,17 @@ public class CommentActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public void onPause() {
+		Log.v(TAG,"I'm paused");
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG,"I'm destroyed");
+		super.onPause();
 	}
 }
