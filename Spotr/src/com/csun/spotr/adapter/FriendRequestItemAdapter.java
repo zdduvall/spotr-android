@@ -65,7 +65,7 @@ public class FriendRequestItemAdapter extends BaseAdapter {
 		{
 			holder.textViewMessage.setText(" has replied to your comment.");
 		}
-		else //cuurently assumed reward
+		else //curently assumed reward
 			holder.textViewMessage.setText(" REWARD TIME!");
 		holder.textViewTime.setText(items.get(position).getTime());
 		

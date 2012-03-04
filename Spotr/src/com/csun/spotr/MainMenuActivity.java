@@ -54,7 +54,7 @@ public class MainMenuActivity
 		implements IActivityProgressUpdate<FriendRequestItem> {
 	
 	private static final 	String 						TAG = "(MainMenuActivity)";
-	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/get_friend_requests.php";
+	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/beta_get_friend_requests.php";
 	private static final 	String 						ADD_FRIEND_URL = "http://107.22.209.62/android/add_friend.php";
 	private static final 	String 						IGNORE_FRIEND_URL = "http://107.22.209.62/android/ignore_friend.php";
 	
@@ -78,11 +78,8 @@ public class MainMenuActivity
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				startDialog(position);
-				adapter.notifyDataSetChanged();
-				friendRequestList.remove(position);
-
-			//	listview.getChildAt((int) id).setVisibility(View.GONE);
-			//	listview.invalidate();
+				listview.getChildAt((int) id).setVisibility(View.GONE);
+				listview.invalidate();
 			}
 		});
 	
@@ -182,7 +179,8 @@ public class MainMenuActivity
 								array.getJSONObject(i).getInt("user_requests_tbl_friend_id"),
 								array.getJSONObject(i).getString("users_tbl_username"),
 								array.getJSONObject(i).getString("user_requests_tbl_friend_message"),
-								array.getJSONObject(i).getString("user_requests_tbl_time")));
+								array.getJSONObject(i).getString("user_requests_tbl_time"),
+								array.getJSONObject(i).getInt("user_requests_tbl_type")));
 					}
 				}
 				catch (JSONException e) {
@@ -248,7 +246,8 @@ public class MainMenuActivity
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result == true) {
-				Toast.makeText(ref.get().getApplicationContext(), "Friendship is upto date!", Toast.LENGTH_SHORT).show();
+				//Commented out Toast Text for now
+				//Toast.makeText(ref.get().getApplicationContext(), "Friendship is upto date!", Toast.LENGTH_SHORT).show();
 			}
 			detach();
 		}
@@ -308,8 +307,8 @@ public class MainMenuActivity
 		case 0:
 			return new 
 				AlertDialog.Builder(this)
-					.setTitle("Friend process dialog")
-					.setMessage("Congratulation you have a new friend!")
+					.setTitle("Process dialog")
+					.setMessage("Great!!")
 					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							GetFriendRequestTask task = new GetFriendRequestTask(MainMenuActivity.this);
@@ -334,29 +333,94 @@ public class MainMenuActivity
 	
 	public void startDialog(final int position) {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
+		if(friendRequestList.get(position).getType() == 1)
+		{
 		myAlertDialog.setTitle("Request Dialog");
-		myAlertDialog.setMessage("Accept this message?");
+		myAlertDialog.setMessage("Accept this Friend Request?");
 		myAlertDialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
 				if(friendRequestList.size() != 0)
 				{
 					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-					task.execute(ADD_FRIEND_URL);
+				//	task.execute(ADD_FRIEND_URL);
 				}
 			}
 		});
 		
-		myAlertDialog.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+		myAlertDialog.setNegativeButton("Decline Friend Request", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
 				if(friendRequestList.size() != 0)
 				{
 				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-				task.execute(IGNORE_FRIEND_URL);
+			//	task.execute(IGNORE_FRIEND_URL);
 				}
 			}
 		});
 		myAlertDialog.show();
+		}
+		else if(friendRequestList.get(position).getType() == 2)
+		{	//Custom Dialog for the comment Notification
+			myAlertDialog.setTitle("Comment Dialog");
+			myAlertDialog.setMessage("View Comment Thread?");
+			myAlertDialog.setPositiveButton("Show Me!", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					if(friendRequestList.size() != 0)
+					{
+						Bundle extras = new Bundle();
+						extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+						Intent newIntent = new Intent(getApplicationContext(), ProfileMainActivity.class);
+						newIntent.putExtras(extras);
+						//task.execute(IGNORE_FRIEND_URL);
+						startActivity(newIntent);
+					}
+				}
+			});
+			
+			myAlertDialog.setNegativeButton("Ignore/Hide", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					if(friendRequestList.size() != 0)
+					{
+					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+					//task.execute(IGNORE_FRIEND_URL);
+					}
+				}
+			});
+			myAlertDialog.show();
+		}
+		else
+		{	//For Now everything else will be treated as a reward
+			myAlertDialog.setTitle("Rewards Dialog");
+			myAlertDialog.setMessage("View Rewards");
+			myAlertDialog.setPositiveButton("Lets Go!", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					if(friendRequestList.size() != 0)
+					{
+						Bundle extras = new Bundle();
+						extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+						Intent newIntent = new Intent(getApplicationContext(), RewardActivity.class);
+						newIntent.putExtras(extras);
+						//task.execute(IGNORE_FRIEND_URL);
+						startActivity(newIntent);
+					}
+				}
+			});
+			
+			myAlertDialog.setNegativeButton("Ignore/Hide", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface arg0, int arg1) {
+					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
+					if(friendRequestList.size() != 0)
+					{
+					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+					//task.execute(IGNORE_FRIEND_URL);
+					}
+				}
+			});
+			myAlertDialog.show();
+		}
 	}
 }
