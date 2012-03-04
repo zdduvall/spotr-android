@@ -2,9 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/LoginBackground" >
     
-    <LinearLayout style="@style/LinearLayoutShadow.Login" >
-    
-	    <RelativeLayout style="@style/LoginIntro" >
+<!--     <LinearLayout style="@style/LinearLayoutShadow.Login" > -->
+    <RelativeLayout style="@style/LoginIntroShadow">
+        
+        
+	    <RelativeLayout 
+	        android:id="@+id/login_xml_intro"
+	        style="@style/LoginIntro" >
 	        
 		    <TextView
 		        android:id="@+id/login_xml_tagline"
@@ -13,8 +17,12 @@
 		    <Button
 		        android:id="@+id/login_xml_button_signup"
 		        style="@style/SignUpButton" />
-	    </RelativeLayout>
-    </LinearLayout>
+        </RelativeLayout>
+        <View style="@style/LoginShadowBorderTop" />
+	    <View style="@style/LoginShadowBorderBottom" />
+        
+    </RelativeLayout>
+<!--     </LinearLayout> -->
     
     <LinearLayout style="@style/LoginInputFields" >
         
