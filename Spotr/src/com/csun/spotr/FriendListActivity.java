@@ -103,9 +103,7 @@ public class FriendListActivity
 		extends AsyncTask<Integer, UserItem, Boolean> 
 			implements IAsyncTask<FriendListActivity> {
 		
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<FriendListActivity> ref;
-		private JSONArray userJsonArray = null;
 
 		public GetFriendsTask(FriendListActivity a, boolean flag) {
 			attach(a);
@@ -122,23 +120,28 @@ public class FriendListActivity
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			
 			// send user id
-			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			
 			// send offset
-			clientData.add(new BasicNameValuePair("offset", Integer.toString(offsets[0])));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offsets[0])));
+			
 			// retrieve data from server
-			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, clientData);
-			if (userJsonArray != null) {
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
+			
+			if (array != null) {
 				try {
 					if (ref.get().task.isCancelled()) {
 						return true;
 					}
-					for (int i = 0; i < userJsonArray.length(); ++i) {
+					for (int i = 0; i < array.length(); ++i) {
 						publishProgress(
 							new UserItem(
-								userJsonArray.getJSONObject(i).getInt("users_tbl_id"), 
-								userJsonArray.getJSONObject(i).getString("users_tbl_username"), 
-								userJsonArray.getJSONObject(i).getString("users_tbl_user_image_url")));
+								array.getJSONObject(i).getInt("users_tbl_id"), 
+								array.getJSONObject(i).getString("users_tbl_username"), 
+								array.getJSONObject(i).getString("users_tbl_user_image_url")));
 					}
 				}
 				catch (JSONException e) {
@@ -175,6 +178,7 @@ public class FriendListActivity
 		myAlertDialog.setPositiveButton("Send a message", new DialogInterface.OnClickListener() {
 			// do something when the button is clicked
 			public void onClick(DialogInterface arg0, int arg1) {
+				
 			}
 		});
 
