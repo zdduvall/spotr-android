@@ -44,7 +44,7 @@ public class BasicSpotrActivity extends Activity {
 	public void goToMainMenu(View button) {
 		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
 	    final Intent intent = new Intent(this, MainMenuActivity.class);
-	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    startActivity (intent);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity(intent);
 	}
 }

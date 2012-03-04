@@ -83,9 +83,11 @@ public class MainMenuActivity
 			}
 		});
 	
-		// populating Notification with friend request 
-		 GetFriendRequestTask task = new GetFriendRequestTask(this);
-		 task.execute();
+		/*
+		 * Chan Nguyen (3/3/2012): temporary disable due to crashing other activities
+		 */
+		// GetFriendRequestTask task = new GetFriendRequestTask(this);
+		// task.execute();
 	}
 	
 	@Override

@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,18 +44,15 @@ public class PlaceActivityActivity
 	extends Activity 
 		implements IActivityProgressUpdate<FriendFeedItem> {
 	
-	private static final 	String 					TAG = "(PlaceActivityActivity)";
-	private static final 	String 					GET_PLACE_FEED_URL = "http://107.22.209.62/android/get_activities.php";
-	private static final 	String 					GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
+	private static final String TAG = "(PlaceActivityActivity)";
+	private static final String GET_PLACE_FEED_URL = "http://107.22.209.62/android/get_activities.php";
+	private static final String GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
 	
-	public 					int 					currentPlaceId = 0;
-	private 				ListView 				listview = null;
-	private 				FriendFeedItemAdapter   adapter = null;
-	private 				List<FriendFeedItem> 	placeFeedList = new ArrayList<FriendFeedItem>();
-	private 				boolean 				loading = true;
-	private 				int 					prevTotal = 0;
-	private final 			int 					threshHold = 5;
-	private 				int 					counter = 0;
+	public int currentPlaceId = 0;
+	private ListView listview = null;
+	private FriendFeedItemAdapter adapter = null;
+	private List<FriendFeedItem> placeFeedList = new ArrayList<FriendFeedItem>();
+	private GetPlaceFeedTask task = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,45 +72,32 @@ public class PlaceActivityActivity
 			}
 		});
 		
+		// run initial task
+		task = new GetPlaceFeedTask(this, 0);
+		task.execute();	
 		
-		// initial task
-		new GetPlaceFeedTask(this).execute(counter);
-		
-		// as we scroll down the list, add more items
-		listview.setOnScrollListener(new OnScrollListener() {
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (loading) {
-					if (totalItemCount > prevTotal) {
-						loading = false;
-						prevTotal = totalItemCount;
-					}
-				}
-
-				if (!loading && ((totalItemCount - visibleItemCount) <= (firstVisibleItem + threshHold))) {
-					synchronized (this) {
-						counter += threshHold;
-						loading = true;
-					}
-					// run with another 5
-					new GetPlaceFeedTask(PlaceActivityActivity.this).execute(counter);
-				}
-			}
-
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-			}
-		});
+		/* 
+		 * Handle onScroll event, when the user scroll to see more items,
+		 * we run another task to get more data from the server.
+		 * Since each item occupies 1/3 of the screen, we only load 5 items
+		 * at a time to save time and increase performance.
+		 */
+		listview.setOnScrollListener(new FeedOnScrollListener());
     }
     
     private static class GetPlaceFeedTask 
-    	extends AsyncTask<Integer, FriendFeedItem, Boolean> 
+    	extends AsyncTask<Void, FriendFeedItem, Boolean> 
     		implements IAsyncTask<PlaceActivityActivity> {
     	
-		private List<NameValuePair> datas = new ArrayList<NameValuePair>(); 
 		private WeakReference<PlaceActivityActivity> ref;
+		private int offset; 
 		
-		public GetPlaceFeedTask(PlaceActivityActivity a) {
+		public GetPlaceFeedTask(PlaceActivityActivity a, int offset) {
+			// DEBUG
+    		Log.v(TAG, "GetPlaceFeedTask runs with offset: " + offset);
+    		
 			attach(a);
+			this.offset = offset;
 		}
 		
 		@Override
@@ -125,15 +110,31 @@ public class PlaceActivityActivity
 	    }
 		
 		@Override
-		protected Boolean doInBackground(Integer... offsets) {
-			datas.add(new BasicNameValuePair("spots_id", Integer.toString(ref.get().currentPlaceId)));
-			datas.add(new BasicNameValuePair("offset", Integer.toString(offsets[0])));
+		protected Boolean doInBackground(Void... voids) {
+			// cancel task: check before task run
+			if (isCancelled()) {
+				return true;
+			}
 			
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_PLACE_FEED_URL, datas);
+			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+			data.add(new BasicNameValuePair("spots_id", Integer.toString(ref.get().currentPlaceId)));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_PLACE_FEED_URL, data);
 			JSONArray temp;
+			
+			// cancel task: check after fetching data from the server
+			if (isCancelled()) {
+				return true;
+			}
+			
 			if (array != null) { 
 				try {
 					for (int i = 0; i < array.length(); ++i) { 
+						// cancel task: check while is running
+						if (isCancelled()) {
+							return true;
+						}
+	
 						String userPictureUrl = null;
 						String snapPictureUrl = null;
 						String shareUrl = null;
@@ -173,9 +174,9 @@ public class PlaceActivityActivity
 	    							.likes(array.getJSONObject(i).getInt("activity_tbl_likes"))
 	    								.build();
 						
-						datas.clear();
-    					datas.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-    					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, datas);
+						data.clear();
+    					data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
+    					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
     					Comment firstComment = new Comment(-1, "", "", "", "");
     					if (temp != null) {
     						firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
@@ -263,5 +264,48 @@ public class PlaceActivityActivity
 	public void updateAsyncTaskProgress(FriendFeedItem f) {
 		placeFeedList.add(f);
 		adapter.notifyDataSetChanged();
+	}
+	
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			task.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	public class FeedOnScrollListener implements OnScrollListener {
+	    private int visibleThreshold = 5;
+	    private int currentPage = 0;
+	    private int previousTotal = 0;
+	    private boolean loading = true;
+	 
+	    public FeedOnScrollListener() {
+	    	
+	    }
+	    
+	    public FeedOnScrollListener(int visibleThreshold) {
+	        this.visibleThreshold = visibleThreshold;
+	    }
+	 
+	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	        if (loading) {
+	            if (totalItemCount > previousTotal) {
+	                loading = false;
+	                previousTotal = totalItemCount;
+	                currentPage += 5;
+	            }
+	        }
+	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+	            new GetPlaceFeedTask(PlaceActivityActivity.this, currentPage).execute();
+	            loading = true;
+	        }
+	    }
+	 
+	    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	    	// TODO : not use
+	    }
 	}
 }

@@ -43,14 +43,13 @@ import com.csun.spotr.util.JsonHelper;
 
 public class FriendFeedItemAdapter extends BaseAdapter {
 	private static final String TAG = "(FriendFeedItemAdapter)";
+	private static final String LIKE_ACTIVITY_URL = "http://107.22.209.62/android/do_like_activity.php";
 	private List<FriendFeedItem> items;
 	private static LayoutInflater inflater;
 	public ImageLoader imageLoader;
 	private Context context;
 	private ItemViewHolder holder;
 	private boolean me;
-
-	private static final String LIKE_ACTIVITY_URL = "http://107.22.209.62/android/do_like_activity.php";
 	
 	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items, boolean me) {
 		this.context = context.getApplicationContext();

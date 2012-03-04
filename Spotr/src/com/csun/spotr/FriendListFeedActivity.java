@@ -29,6 +29,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,14 +43,14 @@ public class FriendListFeedActivity
 	extends Activity 
 		implements IActivityProgressUpdate<FriendFeedItem> {
 	
-	private static final 	String 						TAG = "(FriendListFeedActivity)";
-	private static final 	String 						GET_FRIEND_FEED_URL = "http://107.22.209.62/android/get_friend_feeds.php";
-	private static final 	String 						GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
+	private static final String TAG = "(FriendListFeedActivity)";
+	private static final String GET_FRIEND_FEED_URL = "http://107.22.209.62/android/get_friend_feeds.php";
+	private static final String GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
 	
-	private 				List<FriendFeedItem> 		friendFeedList = new ArrayList<FriendFeedItem>();
-	private 				ListView 					listview = null;
-	private 				FriendFeedItemAdapter 		adapter = null;
-	private					GetFriendFeedTask 			task = null;
+	private List<FriendFeedItem> friendFeedList = new ArrayList<FriendFeedItem>();
+	private ListView listview = null;
+	private FriendFeedItemAdapter adapter = null;
+	private	GetFriendFeedTask task = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,20 +67,31 @@ public class FriendListFeedActivity
 			}
 		});
 		
-		task = new GetFriendFeedTask(this);
+		task = new GetFriendFeedTask(this, 0);
 		task.execute();
+		
+		/* Handle onScroll event, when the user scroll to see more items,
+		 * we run another task to get more data from the server.
+		 * Since each item occupies 1/3 of the screen, we only load 5 items
+		 * at a time to save time and increase performance.
+		 */
+		listview.setOnScrollListener(new FeedOnScrollListener());
     }
     
     private static class GetFriendFeedTask 
 		extends AsyncTask<Void, FriendFeedItem, Boolean> 
 			implements IAsyncTask<FriendListFeedActivity> {
 	
-    	private List<NameValuePair> datas = new ArrayList<NameValuePair>(); 
     	private WeakReference<FriendListFeedActivity> ref;
     	private JSONArray array = null;
+    	private int offset;
     	
-    	public GetFriendFeedTask(FriendListFeedActivity a) {
+    	public GetFriendFeedTask(FriendListFeedActivity a, int offset) {
+    		// DEBUG
+    		Log.v(TAG, "GetFriendFeedTask runs with offset: " + offset);
+    		
     		attach(a);
+    		this.offset = offset;
     	}
     	
     	@Override
@@ -92,8 +105,10 @@ public class FriendListFeedActivity
     	
     	@Override
     	protected Boolean doInBackground(Void...voids) {
-    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-    		array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_FEED_URL, datas);
+    		List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+    		data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+    		data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+    		array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_FEED_URL, data);
     		JSONArray temp;
     		if (array != null) { 
     			try {
@@ -143,9 +158,9 @@ public class FriendListFeedActivity
     										.build();
     					
     					
-    					datas.clear();
-    					datas.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-    					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, datas);
+    					data.clear();
+    					data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
+    					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
     					Comment firstComment = new Comment(-1, "", "", "", "");
     					if (temp != null) {
     						firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
@@ -241,5 +256,38 @@ public class FriendListFeedActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public class FeedOnScrollListener implements OnScrollListener {
+	    private int visibleThreshold = 5;
+	    private int currentPage = 0;
+	    private int previousTotal = 0;
+	    private boolean loading = true;
+	 
+	    public FeedOnScrollListener() {
+	    	
+	    }
+	    
+	    public FeedOnScrollListener(int visibleThreshold) {
+	        this.visibleThreshold = visibleThreshold;
+	    }
+	 
+	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	        if (loading) {
+	            if (totalItemCount > previousTotal) {
+	                loading = false;
+	                previousTotal = totalItemCount;
+	                currentPage += 5;
+	            }
+	        }
+	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+	            new GetFriendFeedTask(FriendListFeedActivity.this, currentPage).execute();
+	            loading = true;
+	        }
+	    }
+	 
+	    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	    	// TODO : not use
+	    }
 	}
 }

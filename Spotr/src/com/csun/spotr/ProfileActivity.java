@@ -46,11 +46,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
 
 /**
  * Description:
@@ -75,13 +77,9 @@ public class ProfileActivity
 	private 				Bitmap 					bitmapUserPicture = null;
 	private					GetUserDetailTask		task;
 	private 				int 					userId = -1;
+	
 	private					Button					editButton;
-	private					View					friendsButton1;
-	private					View					friendsButton2;
-	private					View					friendsButton3;
-	private					View					badgeButton1;
-	private					View					badgeButton2;
-	private					View					badgeButton3;
+	
 	private					OnClickListener			friendsClick;
 	private					OnClickListener			badgeClick;
 	private					String					imageLocation;
@@ -92,29 +90,32 @@ public class ProfileActivity
 		setContentView(R.layout.profile);
 		
 		editButton = (Button) findViewById(R.id.profile_xml_button_edit);
-		//Views created to make entire area clickable
-		friendsButton1 = (View) findViewById(R.id.profile_xml_friends_1);
-		friendsButton2 = (View) findViewById(R.id.profile_xml_friends_2);
-		friendsButton3 = (View) findViewById(R.id.profile_xml_friends_3);
-		badgeButton1 = (View) findViewById(R.id.profile_xml_badges_1);
-		badgeButton2 = (View) findViewById(R.id.profile_xml_badges_2);
-		badgeButton3 = (View) findViewById(R.id.profile_xml_badges_3);
 		
-		
+		// Views created to make entire area clickable
+		View friendsButton1 = (View) findViewById(R.id.profile_xml_friends_1);
+		View friendsButton2 = (View) findViewById(R.id.profile_xml_friends_2);
+		View friendsButton3 = (View) findViewById(R.id.profile_xml_friends_3);
+		View badgeButton1 = (View) findViewById(R.id.profile_xml_badges_1);
+		View badgeButton2 = (View) findViewById(R.id.profile_xml_badges_2);
+		View badgeButton3 = (View) findViewById(R.id.profile_xml_badges_3);
 		
 		feedList = new ArrayList<FriendFeedItem>();
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
 		adapter = new FriendFeedItemAdapter(this, feedList, true);
 		listview.setAdapter(adapter);
-		
+		listview.setOnScrollListener(new FeedOnScrollListener());
 		
 		Bundle extrasBundle = getIntent().getExtras();
 		userId = extrasBundle.getInt("user_id");
 
+		// get user detail task for top portion
 		if (userId != -1) {
 			task = new GetUserDetailTask(this, userId);
 			task.execute();
 		}
+		
+		// run another task to display user's feeds
+		new GetUserFeedTask(this, userId, 0).execute();
 		
 		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
 		imageViewUserPicture.setClickable(false);
@@ -142,7 +143,6 @@ public class ProfileActivity
 				Intent intent;
 				intent = new Intent(getApplicationContext(), FriendListMainActivity.class);
 				startActivity(intent);
-				//finish();
 			}
 		});
 		
@@ -158,6 +158,7 @@ public class ProfileActivity
 				//finish();
 			}
 		});
+		
 		badgeButton1.setOnClickListener(badgeClick);
 		badgeButton2.setOnClickListener(badgeClick);
 		badgeButton3.setOnClickListener(badgeClick);
@@ -241,7 +242,6 @@ public class ProfileActivity
 		
 		@Override
     	protected void onProgressUpdate(FriendFeedItem... f) {
-			Log.v(TAG, "Did you go here?");
     		ref.get().updateAsyncTaskProgress(f[0]);
         }
 
@@ -257,12 +257,10 @@ public class ProfileActivity
 			// user's detail info
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_DETAIL_URL, data);
 			
-			// user's feeds
-			JSONArray feedArray = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_FEEDS, data);
-			
-			// comments in user's feed
-			JSONArray commentArray;
-			
+			if (isCancelled()) {
+				return null;
+			}
+				
 			User user = null;
 			try {
 				user = new User.Builder( 
@@ -279,8 +277,170 @@ public class ProfileActivity
 							.numBadges(array.getJSONObject(0).getInt("num_badges"))
 								.build();
 				
+			}
+			catch (JSONException e) {
+				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data" + e.toString());
+			}
+			return user;
+		}
+		
+		@Override
+		protected void onPostExecute(final User u) {
+			if (u != null) {
+				ref.get().updateUserView(u);
+			}
+			detach();
+		}
+
+		public void attach(ProfileActivity a) {
+			ref = new WeakReference<ProfileActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+	}
+	
+	private static class UploadPictueTask 
+    	extends AsyncTask<Void, Integer, String> 
+    		implements IAsyncTask<ProfileActivity> {
+    	
+    	private WeakReference<ProfileActivity> ref;
+    	private String picturebyteCode;
+    	
+    	public UploadPictueTask(ProfileActivity a, String pbc) {
+    		attach(a);
+    		picturebyteCode = pbc;
+    	}
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		
+    	}
+    
+    	@Override
+    	protected String doInBackground(Void... voids) {
+    		List<NameValuePair> datas = new ArrayList<NameValuePair>();
+    		// send encoded data to server
+    		datas.add(new BasicNameValuePair("image", picturebyteCode));
+    		// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
+    		// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
+    		datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
+    		
+    		// send the rest of data
+    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+    		
+    		
+    		// get JSON to check result
+    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
+    		String result = "";
+    		try {
+    			result = json.getString("result");
+    		} 
+    		catch (JSONException e) {
+    			Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+    		}
+    		return result;
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(String result) {
+    		detach();
+    	}
+    	
+    	public void attach(ProfileActivity a) {
+    		ref = new WeakReference<ProfileActivity>(a);
+    	}
+    	
+    	public void detach() {
+    		ref.clear();
+    	}
+    }
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.profile_setting_menu, menu);
+		return true;
+	}
+
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+			case R.id.options_menu_xml_item_setting_icon:
+				intent = new Intent("com.csun.spotr.SettingsActivity");
+				startActivity(intent);
+				finish();
+				break;
+			case R.id.options_menu_xml_item_logout_icon:
+				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
+				editor.clear();
+				editor.commit();
+				intent = new Intent("com.csun.spotr.LoginActivity");
+				startActivity(intent);
+				finish();
+				break;
+			case R.id.options_menu_xml_item_mainmenu_icon:
+				intent = new Intent("com.csun.spotr.MainMenuActivity");
+				startActivity(intent);
+				finish();
+				break;
+			case R.id.profile_setting_menu_xml_edit:
+				intent = new Intent("com.csun.spotr.ProfileEditActivity");
+				Bundle extras = new Bundle();
+				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
+				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
+				extras.putString("imageUrl", imageLocation);
+				intent = new Intent("com.csun.spotr.ProfileEditActivity");
+				intent.putExtras(extras);
+				startActivity(intent);
+				finish();
+				break;
+		}
+		return true;
+	}
+	
+	private static class GetUserFeedTask 
+		extends AsyncTask<Void, FriendFeedItem, Boolean> 
+			implements IAsyncTask<ProfileActivity> {
+		
+		private WeakReference<ProfileActivity> ref;
+		private int userId;
+		private int offset;
+		
+		public GetUserFeedTask(ProfileActivity a, int userId, int offset) {
+			this.userId = userId;
+			this.offset = offset;
+			attach(a);
+		}
+		
+		@Override
+    	protected void onProgressUpdate(FriendFeedItem... f) {
+    		ref.get().updateAsyncTaskProgress(f[0]);
+        }
+
+		@Override
+		protected Boolean doInBackground(Void...voids) {
+			if (isCancelled()) {
+				return false;
+			}
+			
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			
+			// user's feeds
+			JSONArray feedArray = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_FEEDS, data);
+			
+			// comments in user's feed
+			JSONArray commentArray;
+			
+			try {
 				if (isCancelled()) {
-					return user;
+					return false;
 				}
 				
 				if (feedArray != null) {
@@ -348,14 +508,11 @@ public class ProfileActivity
 			catch (JSONException e) {
 				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data" + e.toString());
 			}
-			return user;
+			return true;
 		}
 		
 		@Override
-		protected void onPostExecute(final User u) {
-			if (u != null) {
-				ref.get().updateUserView(u);
-			}
+		protected void onPostExecute(Boolean result) {
 			detach();
 		}
 
@@ -368,118 +525,6 @@ public class ProfileActivity
 		}
 	}
 	
-	private static class UploadPictueTask 
-    	extends AsyncTask<Void, Integer, String> 
-    		implements IAsyncTask<ProfileActivity> {
-    	
-    	private WeakReference<ProfileActivity> ref;
-    	private String picturebyteCode;
-    	
-    	public UploadPictueTask(ProfileActivity a, String pbc) {
-    		attach(a);
-    		picturebyteCode = pbc;
-    	}
-    	
-    	@Override
-    	protected void onPreExecute() {
-    		
-    	}
-    
-    	@Override
-    	protected String doInBackground(Void... voids) {
-    		List<NameValuePair> datas = new ArrayList<NameValuePair>();
-    		// send encoded data to server
-    		datas.add(new BasicNameValuePair("image", picturebyteCode));
-    		
-    		// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
-    		// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
-    		datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
-    		
-    		// send the rest of data
-    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-    		
-    		
-    		// get JSON to check result
-    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
-    		String result = "";
-    		try {
-    			result = json.getString("result");
-    		} 
-    		catch (JSONException e) {
-    			Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
-    		}
-    		return result;
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(String result) {
-    		if (result.equals("success")) {
-    			/*
-    			Toast.makeText(ref.get().getApplicationContext(), "Upload picture done!", Toast.LENGTH_SHORT).show();
-    			Intent intent = new Intent();
-    			intent.setData(Uri.parse("done"));
-    			ref.get().setResult(RESULT_OK, intent);
-    			ref.get().finish();
-    			*/
-    		}
-    		
-    		detach();
-    	}
-    	
-    	public void attach(ProfileActivity a) {
-    		ref = new WeakReference<ProfileActivity>(a);
-    	}
-    	
-    	public void detach() {
-    		ref.clear();
-    	}
-    }
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.profile_setting_menu, menu);
-		return true;
-	}
-
-    
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.profile_setting_menu_xml_edit:
-				intent = new Intent("com.csun.spotr.ProfileEditActivity");
-				Bundle extras = new Bundle();
-				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
-				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
-				extras.putString("imageUrl", imageLocation);
-				intent = new Intent("com.csun.spotr.ProfileEditActivity");
-				intent.putExtras(extras);
-				startActivity(intent);
-				finish();
-				break;
-		}
-		return true;
-	}
 	
 	@Override
     public void onPause() {
@@ -511,24 +556,6 @@ public class ProfileActivity
 		imageLoader.displayImage(u.getImageUrl(), imageViewUserPicture);
 		imageLocation = u.getImageUrl();
 		
-		imageViewUserPicture.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				/*
-				Intent intent;
-				Bundle extras = new Bundle();
-				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
-				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
-				extras.putString("imageUrl", imageLocation);
-				intent = new Intent("com.csun.spotr.ProfileEditActivity");
-				intent.putExtras(extras);
-				startActivity(intent);
-				finish();
-				*/
-				//startDialog();
-			}
-		});
-		
 		TextView textViewName = (TextView) findViewById(R.id.profile_xml_textview_profilename);
 		textViewName.setText(u.getUsername());
 		
@@ -556,5 +583,38 @@ public class ProfileActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public class FeedOnScrollListener implements OnScrollListener {
+	    private int visibleThreshold = 5;
+	    private int currentPage = 0;
+	    private int previousTotal = 0;
+	    private boolean loading = true;
+	 
+	    public FeedOnScrollListener() {
+	    	
+	    }
+	    
+	    public FeedOnScrollListener(int visibleThreshold) {
+	        this.visibleThreshold = visibleThreshold;
+	    }
+	 
+	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	        if (loading) {
+	            if (totalItemCount > previousTotal) {
+	                loading = false;
+	                previousTotal = totalItemCount;
+	                currentPage += 5;
+	            }
+	        }
+	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+	            new GetUserFeedTask(ProfileActivity.this, userId, currentPage).execute();
+	            loading = true;
+	        }
+	    }
+	 
+	    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	    	// TODO : not use
+	    }
 	}
 }
