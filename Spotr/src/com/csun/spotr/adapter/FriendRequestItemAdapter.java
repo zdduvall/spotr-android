@@ -57,6 +57,10 @@ public class FriendRequestItemAdapter extends BaseAdapter {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
 		holder.textViewOrder.setText(items.get(position).getFriendName());
+		/*	Author: Ed
+		 *  if/else ladder. items.get(position).getType() returns an Integer value. Notification list
+		 *  message will be patterned to the notification type. Strings are placeholders and can change at any time
+		 */
 		if(items.get(position).getType() == 1)
 		{
 			holder.textViewMessage.setText(" has sent you a request \"" + items.get(position).getMessage() + "\"");
@@ -65,7 +69,7 @@ public class FriendRequestItemAdapter extends BaseAdapter {
 		{
 			holder.textViewMessage.setText(" has replied to your comment.");
 		}
-		else //curently assumed reward
+		else //currently assumed reward
 			holder.textViewMessage.setText(" REWARD TIME!");
 		holder.textViewTime.setText(items.get(position).getTime());
 		

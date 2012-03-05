@@ -42,8 +42,11 @@ public class CommentActivity
 		implements IActivityProgressUpdate<Comment> {
 
 	private static final String TAG = "(CommentActivity)";
-	private static final String GET_COMMENTS_URL = "http://107.22.209.62/android/beta_get_comments.php";
+	
 	private static final String POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
+	private static final String GET_COMMENTS_URL = "http://107.22.209.62/android/get_comments.php";
+	// Commented out original to work with beta which also updates the user_requests table - ED
+	//private static final String POST_COMMENT_URL = "http://107.22.209.62/android/do_post_comment.php";
 
 	private ListView listview = null;
 	private CommentItemAdapter adapter = null;

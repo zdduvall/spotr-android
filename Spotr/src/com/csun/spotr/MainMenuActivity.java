@@ -55,6 +55,8 @@ public class MainMenuActivity
 	
 	private static final 	String 						TAG = "(MainMenuActivity)";
 	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/beta_get_friend_requests.php";
+//	Commented out original in order to test/use beta to update user_request notification list
+//	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/get_friend_requests.php";
 	private static final 	String 						ADD_FRIEND_URL = "http://107.22.209.62/android/add_friend.php";
 	private static final 	String 						IGNORE_FRIEND_URL = "http://107.22.209.62/android/ignore_friend.php";
 	
@@ -86,8 +88,8 @@ public class MainMenuActivity
 		/*
 		 * Chan Nguyen (3/3/2012): temporary disable due to crashing other activities
 		 */
-		// GetFriendRequestTask task = new GetFriendRequestTask(this);
-		// task.execute();
+		 GetFriendRequestTask task = new GetFriendRequestTask(this);
+		 task.execute();
 	}
 	
 	@Override
@@ -341,24 +343,26 @@ public class MainMenuActivity
 		{
 		myAlertDialog.setTitle("Request Dialog");
 		myAlertDialog.setMessage("Accept this Friend Request?");
-		myAlertDialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+		myAlertDialog.setPositiveButton("Accept Request", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
 				if(friendRequestList.size() != 0)
 				{
 					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-				//	task.execute(ADD_FRIEND_URL);
+				// Commented out for testing purposes - ED
+					task.execute(ADD_FRIEND_URL);
 				}
 			}
 		});
 		
-		myAlertDialog.setNegativeButton("Decline Friend Request", new DialogInterface.OnClickListener() {
+		myAlertDialog.setNegativeButton("Decline Request", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
 				if(friendRequestList.size() != 0)
 				{
 				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-			//	task.execute(IGNORE_FRIEND_URL);
+				// Commented out for testing purposes - ED
+					task.execute(IGNORE_FRIEND_URL);
 				}
 			}
 		});
@@ -377,7 +381,8 @@ public class MainMenuActivity
 						extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
 						Intent newIntent = new Intent(getApplicationContext(), ProfileMainActivity.class);
 						newIntent.putExtras(extras);
-						//task.execute(IGNORE_FRIEND_URL);
+						// Commented out for testing purposes - ED
+						task.execute(IGNORE_FRIEND_URL);
 						startActivity(newIntent);
 					}
 				}
@@ -389,7 +394,8 @@ public class MainMenuActivity
 					if(friendRequestList.size() != 0)
 					{
 					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-					//task.execute(IGNORE_FRIEND_URL);
+					// Commented out for testing purposes - ED
+					task.execute(IGNORE_FRIEND_URL);
 					}
 				}
 			});
@@ -408,7 +414,8 @@ public class MainMenuActivity
 						extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
 						Intent newIntent = new Intent(getApplicationContext(), RewardActivity.class);
 						newIntent.putExtras(extras);
-						//task.execute(IGNORE_FRIEND_URL);
+						// Commented out for testing purposes - ED
+						task.execute(IGNORE_FRIEND_URL);
 						startActivity(newIntent);
 					}
 				}
@@ -420,7 +427,8 @@ public class MainMenuActivity
 					if(friendRequestList.size() != 0)
 					{
 					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-					//task.execute(IGNORE_FRIEND_URL);
+					// Commented out for testing purposes - ED
+					task.execute(IGNORE_FRIEND_URL);
 					}
 				}
 			});

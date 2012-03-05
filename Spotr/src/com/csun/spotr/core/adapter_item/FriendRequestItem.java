@@ -14,7 +14,12 @@ public class FriendRequestItem {
 		this.type = 1;
 	}
 	/* Little test area. Adding a type variable
-	 * Author: Edgardo C.*/
+	 * Author: Edgardo C.
+	 * Added a new int type which holds the type of the notification
+	 * 		(1) Friend request	(2)	Comment	(3) Awward [currently assumed]
+	 * Added a new constructor with an additional field that takes in type.
+	 * Added a getType() function which returns the type of the notification.
+	 */
 	private int type;
 	public FriendRequestItem(int friendId, String friendName, String message, String time, int type)
 	{
