@@ -2,17 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@color/aluminum1"
-    >
-
+    android:background="#181818"
+    android:orientation="vertical">
+    <TextView 
+	    android:text="Badges Earned"
+	    android:textSize="16dp"
+	    android:gravity="center"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"/>
     <GridView
-        android:id="@+id/badge_xml_gridview"
+        android:id="@+id/badge_xml_gridview_userbadges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
     	android:stretchMode="columnWidth"
     	android:gravity="center"
+        android:numColumns="4">
+    </GridView>
+    <TextView 
+	    android:text="Locked Badges"
+	    android:background="#000000"
+	    android:textSize="16dp"
+	    android:gravity="center"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"/>
+    <GridView
+        android:id="@+id/badge_xml_gridview_missingbadges"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    	android:stretchMode="columnWidth"
+    	android:background="#000000"
+    	android:gravity="center"
         android:numColumns="4" >
     </GridView>
-			
 </LinearLayout>

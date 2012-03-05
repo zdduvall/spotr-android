@@ -47,6 +47,12 @@ public class RewardViewActivity extends Activity {
 		Button buttonConvert = (Button) findViewById(R.id.reward_view_xml_button_convert);
 		
 		final Bundle extras = getIntent().getExtras();
+		if(extras.getInt("points") == -1) {
+			buttonConvert.setVisibility(View.GONE);
+			textViewPoints.setVisibility(View.GONE);
+			textViewDate.setVisibility(View.GONE);
+		}
+		
 		textViewName.setText(extras.getString("name"));
 		textViewDescription.setText(extras.getString("description"));
 		textViewDate.setText(extras.getString("date"));
