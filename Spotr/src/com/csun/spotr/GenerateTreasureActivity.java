@@ -1,13 +1,18 @@
 package com.csun.spotr;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.csun.spotr.core.Treasure;
+import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.ImageLoader;
@@ -36,12 +41,19 @@ public class GenerateTreasureActivity
 	private static final String TAG = "(TreasureActivity)";
 	private static final String GET_RANDOM_TREASURE_URL = "http://107.22.209.62/android/get_treasure.php";
 
+	private int placeId;
+	private int userId;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.generate_treasure);
 		
+		Bundle extrasBundle = getIntent().getExtras();
+		placeId = extrasBundle.getInt("place_id");
+		userId = CurrentUser.getCurrentUser().getId();
+		
 		// get treasure 
-		new GetRandomTreasureTask(this).execute();
+		new GetRandomTreasureTask(this, userId, placeId).execute();
 	}
 	
 	private class GetRandomTreasureTask 
@@ -49,9 +61,13 @@ public class GenerateTreasureActivity
 			implements IAsyncTask<GenerateTreasureActivity> {
 		
 		private WeakReference<GenerateTreasureActivity> ref;
+		private int placeId;
+		private int userId;
 
-		public GetRandomTreasureTask(GenerateTreasureActivity a) {
+		public GetRandomTreasureTask(GenerateTreasureActivity a, int userId, int placeId) {
 			attach(a);
+			this.userId = userId;
+			this.placeId = placeId;
 		}
 
 		@Override
@@ -66,7 +82,11 @@ public class GenerateTreasureActivity
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			JSONArray array = JsonHelper.getJsonArrayFromUrl(GET_RANDOM_TREASURE_URL);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("spot_id", Integer.toString(placeId)));
+			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
+			
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_RANDOM_TREASURE_URL, data);
 			if (array != null) {
 				try {
 					publishProgress(
