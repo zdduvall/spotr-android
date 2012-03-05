@@ -24,7 +24,7 @@
     <!-- WHAT IS THIS I DON'T EVEN -->
 
 
-    <!-- Title Bar Helper -->
+    <!-- Title Bar Helper-->
     <style name="CustomWindowTitleBackground">
         <item name="android:background">@null</item>
     </style>
@@ -33,9 +33,9 @@
         <item name="android:windowTitleSize">45dp</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
-    <!-- End Title Bar Helper -->
-
-
+    <!-- End Title Bar Helper-->
+    
+    
     <!-- Title Bars (Basic) -->
     <style name="TitleBarBackground">
         <item name="android:layout_width">match_parent</item>
@@ -43,16 +43,16 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">@drawable/rectangle_gradient_aluminum6</item>
+        <item name="android:background">@drawable/rectangle_gradient_al6_al5d5</item>
     </style>
-
+    
     <style name="TitleBarNav">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-
+    
     <style name="TitleBarHomeContainer">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -62,7 +62,7 @@
         <item name="android:clickable">true</item>
         <item name="android:onClick">goToMainMenu</item>
     </style>
-
+    
     <style name="TitleBarHomeBeacon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -73,7 +73,7 @@
         <item name="android:scaleType">fitXY</item>
         <item name="android:visibility">invisible</item>
     </style>
-
+    
     <style name="TitleBarLogo">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -83,7 +83,7 @@
         <item name="android:src">@drawable/ic_logo_default</item>
         <item name="android:scaleType">fitXY</item>
     </style>
-
+    
     <style name="TitleBarTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -94,19 +94,19 @@
         <item name="android:textSize">21sp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
-
+    
     <style name="TitleBarActions">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">right|center_vertical</item>
     </style>
-
+    
     <style name="VerticalSpacer.TitleBar">
         <item name="android:layout_width">2px</item>
         <item name="android:background">@drawable/vertical_divider</item>
     </style>
-
+    
     <style name="TitleBarButton">
         <item name="android:layout_width">55dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -144,42 +144,38 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">40dp</item>
         <item name="android:background">@color/vimeo_grey</item>
     </style>
-
-    <style name="LinearLayoutShadow.Login">
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
-    <style name="LoginIntro">
+        
+    <style name="LoginSignUpContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/rectangle_rounded_vimeo_grey</item>
-        <item name="android:padding">15dp</item>
+    </style>
+        
+    <style name="LoginSignUpContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rectangle_gradient_al6_al5d5</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">28dp</item>
+        <item name="android:paddingBottom">15dp</item>
     </style>
 
-    <style name="TagLine">
+    <style name="LoginTagLine">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/login_xml_textview_tagline_str</item>
-        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textColor">@color/aluminum1</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:lineSpacingExtra">15dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">20dp</item>
     </style>
-
-    <style name="SignUpButton">
+    
+    <style name="LoginScreenButton">
         <item name="android:layout_width">130dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_marginRight">30dp</item>
-        <item name="android:layout_alignBottom">@id/login_xml_tagline</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:background">@drawable/button_orange</item>
-        <item name="android:text">@string/login_xml_button_signup_str</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
@@ -188,53 +184,66 @@
         <item name="android:shadowDx">-0.5</item>
         <item name="android:shadowDy">-0.6</item>
     </style>
+    
+    <style name="LoginScreenButton.SignUp">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+        <item name="android:layout_alignBottom">@id/login_xml_tagline</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/button_pink</item>
+        <item name="android:text">@string/login_xml_button_signup_str</item>
+    </style>
+    
+    <style name="LoginShadowBorderTop">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">6dp</item>
+        <item name="android:layout_alignTop">@id/login_xml_signup_content</item>
+        <item name="android:background">@drawable/shadow_border_top</item>
+    </style>
 
+    <style name="LoginShadowBorderBottom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">7dp</item>
+        <item name="android:layout_alignBottom">@id/login_xml_signup_content</item>
+        <item name="android:background">@drawable/shadow_border_bottom</item>
+    </style>
+  
     <style name="LoginInputFields">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
         <item name="android:layout_marginTop">50dp</item>
         <item name="android:layout_marginBottom">25dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
-
-    <style name="LoginEmail">
+    
+    <style name="LoginInput">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/rectangle_rounded_tops</item>
         <item name="android:singleLine">true</item>
-        <item name="android:inputType">textEmailAddress</item>
         <item name="android:textColor">@color/aluminum6</item>
-        <item name="android:hint">@string/login_xml_textview_email_str</item>
         <item name="android:textColorHint">#ffacb6c2</item>
+        
     </style>
-
-    <style name="LoginPassword">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+            
+    <style name="LoginInput.Email">
+        <item name="android:background">@drawable/rectangle_rounded_tops</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:hint">@string/login_xml_textview_email_str</item>
+    </style>
+    
+    <style name="LoginInput.Password">
         <item name="android:layout_marginTop">-2dp</item>
         <item name="android:background">@drawable/rectangle_rounded_bottoms</item>
-        <item name="android:singleLine">true</item>
         <item name="android:inputType">textPassword</item>
-        <item name="android:textColor">@color/aluminum6</item>
         <item name="android:hint">@string/login_xml_textview_password_str</item>
-        <item name="android:textColorHint">#ffacb6c2</item>
     </style>
-
-    <style name="LogInButton">
-        <item name="android:layout_width">130dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        
+    <style name="LoginScreenButton.Login">
         <item name="android:background">@drawable/button_blue</item>
         <item name="android:text">@string/login_xml_button_login_str</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:shadowColor">@android:color/black</item>
-        <item name="android:shadowRadius">1.2</item>
-        <item name="android:shadowDx">-0.5</item>
-        <item name="android:shadowDy">-0.6</item>
-    </style>
+    </style>            
     <!-- End Login -->
 
 
@@ -244,8 +253,8 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_above">@id/spacer</item>
         <item name="android:background">@drawable/cloudy_sky</item>
-    </style>
-
+    </style>    
+    
     <style name="MainMenuButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -257,25 +266,25 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:background">@null</item>
     </style>
-
+    
     <style name="MainMenuButton.Me">
         <item name="android:drawableTop">@drawable/ic_main_menu_me</item>
         <item name="android:text">@string/main_menu_btn_me</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.Map">
         <item name="android:drawableTop">@drawable/ic_main_menu_map</item>
         <item name="android:text">@string/main_menu_btn_map</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.Friends">
         <item name="android:drawableTop">@drawable/ic_main_menu_friends</item>
         <item name="android:text">@string/main_menu_btn_friends</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.Quests">
         <item name="android:drawableTop">@drawable/ic_main_menu_quests</item>
         <item name="android:text">@string/main_menu_btn_quests</item>
@@ -287,31 +296,31 @@
         <item name="android:text">@string/main_menu_btn_spots</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.Ping">
         <item name="android:drawableTop">@drawable/ic_main_menu_ping</item>
         <item name="android:text">@string/main_menu_btn_ping</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.SpotIt">
         <item name="android:drawableTop">@drawable/ic_main_menu_spot_it</item>
         <item name="android:text">@string/main_menu_btn_spot_it</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.Inventory">
         <item name="android:drawableTop">@drawable/ic_main_menu_inventory</item>
         <item name="android:text">@string/main_menu_btn_inventory</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="MainMenuButton.Inbox">
         <item name="android:drawableTop">@drawable/ic_main_menu_inbox</item>
         <item name="android:text">@string/main_menu_btn_inbox</item>
         <item name="android:onClick">getActivity</item>
     </style>
-
+    
     <style name="NotificationHandle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">25dp</item>
@@ -319,8 +328,8 @@
         <item name="android:background">@color/aluminum4</item>
     </style>
     <!-- End Main Menu -->
-
-
+    
+    
     <!-- Me -->
     <!-- Me: Leaderboard List -->
     <style name="RankListing">
@@ -400,38 +409,36 @@
         <item name="android:textStyle">bold</item>
     </style>
     <!-- End Me -->
-
-
+    
+    
     <!-- Map -->
-
-
+    
     <!-- Note: style of clickable version defined programatically -->
     <style name="TitleBarButton.MapLocate">
         <item name="android:src">@drawable/ic_map_locate_disabled</item>
         <item name="android:clickable">false</item>
     </style>
-
+    
     <!-- Note: style of clickable version defined programatically -->
     <style name="TitleBarButton.MapPlaces">
         <item name="android:src">@drawable/ic_map_places_disabled</item>
         <item name="android:clickable">false</item>
-    </style>
+    </style>    
     <!-- End Map -->
-
-
-    <!-- Friends: Friends tab -->
+    
+    <!-- Friends: Friends tab -->    
     <style name="LinearLayoutShadow.FriendsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
     </style>
-
+    
     <style name="UserItemRow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">7dp</item>
     </style>
-
+    
     <style name="UserItemAvatar">
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
@@ -440,17 +447,16 @@
         <item name="android:gravity">center</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
-
+    
     <style name="UserItemName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textColor">@color/aluminum6</item>        
     </style>
     <!-- End Friends: Friends tab -->
-
-
+    
     <!-- Friends: Chatter tab -->
     <style name="FriendListFeedBackground">
         <item name="android:layout_width">match_parent</item>
@@ -458,16 +464,15 @@
         <item name="android:orientation">vertical</item>
         <item name="android:background">@android:color/white</item>
     </style>
-
+    
     <style name="FriendListFeedActual">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@android:color/white</item>
     </style>
     <!-- End Friends: Chatter tab -->
-
-
-    <!-- Friends: Find tab -->
+    
+    <!-- Friends: Find tab-->
     <style name="FriendSearchBarContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -476,33 +481,32 @@
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
-
+    
     <style name="FriendSearchBar">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">3</item>
         <item name="android:singleLine">true</item>
     </style>
-
+    
     <style name="FriendSearchButton">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:text">@string/friend_search_button</item>
+        <item name="android:text">@string/friend_search_button</item>        
     </style>
-
+    
     <style name="LinearLayoutShadow.FriendsFindList">
         <item name="android:layout_height">match_parent</item>
     </style>
-    <!-- End Friends: Find tab -->
+    <!-- End Friends: Find tab-->
 
-
-    <!-- Spots: list of nearby places -->
+    <!-- Spots: list of nearby places -->   
     <style name="TitleBarButton.SpotsRefresh">
         <item name="android:src">@drawable/ic_refresh_disabled</item>
         <item name="android:clickable">false</item>
     </style>
-
+    
     <style name="SpotrGeneralBackground.Place">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -510,7 +514,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/aluminum1</item>
     </style>
-
+    
     <style name="SpotsSearchBarLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -518,13 +522,13 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/aluminum5</item>
     </style>
-
+    
     <style name="SpotsSearchBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:singleLine">true</item>
     </style>
-
+    
     <style name="SpotsResultsLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -532,7 +536,7 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/aluminum5</item>
     </style>
-
+    
     <style name="SpotsResultsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -540,8 +544,7 @@
     </style>
     <!-- End Spots: list of nearby places -->
 
-
-    <!-- Spots: Missions tab -->
+    <!-- Spots: Missions tab-->    
     <style name="LinearLayoutShadow.SpotsMissionsShortInfoContainer">
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -584,6 +587,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
 
     <style name="LinearLayoutMissionsShortInfoMisc">
         <item name="android:layout_width">0px</item>
@@ -669,7 +673,8 @@
         <item name="android:paddingRight">15dp</item>
     </style>
     <!-- End Spots: Missions tab -->
-
+    
+    
     <style name="ToolbarButton">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -719,19 +724,18 @@
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
     </style>
-
-    <!-- Ping -->
+    
+    <!-- Ping -->      
     <!-- Note: style of clickable version defined programatically -->
     <style name="TitleBarButton.Ping">
         <item name="android:src">@drawable/ic_ping_disabled</item>
         <item name="android:clickable">false</item>
     </style>
-
+    
     <style name="TitleBarButton.PingFriends">
         <item name="android:src">@drawable/ic_ping_friends</item>
     </style>
     <!-- End Ping -->
-
 
     <!-- Comment Button -->
     <style name="CommentButton">
@@ -764,6 +768,7 @@
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
     </style>
+
 
     <style name="Animations" />
 
@@ -820,12 +825,15 @@
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
         <item name="android:background">@color/aluminum1</item>
+        
     </style>
-
     <style name="LinearLayoutShadow">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
         <item name="android:background">@drawable/shadow</item>
     </style>
 
@@ -834,7 +842,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@drawable/rectangle_rounded_white</item>
     </style>
-
+    
     <style name="RoundedRectListView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -842,7 +850,7 @@
         <item name="android:dividerHeight">1dp</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:background">@drawable/rectangle_rounded_white</item>
+        <item name="android:background">@drawable/rectangle_rounded_white</item>        
     </style>
 
     <style name="VerticalSpacer">
@@ -850,14 +858,15 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/aluminum2</item>
     </style>
-
+    
+    
     <style name="MapView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:apiKey">07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"</item>
         <item name="android:clickable">true</item>
     </style>
-
+    
     <!-- End Misc -->
 
 </resources>

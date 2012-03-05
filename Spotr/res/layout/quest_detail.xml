@@ -126,7 +126,7 @@
         android:id="@+id/quest_detail_xml_map"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"
+        android:apiKey="@string/google_api_key"
         android:clickable="true"
         android:paddingLeft="4dp"
         android:paddingRight="4dp" />

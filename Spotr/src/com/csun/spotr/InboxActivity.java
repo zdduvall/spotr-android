@@ -62,7 +62,7 @@ public class InboxActivity
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		listview = (ListView) findViewById(R.id.inbox_xml_listview);
 		
-		adapter = new InboxItemAdapter(this.getApplicationContext(), inboxList);
+		adapter = new InboxItemAdapter(this, inboxList);
 		listview.setAdapter(adapter);
 
 		final Button buttonCompose = (Button) findViewById(R.id.inbox_xml_button_compose);

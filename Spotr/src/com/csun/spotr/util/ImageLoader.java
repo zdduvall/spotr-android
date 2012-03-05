@@ -27,7 +27,7 @@ public class ImageLoader {
 	private FileCache fileCache;
 	private Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
 	private ExecutorService executorService;
-	private final int stubId = R.drawable.ic_launcher;
+	private final int stubId = R.drawable.user_default;
 
 	public ImageLoader(Context context) {
 		fileCache = new FileCache(context);

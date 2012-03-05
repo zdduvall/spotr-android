@@ -12,7 +12,6 @@
         android:layout_height="50dp"
         android:layout_marginRight="6dp"
         android:scaleType="centerCrop"
-        android:background="@drawable/user_default"
         android:src="@drawable/user_default" />
 
     <LinearLayout
