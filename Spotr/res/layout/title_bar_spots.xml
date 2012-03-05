@@ -3,31 +3,31 @@
     style="@style/TitleBarBackground" >
 
     <!-- Navigation/Title -->
+
     <LinearLayout style="@style/TitleBarNav" >
-        
+
         <LinearLayout
             android:id="@+id/title_bar_home_container"
             style="@style/TitleBarHomeContainer" >
-            
+
             <ImageView
                 android:id="@+id/title_bar_home_beacon"
                 style="@style/TitleBarHomeBeacon" />
-            
-	        <ImageView style="@style/TitleBarLogo" />
-	
-	    </LinearLayout>
+
+            <ImageView style="@style/TitleBarLogo" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/title_bar_title"
             style="@style/TitleBarTitle" />
-        
     </LinearLayout>
 
     <!-- Buttons -->
+
     <LinearLayout
         android:id="@+id/title_bar_actions"
         style="@style/TitleBarActions" >
-        
+
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton

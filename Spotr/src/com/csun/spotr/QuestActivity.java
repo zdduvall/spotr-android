@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -38,13 +39,13 @@ public class QuestActivity
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<QuestItem> {
 	
-	private static final 	String 				TAG = "(QuestActivity)";
-	private static final 	String 				GET_QUEST_URL = "http://107.22.209.62/android/get_quest.php";
+	private static final String TAG = "(QuestActivity)";
+	private static final String GET_QUEST_URL = "http://107.22.209.62/android/get_quest.php";
 	
-	private 				ListView 			listview;
-	private 				QuestItemAdapter 	adapter;
-	private 				List<QuestItem> 	questList = new ArrayList<QuestItem>();
-	
+	private ListView listview;
+	private QuestItemAdapter adapter;
+	private List<QuestItem> questList = new ArrayList<QuestItem>();
+	private GetQuestTask task = null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,9 +57,8 @@ public class QuestActivity
 		adapter = new QuestItemAdapter(getApplicationContext(), questList);
 		listview.setAdapter(adapter);
 		
-		//initialize detail description of specific quest
 		
-		//handle event when click on specific quest
+		// handle event when click on specific quest
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent("com.csun.spotr.QuestDetailActivity");
@@ -73,7 +73,8 @@ public class QuestActivity
 			}
 		});
 		
-		new GetQuestTask(this).execute();
+		task = new GetQuestTask(this);
+		task.execute();
 	}
 	
 	@Override
@@ -87,7 +88,6 @@ public class QuestActivity
 		extends AsyncTask<Integer, QuestItem, Boolean> 
 			implements IAsyncTask<QuestActivity> {
 		
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<QuestActivity> ref;
 		
 		public GetQuestTask(QuestActivity a) {
@@ -106,12 +106,30 @@ public class QuestActivity
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
-			clientData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			JSONArray userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_URL, clientData);
+			
+			// cancel before task runs
+			if (isCancelled()) {
+				return false;
+			}
+			
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			JSONArray userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_URL, data);
+			
+			// cancel after getting data from sever
+			if (isCancelled()) {
+				return false;
+			}
 			
 			if (userJsonArray != null) {
 				try {
 					for (int i = 0; i < userJsonArray.length(); ++i) {
+						
+						// cancel while populating data
+						if (isCancelled()) {
+							return false;
+						}
+			
 						publishProgress(
 							new QuestItem(
 								userJsonArray.getJSONObject(i).getInt("quest_tbl_id"), 
@@ -160,4 +178,14 @@ public class QuestActivity
 		questList.add(q);
 		adapter.notifyDataSetChanged();
 	}	
+	
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			task.cancel(true);
+			onBackPressed();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

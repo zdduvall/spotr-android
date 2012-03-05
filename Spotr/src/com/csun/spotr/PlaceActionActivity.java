@@ -3,6 +3,7 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -82,14 +83,53 @@ public class PlaceActionActivity
 			}
 		});
 		
+		/**
+		 * Description
+		 * To open a treasure, user need to have at least 1000 pts. 
+		 * However this not a guarantee that they will earn a treasure
+		 * There are 50% chances for that to happen. If they agree to take
+		 * the risk, then the system will subtract 1000 pts from their 
+		 * account (users_tbl_points).
+		 * 
+		 * NOTE: subtracting points will be done in server side, and
+		 * this feature is not yet implemented.
+		 * 
+		 * Plan: Sprint 10
+		 **/
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
 		buttonTreasure.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Bundle extras = new Bundle();
-				extras.putInt("place_id", currentPlaceId);
-				Intent intent = new Intent(getApplicationContext(), GenerateTreasureActivity.class);
-				intent.putExtras(extras);
-				startActivity(intent);
+				 AlertDialog.Builder builder = new AlertDialog.Builder(PlaceActionActivity.this);
+				 builder.setMessage("(Treasures == 1000 pts) IsWorthIt()?")
+				 	    .setCancelable(false)
+				        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				        	public void onClick(DialogInterface dialog, int id) {
+				        		// create a random generator
+				        		Random random = new Random();
+				        		
+				        		// only run GenerateTreasureActivity if 
+				        		// the random number return is greater than 0.5
+				            	if (random.nextDouble() > 0.5) {
+				            		Bundle extras = new Bundle();
+				            		extras.putInt("place_id", currentPlaceId);
+				            		Intent intent = new Intent(getApplicationContext(), GenerateTreasureActivity.class);
+				            		intent.putExtras(extras);
+				            		startActivity(intent);
+				            	}
+				            	else {
+				            		Intent intent = new Intent(getApplicationContext(), NoTreasureActivity.class);
+				            		startActivity(intent);
+				            	}
+				            }
+				         })
+				         .setNegativeButton("No", new DialogInterface.OnClickListener() {
+				        	 public void onClick(DialogInterface dialog, int id) {
+				        		 dialog.cancel();
+				             }
+				           });
+				 
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		});
 		
@@ -428,51 +468,11 @@ public class PlaceActionActivity
 	public void updatePlaceDetailAsyncTaskProgress(final Place p) {
 		TextView name = (TextView) findViewById(R.id.place_activity_xml_textview_name);
 		name.setText(p.getName());
-
+		
 		TextView description = (TextView) findViewById(R.id.place_activity_xml_textview_description);
 		String formattedAddress = formatAddress(p.getAddress());
-		description.setText(formattedAddress);//p.getAddress());
-
-		//TextView location = (TextView) findViewById(R.id.place_info_xml_textview_location);
-		//location.setText("[" + Double.toString(p.getLatitude()) + ", " + Double.toString(p.getLongitude()) + "]");
 		
-		/*
-		TextView url = (TextView) findViewById(R.id.place_info_xml_textview_url);
-		url.setText(p.getWebsiteUrl());
-
-		url.setClickable(true);
-		url.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Bundle extras = new Bundle();
-				extras.putString("place_web_url", p.getWebsiteUrl());
-				Log.v(TAG, p.getWebsiteUrl());
-				Intent intent = new Intent(getApplicationContext(), WebviewActivity.class);
-				intent.putExtras(extras);
-				startActivity(intent);
-			}
-		});
-
-		//ImageView image = (ImageView) findViewById(R.id.place_info_xml_imageview_picture);
-		//image.setImageResource(R.drawable.ic_launcher);
-
-		Button phoneButton = (Button) findViewById(R.id.place_info_xml_button_phone_number);
-		phoneButton.setText(p.getPhoneNumber());
-
-		final String phoneUrl = "tel:" + p.getPhoneNumber().replaceAll("-", "").replace("(", "").replace(")", "").replace(" ", "");
-		Log.v(TAG, phoneUrl);
-
-		phoneButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
-				startActivity(intent);
-			}
-		});
-
-		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
-		itemizedOverlay.addOverlay(overlay, p);
-		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
-		mapController.setZoom(16);
-		*/
+		description.setText(formattedAddress);//p.getAddress());
 	}
 	
 	/**
@@ -523,9 +523,9 @@ public class PlaceActionActivity
 						.setMessage("<undefined>")
 						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
-								
 							}
 						}).create();
+		
 		}
 		return null;
 	}
