@@ -224,18 +224,16 @@
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/aluminum6</item>
         <item name="android:textColorHint">#ffacb6c2</item>
-        
     </style>
             
     <style name="LoginInput.Email">
-        <item name="android:background">@drawable/rectangle_rounded_tops</item>
+        <item name="android:background">@drawable/rectangle_rounded_tops_selector</item>
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:hint">@string/login_xml_textview_email_str</item>
     </style>
     
     <style name="LoginInput.Password">
-        <item name="android:layout_marginTop">-2dp</item>
-        <item name="android:background">@drawable/rectangle_rounded_bottoms</item>
+        <item name="android:background">@drawable/rectangle_rounded_bottoms_selector</item>
         <item name="android:inputType">textPassword</item>
         <item name="android:hint">@string/login_xml_textview_password_str</item>
     </style>
@@ -245,6 +243,26 @@
         <item name="android:text">@string/login_xml_button_login_str</item>
     </style>            
     <!-- End Login -->
+
+
+    <!-- Sign Up -->
+    <style name="SignupInputLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="SignupInputLabel.Email">
+        <item name="android:text">@string/signup_xml_textview_email_str</item>
+    </style>
+    
+    <style name="SignupInputLabel.Password">
+        <item name="android:text">@string/signup_xml_textview_password_str</item>
+    </style>
+    
+    <style name="SignupInputLabel.ConfirmPassword">
+        <item name="android:text">@string/signup_xml_textview_confirm_password_str</item>
+    </style>
+    <!-- End Sign Up -->
 
 
     <!-- Main Menu -->

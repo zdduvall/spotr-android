@@ -14,8 +14,8 @@
     <!-- signup.xml - Tu Tran 11/9/2011-->
     <string name="signup_xml_textview_email_str">Email</string>
     <string name="signup_xml_textview_password_str">Password</string>
-    <string name="signup_xml_textview_confirmpassword_str">Confirm password</string>
-    <string name="signup_xml_button_signup_str">Sign Up</string>
+    <string name="signup_xml_textview_confirm_password_str">Confirm password</string>
+    <string name="signup_xml_button_signup_str">Sign up</string>
     <string name="signup_xml_checkbox_visible_characters_str">Show visible password</string>
     <string name="signup_xml_button_exit_str">Exit</string>        
     <!-- mapview.xml -->

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.LinearLayout;
 
 /**
  * This class provides a foundation of basic features (e.g. Spotr's custom

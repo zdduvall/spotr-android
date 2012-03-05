@@ -99,7 +99,7 @@ public class LoginActivity
 				finish();
 			}
 		});
-		
+				
 		edittextPassword.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -109,6 +109,7 @@ public class LoginActivity
 				return false;
 			}
 		});
+		
 	}
 	
 	protected void setupTitleBar() {

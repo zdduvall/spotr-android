@@ -22,6 +22,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -31,7 +32,7 @@ import android.widget.EditText;
  * 		Sign up for a new account
  */
 public class SignupActivity 
-	extends Activity {
+	extends BasicSpotrActivity {
 	
 	private static final 	String 		TAG = "(SignupActivity)";
 	private static final 	String 		SIGN_UP_URL = "http://107.22.209.62/android/signup.php";
@@ -41,7 +42,6 @@ public class SignupActivity
 	private 				EditText 	edittextPassword = null;
 	private 				EditText 	edittextConfirmPassword = null;
 	private 				CheckBox 	checkboxVisible = null;
-	private 				Button 		buttonExit = null;
 	
 	private 				boolean 	passwordVisible = false;
 	private 				boolean 	validInformation = false;
@@ -50,12 +50,12 @@ public class SignupActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.signup);
+		setupTitleBar();
 
 		edittextEmail = (EditText) findViewById(R.id.signup_xml_edittext_email_id);
 		edittextPassword = (EditText) findViewById(R.id.signup_xml_edittext_password_id);
 		edittextConfirmPassword = (EditText) findViewById(R.id.signup_xml_edittext_confirmpassword_id);
 		checkboxVisible = (CheckBox) findViewById(R.id.signup_xml_checkbox_visible_characters);
-		buttonExit = (Button) findViewById(R.id.signup_xml_button_exit);
 		buttonSignup = (Button) findViewById(R.id.signup_xml_button_signup);
 
 		checkboxVisible.setOnClickListener(new OnClickListener() {
@@ -90,6 +90,10 @@ public class SignupActivity
 				}
 			}
 		});
+	}
+	
+	protected void setupTitleBar() {
+		super.setupTitleBar();
 	}
 	
 	private static class SignupTask 

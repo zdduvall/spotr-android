@@ -1,89 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    >
-   
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_launcher" />
+    android:orientation="vertical" >
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView style="@style/SignupInputLabel.Email" />
 
-        <TableRow>
-            <TextView
-                android:width="120px"
-                android:text="Email"
-                />
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/signup_xml_edittext_email_id"
+        android:hint="@string/signup_xml_textview_email_str"
+        android:inputType="textEmailAddress"
+        android:width="200px" />
 
-            <EditText
-                android:id="@+id/signup_xml_edittext_email_id"
-                android:hint="@string/signup_xml_textview_email_str"
-                android:inputType="textEmailAddress"
-                android:width="200px" />
+    <TextView style="@style/SignupInputLabel.Password" />
 
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:text="Password"/>
-
-            <EditText
-                android:id="@+id/signup_xml_edittext_password_id"
-                android:hint="@string/signup_xml_textview_password_str"
-                android:inputType="textPassword" />
-
-        </TableRow>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         
-        <TableRow>
-            <TextView
-                android:text="Confirm"/>
+        android:id="@+id/signup_xml_edittext_password_id"
+        android:hint="@string/signup_xml_textview_password_str"
+        android:inputType="textPassword" />
 
-            <EditText
-                android:id="@+id/signup_xml_edittext_confirmpassword_id"
-                android:hint="@string/signup_xml_textview_confirmpassword_str"
-                android:inputType="textPassword" />
+    <TextView style="@style/SignupInputLabel.ConfirmPassword" />
 
-        </TableRow>
-        
-         <TableRow>
-            <TextView/>
-
-            <CheckBox
-                android:id="@+id/signup_xml_checkbox_visible_characters"
+    <EditText
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signup_xml_checkbox_visible_characters_str" />
-			
-        </TableRow>
+        android:layout_height="wrap_content"
         
-        <TableRow>
-            <TextView/>
+        android:id="@+id/signup_xml_edittext_confirmpassword_id"
+        android:hint="@string/signup_xml_textview_confirm_password_str"
+        android:inputType="textPassword" />
 
-            <Button
-                android:id="@+id/signup_xml_button_signup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/signup_xml_button_signup_str" />
+    <CheckBox
+        android:id="@+id/signup_xml_checkbox_visible_characters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_xml_checkbox_visible_characters_str" />
 
-        </TableRow>
-        
-        <TableRow>
-            <TextView/>
-
-            <Button
-                android:id="@+id/signup_xml_button_exit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/signup_xml_button_exit_str" />
-
-        </TableRow>
-    </TableLayout>
+    <Button
+        android:id="@+id/signup_xml_button_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_xml_button_signup_str" />
 
 </LinearLayout>

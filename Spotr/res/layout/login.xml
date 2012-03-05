@@ -28,7 +28,7 @@
 	        android:id="@+id/login_xml_edittext_email_id"
 	        style="@style/LoginInput.Email" >
 	        
-	        <requestFocus />
+<!-- 	        <requestFocus /> -->
 	    </EditText>
 	
 	    <EditText
