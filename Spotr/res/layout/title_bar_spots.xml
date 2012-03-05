@@ -27,18 +27,18 @@
     <LinearLayout
         android:id="@+id/title_bar_actions"
         style="@style/TitleBarActions" >
-
-        <View style="@style/VerticalSpacer.TitleBar" />
-
-        <ImageButton
-            android:id="@+id/title_bar_btn_spots_refresh"
-            style="@style/TitleBarButton.SpotsRefresh" />
-        
+         
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton
             android:id="@+id/title_bar_btn_spots_tool"
             style="@style/TitleBarButton.Ping" />
+        
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+        <ImageButton
+            android:id="@+id/title_bar_btn_spots_refresh"
+            style="@style/TitleBarButton.SpotsRefresh" />
     </LinearLayout>
 
 </LinearLayout>

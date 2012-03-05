@@ -58,7 +58,32 @@ public class PlaceItemAdapter extends BaseAdapter {
 		}
 
 		holder.nameTextView.setText(items.get(position).getName());
-		holder.typesTextView.setText(items.get(position).getAddress());		
+		holder.typesTextView.setText(formatAddress(items.get(position).getAddress()));		
 		return convertView;
 	}
+	
+	/**
+	 * NOTE: THIS IS A TEMPORARY IMPLEMENTATION
+	 * Formats an address string to have line breaks. 
+	 * @param address the string retrieved from the database
+	 * @return a nicely formatted string
+	 */
+	private String formatAddress(String address) {
+		String[] parts = address.split("\\, ");
+		
+		// Check that we get 4 substrings:
+		//	   1) street
+		//     2) city
+		//     3) state and zip
+		//     4) country --> ignored
+		// Otherwise, return the address unchanged. 
+		if (parts.length == 4) {
+			address = "";			
+			String[] stateAndZip = parts[2].split("\\ ");
+			address = parts[0] + "\n"
+					+ parts[1] + ", " + stateAndZip[0] + ", " + stateAndZip[1];		
+		}
+		return address;
+	}
+
 }

@@ -55,7 +55,7 @@ public class PlaceActionActivity
 	public int currentPlaceId = 0;
 	public int currentChosenItem;
 	public ListView list = null;
-	private	PlaceActionItemAdapter	adapter = null;
+	private	PlaceActionItemAdapter adapter = null;
 	private List<Challenge> challengeList = new ArrayList<Challenge>();
 	
 	@Override
@@ -196,7 +196,7 @@ public class PlaceActionActivity
 				}
 			}
 		});
-		
+
 		// run GetPlaceDetailTask
 		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
 
@@ -333,7 +333,6 @@ public class PlaceActionActivity
 		}
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();

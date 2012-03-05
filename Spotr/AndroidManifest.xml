@@ -210,7 +210,7 @@
                 <action android:name="com.csun.spotr.PlaceActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            </intent-filter>            
         </activity>
 
         <!-- Local Place Activity -->

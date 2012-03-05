@@ -484,14 +484,13 @@
     
     
     <!-- Map -->
-    
-    <!-- Note: style of clickable version defined programatically -->
+    <!-- Style of clickable version defined programatically -->
     <style name="TitleBarButton.MapLocate">
         <item name="android:src">@drawable/ic_map_locate_disabled</item>
         <item name="android:clickable">false</item>
     </style>
     
-    <!-- Note: style of clickable version defined programatically -->
+    <!-- Style of clickable version defined programatically -->
     <style name="TitleBarButton.MapPlaces">
         <item name="android:src">@drawable/ic_map_places_disabled</item>
         <item name="android:clickable">false</item>
@@ -592,9 +591,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/place_xml_textview_find_str</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum5</item>
+        <item name="android:textColor">@color/aluminum6</item>
     </style>
     
+    <!-- STYLING FOR NOTHING -->
     <style name="SpotsSearchBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -606,13 +606,34 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/place_xml_textview_nearby_str</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum5</item>
+        <item name="android:textColor">@color/aluminum6</item>
     </style>
     
-    <style name="SpotsResultsList">
+    <style name="SpotsResultsList" parent="RoundedRectListView">
+        <item name="android:background">@color/aluminum1</item>
+        <item name="android:listSelector">@null</item>
+    </style>
+    
+    <style name="Spot">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/aluminum3</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">10dp</item>
+    </style>
+    
+    <style name="SpotName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/darkTurquoise</item> 
+    </style>
+    
+    <style name="SpotAddress">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/aluminum6</item> 
     </style>
     <!-- End Spots: list of nearby places -->
 
@@ -660,7 +681,6 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-
     <style name="LinearLayoutMissionsShortInfoMisc">
         <item name="android:layout_width">0px</item>
         <item name="android:layout_height">match_parent</item>
@@ -682,6 +702,7 @@
 
     <style name="RoundedRectListView.MissionsList">
         <item name="android:scrollbars">none</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>
 
     <style name="MissionRow">
@@ -690,6 +711,7 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">7dp</item>
+        <item name="android:background">@drawable/listview_row_selector</item>
     </style>
 
     <style name="MissionIcon">
@@ -706,7 +728,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/aluminum5</item>
+        <item name="android:textColor">@color/listview_text_selector</item>
     </style>
 
     <style name="MissionPointValue">
@@ -931,14 +953,12 @@
         <item name="android:background">@color/aluminum2</item>
     </style>
     
-    
     <style name="MapView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:apiKey">07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw"</item>
         <item name="android:clickable">true</item>
     </style>
-    
     <!-- End Misc -->
 
 </resources>

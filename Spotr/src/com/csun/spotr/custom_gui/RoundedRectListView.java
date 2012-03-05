@@ -25,16 +25,7 @@ public class RoundedRectListView extends ListView {
  
     private void init() {
         GradientDrawable gd = new GradientDrawable();
-        gd.setCornerRadius(RADIUS);
- 
-        StateListDrawable sld = new StateListDrawable();
-        sld.addState(
-                PRESSED_ENABLED_STATE_SET,
-                getResources().getDrawable(R.drawable.rectangle_dark_turquoise));
-        sld.addState(
-                EMPTY_STATE_SET,
-                getResources().getDrawable(R.drawable.rectangle_dark_turquoise));
-        setSelector(sld);
+        gd.setCornerRadius(RADIUS); 
     }
    
     @Override
