@@ -47,8 +47,6 @@ public class ProfileEditActivity extends Activity {
 	private static final int CAMERA_PICTURE = 111;
 	private static final int GALLERY_PICTURE = 222;
 
-	// private SetUserDetailTask task;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
