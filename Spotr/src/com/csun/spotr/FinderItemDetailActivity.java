@@ -54,17 +54,10 @@ public class FinderItemDetailActivity extends Activity {
 	private List<String> items = new ArrayList<String>();
 	private FinderAdditionalItemImageAdapter adapter;
 	private static int finderId = -1;
+	
 	private GetFinderDetailTask getFinderDetailTask;
 	private GetFinderImagesTask getFinderImagesTask;
 	private SubmitAdditionalImageTask submitAdditionalImageTask;
-	
-	private Gallery gallery;
-	private Button buttonFound;
-	private Button buttonAddImage;
-	private TextView textViewName;
-	private TextView textViewDesc;
-	private TextView textViewUser;
-	private TextView textViewPoints;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,13 +65,9 @@ public class FinderItemDetailActivity extends Activity {
 		
 		finderId = getIntent().getExtras().getInt("finder_id");
 		
-		textViewName = (TextView)findViewById(R.id.finder_item_detail_xml_name);
-		textViewDesc = (TextView)findViewById(R.id.finder_item_detail_xml_desc);
-		textViewUser = (TextView)findViewById(R.id.finder_item_detail_xml_user);
-		textViewPoints = (TextView)findViewById(R.id.finder_item_detail_xml_points);
-		gallery = (Gallery) findViewById(R.id.finder_item_detail_xml_gallery);
-		buttonAddImage = (Button) findViewById(R.id.finder_item_detail_xml_button_add_image);
-		buttonFound = (Button) findViewById(R.id.finder_item_detail_xml_button_found);
+		final Gallery gallery = (Gallery) findViewById(R.id.finder_item_detail_xml_gallery);
+		final Button buttonAddImage = (Button) findViewById(R.id.finder_item_detail_xml_button_add_image);
+		final Button buttonFound = (Button) findViewById(R.id.finder_item_detail_xml_button_found);
 		
 		buttonAddImage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -92,8 +81,7 @@ public class FinderItemDetailActivity extends Activity {
 			public void onClick(View v) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(FinderItemDetailActivity.this).create();
 				dialogMessage.setTitle("Wait just a second.");
-				dialogMessage.setMessage("You're about to mark this item as found.\n\n" + 
-						"Are you sure you want to proceed?");
+				dialogMessage.setMessage("You're about to mark this item as found.\n\n" + "Are you sure you want to proceed?");
 				
 				dialogMessage.setButton(Dialog.BUTTON_POSITIVE, "Yes, I really found this", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
@@ -120,12 +108,9 @@ public class FinderItemDetailActivity extends Activity {
 		});
 		
 		adapter = new FinderAdditionalItemImageAdapter(this, items);
-
 		gallery.setAdapter(adapter);
-		
 		getFinderDetailTask = new GetFinderDetailTask(this);
 		getFinderDetailTask.execute();
-		
 		getFinderImagesTask = new GetFinderImagesTask(this);
 		getFinderImagesTask.execute();
 	}
@@ -148,6 +133,7 @@ public class FinderItemDetailActivity extends Activity {
 			catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
+			
 			Options options = new Options();
 			options.inSampleSize = 1;
 			Bitmap bitmap = BitmapFactory.decodeStream(in, null, options);
@@ -155,10 +141,10 @@ public class FinderItemDetailActivity extends Activity {
 		}
 	}
 	
-	private static class SubmitAdditionalImageTask extends AsyncTask<String, Integer, String> 
-	implements IAsyncTask<FinderItemDetailActivity> {
+	private static class SubmitAdditionalImageTask
+		extends AsyncTask<String, Integer, String> 
+			implements IAsyncTask<FinderItemDetailActivity> {
 	
-		private List<NameValuePair> finderImageData = new ArrayList<NameValuePair>();
 		private WeakReference<FinderItemDetailActivity> ref;
 		private ProgressDialog progressDialog = null;
 		private Bitmap imageBitmap;
@@ -178,6 +164,7 @@ public class FinderItemDetailActivity extends Activity {
 		}
 	
 		protected String doInBackground(String... params) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 			byte[] src = stream.toByteArray();
@@ -185,11 +172,11 @@ public class FinderItemDetailActivity extends Activity {
 			String imageBytecode = Base64.encodeBytes(src);
 			String imageFile = CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png";
 			
-			finderImageData.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
-			finderImageData.add(new BasicNameValuePair("image", imageBytecode));
-			finderImageData.add(new BasicNameValuePair("filename", imageFile));
+			data.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
+			data.add(new BasicNameValuePair("image", imageBytecode));
+			data.add(new BasicNameValuePair("filename", imageFile));
 	
-			JSONObject json = UploadFileHelper.uploadFileToServer(SUBMIT_ADDITIONAL_IMAGE, finderImageData);
+			JSONObject json = UploadFileHelper.uploadFileToServer(SUBMIT_ADDITIONAL_IMAGE, data);
 			String result = "";
 			try {
 				result = json.getString("result");
@@ -237,10 +224,8 @@ public class FinderItemDetailActivity extends Activity {
 	}
 	
 	private class GetFinderDetailTask extends AsyncTask<Integer, String, Boolean> {
-		private List<NameValuePair> finderData = new ArrayList<NameValuePair>();
 		private WeakReference<FinderItemDetailActivity> refActivity;
 		private ProgressDialog progressDialog = null;
-		private JSONArray jsonArray = null;
 		
 		public GetFinderDetailTask(FinderItemDetailActivity c) {
 			refActivity = new WeakReference<FinderItemDetailActivity>(c);
@@ -262,8 +247,11 @@ public class FinderItemDetailActivity extends Activity {
 		
 		@Override
 		protected Boolean doInBackground(Integer... params) {
-			finderData.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
-			jsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FINDER_DETAIL_URL, finderData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
+			
+			JSONArray jsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FINDER_DETAIL_URL, data);
+			
 			if (jsonArray != null) {
 				try {
 					publishProgress(jsonArray.getJSONObject(0).getString("finder_tbl_name"), 
@@ -288,10 +276,8 @@ public class FinderItemDetailActivity extends Activity {
 	}
 	
 	private class GetFinderImagesTask extends AsyncTask<Integer, String, Boolean> {
-		private List<NameValuePair> finderData = new ArrayList<NameValuePair>();
 		private WeakReference<FinderItemDetailActivity> refActivity;
 		private ProgressDialog progressDialog = null;
-		private JSONArray jsonArray = null;
 		
 		public GetFinderImagesTask(Activity c) {
 			refActivity = new WeakReference<FinderItemDetailActivity>((FinderItemDetailActivity)c);
@@ -314,8 +300,11 @@ public class FinderItemDetailActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
-			finderData.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
-			jsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FINDER_ADDITIONAL_IMAGES_URL, finderData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
+			
+			JSONArray jsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FINDER_ADDITIONAL_IMAGES_URL, data);
+			
 			if (jsonArray != null) {
 				try {
 					for (int i = 0; i < jsonArray.length(); ++i) {
@@ -352,21 +341,31 @@ public class FinderItemDetailActivity extends Activity {
 	}
 	
 	public void updateFinderInfo(String name, String description, String points, String userName) {
+		TextView textViewName = (TextView)findViewById(R.id.finder_item_detail_xml_name);
 		textViewName.setText(name);
+		
+		TextView textViewDesc = (TextView)findViewById(R.id.finder_item_detail_xml_desc);
 		textViewDesc.setText(description);
+		
+		TextView textViewUser = (TextView)findViewById(R.id.finder_item_detail_xml_user);
 		textViewUser.setText(userName);
+		
+		TextView textViewPoints = (TextView)findViewById(R.id.finder_item_detail_xml_points);
 		textViewPoints.setText(points);
 	}
 	
 	@Override 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			if(getFinderDetailTask != null) 
+			if (getFinderDetailTask != null) 
 				getFinderDetailTask.cancel(true);
-			if(getFinderImagesTask != null)
+			
+			if (getFinderImagesTask != null)
 				getFinderImagesTask.cancel(true);
-			if(submitAdditionalImageTask != null)
+			
+			if (submitAdditionalImageTask != null)
 				submitAdditionalImageTask.cancel(true);
+			
 			onBackPressed();
 			return true;
 		}

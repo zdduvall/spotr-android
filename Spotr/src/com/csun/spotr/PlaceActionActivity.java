@@ -85,7 +85,10 @@ public class PlaceActionActivity
 		Button buttonTreasure = (Button) findViewById(R.id.place_action_xml_button_treasure);
 		buttonTreasure.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				Bundle extras = new Bundle();
+				extras.putInt("place_id", currentPlaceId);
 				Intent intent = new Intent(getApplicationContext(), GenerateTreasureActivity.class);
+				intent.putExtras(extras);
 				startActivity(intent);
 			}
 		});
@@ -170,7 +173,6 @@ public class PlaceActionActivity
 		extends AsyncTask<String, Challenge, Boolean> 
 			implements IAsyncTask<PlaceActionActivity> {
 		
-		private List<NameValuePair> challengeData = new ArrayList<NameValuePair>();
 		private WeakReference<PlaceActionActivity> ref;
 		
 		public GetChallengesTask(PlaceActionActivity a) {
@@ -189,8 +191,11 @@ public class PlaceActionActivity
 
 		@Override
 		protected Boolean doInBackground(String... text) {
-			challengeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_CHALLENGES_URL, challengeData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+			
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_CHALLENGES_URL, data);
+			
 			if (array != null) { 
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -305,65 +310,65 @@ public class PlaceActionActivity
 	}
 
 	private static class GetPlaceDetailTask 
-	extends AsyncTask<Void, Integer, Place> 
-		implements IAsyncTask<PlaceActionActivity> {
+		extends AsyncTask<Void, Integer, Place> 
+			implements IAsyncTask<PlaceActionActivity> {
 	
-	private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
-	private WeakReference<PlaceActionActivity> ref;
+		private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
+		private WeakReference<PlaceActionActivity> ref;
 	
-	public GetPlaceDetailTask(PlaceActionActivity a) {
-		attach(a);
-	}
-
-	@Override
-	protected Place doInBackground(Void... voids) {
-		placeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-		JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, placeData);
-		Place place = null;
-		try {
-			// create a place
-			place = new Place.Builder(
-			// required parameters
-				array.getJSONObject(0).getDouble("spots_tbl_longitude"),
-				array.getJSONObject(0).getDouble("spots_tbl_latitude"), 
-				array.getJSONObject(0).getInt("spots_tbl_id"))
-				// optional parameters
-				.name(array.getJSONObject(0).getString("spots_tbl_name"))
-				.address(array.getJSONObject(0).getString("spots_tbl_description")).build();
-			
-			if (array.getJSONObject(0).has("spots_tbl_phone")) {
-				place.setPhoneNumber(array.getJSONObject(0).getString("spots_tbl_phone"));
-			}
-			
-			if (array.getJSONObject(0).has("spots_tbl_url")) {
-				place.setWebsiteUrl(array.getJSONObject(0).getString("spots_tbl_url"));
-			}
+		public GetPlaceDetailTask(PlaceActionActivity a) {
+			attach(a);
 		}
-		catch (JSONException e) {
-			Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data" + e.toString());
+
+		@Override
+		protected Place doInBackground(Void... voids) {
+			placeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, placeData);
+			Place place = null;
+			try {
+				// create a place
+				place = new Place.Builder(
+				// required parameters
+					array.getJSONObject(0).getDouble("spots_tbl_longitude"),
+					array.getJSONObject(0).getDouble("spots_tbl_latitude"), 
+					array.getJSONObject(0).getInt("spots_tbl_id"))
+					// optional parameters
+					.name(array.getJSONObject(0).getString("spots_tbl_name"))
+					.address(array.getJSONObject(0).getString("spots_tbl_description")).build();
+				
+				if (array.getJSONObject(0).has("spots_tbl_phone")) {
+					place.setPhoneNumber(array.getJSONObject(0).getString("spots_tbl_phone"));
+				}
+				
+				if (array.getJSONObject(0).has("spots_tbl_url")) {
+					place.setWebsiteUrl(array.getJSONObject(0).getString("spots_tbl_url"));
+				}
+			}
+			catch (JSONException e) {
+				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data" + e.toString());
+			}
+			return place;
 		}
-		return place;
-	}
 
-	@Override
-	protected void onPreExecute() {
-
+		@Override
+		protected void onPreExecute() {
+	
+		}
+	
+		@Override
+		protected void onPostExecute(final Place p) {
+			ref.get().updatePlaceDetailAsyncTaskProgress(p);
+			detach();
+		}
+	
+		public void attach(PlaceActionActivity a) {
+			ref = new WeakReference<PlaceActionActivity>(a);
+		}
+	
+		public void detach() {
+			ref.clear();
+		}
 	}
-
-	@Override
-	protected void onPostExecute(final Place p) {
-		ref.get().updatePlaceDetailAsyncTaskProgress(p);
-		detach();
-	}
-
-	public void attach(PlaceActionActivity a) {
-		ref = new WeakReference<PlaceActionActivity>(a);
-	}
-
-	public void detach() {
-		ref.clear();
-	}
-}
 
 	
 	@Override

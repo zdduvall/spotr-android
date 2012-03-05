@@ -118,12 +118,19 @@ public class FriendListFeedActivity
     						return true;
     					}
     					
-    					String snapPictureUrl = null;
-    					String userPictureUrl = null;
-    					String shareUrl = null;
+    					String snapPictureUrl = "";
+    					String userPictureUrl = "";
+    					String shareUrl = "";
+    					String treasureIconUrl = "";
+    					String company = "";
     					
     					if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
     						snapPictureUrl = array.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+    					}
+    					
+    					if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.FIND_TREASURE) {
+    						treasureIconUrl = array.getJSONObject(i).getString("activity_tbl_treasure_icon_url");
+    						company = array.getJSONObject(i).getString("activity_tbl_treasure_company");
     					}
     					
     					if(array.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
@@ -155,6 +162,8 @@ public class FriendListFeedActivity
     									.shareUrl(shareUrl)
     									.numberOfComments(array.getJSONObject(i).getInt("activity_tbl_total_comments"))
     									.likes(array.getJSONObject(i).getInt("activity_tbl_likes"))
+    									.treasureIconUrl(treasureIconUrl)
+    									.treasureCompany(company)
     										.build();
     					
     					
@@ -162,6 +171,7 @@ public class FriendListFeedActivity
     					data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
     					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
     					Comment firstComment = new Comment(-1, "", "", "", "");
+    					
     					if (temp != null) {
     						firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
     						firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));

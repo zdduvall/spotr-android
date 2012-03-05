@@ -84,9 +84,17 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		TextView textViewTotalComments;
 		WebView webview;
 		
-		/*
+		/**
+		 * Treasure section
+		 **/
+		LinearLayout treasureLayout;
+		ImageView imageViewTreasureIcon;
+		TextView textViewTreasureCompany;
+		
+		
+		/**
 		 * 1st comment
-		 */
+		 **/
 		LinearLayout firstLayout;
 		ImageView firstImageViewUserPicture;
 		TextView firstTextViewUsername;
@@ -110,9 +118,16 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.buttonLike = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_like);
 			holder.textViewTotalComments = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_number_of_comments);
 			
-			/*
+			/**
+			 * Treasure section
+			 **/
+			holder.treasureLayout = (LinearLayout) convertView.findViewById(R.id.friend_list_feed_item_xml_linearlayout_treasure_section);
+			holder.imageViewTreasureIcon = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_treausre_icon);
+			holder.textViewTreasureCompany = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_treausre_company);
+			
+			/**
 			 * 1st comment
-			 */
+			 **/
 			holder.firstImageViewUserPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_picture);
 			holder.firstTextViewUsername = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_username);
     		holder.firstTextViewTime = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_time);
@@ -130,6 +145,9 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		holder.textViewPlaceName.setText("@ " + items.get(position).getPlaceName());
 		holder.textViewTime.setText("about " + items.get(position).getActivityTime());
 		
+		/**
+		 *  Add share url from user
+		 **/
 		if (items.get(position).getShareUrl().equals("")) {
 			holder.webview.setVisibility(View.GONE);
 		}
@@ -143,33 +161,81 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.webview.setWebViewClient(new Helper());
 			holder.webview.loadUrl(items.get(position).getShareUrl());
 		}
+		// end 
 		
 		if (items.get(position).getChallengeType() == Challenge.Type.CHECK_IN) {
+			// required view
 			holder.textViewContent.setText("check-in");
+			
+			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.GONE);
+			holder.textViewTreasureCompany.setVisibility(View.GONE);
+			holder.imageViewTreasureIcon.setVisibility(View.GONE);
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE) {
+			// required view
 			holder.textViewContent.setText("snap-picture");
+			
+			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.VISIBLE);
-			imageLoader.displayImage(items.get(position).getActivitySnapPictureUrl(), holder.imageViewSnapPicture);
 			holder.textViewDetail.setVisibility(View.GONE);
+			holder.textViewTreasureCompany.setVisibility(View.GONE);
+			holder.imageViewTreasureIcon.setVisibility(View.GONE);
+			
+			// populate data into optional view
+			imageLoader.displayImage(items.get(position).getActivitySnapPictureUrl(), holder.imageViewSnapPicture);
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.WRITE_ON_WALL) {
+			// required view
 			holder.textViewContent.setText("write-on-wall");
+			
+			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
+			holder.textViewTreasureCompany.setVisibility(View.GONE);
+			holder.imageViewTreasureIcon.setVisibility(View.GONE);
+			
+			// populate data into optional view
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.QUESTION_ANSWER) {
+			// required view
 			holder.textViewContent.setText("answer-question");
+			
+			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
+			holder.textViewTreasureCompany.setVisibility(View.GONE);
+			holder.imageViewTreasureIcon.setVisibility(View.GONE);
+			
+			// populate data into optional view
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 		}
+		else if (items.get(position).getChallengeType() == Challenge.Type.FIND_TREASURE) {
+			// required view
+			holder.textViewContent.setText("found-treasure");
+			
+			// optional view
+			holder.imageViewSnapPicture.setVisibility(View.GONE);
+			holder.textViewDetail.setVisibility(View.VISIBLE);
+			holder.textViewTreasureCompany.setVisibility(View.VISIBLE);
+			holder.imageViewTreasureIcon.setVisibility(View.VISIBLE);
+			
+			// populate data into optional view
+			holder.textViewDetail.setText(items.get(position).getActivityComment());
+			holder.textViewTreasureCompany.setText(items.get(position).getTreasureCompany());
+			imageLoader.displayImage(items.get(position).getTreasureIconUrl(), holder.imageViewTreasureIcon);
+		}
 		else {
+			// required view
+			holder.textViewContent.setText("other");
+			
+			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.GONE);
+			holder.textViewTreasureCompany.setVisibility(View.GONE);
+			holder.imageViewTreasureIcon.setVisibility(View.GONE);
 		}
 		
 		holder.buttonComment.setOnClickListener(new OnClickListener() {
@@ -237,7 +303,6 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	
 		private WeakReference<FriendFeedItemAdapter> ref;
 		
-	
 		public LikeActivityTask(FriendFeedItemAdapter a) {
 			attach(a);
 		}
