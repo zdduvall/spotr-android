@@ -16,6 +16,9 @@ public class User {
 	private String password;
 	// optional parameters
 	private String realname;
+	private String education;
+	private String hometown;
+	private String hobbies;
 	private Date dateOfBirth;
 	private int points;
 	private int challengesDone;
@@ -32,6 +35,9 @@ public class User {
 		private String password;
 		// optional parameters
 		private String realname;
+		private String education;
+		private String hometown;
+		private String hobbies;
 		private Date dateOfBirth;
 		private int points;
 		private int challengesDone;
@@ -47,16 +53,34 @@ public class User {
 			this.username = username;
 			this.password = password;
 			// optional parameters
-			realname = username;
+			realname = null;
+			education = null;
+			hometown = null;
+			hobbies = null;
 			dateOfBirth = null;
 			points = 0;
 			challengesDone = 0;
 			placesVisited = 0;
 			imageUrl = null;
 		}
-
+		
 		public Builder realname(String realname) {
 			this.realname = realname;
+			return this;
+		}
+		
+		public Builder education(String education) {
+			this.education = education;
+			return this;
+		}
+		
+		public Builder hometown(String hometown) {
+			this.hometown = hometown;
+			return this;
+		}
+		
+		public Builder hobbies(String hobbies) {
+			this.hobbies = hobbies;
 			return this;
 		}
 
@@ -110,6 +134,9 @@ public class User {
 		this.username = builder.username;
 		this.password = builder.password;
 		this.realname = builder.realname;
+		this.education = builder.education;
+		this.hometown = builder.hometown;
+		this.hobbies = builder.hobbies;
 		this.dateOfBirth = builder.dateOfBirth;
 		this.points = builder.points;
 		this.challengesDone = builder.challengesDone;
@@ -134,6 +161,30 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
+	}
+	
+	public String getHometown() {
+		return hometown;
+	}
+
+	public void setHometown(String hometown) {
+		this.hometown = hometown;
+	}
+	
+	public String getHobbies() {
+		return hobbies;
+	}
+
+	public void setHobbies(String hobbies) {
+		this.hobbies = hobbies;
 	}
 
 	public Date getDateOfBirth() {
@@ -239,6 +290,6 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", realname=" + realname + ", dateOfBirth=" + dateOfBirth + ", points=" + points + ", challengesDone=" + challengesDone + ", placesVisited=" + placesVisited + ", imageUrl=" + imageUrl + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", realname=" + realname + ", education=" + education + ", hometown=" + hometown +", hobbies=" + hobbies + ", dateOfBirth=" + dateOfBirth + ", points=" + points + ", challengesDone=" + challengesDone + ", placesVisited=" + placesVisited + ", imageUrl=" + imageUrl + "]";
 	}
 }
