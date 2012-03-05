@@ -50,10 +50,8 @@ public class PlaceActionActivity
 	
 	private static final String TAG = "(PlaceActionActivity)";
 	private static final String GET_CHALLENGES_URL = "http://107.22.209.62/android/get_challenges_from_place.php";
-	private static final String DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
 	private static final String GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
 
-	
 	public int currentPlaceId = 0;
 	public int currentChosenItem;
 	public ListView list = null;
@@ -147,16 +145,13 @@ public class PlaceActionActivity
 				currentChosenItem = position;
 								
 				if (c.getType() == Challenge.Type.CHECK_IN) {
-					/*
-					Intent intent = new Intent(getApplicationContext(), CheckInActivity.class);
+					Intent intent = new Intent("com.csun.spotr.CheckInActivity");
+					Bundle extras = new Bundle();
+					extras.putString("users_id", Integer.toString(CurrentUser.getCurrentUser().getId()));
+					extras.putString("spots_id", Integer.toString(currentPlaceId));
+					extras.putString("challenges_id", Integer.toString(c.getId()));
+					intent.putExtras(extras);
 					startActivity(intent);
-					*/
-					
-					CheckInTask task = new CheckInTask(PlaceActionActivity.this);
-					task.execute(
-					Integer.toString(CurrentUser.getCurrentUser().getId()),
-					Integer.toString(currentPlaceId),
-					Integer.toString(c.getId()));
 				}
 				else if (c.getType() == Challenge.Type.WRITE_ON_WALL) {
 					Intent intent = new Intent("com.csun.spotr.WriteOnWallActivity");
@@ -277,78 +272,6 @@ public class PlaceActionActivity
 		}
 	}
 	
-	private static class CheckInTask 
-		extends AsyncTask<String, Integer, String> 
-			implements IAsyncTask<PlaceActionActivity> {
-		
-		private List<NameValuePair> checkInData = new ArrayList<NameValuePair>();
-		private WeakReference<PlaceActionActivity> ref;
-		
-		public CheckInTask(PlaceActionActivity a) {
-			attach(a);
-		}
-
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected String doInBackground(String... ids) {
-			/*
-			 * 1. Retrieve data from [activity] table where $users_id and $places_id
-			 * 2. Check the result of this query:
-			 * 		a. If the result is null, then user hasn't visited this place yet which also implies that he has not done any challenges.
-			 * 		   Thus we can update the current user:
-			 * 		   i.  Update [activity] table with $users_id, $places_id, $challenges_id   
-			 * 		   ii. Update [users] table with 
-			 * 			   + $challenges_done = $challenges_done + 1
-			 * 			   + $points += challenges.points
-			 * 			   + $places_visited = $places_visited + 1
-			 * 		b. If the result is not null, update [activity] table with $users_id, $places_id, $challenges_id with CURRENT_TIMESTAMP, but
-			 * 		   don't run the statement:
-			 * 		       + $places_visited = $places_visited + 1
-			 * 3. All these complexity is done at server side, i.e. php script, so we only need to post to the server three parameters:
-			 * 	    a. users_id
-			 * 		b. places_id
-			 * 		c. challenges_id
-			 * 4. The return of this query is the number points is added the points added to the user account.
-			 */
-			checkInData.add(new BasicNameValuePair("users_id", ids[0]));
-			checkInData.add(new BasicNameValuePair("spots_id", ids[1]));
-			checkInData.add(new BasicNameValuePair("challenges_id", ids[2]));
-			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(DO_CHECK_IN_URL, checkInData);
-			String result = "";
-			
-			try {
-				result = json.getString("result");
-			} 
-			catch (JSONException e) {
-				Log.e(TAG + "CheckInTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			if (result.equals("success")) {
-				ref.get().list.getChildAt(ref.get().currentChosenItem).setBackgroundColor(Color.GRAY);
-			}
-			else {
-				ref.get().showDialog(0);
-			}	
-			
-			detach();
-		}
-
-		public void attach(PlaceActionActivity a) {
-			ref = new WeakReference<PlaceActionActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
-		}
-	}
-
 	private static class GetPlaceDetailTask 
 		extends AsyncTask<Void, Integer, Place> 
 			implements IAsyncTask<PlaceActionActivity> {

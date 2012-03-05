@@ -33,7 +33,7 @@ import android.widget.ViewFlipper;
 /**
  * Description:
  * 		Generate a random treasure from server and return to user
- */
+ **/
 public class GenerateTreasureActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Treasure> {

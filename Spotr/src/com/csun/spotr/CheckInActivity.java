@@ -2,39 +2,94 @@ package com.csun.spotr;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.csun.spotr.adapter.CheckInUserItemAdapter;
+import com.csun.spotr.core.adapter_item.SeekingItem;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Gallery;
+import android.widget.Toast;
 
-public class CheckInActivity extends Activity {
+public class CheckInActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<String> {
+	
 	private static final String TAG = "(CheckInActivity)";
 	private static final String DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
+	private static final String GET_CHECKIN_USERS_URL = "http://107.22.209.62/android/get_checkin_users.php";
+	
+	private String usersId;
+	private String spotsId;
+	private String challengesId;
+	private CheckInTask task;
+	private List<String> userImageList;
+	private	Gallery gallery;
+	private CheckInUserItemAdapter adapter;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.check_in);
+		
+		Bundle extras = getIntent().getExtras();
+		usersId = extras.getString("users_id");
+		spotsId = extras.getString("spots_id");
+		challengesId = extras.getString("challenges_id");
+		
+		Button checkin = (Button) findViewById(R.id.check_in_xml_button_checkin);
+		checkin.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				task = new CheckInTask(CheckInActivity.this, usersId, spotsId, challengesId);
+				task.execute();
+			}
+		});
+		
+		userImageList = new ArrayList<String>();
+		gallery = (Gallery) findViewById(R.id.check_in_xml_gallery_checkin_people);
+		adapter = new CheckInUserItemAdapter(this, userImageList);
+		gallery.setAdapter(adapter);
+		
+		new GetCheckInUsersTask(this, spotsId).execute();
 	}
 	
 	private static class CheckInTask 
-		extends AsyncTask<String, Integer, String> 
+		extends AsyncTask<Void, Void, String> 
 			implements IAsyncTask<CheckInActivity> {
 	
 		private WeakReference<CheckInActivity> ref;
+		private String usersId;
+		private String spotsId;
+		private String challengesId;
 	
-		public CheckInTask(CheckInActivity a) {
+		public CheckInTask(CheckInActivity a, String usersId, String spotsId, String challengesId) {
 			attach(a);
+			this.usersId = usersId;
+			this.spotsId = spotsId;
+			this.challengesId = challengesId;
 		}
 	
 		@Override
@@ -42,7 +97,7 @@ public class CheckInActivity extends Activity {
 		}
 	
 		@Override
-		protected String doInBackground(String... ids) {
+		protected String doInBackground(Void... voids) {
 			/*
 			 * 1. Retrieve data from [activity] table where $users_id and $places_id
 			 * 2. Check the result of this query:
@@ -64,9 +119,9 @@ public class CheckInActivity extends Activity {
 			 */
 			
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("users_id", ids[0]));
-			data.add(new BasicNameValuePair("spots_id", ids[1]));
-			data.add(new BasicNameValuePair("challenges_id", ids[2]));
+			data.add(new BasicNameValuePair("users_id", usersId));
+			data.add(new BasicNameValuePair("spots_id", spotsId));
+			data.add(new BasicNameValuePair("challenges_id", challengesId));
 			
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(DO_CHECK_IN_URL, data);
 			
@@ -84,7 +139,11 @@ public class CheckInActivity extends Activity {
 		@Override
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
-				
+				Button checkin = (Button) ref.get().findViewById(R.id.check_in_xml_button_checkin);
+				checkin.setBackgroundColor(Color.RED);
+			}
+			else {
+				ref.get().showDialog(0);
 			}
 			detach();
 		}
@@ -96,5 +155,116 @@ public class CheckInActivity extends Activity {
 		public void detach() {
 			ref.clear();
 		}
+	}
+	
+	private static class GetCheckInUsersTask 
+		extends AsyncTask<Integer, String, Boolean> 
+			implements IAsyncTask<CheckInActivity> {
+	
+		private WeakReference<CheckInActivity> ref;
+		private String spotsId;
+		
+		public GetCheckInUsersTask(CheckInActivity a, String spotsId) {
+			Log.v(TAG, "run?");
+			attach(a);
+			this.spotsId = spotsId;
+		}
+
+
+		@Override
+		protected void onProgressUpdate(String... s) {
+			ref.get().updateAsyncTaskProgress(s[0]);
+		}
+
+		@Override
+		protected Boolean doInBackground(Integer... offsets) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("place_id", spotsId));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_CHECKIN_USERS_URL, data);
+			if (array != null) {
+				try {
+					for (int i = 0; i < array.length(); ++i) {
+						publishProgress(
+							array.getJSONObject(i).getString("users_tbl_user_image_url"));
+					}
+				}
+				catch (JSONException e) {
+					Log.e(TAG + "GetCheckInUsersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+				}
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			detach();
+		}
+
+		public void attach(CheckInActivity a) {
+			ref = new WeakReference<CheckInActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case 0:
+			return new 
+				AlertDialog.Builder(this)
+					.setIcon(R.drawable.error_circle)
+					.setTitle("Warning!")
+					.setMessage("You checked in recently. You can only check in once every 24 hours. :(!")
+					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							
+						}
+					}).create();
+		
+		case 1: 
+			return new 
+					AlertDialog.Builder(this)
+						.setIcon(R.drawable.error_circle)
+						.setTitle("Error Message")
+						.setMessage("<undefined>")
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+							}
+						}).create();
+		
+		}
+		return null;
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
+	}
+
+	public void updateAsyncTaskProgress(String u) {
+		userImageList.add(u);
+		adapter.notifyDataSetChanged();
 	}
 }
