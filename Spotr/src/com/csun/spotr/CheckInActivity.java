@@ -14,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.csun.spotr.adapter.CheckInUserItemAdapter;
+import com.csun.spotr.adapter.EventAdapter;
+import com.csun.spotr.core.Event;
 import com.csun.spotr.core.adapter_item.SeekingItem;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -32,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class CheckInActivity 
@@ -41,14 +44,18 @@ public class CheckInActivity
 	private static final String TAG = "(CheckInActivity)";
 	private static final String DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
 	private static final String GET_CHECKIN_USERS_URL = "http://107.22.209.62/android/get_checkin_users.php";
+	private static final String GET_EVENTS = "http://107.22.209.62/android/get_events.php";
 	
 	private String usersId;
 	private String spotsId;
 	private String challengesId;
 	private CheckInTask task;
 	private List<String> userImageList;
+	private List<Event> eventList;
 	private	Gallery gallery;
+	private ListView listview;
 	private CheckInUserItemAdapter adapter;
+	private EventAdapter eventAdapter; 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +80,13 @@ public class CheckInActivity
 		adapter = new CheckInUserItemAdapter(this, userImageList);
 		gallery.setAdapter(adapter);
 		
+		eventList = new ArrayList<Event>();
+		listview = (ListView) findViewById(R.id.check_in_xml_listview_events);
+		eventAdapter = new EventAdapter(this, eventList);
+		listview.setAdapter(eventAdapter);
+		
 		new GetCheckInUsersTask(this, spotsId).execute();
+		new GetEventTask(this, spotsId).execute();
 	}
 	
 	private static class CheckInTask 
@@ -165,7 +178,6 @@ public class CheckInActivity
 		private String spotsId;
 		
 		public GetCheckInUsersTask(CheckInActivity a, String spotsId) {
-			Log.v(TAG, "run?");
 			attach(a);
 			this.spotsId = spotsId;
 		}
@@ -209,6 +221,62 @@ public class CheckInActivity
 		}
 	}
 	
+	private static class GetEventTask 
+		extends AsyncTask<Integer, Event, Boolean> 
+			implements IAsyncTask<CheckInActivity> {
+
+		private WeakReference<CheckInActivity> ref;
+		private String spotsId;
+	
+		public GetEventTask(CheckInActivity a, String spotsId) {
+			attach(a);
+			this.spotsId = spotsId;
+		}
+
+
+		@Override
+		protected void onProgressUpdate(Event... e) {
+			ref.get().eventList.add(e[0]);
+			ref.get().eventAdapter.notifyDataSetChanged();
+		}
+
+		@Override
+		protected Boolean doInBackground(Integer... offsets) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("place_id", spotsId));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_EVENTS, data);
+			if (array != null) {
+				try {
+					for (int i = 0; i < array.length(); ++i) {
+						publishProgress(
+							new Event(
+								array.getJSONObject(i).getInt("event_tbl_id"),
+								array.getJSONObject(i).getString("event_tbl_name"),
+								array.getJSONObject(i).getString("event_tbl_context"),
+								array.getJSONObject(i).getString("event_tbl_image_url"),
+								array.getJSONObject(i).getString("event_tbl_time")));
+					}
+				}
+				catch (JSONException e) {
+					Log.e(TAG + "GetEventTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+				}
+			}
+			return true;
+		}
+	
+		@Override
+		protected void onPostExecute(Boolean result) {
+			detach();
+		}
+	
+		public void attach(CheckInActivity a) {
+			ref = new WeakReference<CheckInActivity>(a);
+		}
+	
+		public void detach() {
+			ref.clear();
+		}
+}
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
