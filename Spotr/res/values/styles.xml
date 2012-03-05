@@ -611,7 +611,7 @@
     
     <style name="SpotsResultsList" parent="RoundedRectListView">
         <item name="android:background">@color/aluminum1</item>
-        <item name="android:listSelector">@null</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>
     
     <style name="Spot">
@@ -619,6 +619,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/listview_row_selector_spots</item>
     </style>
     
     <style name="SpotName">
@@ -626,7 +627,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/darkTurquoise</item> 
+        <item name="android:textColor">@color/listview_text_selector_spots</item> 
     </style>
     
     <style name="SpotAddress">

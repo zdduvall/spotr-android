@@ -109,41 +109,7 @@ public class PlaceActivity
 				startActivity(intent);
 			}
 		});
-		
-		list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			View previousItem = null;
-			TextView previousName = null;
-			
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				TextView spotName = (TextView) view.findViewById(R.id.place_item_xml_textview_name);
-				if (previousItem == null) {
-					view.setBackgroundResource(R.color.darkTurquoise);
-					spotName.setTextColor(getResources().getColor(R.color.aluminum1));
-					
-					previousItem = view;
-					previousName = spotName;
-				}
-				else {
-					view.setBackgroundResource(R.color.darkTurquoise);
-					spotName.setTextColor(getResources().getColor(R.color.aluminum1));
-					
-					previousItem.setBackgroundResource(R.color.aluminum1);
-					previousName.setTextColor(getResources().getColor(R.color.darkTurquoise));
-					previousItem = view;
-					previousName = spotName;
-				}
-			}
-
-			public void onNothingSelected(AdapterView<?> arg0) {
-				if (previousItem != null) {
-					previousItem.setBackgroundResource(R.color.aluminum1);
-					previousName.setTextColor(getResources().getColor(R.color.darkTurquoise));
-					previousItem = null;
-					previousName = null;					
-				}
-			}
-		});
-		
+				
 		findLocation(); // refresh button activated once location is found
 		
 		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
@@ -180,7 +146,7 @@ public class PlaceActivity
 	protected void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("pots");		
+		title.setText("pots Nearby");		
 	}
 	
 	/**
