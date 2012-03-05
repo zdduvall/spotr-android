@@ -306,8 +306,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">-20dp</item>
+        <item name="android:button">@drawable/checkbox</item>
         <item name="android:text">@string/signup_xml_checkbox_visible_characters_str</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/aluminum6</item>
     </style>
     
     <style name="SignupSubmitButton" parent="LoginScreenButton.Login">

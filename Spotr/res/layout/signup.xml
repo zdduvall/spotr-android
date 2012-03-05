@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/SignupBackground" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <LinearLayout style="@style/SignupFormContainer" >
+    <LinearLayout style="@style/SignupBackground" >
 
-        <TextView style="@style/SignupInputLabel.Email" />
+        <LinearLayout style="@style/SignupFormContainer" >
 
-        <EditText
-            android:id="@+id/signup_xml_edittext_email_id"
-            style="@style/SignupInputEmail" />
+            <TextView style="@style/SignupInputLabel.Email" />
+
+            <EditText
+                android:id="@+id/signup_xml_edittext_email_id"
+                style="@style/SignupInputEmail" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SignupFormContainer" >
+
+            <TextView style="@style/SignupInputLabel.Password" />
+
+            <EditText
+                android:id="@+id/signup_xml_edittext_password_id"
+                style="@style/SignupInputPassword" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SignupFormContainer" >
+
+            <TextView style="@style/SignupInputLabel.ConfirmPassword" />
+
+            <EditText
+                android:id="@+id/signup_xml_edittext_confirmpassword_id"
+                style="@style/SignupInputConfirmPassword" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/signup_xml_checkbox_visible_characters"
+            style="@style/SignupShowPassword" />
+
+        <Button
+            android:id="@+id/signup_xml_button_signup"
+            style="@style/SignupSubmitButton" />
     </LinearLayout>
 
-    <LinearLayout style="@style/SignupFormContainer" >
-
-        <TextView style="@style/SignupInputLabel.Password" />
-
-        <EditText
-            android:id="@+id/signup_xml_edittext_password_id"
-            style="@style/SignupInputPassword" />
-    </LinearLayout>
-
-    <LinearLayout style="@style/SignupFormContainer" >
-
-        <TextView style="@style/SignupInputLabel.ConfirmPassword" />
-
-        <EditText
-            android:id="@+id/signup_xml_edittext_confirmpassword_id"
-            style="@style/SignupInputConfirmPassword" />
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/signup_xml_checkbox_visible_characters"
-        style="@style/SignupShowPassword" />
-
-    <Button
-        android:id="@+id/signup_xml_button_signup"
-        style="@style/SignupSubmitButton" />
-
-</LinearLayout>
+</ScrollView>
