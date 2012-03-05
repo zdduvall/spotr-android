@@ -5,7 +5,6 @@
     <string name="login_xml_textview_email_str">Email</string>
     <string name="login_xml_textview_password_str">Password</string>
     <string name="login_xml_checkbox_remember_password_str">Remember password</string>
-    <string name="login_xml_checkbox_visible_password_str">Show visible password</string>
     <string name="login_xml_button_login_str">Log in</string>
     <string name="login_xml_button_signup_str">Sign up</string> 
     <string name="login_xml_textview_version_str">V1.0</string>
@@ -16,7 +15,7 @@
     <string name="signup_xml_textview_password_str">Password</string>
     <string name="signup_xml_textview_confirm_password_str">Confirm password</string>
     <string name="signup_xml_button_signup_str">Sign up</string>
-    <string name="signup_xml_checkbox_visible_characters_str">Show visible password</string>
+    <string name="signup_xml_checkbox_visible_characters_str">Show password</string>
     <string name="signup_xml_button_exit_str">Exit</string>        
     <!-- mapview.xml -->
     <string name="mapview_xml_button_view_str">View</string>

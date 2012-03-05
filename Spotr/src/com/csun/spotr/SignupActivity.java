@@ -26,6 +26,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Description:
@@ -94,6 +95,8 @@ public class SignupActivity
 	
 	protected void setupTitleBar() {
 		super.setupTitleBar();
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("ign up");
 	}
 	
 	private static class SignupTask 

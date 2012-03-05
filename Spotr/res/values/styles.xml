@@ -227,18 +227,19 @@
     </style>
             
     <style name="LoginInput.Email">
-        <item name="android:background">@drawable/rectangle_rounded_tops_selector</item>
+        <item name="android:background">@drawable/rectangle_rounded_tops</item>
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:hint">@string/login_xml_textview_email_str</item>
     </style>
     
     <style name="LoginInput.Password">
-        <item name="android:background">@drawable/rectangle_rounded_bottoms_selector</item>
+        <item name="android:background">@drawable/rectangle_rounded_bottoms</item>
         <item name="android:inputType">textPassword</item>
         <item name="android:hint">@string/login_xml_textview_password_str</item>
     </style>
         
     <style name="LoginScreenButton.Login">
+        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:background">@drawable/button_blue</item>
         <item name="android:text">@string/login_xml_button_login_str</item>
     </style>            
@@ -246,21 +247,73 @@
 
 
     <!-- Sign Up -->
+    <style name="SignupBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">40dp</item>
+        <item name="android:background">@color/vimeo_grey</item>
+    </style>
+    
+    <style name="SignupFormContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    
     <style name="SignupInputLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/aluminum6</item>
     </style>
     
+    <style name="SignupInputField">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
     <style name="SignupInputLabel.Email">
         <item name="android:text">@string/signup_xml_textview_email_str</item>
+    </style>
+    
+    <style name="SignupInputEmail" parent="LoginInput.Email">
+        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms</item>
+        <item name="android:hint">@null</item>
     </style>
     
     <style name="SignupInputLabel.Password">
         <item name="android:text">@string/signup_xml_textview_password_str</item>
     </style>
     
+    <style name="SignupInputPassword" parent="LoginInput.Password">
+        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms</item>
+        <item name="android:hint">@null</item>
+    </style>
+    
     <style name="SignupInputLabel.ConfirmPassword">
         <item name="android:text">@string/signup_xml_textview_confirm_password_str</item>
+    </style>
+    
+    <style name="SignupInputConfirmPassword" parent="LoginInput.Password">
+        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms</item>
+        <item name="android:hint">@null</item>
+    </style>
+    
+    <style name="SignupShowPassword">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">-20dp</item>
+        <item name="android:text">@string/signup_xml_checkbox_visible_characters_str</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="SignupSubmitButton" parent="LoginScreenButton.Login">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:background">@drawable/button_blue</item>
+        <item name="android:text">@string/login_xml_button_signup_str</item>
     </style>
     <!-- End Sign Up -->
 
