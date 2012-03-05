@@ -1,0 +1,120 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/aluminum1"
+        android:orientation="vertical"
+        android:paddingBottom="25dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="25dp" >
+
+        <TextView
+            android:id="@+id/generate_treasure_xml_textview_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#0e1f5b" />
+
+        <ImageView
+            android:id="@+id/generate_treasure_xml_imageview_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/hottub" />
+
+        <TextView
+            android:id="@+id/generate_treasure_xml_textview_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/aluminum6" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="This is a block of text describing the item and congratulating you, the chosen one, for finding this long lost relic, whilst also warning you against using it, lest its overwhelming power strips you of your humanity, turning you into a bloodthirsty, raving lunatic, no longer recognizable by his loved ones--no more a man than this long-winded verbiage is sensible."
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/aluminum4" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expires"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/aluminum6" />
+
+                <TextView
+                    android:id="@+id/generate_treasure_xml_textview_expiration_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/aluminum4" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Item Code"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/aluminum6" />
+
+                <TextView
+                    android:id="@+id/generate_treasure_xml_textview_barcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/aluminum4" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/generate_treasure_xml_button_facebook"
+                style="@style/TreasureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Fackbook" />
+
+            <Button
+                android:id="@+id/generate_treasure_xml_button_twitter"
+                style="@style/TreasureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Twitter" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

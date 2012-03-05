@@ -149,6 +149,12 @@ public class QuestActivity
 		Log.v(TAG,"I'm paused");
 		super.onPause();
 	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG,"I'm destroyed");
+		super.onPause();
+	}
 
 	public void updateAsyncTaskProgress(QuestItem q) {
 		questList.add(q);

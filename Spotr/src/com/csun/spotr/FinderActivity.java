@@ -14,12 +14,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -42,17 +40,12 @@ public class FinderActivity
 	private List<SeekingItem> items;
 	private GridView gridview;
 	private FinderItemAdapter adapter;
-	private Button buttonCreateItem;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-/*		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar); */
-		
 		setContentView(R.layout.finder);
 		
-		buttonCreateItem = (Button) findViewById(R.id.finder_xml_button);
+		Button buttonCreateItem = (Button) findViewById(R.id.finder_xml_button);
 		items = new ArrayList<SeekingItem>();
 		gridview = (GridView) findViewById(R.id.finder_xml_gridview);
 		adapter = new FinderItemAdapter(this, items);
@@ -84,7 +77,6 @@ public class FinderActivity
 		
 		private WeakReference<FinderActivity> ref;
 		private ProgressDialog progressDialog = null;
-		
 		
 		public GetFindersTask(FinderActivity a) {
 			attach(a);

@@ -267,7 +267,6 @@ public class FriendListFeedActivity
 	    public FeedOnScrollListener() {
 	    	
 	    }
-	    
 	    public FeedOnScrollListener(int visibleThreshold) {
 	        this.visibleThreshold = visibleThreshold;
 	    }

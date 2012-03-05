@@ -161,4 +161,16 @@ public class InboxActivity
 		inboxList.clear();
 		adapter.notifyDataSetChanged();
 	}
+	
+	@Override
+	public void onPause() {
+		Log.v(TAG,"I'm paused");
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG,"I'm destroyed");
+		super.onPause();
+	}
 }

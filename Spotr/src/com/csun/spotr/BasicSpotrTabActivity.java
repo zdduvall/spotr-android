@@ -5,6 +5,7 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 /**
@@ -12,6 +13,8 @@ import android.view.Window;
 * title bar) upon which tab-activities can be built. 
 */
 public class BasicSpotrTabActivity extends TabActivity {
+	private static final String TAG = "(BasicSpotrTabActivity)";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,4 +50,16 @@ public class BasicSpotrTabActivity extends TabActivity {
 //	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //	    startActivity (intent);
 //	}
+	
+	@Override
+	public void onPause() {
+		Log.v(TAG,"I'm paused");
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG,"I'm destroyed");
+		super.onPause();
+	}
 }

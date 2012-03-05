@@ -509,6 +509,18 @@
             </intent-filter>
         </activity>
         
+         <!-- Generate Treasure Activity -->
+        <activity
+            android:name=".GenerateTreasureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/CustomTheme" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.GenerateTreasureActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
          <!-- Treasure Activity -->
         <activity
             android:name=".TreasureActivity"
@@ -521,13 +533,25 @@
             </intent-filter>
         </activity>
         
-         <!-- Treasure Activity -->
+         <!-- Weapon Activity -->
+        <activity
+            android:name=".WeaponActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/CustomTheme" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.WeaponActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+          <!-- Inventory Activity -->
         <activity
             android:name=".InventoryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/CustomTheme" >
             <intent-filter>
-                <action android:name="com.csun.spotr.WeaponActivity" />
+                <action android:name="com.csun.spotr.InventoryActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -64,15 +64,8 @@ public class CreateFinderActivity extends Activity {
 	private static Location lastKnownLocation = null;
 	private static FineLocation fineLocation = new FineLocation();
 
-	private EditText editTextName;
-	private EditText editTextDescription;
-	private EditText editTextPoints;
-	private Button buttonPointsPlus;
-	private Button buttonPointsMinus;
-	private Button buttonSelectImage;
-	private Button buttonSubmit;
-	private Bitmap bitmapPicture = null;
 	private ImageView imageViewPicture;
+	private Bitmap bitmapPicture = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,13 +75,14 @@ public class CreateFinderActivity extends Activity {
 		// Hide the keyboard
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		editTextName = (EditText) findViewById(R.id.create_lost_item_xml_edittext_name);
-		editTextDescription = (EditText) findViewById(R.id.create_lost_item_xml_edittext_description);
-		editTextPoints = (EditText) findViewById(R.id.create_lost_item_xml_edittext_points);
-		buttonSelectImage = (Button) findViewById(R.id.create_lost_item_xml_button_choose_image);
-		buttonPointsPlus = (Button) findViewById(R.id.create_lost_item_xml_button_plus);
-		buttonPointsMinus = (Button) findViewById(R.id.create_lost_item_xml_button_minus);
-		buttonSubmit = (Button) findViewById(R.id.create_lost_item_xml_button_upload);
+		final EditText editTextName = (EditText) findViewById(R.id.create_lost_item_xml_edittext_name);
+		final EditText editTextDescription = (EditText) findViewById(R.id.create_lost_item_xml_edittext_description);
+		final EditText editTextPoints = (EditText) findViewById(R.id.create_lost_item_xml_edittext_points);
+		
+		final Button buttonSelectImage = (Button) findViewById(R.id.create_lost_item_xml_button_choose_image);
+		final Button buttonPointsPlus = (Button) findViewById(R.id.create_lost_item_xml_button_plus);
+		final Button buttonPointsMinus = (Button) findViewById(R.id.create_lost_item_xml_button_minus);
+		final Button buttonSubmit = (Button) findViewById(R.id.create_lost_item_xml_button_upload);
 		imageViewPicture = (ImageView) findViewById(R.id.create_lost_item_xml_imageview_item_images);
 
 		editTextPoints.setText(Integer.toString(itemPoints));
@@ -282,8 +276,6 @@ public class CreateFinderActivity extends Activity {
 		}
 
 		protected String doInBackground(String... params) {
-			
-			
 			finderData.add(new BasicNameValuePair("name", itemName));
 			finderData.add(new BasicNameValuePair("desc", itemDesc));
 			finderData.add(new BasicNameValuePair("points", Integer.toString(itemPoints)));

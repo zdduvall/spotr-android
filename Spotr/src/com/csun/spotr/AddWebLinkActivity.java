@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.GetChars;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
@@ -77,5 +78,17 @@ public class AddWebLinkActivity extends Activity {
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			return false;
 		}
+	}
+	
+	@Override
+	public void onPause() {
+		Log.v(TAG,"I'm paused");
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG,"I'm destroyed");
+		super.onPause();
 	}
 }
