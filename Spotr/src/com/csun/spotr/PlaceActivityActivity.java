@@ -13,11 +13,9 @@ import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.FriendFeedItemAdapter;
-import com.csun.spotr.adapter.PlaceFeedItemAdapter;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
-import com.csun.spotr.core.adapter_item.PlaceFeedItem;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -76,12 +74,12 @@ public class PlaceActivityActivity
 		task = new GetPlaceFeedTask(this, 0);
 		task.execute();	
 		
-		/* 
+		/**
 		 * Handle onScroll event, when the user scroll to see more items,
 		 * we run another task to get more data from the server.
 		 * Since each item occupies 1/3 of the screen, we only load 5 items
 		 * at a time to save time and increase performance.
-		 */
+		 **/
 		listview.setOnScrollListener(new FeedOnScrollListener());
     }
     
@@ -135,24 +133,31 @@ public class PlaceActivityActivity
 							return true;
 						}
 	
-						String userPictureUrl = null;
-						String snapPictureUrl = null;
-						String shareUrl = null;
+						String snapPictureUrl = "";
+    					String userPictureUrl = "";
+    					String shareUrl = "";
+    					String treasureIconUrl = "";
+    					String company = "";
 					
-						if(array.getJSONObject(i).getString("users_tbl_user_image_url") != null) {
-							userPictureUrl = array.getJSONObject(i).getString("users_tbl_user_image_url");
-						}
-						
-						if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
-							snapPictureUrl = array.getJSONObject(i).getString("activity_tbl_snap_picture_url");
-						}
-						
-						if(array.getJSONObject(i).has("activity_tbl_share_url") && !array.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
-							shareUrl = array.getJSONObject(i).getString("activity_tbl_share_url");
-						}
-						else {
-							shareUrl = "";
-						}
+    					if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE) {
+    						snapPictureUrl = array.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+    					}
+    					
+    					if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.FIND_TREASURE) {
+    						treasureIconUrl = array.getJSONObject(i).getString("activity_tbl_treasure_icon_url");
+    						company = array.getJSONObject(i).getString("activity_tbl_treasure_company");
+    					}
+    					
+    					if(array.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
+    						userPictureUrl = array.getJSONObject(i).getString("users_tbl_user_image_url");
+    					}
+    					
+    					if(array.getJSONObject(i).has("activity_tbl_share_url") && !array.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
+    						shareUrl = array.getJSONObject(i).getString("activity_tbl_share_url");
+    					}
+    					else {
+    						shareUrl = "";
+    					}
 						
 						FriendFeedItem ffi = 
 							new FriendFeedItem.Builder(
@@ -172,6 +177,8 @@ public class PlaceActivityActivity
 									.shareUrl(shareUrl)
 									.numberOfComments(array.getJSONObject(i).getInt("activity_tbl_total_comments"))
 	    							.likes(array.getJSONObject(i).getInt("activity_tbl_likes"))
+	    							.treasureIconUrl(treasureIconUrl)
+    								.treasureCompany(company)
 	    								.build();
 						
 						data.clear();

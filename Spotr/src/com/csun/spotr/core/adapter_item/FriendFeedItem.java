@@ -22,6 +22,8 @@ public class FriendFeedItem {
 	private int likes;
 	private int numberOfComments;
 	private Comment firstComment;
+	private String treasureIconUrl;
+	private String treasureCompany;
 
 	public static class Builder {
 		// required parameters
@@ -42,6 +44,8 @@ public class FriendFeedItem {
 		private int likes;
 		private int numberOfComments;
 		private Comment firstComment;
+		private String treasureIconUrl;
+		private String treasureCompany;
 
 		public Builder(int activityId, int friendId, String friendName, Challenge.Type challengeType, String activityTime, String placeName) {
 			this.activityId = activityId;
@@ -96,6 +100,16 @@ public class FriendFeedItem {
 			this.firstComment = firstComment;
 			return this;
 		}
+		
+		public Builder treasureIconUrl(String treasureIconUrl) {
+			this.treasureIconUrl = treasureIconUrl;
+			return this;
+		}
+		
+		public Builder treasureCompany(String treasureCompany) {
+			this.treasureCompany = treasureCompany;
+			return this;
+		}
 
 		public FriendFeedItem build() {
 			return new FriendFeedItem(this);
@@ -119,6 +133,8 @@ public class FriendFeedItem {
 		this.likes = builder.likes;
 		this.numberOfComments = builder.numberOfComments;
 		this.firstComment = builder.firstComment;
+		this.treasureIconUrl = builder.treasureIconUrl;
+		this.treasureCompany = builder.treasureCompany;
 	}
 
 	public int getNumberOfComments() {
@@ -164,9 +180,9 @@ public class FriendFeedItem {
 	public String getActivitySnapPictureUrl() {
 		return activitySnapPictureUrl;
 	}
-
-	public void setActivitySnapPictureUri(String url) {
-		this.activitySnapPictureUrl = url;
+	
+	public void setActivitySnapPictureUrl(String activitySnapPictureUrl) {
+		this.activitySnapPictureUrl = activitySnapPictureUrl;
 	}
 
 	public String getFriendPictureUrl() {
@@ -216,7 +232,23 @@ public class FriendFeedItem {
 	public void setFirstComment(Comment firstComment) {
 		this.firstComment = firstComment;
 	}
+	
+	public String getTreasureIconUrl() {
+		return treasureIconUrl;
+	}
 
+	public void setTreasureIconUrl(String treasureIconUrl) {
+		this.treasureIconUrl = treasureIconUrl;
+	}
+
+	public String getTreasureCompany() {
+		return treasureCompany;
+	}
+
+	public void setTreasureCompany(String treasureCompany) {
+		this.treasureCompany = treasureCompany;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
