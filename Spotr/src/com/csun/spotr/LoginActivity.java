@@ -55,8 +55,7 @@ public class LoginActivity
 	private SharedPreferences prefs;
 	private SharedPreferences.Editor editor;
 	private boolean prefsSavePassword = false;
-	private boolean passwordVisible = false;
-	private boolean savePassword = true;//false;
+	private boolean savePassword = true;
 	private LoginTask task = null;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,15 +68,13 @@ public class LoginActivity
 		String prefsUsername = prefs.getString("username", "");
 		String prefsPassword = prefs.getString("password", "");
 
-		CheckBox checkVisible = (CheckBox) findViewById(R.id.login_xml_checkbox_visible_characters);
-		CheckBox checkSavePassword = (CheckBox) findViewById(R.id.login_xml_checkbox_remember_password);
 		edittextUsername = (EditText) findViewById(R.id.login_xml_edittext_email_id);
 		edittextPassword = (EditText) findViewById(R.id.login_xml_edittext_password_id);
 		Button buttonLogin = (Button) findViewById(R.id.login_xml_button_login);
 		Button buttonSignup = (Button) findViewById(R.id.login_xml_button_signup);
 		
 		// check Internet connection
-		if (isNetworkAvailableAndConnected() == false) {
+		if (!isNetworkAvailableAndConnected()) {
 			showDialog(CONNECTION_ERROR);
 			buttonLogin.setEnabled(false);
 			buttonSignup.setEnabled(false);
@@ -90,19 +87,6 @@ public class LoginActivity
 			// performLogin();
 		}
 
-		checkVisible.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (passwordVisible) {
-					edittextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-					passwordVisible = false;
-				}
-				else {
-					edittextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-					passwordVisible = true;
-				}
-			}
-		});
-
 		buttonLogin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				performLogin();
@@ -113,15 +97,6 @@ public class LoginActivity
 			public void onClick(View v) {
 				startActivity(new Intent(getApplicationContext(), SignupActivity.class));
 				finish();
-			}
-		});
-
-		checkSavePassword.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (!savePassword)
-					savePassword = true;
-				else
-					savePassword = false;
 			}
 		});
 		

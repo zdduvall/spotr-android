@@ -7,7 +7,7 @@
     <string name="login_xml_checkbox_remember_password_str">Remember password</string>
     <string name="login_xml_checkbox_visible_password_str">Show visible password</string>
     <string name="login_xml_button_login_str">Log in</string>
-    <string name="login_xml_button_signup_str">Sign Up</string> 
+    <string name="login_xml_button_signup_str">Sign up</string> 
     <string name="login_xml_textview_version_str">V1.0</string>
     <string name="login_xml_hyperlink_signup_str"><a href="http://107.22.209.62/web_app/register.php">Sign Up</a></string>
         
