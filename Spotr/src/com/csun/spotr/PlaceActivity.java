@@ -119,7 +119,7 @@ public class PlaceActivity
         
         final ToolbarAction quickAction = new ToolbarAction(this, ToolbarAction.HORIZONTAL);
 		
-		//add action items into QuickAction
+		// add action items into QuickAction
         quickAction.addActionItem(itemBonus);
 		quickAction.addActionItem(itemLoan);
         quickAction.addActionItem(itemLuck);
@@ -128,8 +128,7 @@ public class PlaceActivity
         quickAction.addActionItem(itemTeleport);
         quickAction.addActionItem(itemTelescope);
         
-        ImageView tool = (ImageView) findViewById(R.id.place_xml_imageview_toolbar_button);
-        
+        ImageButton tool = (ImageButton) findViewById(R.id.title_bar_btn_spots_tool);
         tool.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				quickAction.show(v);
