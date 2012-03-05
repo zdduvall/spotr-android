@@ -62,27 +62,32 @@ public class ProfileActivity
 	extends Activity 
 		implements IActivityProgressUpdate<FriendFeedItem> {
 	
-	private static final 	String 					TAG = "(ProfileActivity)";
-	private static final 	String 					GET_USER_DETAIL_URL = "http://107.22.209.62/android/get_user_detail.php";
-	private static final 	String 					GET_USER_FEEDS = "http://107.22.209.62/android/get_current_user_feeds.php";
-	private static final 	String 					GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
-	private static final    String					UPDATE_PICTURE_URL = "http://107.22.209.62/images/upload_user_picture.php";
+	private static final String TAG = "(ProfileActivity)";
+	private static final String GET_USER_DETAIL_URL = "http://107.22.209.62/android/get_user_detail.php";
+	private static final String GET_USER_FEEDS = "http://107.22.209.62/android/get_current_user_feeds.php";
+	private static final String GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
+	private static final String	UPDATE_PICTURE_URL = "http://107.22.209.62/images/upload_user_picture.php";
 	
-	private static final 	int 					CAMERA_PICTURE = 111;
-	private static final 	int 					GALLERY_PICTURE = 222;
+	private static final 	int CAMERA_PICTURE = 111;
+	private static final 	int GALLERY_PICTURE = 222;
 	
-	private 				ListView 				listview;
-	private 				FriendFeedItemAdapter   adapter;
-	private					List<FriendFeedItem>    feedList;
-	private 				Bitmap 					bitmapUserPicture = null;
-	private					GetUserDetailTask		task;
-	private 				int 					userId = -1;
+	private ListView 				listview;
+	private FriendFeedItemAdapter   adapter;
+	private	List<FriendFeedItem>    feedList;
+	private Bitmap 					bitmapUserPicture = null;
+	private	GetUserDetailTask		task;
+	private int 					userId = -1;
 	
-	private					Button					editButton;
+	private	Button					editButton;
 	
-	private					OnClickListener			friendsClick;
-	private					OnClickListener			badgeClick;
-	private					String					imageLocation;
+	private	OnClickListener			friendsClick;
+	private	OnClickListener			badgeClick;
+	private	String					imageLocation;
+	
+	private String realname = "n/a";
+	private String education = "n/a";
+	private String hometown = "n/a";
+	private String hobbies = "n/a";
 				
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +96,7 @@ public class ProfileActivity
 		
 		editButton = (Button) findViewById(R.id.profile_xml_button_edit);
 		
-		// Views created to make entire area clickable
+		// views created to make entire area clickable
 		View friendsButton1 = (View) findViewById(R.id.profile_xml_friends_1);
 		View friendsButton2 = (View) findViewById(R.id.profile_xml_friends_2);
 		View friendsButton3 = (View) findViewById(R.id.profile_xml_friends_3);
@@ -122,6 +127,9 @@ public class ProfileActivity
 		if(imageViewUserPicture.isClickable())
 			imageViewUserPicture.setClickable(false);
 	
+		// wait for user's data available 
+		editButton.setEnabled(false);
+		
 		editButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Intent intent;
@@ -130,6 +138,10 @@ public class ProfileActivity
 				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
 				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
 				extras.putString("imageUrl", imageLocation);
+				extras.putString("name", realname);
+			    extras.putString("education", education);
+			    extras.putString("hometown", hometown);
+			    extras.putString("hobbies", hobbies);
 				intent = new Intent("com.csun.spotr.ProfileEditActivity");
 				intent.putExtras(extras);
 				startActivity(intent);
@@ -275,6 +287,10 @@ public class ProfileActivity
 							.imageUrl(array.getJSONObject(0).getString("users_tbl_user_image_url"))
 							.numFriends(array.getJSONObject(0).getInt("num_friends"))
 							.numBadges(array.getJSONObject(0).getInt("num_badges"))
+							.realname(array.getJSONObject(0).getString("users_tbl_real_name"))
+							.education(array.getJSONObject(0).getString("users_tbl_education"))
+							.hometown(array.getJSONObject(0).getString("users_tbl_hometown"))
+							.hobbies(array.getJSONObject(0).getString("users_tbl_hobbies"))
 								.build();
 				
 			}
@@ -584,6 +600,13 @@ public class ProfileActivity
 		
 		TextView textViewNumBadges = (TextView) findViewById(R.id.profile_xml_textview_numrewards);
 		textViewNumBadges.setText(Integer.toString(u.getNumBadges()));
+		
+		// now user can edit his/her profile
+		editButton.setEnabled(true);
+		realname = u.getRealname();
+		education = u.getEducation();
+		hometown = u.getHometown();
+		hobbies = u.getHobbies();
 	}
 	
 	@Override 
