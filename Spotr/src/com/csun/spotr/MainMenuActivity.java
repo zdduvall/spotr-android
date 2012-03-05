@@ -281,8 +281,10 @@ public class MainMenuActivity
 		case R.id.options_menu_xml_item_logout_icon :
 			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
 			editor.clear();
-			editor.commit();
+			System.out.println("SUCKS");
+			if(!editor.commit()) System.out.println("LOLWUT");
 			intent = new Intent("com.csun.spotr.LoginActivity");
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		}

@@ -43,7 +43,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">@drawable/rectangle_gradient_aluminum6</item>
+        <item name="android:background">@drawable/rectangle_gradient_al6_al5d5</item>
     </style>
     
     <style name="TitleBarNav">
@@ -144,42 +144,38 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingTop">20dp</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">40dp</item>
         <item name="android:background">@color/vimeo_grey</item>
     </style>
-    
-    <style name="LinearLayoutShadow.Login">
-        <item name="android:layout_width">match_parent</item>
-    </style>
-    
-    <style name="LoginIntro">
+        
+    <style name="LoginSignUpContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/rectangle_rounded_vimeo_grey</item>
-        <item name="android:padding">15dp</item>    
     </style>
-    
-    <style name="TagLine">
+        
+    <style name="LoginSignUpContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rectangle_gradient_al6_al5d5</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">28dp</item>
+        <item name="android:paddingBottom">15dp</item>
+    </style>
+
+    <style name="LoginTagLine">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/login_xml_textview_tagline_str</item>
-        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textColor">@color/aluminum1</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:lineSpacingExtra">15dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">20dp</item>
     </style>
     
-    <style name="SignUpButton">
+    <style name="LoginScreenButton">
         <item name="android:layout_width">130dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_marginRight">30dp</item>
-        <item name="android:layout_alignBottom">@id/login_xml_tagline</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:background">@drawable/button_orange</item>
-        <item name="android:text">@string/login_xml_button_signup_str</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
@@ -189,51 +185,64 @@
         <item name="android:shadowDy">-0.6</item>
     </style>
     
+    <style name="LoginScreenButton.SignUp">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+        <item name="android:layout_alignBottom">@id/login_xml_tagline</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/button_pink</item>
+        <item name="android:text">@string/login_xml_button_signup_str</item>
+    </style>
+    
+    <style name="LoginShadowBorderTop">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">6dp</item>
+        <item name="android:layout_alignTop">@id/login_xml_signup_content</item>
+        <item name="android:background">@drawable/shadow_border_top</item>
+    </style>
+
+    <style name="LoginShadowBorderBottom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">7dp</item>
+        <item name="android:layout_alignBottom">@id/login_xml_signup_content</item>
+        <item name="android:background">@drawable/shadow_border_bottom</item>
+    </style>
+  
     <style name="LoginInputFields">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
         <item name="android:layout_marginTop">50dp</item>
         <item name="android:layout_marginBottom">25dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-    </style>
-            
-    <style name="LoginEmail">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/rectangle_rounded_tops</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:inputType">textEmailAddress</item>
-        <item name="android:textColor">@color/aluminum6</item>
-        <item name="android:hint">@string/login_xml_textview_email_str</item>
-        <item name="android:textColorHint">#ffacb6c2</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
     
-    <style name="LoginPassword">
+    <style name="LoginInput">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textColorHint">#ffacb6c2</item>
+        
+    </style>
+            
+    <style name="LoginInput.Email">
+        <item name="android:background">@drawable/rectangle_rounded_tops</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:hint">@string/login_xml_textview_email_str</item>
+    </style>
+    
+    <style name="LoginInput.Password">
         <item name="android:layout_marginTop">-2dp</item>
         <item name="android:background">@drawable/rectangle_rounded_bottoms</item>
-        <item name="android:singleLine">true</item>
         <item name="android:inputType">textPassword</item>
-        <item name="android:textColor">@color/aluminum6</item>
         <item name="android:hint">@string/login_xml_textview_password_str</item>
-        <item name="android:textColorHint">#ffacb6c2</item>
     </style>
         
-    <style name="LogInButton">
-        <item name="android:layout_width">130dp</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="LoginScreenButton.Login">
         <item name="android:background">@drawable/button_blue</item>
         <item name="android:text">@string/login_xml_button_login_str</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:shadowColor">@android:color/black</item>
-        <item name="android:shadowRadius">1.2</item>
-        <item name="android:shadowDx">-0.5</item>
-        <item name="android:shadowDy">-0.6</item>
     </style>            
     <!-- End Login -->
 
@@ -821,7 +830,10 @@
     <style name="LinearLayoutShadow">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
         <item name="android:background">@drawable/shadow</item>
     </style>
 

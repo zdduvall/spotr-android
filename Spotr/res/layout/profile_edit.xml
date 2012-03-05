@@ -68,10 +68,10 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/profile_edit_xml_textview_education"
+                android:id="@+id/profile_edit_xml_textview_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Education"
+                android:text="Password"
                 android:textColor="@color/aluminum6" />
             
             <EditText
@@ -83,7 +83,7 @@
                 android:id="@+id/profile_edit_xml_textview_education"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password"
+                android:text="Education"
                 android:textColor="@color/aluminum6" />
 
             <EditText
