@@ -92,7 +92,7 @@ public class TreasureActivity
 		protected Boolean doInBackground(Integer... offsets) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
 			// retrieve data from server
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_TREASURES_URL, data);
 			if (array != null) {
