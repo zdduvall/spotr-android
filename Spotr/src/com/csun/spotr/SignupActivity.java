@@ -162,8 +162,8 @@ public class SignupActivity
 			return 
 				new AlertDialog.Builder(this)
 					.setIcon(R.drawable.error_circle)
-					.setTitle("Error Message")
-					.setMessage("Confirm password does not match.\n Please try again.")
+					.setTitle("Error")
+					.setMessage("Passwords do not match.\n Please try again.")
 					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -174,8 +174,8 @@ public class SignupActivity
 			return 
 				new AlertDialog.Builder(this)
 					.setIcon(R.drawable.error_circle)
-					.setTitle("Error Message")
-					.setMessage("This is not a valid email address.\n Please try again.")
+					.setTitle("Error")
+					.setMessage("Invalid email address.\n Please try again.")
 					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							
@@ -185,9 +185,8 @@ public class SignupActivity
 		case 2 :
 			return 
 				new AlertDialog.Builder(this)
-					.setIcon(R.drawable.bug)
-					.setTitle("Congratz")
-					.setMessage("Your account has been created. Log in and have fun playing SPOTR.")
+					.setTitle("Woohoo!")
+					.setMessage("Your account has been created. Log in and have fun playing Spotr!")
 					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							startActivity(new Intent("com.csun.spotr.LoginActivity"));
@@ -197,8 +196,8 @@ public class SignupActivity
 		case 3 :
 			return new AlertDialog.Builder(this)
 				.setIcon(R.drawable.error_circle)
-				.setTitle("Error Message")
-				.setMessage("This email has been used.\n Please try again.")
+				.setTitle("Error")
+				.setMessage("This email is already in use.\n Please try again.")
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 

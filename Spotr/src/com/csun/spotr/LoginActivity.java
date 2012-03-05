@@ -96,7 +96,6 @@ public class LoginActivity
 		buttonSignup.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				startActivity(new Intent(getApplicationContext(), SignupActivity.class));
-				finish();
 			}
 		});
 				
@@ -109,7 +108,6 @@ public class LoginActivity
 				return false;
 			}
 		});
-		
 	}
 	
 	protected void setupTitleBar() {
@@ -159,7 +157,6 @@ public class LoginActivity
 
 	public void onPause() {
 		super.onPause();
-		finish();
 	}
 	
 	private static class LoginTask 
