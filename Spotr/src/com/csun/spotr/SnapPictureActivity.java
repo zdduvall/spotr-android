@@ -37,27 +37,42 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		Take a picture and upload to server
  */
 public class SnapPictureActivity 
 	extends Activity {
 
-	private static final 	String 			TAG = "(SnapPictureActivity)";
-	private static final 	String 			SNAP_PICTURE_URL = "http://107.22.209.62/images/upload_picture.php";
+	private static final String TAG = "(SnapPictureActivity)";
+	private static final String SNAP_PICTURE_URL = "http://107.22.209.62/images/upload_picture.php";
 	
-	private 				Bitmap 			takenPictureBitmap = null;
-	private 				String 			usersId;
-	private 				String 			spotsId;
-	private 				String 			challengesId;
-	private 				String 			comment;
-	private 				String			link;
+	private static final int INTENT_RESULT_LINK = 0;
+	private static final int INTENT_RESULT_TAKE_PICTURE = 1;
+	
+	private Bitmap takenPictureBitmap = null;
+	private String usersId;
+	private String spotsId;
+	private String challengesId;
+	private String comment;
+	private String link;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.snap_picture);
 		
+		initChallengeInfoFromBundle();
+		
+		setupLinkButton();
+		
+		setupTakePicture();
+	}
+	
+	private void initChallengeInfoFromBundle() {
 		Bundle extras = getIntent().getExtras();
 		usersId = extras.getString("users_id");
 		spotsId = extras.getString("spots_id");
@@ -65,31 +80,31 @@ public class SnapPictureActivity
 		
 		// dummy comment
 		comment = "hello snap picture";
-		// initialize two buttons	
-		
-		Button buttonLink = (Button) findViewById(R.id.snap_picture_xml_button_choose_link);
+	}
+	
+	private void setupLinkButton() {
+		final Button buttonLink = (Button) findViewById(R.id.snap_picture_xml_button_choose_link);
 		buttonLink.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				int dummy = 0;
 				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
-				startActivityForResult(intent, 0);
+				startActivityForResult(intent, INTENT_RESULT_LINK);
 			}
 		});
-		
-		
+	}
+	
+	private void setupTakePicture() {
 		final ImageView imageViewTakePicture = (ImageView) findViewById(R.id.snap_picture_xml_imageview_go);
 		imageViewTakePicture.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				startActivityForResult(intent, 1);
+				startActivityForResult(intent, INTENT_RESULT_TAKE_PICTURE);
 			}
 		});
-		
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 0) {
+		if (requestCode == INTENT_RESULT_LINK) {
 			if (resultCode == RESULT_OK) {
 				Bundle b = data.getExtras();
 				String url = b.getString("link");
@@ -98,43 +113,57 @@ public class SnapPictureActivity
 			}
 		
 		}
-		else {
+		else if (requestCode == INTENT_RESULT_TAKE_PICTURE) {
 			if (resultCode == RESULT_OK) {
-				ImageView imageViewPreview = (ImageView) findViewById(R.id.snap_picture_xml_imageview_preview_picture);
-				// here is the image from camera
+				// get bitmap from the take picture actvity
 				takenPictureBitmap = (Bitmap) data.getExtras().get("data");
-				// initialize image view
-				imageViewPreview.setImageBitmap(takenPictureBitmap);
-				final Button buttonUpload = (Button) findViewById(R.id.snap_picture_xml_button_next);
-				// only enable this button when data is available
-				buttonUpload.setEnabled(true);
-				buttonUpload.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						// disable both buttons to avoid user hit the back button, then hit upload again
-						buttonUpload.setEnabled(false);
-						// start upload picture to server
-						ByteArrayOutputStream stream = new ByteArrayOutputStream();
-						// compress picture and add to stream (PNG)
-						takenPictureBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-						// create raw data src
-						byte[] src = stream.toByteArray();
-						// encode it
-						String byteCode = Base64.encodeBytes(src);
-						
-						EditText editTextLink = (EditText) findViewById(R.id.snap_picture_xml_edittext_link);
-						link = editTextLink.getText().toString();
-						UploadPictueTask task = new UploadPictueTask(SnapPictureActivity.this, byteCode, usersId, spotsId, challengesId, comment, link);
-						task.execute();
-					}
-				});
+				
+				// display it
+				displayNewTakenImage(takenPictureBitmap);
+				
+				// now activate upload button
+				activateUploadButton();
 			}
 		}
+		else {
+			Log.e(TAG, "Unexpected result has occurred!");
+		}
+	}
+	
+	private String getByteCodeFromBitmap(Bitmap bitmap) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		// compress picture and add to stream (PNG)
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+		// create raw data src
+		byte[] src = stream.toByteArray();
+		// encode it
+		return Base64.encodeBytes(src);
+	}
+	
+	private void activateUploadButton() {
+		final Button buttonUpload = (Button) findViewById(R.id.snap_picture_xml_button_next);
+		buttonUpload.setEnabled(true);
+		buttonUpload.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				String byteCode = getByteCodeFromBitmap(takenPictureBitmap);
+				EditText editTextLink = (EditText) findViewById(R.id.snap_picture_xml_edittext_link);
+				link = editTextLink.getText().toString();
+				UploadPictueTask task = new UploadPictueTask(SnapPictureActivity.this, byteCode, usersId, spotsId, challengesId, comment, link);
+				task.execute();
+			}
+		});
+	}
+	
+	private void displayNewTakenImage(Bitmap takenPictureBitmap) {
+		ImageView imageViewPreview = (ImageView) findViewById(R.id.snap_picture_xml_imageview_preview_picture);
+		imageViewPreview.setImageBitmap(takenPictureBitmap);
 	}
 
 	private static class UploadPictueTask 
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<SnapPictureActivity> {
 		
+		private static final String TAG = "[AsyncTask].UploadPictureTask";
 		private WeakReference<SnapPictureActivity> ref;
 		private String pictureByteCode;
 		private String usersId;
@@ -157,32 +186,29 @@ public class SnapPictureActivity
 		protected void onPreExecute() {
 			
 		}
-
-		@Override
-		protected String doInBackground(Void... voids) {
-			
+		
+		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> datas = new ArrayList<NameValuePair>();
-			// send encoded data to server
 			datas.add(new BasicNameValuePair("image", pictureByteCode));
-			// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
-			// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
-			datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
-			// send the rest of data
+			datas.add(new BasicNameValuePair("file_name",  getPictureFileName()));
 			datas.add(new BasicNameValuePair("users_id", usersId));
 			datas.add(new BasicNameValuePair("spots_id", spotsId));
 			datas.add(new BasicNameValuePair("challenges_id", challengesId));
 			datas.add(new BasicNameValuePair("comment", comment));
 			datas.add(new BasicNameValuePair("link", link));
-			
-			// get JSON to check result
+			return datas;
+		}
+
+		@Override
+		protected String doInBackground(Void... voids) {
+			List<NameValuePair> datas = prepareUploadData();
 			JSONObject json = UploadFileHelper.uploadFileToServer(SNAP_PICTURE_URL, datas);
-		
 			String result = "";
 			try {
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 			}
 			return result;
 		}
@@ -207,6 +233,10 @@ public class SnapPictureActivity
 		public void detach() {
 			ref.clear();
 		}
+		
+		private String getPictureFileName() {
+			return CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png";
+		}
 	}
 	
 	@Override
@@ -214,6 +244,38 @@ public class SnapPictureActivity
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.all_menu, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+			case R.id.options_menu_xml_item_setting_icon:
+				intent = new Intent("com.csun.spotr.SettingsActivity");
+				startActivity(intent);
+				finish();
+				break;
+			case R.id.options_menu_xml_item_logout_icon:
+				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
+				editor.clear();
+				editor.commit();
+				intent = new Intent("com.csun.spotr.LoginActivity");
+				startActivity(intent);
+				finish();
+				break;
+			case R.id.options_menu_xml_item_mainmenu_icon:
+				intent = new Intent("com.csun.spotr.MainMenuActivity");
+				startActivity(intent);
+				finish();
+				break;
+		}
+		return true;
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
@@ -242,31 +304,5 @@ public class SnapPictureActivity
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-		}
-		return true;
 	}
 }

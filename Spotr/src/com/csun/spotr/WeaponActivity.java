@@ -13,18 +13,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.csun.spotr.adapter.WeaponAdapter;
 import com.csun.spotr.core.Weapon;
@@ -32,6 +27,10 @@ import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 /**
  * Description: Display user's weapons
@@ -50,7 +49,11 @@ public class WeaponActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.weapon);
-
+		setupListView();
+		new GetWeaponTask(this).execute();
+	}
+	
+	private void setupListView() {
 		listview = (ListView) findViewById(R.id.weapon_xml_listview_weapons);
 		adapter = new WeaponAdapter(this, weaponList);
 		listview.setAdapter(adapter);
@@ -60,9 +63,6 @@ public class WeaponActivity
 				showDialog(0);
 			}
 		});
-		
-
-		new GetWeaponTask(this).execute();
 	}
 	
 	private static class GetWeaponTask 
@@ -87,10 +87,8 @@ public class WeaponActivity
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
 			// send user id
 			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			
 			// retrieve data from server
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_WEAPON_URL, data);
 			

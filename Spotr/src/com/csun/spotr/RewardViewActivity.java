@@ -28,6 +28,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 public class RewardViewActivity extends Activity {
 	private static final String TAG = "(RewardViewActivity)";
 	private static final String CONVERT_BADGE_TO_POINTS_URL = "http://107.22.209.62/android/convert_badge_to_points.php";
@@ -38,16 +42,20 @@ public class RewardViewActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reward_view);
-		
+		final Bundle extras = getIntent().getExtras();
+		displayBadgeInfo(extras);
+		displayImage(extras.getString("url"));
+		setupConvertButton(CurrentUser.getCurrentUser().getId(), extras.getInt("id"), extras.getInt("points"));
+	}
+	
+	private void displayBadgeInfo(Bundle extras) {
 		TextView textViewName = (TextView) findViewById(R.id.reward_view_xml_textview_name);
 		TextView textViewDescription = (TextView) findViewById(R.id.reward_view_xml_textview_description);
 		TextView textViewPoints = (TextView) findViewById(R.id.reward_view_xml_textview_points);
 		TextView textViewDate = (TextView) findViewById(R.id.reward_view_xml_textview_date);
-		ImageView imageViewBadge = (ImageView) findViewById(R.id.reward_view_xml_imageview_badge);
 		Button buttonConvert = (Button) findViewById(R.id.reward_view_xml_button_convert);
 		
-		final Bundle extras = getIntent().getExtras();
-		if(extras.getInt("points") == -1) {
+		if (extras.getInt("points") == -1) {
 			buttonConvert.setVisibility(View.GONE);
 			textViewPoints.setVisibility(View.GONE);
 			textViewDate.setVisibility(View.GONE);
@@ -57,23 +65,23 @@ public class RewardViewActivity extends Activity {
 		textViewDescription.setText(extras.getString("description"));
 		textViewDate.setText(extras.getString("date"));
 		textViewPoints.setText(Integer.toString(extras.getInt("points")));
-		
+	}
+	
+	private void displayImage(String url) {
+		ImageView imageViewBadge = (ImageView) findViewById(R.id.reward_view_xml_imageview_badge);
 		ImageLoader imageLoader = new ImageLoader(this);
-		imageLoader.displayImage(extras.getString("url"), imageViewBadge);
-		
+		imageLoader.displayImage(url, imageViewBadge);
+	}
+	
+	private void setupConvertButton(final int userId, final int badgeId, final int points) {
+		Button buttonConvert = (Button) findViewById(R.id.reward_view_xml_button_convert);
 		buttonConvert.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				task = new ConvertBadgeTask(
-					RewardViewActivity.this, 
-					CurrentUser.getCurrentUser().getId(), 
-					extras.getInt("id"), 
-					extras.getInt("points"));
-				
+				task = new ConvertBadgeTask(RewardViewActivity.this, userId, badgeId, points);
 				task.execute();
 			}
 		});
 	}
-	
 	private static class ConvertBadgeTask 
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<RewardViewActivity> {

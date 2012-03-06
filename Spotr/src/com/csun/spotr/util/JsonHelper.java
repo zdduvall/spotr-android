@@ -131,7 +131,7 @@ public class JsonHelper {
 			jsonArray = new JSONArray(result);
 		}
 		catch (JSONException e) {
-			Log.e(TAG + "getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data " + e.toString());
+			Log.v(TAG + "getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data " + e.toString());
 			return null; // should this be here?
 		}
 		return jsonArray;

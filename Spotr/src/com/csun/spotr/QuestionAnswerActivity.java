@@ -32,36 +32,38 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-/*
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description
  * 		Display question and let user response 
- */
+ **/
 public class QuestionAnswerActivity 
 	extends Activity {
 	
-	private static final 	String 					TAG = "(SnapPictureActivity)";
-	private static final 	String 					QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
+	private static final String TAG = "(QuestionAnswerActivity)";
+	private static final String QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
+	private static final int INTENT_RESULT_LINK = 0;
+	private String usersId;
+	private String spotsId;
+	private String challengesId;
+	private String challengeQuestion;
+	private String userAnswer;
+	private String link;
 	
-	private 				String 					usersId;
-	private 				String 					spotsId;
-	private 				String 					challengesId;
-	private 				String 					challengeQuestion;
-	private 				String 					userAnswer;
-	private 				String 					link;
-	
-	private 				QuestionAnswerTask 		task = null;
+	private QuestionAnswerTask task = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.question_answer);
-		
-		Bundle extras = getIntent().getExtras();
-		usersId = extras.getString("users_id");
-		spotsId = extras.getString("spots_id");
-		challengesId = extras.getString("challenges_id");
-		challengeQuestion = extras.getString("question_description");
+		initChallengeInfoFromBundle();
+		setupUIandListener();
+	}
 	
+	private void setupUIandListener() {
 		TextView textViewQuestion = (TextView) findViewById(R.id.question_answer_xml_textview_question);
 		textViewQuestion.setText(challengeQuestion);
 		
@@ -87,11 +89,18 @@ public class QuestionAnswerActivity
 		
 		buttonLink.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				int dummy = 0;
 				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
-				startActivityForResult(intent, 0);
+				startActivityForResult(intent, INTENT_RESULT_LINK);
 			}
 		});
+	}
+	
+	private void initChallengeInfoFromBundle() {
+		Bundle extras = getIntent().getExtras();
+		usersId = extras.getString("users_id");
+		spotsId = extras.getString("spots_id");
+		challengesId = extras.getString("challenges_id");
+		challengeQuestion = extras.getString("question_description");
 	}
 
 	private static class QuestionAnswerTask 
@@ -125,16 +134,19 @@ public class QuestionAnswerActivity
 			progressDialog.show();
 		}
 
-		@Override
-		protected String doInBackground(Void... params) {
+		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
 			data.add(new BasicNameValuePair("users_id", usersId));
 			data.add(new BasicNameValuePair("spots_id", spotsId));
 			data.add(new BasicNameValuePair("challenges_id", challengesId));
 			data.add(new BasicNameValuePair("user_answer", userAnswer));
 			data.add(new BasicNameValuePair("link", link));
-			
+			return data;
+		}
+		
+		@Override
+		protected String doInBackground(Void... params) {
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(QUESTION_ANSWER_URL, data);
 			String result = "";
 			try {
@@ -187,30 +199,6 @@ public class QuestionAnswerActivity
 	}
 	
 	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-
-	@Override
-	public void onRestart() {
-		Log.v(TAG, "I'm restarted!");
-		super.onRestart();
-	}
-
-	@Override
-	public void onStop() {
-		Log.v(TAG, "I'm stopped!");
-		super.onStop();
-	}
-
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
@@ -244,5 +232,35 @@ public class QuestionAnswerActivity
 				editTextUrl.setText(url);
 			}
 		}
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

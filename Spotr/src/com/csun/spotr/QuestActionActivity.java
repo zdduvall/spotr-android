@@ -40,39 +40,35 @@ public class QuestActionActivity
 	extends Activity 
 		implements IActivityProgressUpdate<Challenge> {
 	
-	private static final 	String 					TAG = "(QuestActionActivity)";
-	private static final 	String 					GET_QUEST_CHALLENGES_URL = "http://107.22.209.62/android/get_quest_from_place.php";
-	private static final	String 					DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
-	private static final	int						DO_ACTION_ACTIVITY = 0;
+	private static final String TAG = "(QuestActionActivity)";
+	private static final String GET_QUEST_CHALLENGES_URL = "http://107.22.209.62/android/get_quest_from_place.php";
+	private static final String DO_CHECK_IN_URL = "http://107.22.209.62/android/do_check_in.php";
+	private static final int DO_ACTION_ACTIVITY = 0;
 	
-	public 					int 					currentPlaceId;
-	public					int						currentSpotPosition;
-	public 					int 					currentChosenItem;
-	public 					ListView 				list = null;
-	private					PlaceActionItemAdapter	adapter = null;
-	private 				List<Challenge> 		challengeList = new ArrayList<Challenge>();
+	public int currentPlaceId;
+	public int currentSpotPosition;
+	public int currentChosenItem;
+	public ListView list = null;
+	private	PlaceActionItemAdapter adapter = null;
+	private List<Challenge> challengeList = new ArrayList<Challenge>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// set layout
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest_action);
-	
-		// get place id
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 		currentSpotPosition = extrasBundle.getInt("position");
-		
+		displayTitle(extrasBundle);
 		setupListView();
-		
+		new GetChallengesTask(QuestActionActivity.this).execute();
+	}
+	
+	private void displayTitle(Bundle extrasBundle) {
 		TextView nameTextView = (TextView) findViewById(R.id.quest_action_xml_name);
 		TextView descriptionTextView = (TextView) findViewById(R.id.quest_action_xml_description);
-		
 		nameTextView.setText(extrasBundle.getString("name"));
 		descriptionTextView.setText(extrasBundle.getString("description"));
-	
-		// run GetChallengeTask
-		new GetChallengesTask(QuestActionActivity.this).execute();
 	}
 	
 	private void setupListView() {
@@ -141,10 +137,10 @@ public class QuestActionActivity
 	}
 	
 	private static class GetChallengesTask 
-		extends AsyncTask<String, Challenge, Boolean> 
+		extends AsyncTask<Void, Challenge, Boolean> 
 			implements IAsyncTask<QuestActionActivity> {
 		
-		private List<NameValuePair> challengeData = new ArrayList<NameValuePair>();
+		private static final String TAG = "[AsyncTask].GetChallengeTask";
 		private WeakReference<QuestActionActivity> ref;
 		
 		public GetChallengesTask(QuestActionActivity questActionActivity) {
@@ -162,9 +158,10 @@ public class QuestActionActivity
 	    }
 
 		@Override
-		protected Boolean doInBackground(String... text) {
-			challengeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_CHALLENGES_URL, challengeData);
+		protected Boolean doInBackground(Void... voids) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_CHALLENGES_URL, data);
 			if (array != null) { 
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -183,7 +180,7 @@ public class QuestActionActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetChallengesTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -195,8 +192,6 @@ public class QuestActionActivity
 		@Override
 		protected void onPostExecute(Boolean result) {
 			detach();
-			
-			
 		}
 
 		public void attach(QuestActionActivity questActionActivity) {
@@ -264,16 +259,14 @@ public class QuestActionActivity
 		protected void onPostExecute(String result) {
 			if (result.equals("success")) {
 				//ref.get().list.getChildAt(ref.get().currentChosenItem).setBackgroundColor(Color.GRAY);
-				Intent data1 = new Intent();
-				
-				data1.setData(Uri.parse("done"));
-				ref.get().setResult(RESULT_OK, data1);
+				Intent data = new Intent();
+				data.setData(Uri.parse("done"));
+				ref.get().setResult(RESULT_OK, data);
 				//ref.get().finish();
 			}
 			else {
 				ref.get().showDialog(0);
 			}	
-			
 			detach();
 		}
 
@@ -290,28 +283,15 @@ public class QuestActionActivity
 	protected void onActivityResult(int requestCode, int resultCode,Intent data) {
 		if (requestCode == DO_ACTION_ACTIVITY) {
 			if (resultCode == RESULT_OK) {
-				Intent data1 = new Intent();
-				
-				data1.putExtra("spot_id", currentPlaceId);
-				
-				setResult(RESULT_OK, data1);
-				//---closes the activity---
+				Intent i = new Intent();
+				i.putExtra("spot_id", currentPlaceId);
+				setResult(RESULT_OK, i);
 				finish();
 			}
     	}
 		
 	}
-	    @Override
-    public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
 	
-	@Override
-    public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
-	}
 
 	public void updateAsyncTaskProgress(Challenge c) {
 		challengeList.add(c);
@@ -350,5 +330,36 @@ public class QuestActionActivity
 						}).create();
 		}
 		return null;
+	}
+	
+
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

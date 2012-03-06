@@ -29,35 +29,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		Sign up for a new account
- */
+ **/
 public class SignupActivity 
 	extends BasicSpotrActivity {
 	
-	private static final 	String 		TAG = "(SignupActivity)";
-	private static final 	String 		SIGN_UP_URL = "http://107.22.209.62/android/signup.php";
+	private static final String TAG = "(SignupActivity)";
+	private static final String SIGN_UP_URL = "http://107.22.209.62/android/signup.php";
 	
-	private 				Button 		buttonSignup = null;
-	private 				EditText 	edittextEmail = null;
-	private 				EditText 	edittextPassword = null;
-	private 				EditText 	edittextConfirmPassword = null;
-	private 				CheckBox 	checkboxVisible = null;
-	
-	private 				boolean 	passwordVisible = false;
-	private 				boolean 	validInformation = false;
+	private boolean passwordVisible = false;
+	private boolean validInformation = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.signup);
 		setupTitleBar();
-
-		edittextEmail = (EditText) findViewById(R.id.signup_xml_edittext_email_id);
-		edittextPassword = (EditText) findViewById(R.id.signup_xml_edittext_password_id);
-		edittextConfirmPassword = (EditText) findViewById(R.id.signup_xml_edittext_confirmpassword_id);
-		checkboxVisible = (CheckBox) findViewById(R.id.signup_xml_checkbox_visible_characters);
-		buttonSignup = (Button) findViewById(R.id.signup_xml_button_signup);
+		setupSignupRoutine();
+	}
+	
+	private void setupSignupRoutine() {
+		final EditText edittextEmail = (EditText) findViewById(R.id.signup_xml_edittext_email_id);
+		final EditText edittextPassword = (EditText) findViewById(R.id.signup_xml_edittext_password_id);
+		final EditText edittextConfirmPassword = (EditText) findViewById(R.id.signup_xml_edittext_confirmpassword_id);
+		final CheckBox checkboxVisible = (CheckBox) findViewById(R.id.signup_xml_checkbox_visible_characters);
+		final Button buttonSignup = (Button) findViewById(R.id.signup_xml_button_signup);
 
 		checkboxVisible.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -205,5 +206,35 @@ public class SignupActivity
 				}).create();
 		}
 		return null;
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

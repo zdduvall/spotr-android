@@ -34,6 +34,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 /**
  * Description:
  * 		Display feeds of a place
@@ -56,13 +61,9 @@ public class PlaceActivityActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friend_list_feed);
-        
         Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
-		
 		setupListView();
-		
-		// run initial task
 		task = new GetPlaceFeedTask(this, 0);
 		task.execute();	
     }
@@ -85,6 +86,7 @@ public class PlaceActivityActivity
     	extends AsyncTask<Void, FriendFeedItem, Boolean> 
     		implements IAsyncTask<PlaceActivityActivity> {
     	
+    	private static final String TAG = "[AsyncTask].GetPlaceFeedTask";
 		private WeakReference<PlaceActivityActivity> ref;
 		private int offset; 
 		
@@ -105,6 +107,34 @@ public class PlaceActivityActivity
 			ref.get().updateAsyncTaskProgress(f[0]);
 	    }
 		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+			data.add(new BasicNameValuePair("spots_id", Integer.toString(ref.get().currentPlaceId)));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			return data;
+		}
+		
+		private Comment getFirstComment(int activityId) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+			data.add(new BasicNameValuePair("activity_id", Integer.toString(activityId)));
+			Comment firstComment = new Comment(-1, "", "", "", "");
+			JSONArray temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+			try {
+				if (temp != null) {
+					firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
+					firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));
+					firstComment.setPictureUrl(temp.getJSONObject(0).getString("users_tbl_user_image_url"));
+					firstComment.setTime(temp.getJSONObject(0).getString("comments_tbl_time"));
+					firstComment.setContent(temp.getJSONObject(0).getString("comments_tbl_content"));
+				}	
+			}
+			catch (JSONException e) {
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+			}
+			
+			return firstComment;
+		}
+		
 		@Override
 		protected Boolean doInBackground(Void... voids) {
 			// cancel task: check before task run
@@ -112,11 +142,8 @@ public class PlaceActivityActivity
 				return true;
 			}
 			
-			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
-			data.add(new BasicNameValuePair("spots_id", Integer.toString(ref.get().currentPlaceId)));
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			List<NameValuePair> data = prepareUploadData();
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_PLACE_FEED_URL, data);
-			JSONArray temp;
 			
 			// cancel task: check after fetching data from the server
 			if (isCancelled()) {
@@ -153,9 +180,6 @@ public class PlaceActivityActivity
     					if(array.getJSONObject(i).has("activity_tbl_share_url") && !array.getJSONObject(i).getString("activity_tbl_share_url").equals("null")) {
     						shareUrl = array.getJSONObject(i).getString("activity_tbl_share_url");
     					}
-    					else {
-    						shareUrl = "";
-    					}
 						
 						FriendFeedItem ffi = 
 							new FriendFeedItem.Builder(
@@ -179,22 +203,8 @@ public class PlaceActivityActivity
     								.treasureCompany(company)
 	    								.build();
 						
-						data.clear();
-    					data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-    					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
-    					Comment firstComment = new Comment(-1, "", "", "", "");
-    					if (temp != null) {
-    						firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
-    						firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));
-    						firstComment.setPictureUrl(temp.getJSONObject(0).getString("users_tbl_user_image_url"));
-    						firstComment.setTime(temp.getJSONObject(0).getString("comments_tbl_time"));
-    						firstComment.setContent(temp.getJSONObject(0).getString("comments_tbl_content"));
-    					}
-    					
-    					ffi.setFirstComment(firstComment);
+    					ffi.setFirstComment(getFirstComment(ffi.getActivityId()));
     					publishProgress(ffi);
-						
-					
 					}
 				}
 				catch (JSONException e) {
@@ -254,18 +264,6 @@ public class PlaceActivityActivity
 		return true;
 	}
     
-    @Override
-    public void onDestroy() {
-    	Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
-	}
-    
-    @Override
-    public void onPause() {
-    	Log.v(TAG, "I'm paused!");
-    	super.onPause();
-    }
-
 	public void updateAsyncTaskProgress(FriendFeedItem f) {
 		placeFeedList.add(f);
 		adapter.notifyDataSetChanged();
@@ -312,5 +310,35 @@ public class PlaceActivityActivity
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }
