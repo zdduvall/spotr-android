@@ -51,12 +51,16 @@ public class LeaderboardActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.leaderboard);
+		
+		setupListView();
+		new GetUsersTask().execute();				
+	}
+	
+	private void setupListView() {
 		// initialize list view
 		listview = (ListView) findViewById(R.id.leaderboard_xml_listview_users);		
 		adapter = new LeaderboardItemAdapter(LeaderboardActivity.this, userList);
 		listview.setAdapter(adapter);
-		
-		new GetUsersTask().execute();				
 	}
 	
 	private class GetUsersTask extends AsyncTask<Void, User, Boolean> {
@@ -76,7 +80,6 @@ public class LeaderboardActivity extends Activity {
 			progressDialog.dismiss();
 			userList.add(users[0]);
 			adapter.notifyDataSetChanged();
-			// adapter.notifyDataSetInvalidated();
 	    }
 		
 		@Override

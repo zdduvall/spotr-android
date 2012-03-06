@@ -2,6 +2,7 @@ package com.csun.spotr;
 
 import com.csun.spotr.custom_gui.FlingableTabHost;
 
+import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import android.widget.TextView;
  * 		Main tab host for friends
  */
 public class InventoryActivity 
-	extends BasicSpotrTabActivity {
+	extends TabActivity {
 	
 	private static final String TAG = "(InventoryActivity)";
 	

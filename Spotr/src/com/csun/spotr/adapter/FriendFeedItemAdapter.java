@@ -261,7 +261,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		holder.textViewTotalComments.setText(Integer.toString(items.get(position).getNumberOfComments()) + " comments.");
 		
 		Comment c = items.get(position).getFirstComment(); 
-		if (c.getId() != 1) {
+		if (c.getId() != -1) {
 			holder.firstLayout.setVisibility(View.VISIBLE);
 			holder.firstImageViewUserPicture.setVisibility(View.VISIBLE);
 			holder.firstTextViewUsername.setVisibility(View.VISIBLE);

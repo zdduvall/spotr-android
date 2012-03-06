@@ -60,7 +60,6 @@ public class PlaceActionActivity
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// set layout
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place_action);
 	
@@ -68,9 +67,21 @@ public class PlaceActionActivity
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 
-		// spot more info button
-		Button buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
+		setupInfoButton();
+		
+		setupTreasureButton();
+		
+		setupListView();
 
+		// run GetPlaceDetailTask
+		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
+
+		// run GetChallengeTask
+		new GetChallengesTask(PlaceActionActivity.this).execute();
+	}
+	
+	private void setupInfoButton() {
+		Button buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
 		buttonMoreInfo.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Bundle extras = new Bundle();
@@ -80,7 +91,9 @@ public class PlaceActionActivity
 				startActivity(intent);
 			}
 		});
-		
+	}
+	
+	private void setupTreasureButton() {
 		/**
 		 * Description
 		 * To open a treasure, user need to have at least 1000 pts. 
@@ -130,7 +143,9 @@ public class PlaceActionActivity
 				alert.show();
 			}
 		});
-		
+	}
+	
+	private void setupListView() {
 		// initialize list view of challenges
 		list = (ListView) findViewById(R.id.place_action_xml_listview_actions);
 		adapter = new PlaceActionItemAdapter(this, challengeList);
@@ -196,12 +211,6 @@ public class PlaceActionActivity
 				}
 			}
 		});
-
-		// run GetPlaceDetailTask
-		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
-
-		// run GetChallengeTask
-		new GetChallengesTask(PlaceActionActivity.this).execute();
 	}
 	
 	private static class GetChallengesTask 

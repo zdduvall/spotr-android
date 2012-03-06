@@ -52,6 +52,13 @@ public class FriendListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_main);
 
+		setupListView();
+		// initially, we load 10 items and show user immediately
+		task = new GetFriendsTask(this, 0);
+		task.execute();
+	}
+	
+	private void setupListView() {
 		// initialize list view
 		listview = (ListView) findViewById(R.id.friend_list_main_xml_listview_friends);
 
@@ -66,11 +73,7 @@ public class FriendListActivity
 				startDialog(userItemList.get(position));
 			}
 		});
-
-		// initially, we load 10 items and show user immediately
-		task = new GetFriendsTask(this, 0);
-		task.execute();
-
+				
 		// handle scrolling event
 		listview.setOnScrollListener(new FeedOnScrollListener());
 	}

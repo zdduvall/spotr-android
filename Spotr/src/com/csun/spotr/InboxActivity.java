@@ -45,13 +45,13 @@ public class InboxActivity
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<Inbox> {
 
-	private static final 	String 					TAG = "(InboxActivity)";
-	private static final 	String 					GET_INBOX_URL = "http://107.22.209.62/android/get_inbox.php";
+	private static final String TAG = "(InboxActivity)";
+	private static final String GET_INBOX_URL = "http://107.22.209.62/android/get_inbox.php";
 
-	private 				ListView 				listview = null;
-	private 				InboxItemAdapter 		adapter = null;
-	private 				List<Inbox> 			inboxList = new ArrayList<Inbox>();
-	private 				GetInboxTask 			task = null;
+	private ListView listview = null;
+	private InboxItemAdapter adapter = null;
+	private List<Inbox> inboxList = new ArrayList<Inbox>();
+	private GetInboxTask task = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,12 +59,15 @@ public class InboxActivity
 
 		setupTitleBar();
 		
-		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		listview = (ListView) findViewById(R.id.inbox_xml_listview);
+		setupListView();
 		
-		adapter = new InboxItemAdapter(this, inboxList);
-		listview.setAdapter(adapter);
-
+		setupComposeButton();
+		
+		task = new GetInboxTask(this);
+		task.execute();
+	}
+	
+	private void setupComposeButton() {
 		final Button buttonCompose = (Button) findViewById(R.id.inbox_xml_button_compose);
 		buttonCompose.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -72,15 +75,17 @@ public class InboxActivity
 				startActivity(intent);
 			}
 		});
-		
+	}
+	
+	private void setupListView() {
+		listview = (ListView) findViewById(R.id.inbox_xml_listview);
+		adapter = new InboxItemAdapter(this, inboxList);
+		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Toast.makeText(InboxActivity.this.getApplicationContext(), inboxList.get(position).getMessage(), Toast.LENGTH_LONG).show();
 			}
-		});
-		
-		task = new GetInboxTask(this);
-		task.execute();
+		});	
 	}
 	
 	@Override

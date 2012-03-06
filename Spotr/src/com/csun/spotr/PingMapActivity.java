@@ -77,7 +77,10 @@ public class PingMapActivity
 		setupTitleBar();
 		setupMapGraphics();
 		findLocation(); // ping button activated once location is found
-		
+		setupFriendButton();
+	}
+	
+	private void setupFriendButton() {
 		ImageButton friendsButton = (ImageButton) findViewById(R.id.title_bar_btn_ping_friends);
 		friendsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {

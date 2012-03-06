@@ -104,7 +104,6 @@ public class ProfileEditActivity extends Activity {
 				finish();
 			}
 		});
-
 	}
 
 	private static class ProfileEditTask 

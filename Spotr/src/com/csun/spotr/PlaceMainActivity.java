@@ -19,7 +19,7 @@ import android.widget.TextView;
  * Description:
  * 		Framework for Spots
  */
-public class PlaceMainActivity extends BasicSpotrTabActivity {
+public class PlaceMainActivity extends TabActivity {
 	private static final String TAG = "(PlaceMainActivity)";
 	
 	@Override
@@ -61,23 +61,6 @@ public class PlaceMainActivity extends BasicSpotrTabActivity {
 				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
-
-		/*
-		intent = new Intent().setClass(this, PlaceInfoActivity.class);
-		// pass this extra to PlaceInfoActivity
-		intent.putExtras(extras);
-		
-		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
-	    tv = (TextView) customTabView.findViewById(R.id.tabText);
-	    tv.setText("About");
-		spec = tabHost
-				.newTabSpec("about")
-				.setIndicator(customTabView)
-				.setContent(intent);
-		tabHost.addTab(spec);
-		// set current tab to action
-		tabHost.setCurrentTab(0);
-		*/
 	}
 		
 	@Override

@@ -63,23 +63,31 @@ public class QuestActionActivity
 		currentPlaceId = extrasBundle.getInt("place_id");
 		currentSpotPosition = extrasBundle.getInt("position");
 		
-		// initialize list view of challenges
-		list = (ListView) findViewById(R.id.quest_action_xml_listview_actions);
-		adapter = new PlaceActionItemAdapter(this, challengeList);
+		setupListView();
 		
 		TextView nameTextView = (TextView) findViewById(R.id.quest_action_xml_name);
 		TextView descriptionTextView = (TextView) findViewById(R.id.quest_action_xml_description);
 		
 		nameTextView.setText(extrasBundle.getString("name"));
 		descriptionTextView.setText(extrasBundle.getString("description"));
-		// add top padding to first item and add bottom padding to last item
+	
+		// run GetChallengeTask
+		new GetChallengesTask(QuestActionActivity.this).execute();
+	}
+	
+	private void setupListView() {
+		// initialize list view of challenges
+		list = (ListView) findViewById(R.id.quest_action_xml_listview_actions);
+		adapter = new PlaceActionItemAdapter(this, challengeList);
+				
 		TextView padding = new TextView(getApplicationContext());
 		padding.setHeight(0);
 		
+		// add top padding to first item and add bottom padding to last item
 		list.addHeaderView(padding, null, false);
 		list.addFooterView(padding, null, false);
 		list.setAdapter(adapter);
-				
+		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Challenge c = (Challenge) list.getAdapter().getItem(position);//challengeList.get(position);
@@ -130,9 +138,6 @@ public class QuestActionActivity
 				}
 			}
 		});
-		
-		// run GetChallengeTask
-		new GetChallengesTask(QuestActionActivity.this).execute();
 	}
 	
 	private static class GetChallengesTask 

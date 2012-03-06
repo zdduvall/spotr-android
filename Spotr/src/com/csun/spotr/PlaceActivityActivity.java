@@ -60,7 +60,15 @@ public class PlaceActivityActivity
         Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 		
-		listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
+		setupListView();
+		
+		// run initial task
+		task = new GetPlaceFeedTask(this, 0);
+		task.execute();	
+    }
+    
+    private void setupListView() {
+    	listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
 		adapter = new FriendFeedItemAdapter(getApplicationContext(), placeFeedList, false);
 		listview.setAdapter(adapter);
 		
@@ -70,16 +78,6 @@ public class PlaceActivityActivity
 			}
 		});
 		
-		// run initial task
-		task = new GetPlaceFeedTask(this, 0);
-		task.execute();	
-		
-		/**
-		 * Handle onScroll event, when the user scroll to see more items,
-		 * we run another task to get more data from the server.
-		 * Since each item occupies 1/3 of the screen, we only load 5 items
-		 * at a time to save time and increase performance.
-		 **/
 		listview.setOnScrollListener(new FeedOnScrollListener());
     }
     

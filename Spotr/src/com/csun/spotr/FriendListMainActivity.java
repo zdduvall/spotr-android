@@ -2,6 +2,7 @@ package com.csun.spotr;
 
 import com.csun.spotr.custom_gui.FlingableTabHost;
 
+import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +15,7 @@ import android.widget.TextView;
  * Description:
  * 		Main tab host for friends
  */
-public class FriendListMainActivity extends BasicSpotrTabActivity {
+public class FriendListMainActivity extends TabActivity {
 	
 	private static final String TAG = "(FriendListMainActivity)";
 	
@@ -60,7 +61,6 @@ public class FriendListMainActivity extends BasicSpotrTabActivity {
 				.setContent(intent);
 		tabHost.addTab(spec);
 
-		
 		tabHost.setCurrentTab(0);
 	}
 	

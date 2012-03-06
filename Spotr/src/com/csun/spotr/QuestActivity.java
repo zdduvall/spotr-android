@@ -52,7 +52,14 @@ public class QuestActivity
 		setContentView(R.layout.quest);
 		
 		setupTitleBar();
-
+		
+		setupListView();
+		
+		task = new GetQuestTask(this);
+		task.execute();
+	}
+	
+	private void setupListView() {
 		listview = (ListView) findViewById(R.id.quest_xml_listview_quest_list);
 		adapter = new QuestItemAdapter(getApplicationContext(), questList);
 		listview.setAdapter(adapter);
@@ -72,9 +79,6 @@ public class QuestActivity
 				startActivity(intent);
 			}
 		});
-		
-		task = new GetQuestTask(this);
-		task.execute();
 	}
 	
 	@Override

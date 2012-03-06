@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-public class FinderMainActivity extends BasicSpotrTabActivity {
+public class FinderMainActivity extends TabActivity {
 	private final static String TAG = "(FinderMainActivity)";
 	
 	@Override

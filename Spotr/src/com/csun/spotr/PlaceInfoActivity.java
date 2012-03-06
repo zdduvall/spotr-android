@@ -47,37 +47,45 @@ public class PlaceInfoActivity
 	extends MapActivity 
 		implements IActivityProgressUpdate<Place> {
 	
-	private static final 	String 					TAG = "(PlaceInfoActivity)";
-	private static final 	String 					GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
+	private static final String TAG = "(PlaceInfoActivity)";
+	private static final String GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
 	
-	public 					int 					currentPlaceId = 0;
-	private 				MapView 				mapView = null;
-	private 				List<Overlay> 			mapOverlays = null;
-	private 				MapController 			mapController = null;
-	private 				MyItemizedOverlay 		itemizedOverlay = null;
-	private 				Drawable 				mapMarker;
+	public int currentPlaceId = 0;
+	private MapView mapView = null;
+	private List<Overlay> mapOverlays = null;
+	private MapController mapController = null;
+	private MyItemizedOverlay itemizedOverlay = null;
+	private Drawable mapMarker;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place_info);
 
+		// get place id
+		Bundle extrasBundle = getIntent().getExtras();
+		currentPlaceId = extrasBundle.getInt("place_id");
+		
+		setupMapGraphics();
+		
+		setupMapOverlays();
+
+		new GetPlaceDetailTask(this).execute();
+	}
+	
+	private void setupMapGraphics() {
 		mapView = (MapView) findViewById(R.id.place_info_xml_mapview);
 		mapController = mapView.getController();
 		mapView.setBuiltInZoomControls(true);
 		mapView.setSatellite(false);
 		mapView.invalidate();
+	}
 
+	private void setupMapOverlays() {
 		mapOverlays = mapView.getOverlays();
 		mapMarker = getResources().getDrawable(R.drawable.map_maker_red);
 		itemizedOverlay = new MyItemizedOverlay(mapMarker, mapView);
 		mapOverlays.add(itemizedOverlay);
-
-		// get place id
-		Bundle extrasBundle = getIntent().getExtras();
-		currentPlaceId = extrasBundle.getInt("place_id");
-
-		new GetPlaceDetailTask(this).execute();
 	}
 
 	private static class GetPlaceDetailTask 

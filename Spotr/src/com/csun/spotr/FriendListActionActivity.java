@@ -47,32 +47,50 @@ public class FriendListActionActivity
 	extends Activity 
 		implements IActivityProgressUpdate<UserItem> {
 	
-	private static final 	String 				TAG = "(FriendListActionActivity)";
-	private static final 	String 				SEARCH_FRIENDS_URL = "http://107.22.209.62/android/search_friends.php";
-	private static final 	String 				SEND_REQUEST_URL = "http://107.22.209.62/android/send_friend_request.php";
+	private static final String TAG = "(FriendListActionActivity)";
+	private static final String SEARCH_FRIENDS_URL = "http://107.22.209.62/android/search_friends.php";
+	private static final String SEND_REQUEST_URL = "http://107.22.209.62/android/send_friend_request.php";
 	
-	private 				ListView 			listview = null;
-	private 				UserItemAdapter 	adapter = null;
-	private 				List<UserItem> 		userItemList = null;
+	private ListView 			listview = null;
+	private UserItemAdapter 	adapter = null;
+	private List<UserItem> 		userItemList = null;
 	
-	private 				Button 				buttonSearch = null;
-	private 				EditText 			editTextSearch = null;
-	private					SearchFriendsTask 	task = null;
-
-	private 				boolean 			loading = true;
-	private 				int 				prevTotal = 0;
-	private final 			int 				threshHold = 10;
-	private 				int 				counter = 0;
+	private EditText 			editTextSearch = null;
+	private	SearchFriendsTask 	task = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_search);
 		
-		buttonSearch = (Button) findViewById(R.id.friend_list_action_xml_button_search);
-		editTextSearch = (EditText) findViewById(R.id.friend_list_action_xml_edittext_search);
-		listview = (ListView) findViewById(R.id.friend_list_action_xml_listview_search_friends);
+		setupTextSearchBar();
 		
+		setupListView();
+		
+		setupSearchButton();
+	}
+	
+	private void setupTextSearchBar() {
+		editTextSearch = (EditText) findViewById(R.id.friend_list_action_xml_edittext_search);
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(editTextSearch.getWindowToken(), 0);
+	}
+	
+	private void setupSearchButton() {
+		Button buttonSearch = (Button) findViewById(R.id.friend_list_action_xml_button_search);
+		buttonSearch.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				userItemList.clear();
+				adapter.notifyDataSetChanged();
+				// start task
+				task = new SearchFriendsTask(FriendListActionActivity.this, editTextSearch.getText().toString(), 0);
+				task.execute();
+			}
+		});
+	}
+	
+	private void setupListView() {
+		listview = (ListView) findViewById(R.id.friend_list_action_xml_listview_search_friends);
 		userItemList = new ArrayList<UserItem>();
 		adapter = new UserItemAdapter(this.getApplicationContext(), userItemList);
 		listview.setAdapter(adapter);
@@ -82,66 +100,21 @@ public class FriendListActionActivity
 				startDialog(userItemList.get(position));
 			}
 		});
-			
-		// hide keyboard right away
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(editTextSearch.getWindowToken(), 0);
-
-		buttonSearch.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				synchronized (this) {
-					loading = true;
-					counter = 0;
-				}
-				
-				userItemList.clear();
-				adapter.notifyDataSetChanged();
-			
-				Log.v(TAG, "search button was clicked.");
-				// start task
-				task = new SearchFriendsTask(FriendListActionActivity.this, editTextSearch.getText().toString(), true);
-				task.execute(counter);
-				
-				listview.clearChoices();
-				listview.setOnScrollListener(new OnScrollListener() {
-					public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-						if (loading) {
-							if (totalItemCount > prevTotal) {
-								loading = false;
-								prevTotal = totalItemCount;
-								Log.d(TAG, Integer.toString(totalItemCount));
-							}
-						}
-
-						if (!loading && ((totalItemCount - visibleItemCount) <= (firstVisibleItem + threshHold))) {
-							synchronized (this) {
-								counter += threshHold;
-								loading = true;
-							}
-							
-							new SearchFriendsTask(FriendListActionActivity.this, editTextSearch.getText().toString(), false).execute(counter);
-						}
-					}
-
-					public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-					}
-				});
-			}
-		});
+		
+		listview.setOnScrollListener(new SeachFriendsOnScrollListener());
 	}
 
 	private class SearchFriendsTask 
-		extends AsyncTask<Integer, UserItem, Boolean> 
+		extends AsyncTask<Void, UserItem, Boolean> 
 			implements IAsyncTask<FriendListActionActivity> {
 			
-		private List<NameValuePair> clientData = new ArrayList<NameValuePair>();
 		private WeakReference<FriendListActionActivity> ref;
-		private JSONArray array = null;
 		private final String criteria;
+		private final int offset;
 
-		public SearchFriendsTask(FriendListActionActivity a, String criteria, boolean flag) {
+		public SearchFriendsTask(FriendListActionActivity a, String criteria, int offset) {
 			this.criteria = criteria;
+			this.offset = offset;
 			attach(a);
 		}
 
@@ -156,11 +129,12 @@ public class FriendListActionActivity
 		}
 
 		@Override
-		protected Boolean doInBackground(Integer... offsets) {
-			clientData.add(new BasicNameValuePair("text", criteria));
-			clientData.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			clientData.add(new BasicNameValuePair("offset", Integer.toString(offsets[0])));
-			array = JsonHelper.getJsonArrayFromUrlWithData(SEARCH_FRIENDS_URL, clientData);
+		protected Boolean doInBackground(Void...voids) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("text", criteria));
+			data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(SEARCH_FRIENDS_URL, data);
 			if (array != null) {
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -230,8 +204,7 @@ public class FriendListActionActivity
 		extends AsyncTask<String, Integer, Boolean> 
 			implements IAsyncTask<FriendListActionActivity> {
 		
-		private List<NameValuePair> friendData = new ArrayList<NameValuePair>();
-		private JSONObject json = null;
+		private static final String TAG = "[AsyncTask].SendFriendRequestTask";
 		private WeakReference<FriendListActionActivity> ref;
 
 		public SendFriendRequestTask(FriendListActionActivity a) {
@@ -239,16 +212,13 @@ public class FriendListActionActivity
 		}
 		
 		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
 		protected Boolean doInBackground(String... datas) {
-			friendData.add(new BasicNameValuePair("users_id", datas[0].toString()));
-			friendData.add(new BasicNameValuePair("friend_id", datas[1].toString()));
-			friendData.add(new BasicNameValuePair("friend_message", datas[2].toString()));
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("users_id", datas[0].toString()));
+			data.add(new BasicNameValuePair("friend_id", datas[1].toString()));
+			data.add(new BasicNameValuePair("friend_message", datas[2].toString()));
 			
-			json = JsonHelper.getJsonObjectFromUrlWithData(SEND_REQUEST_URL, friendData);
+			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(SEND_REQUEST_URL, data);
 			
 			try {
 				if (json.getString("result").equals("success")) {
@@ -256,7 +226,7 @@ public class FriendListActionActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "SnapPictureTask.doInBackGround(String... datas) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(String... datas) : ", "JSON error parsing data" + e.toString());
 			}
 			return false;
 		}
@@ -316,5 +286,37 @@ public class FriendListActionActivity
 	public void updateAsyncTaskProgress(UserItem u) {
 		userItemList.add(u);
 		adapter.notifyDataSetChanged();
+	}
+	
+	public class SeachFriendsOnScrollListener implements OnScrollListener {
+	    private int visibleThreshold = 10;
+	    private int currentPage = 0;
+	    private int previousTotal = 0;
+	    private boolean loading = true;
+	 
+	    public SeachFriendsOnScrollListener() {
+	    	
+	    }
+	    public SeachFriendsOnScrollListener(int visibleThreshold) {
+	        this.visibleThreshold = visibleThreshold;
+	    }
+	 
+	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+	        if (loading) {
+	            if (totalItemCount > previousTotal) {
+	                loading = false;
+	                previousTotal = totalItemCount;
+	                currentPage += 10;
+	            }
+	        }
+	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+	        	new SearchFriendsTask(FriendListActionActivity.this, editTextSearch.getText().toString(), currentPage).execute();
+	            loading = true;
+	        }
+	    }
+	 
+	    public void onScrollStateChanged(AbsListView view, int scrollState) {
+	    	// TODO : not use
+	    }
 	}
 }

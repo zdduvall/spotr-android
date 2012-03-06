@@ -57,18 +57,22 @@ public class FriendListFeedActivity
     	super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_feed);
 		
-		listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
+		setupListView();
+		
+		task = new GetFriendFeedTask(this, 0);
+		task.execute();
+    }
+    
+    private void setupListView() {
+    	listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
 		adapter = new FriendFeedItemAdapter(this.getApplicationContext(), friendFeedList, false);
 		listview.setAdapter(adapter);
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
+				// TODO: handle event here?
 			}
 		});
-		
-		task = new GetFriendFeedTask(this, 0);
-		task.execute();
 		
 		/* Handle onScroll event, when the user scroll to see more items,
 		 * we run another task to get more data from the server.

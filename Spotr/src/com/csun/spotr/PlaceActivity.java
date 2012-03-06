@@ -90,28 +90,19 @@ public class PlaceActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
 
-		setupTitleBar();
-		
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-	
-		list = (ListView) findViewById(R.id.place_xml_listview_places);
-		adapter = new PlaceItemAdapter(this.getApplicationContext(), placeItemList);
-		list.setAdapter(adapter);
+		setupTitleBar();
 		
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(getApplicationContext(), PlaceMainActivity.class);
-				Bundle extras = new Bundle();
-				extras.putInt("place_id", placeItemList.get(position).getId());
-				intent.putExtras(extras);
-				startActivity(intent);
-			}
-		});
-				
+		setupListView();
+		
+		setupPowerupToolbar();
+		
 		findLocation(); // refresh button activated once location is found
-		
+	}
+	
+	private void setupPowerupToolbar() {
 		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
 		ActionItem itemLoan = new ActionItem(ID_LOAN, "Loan", getResources().getDrawable(R.drawable.pu_loan_32));
         ActionItem itemLuck = new ActionItem(ID_LUCK, "Luck", getResources().getDrawable(R.drawable.pu_luck_32));
@@ -121,7 +112,6 @@ public class PlaceActivity
         ActionItem itemTelescope = new ActionItem(ID_TELESCOPE, "Telescope", getResources().getDrawable(R.drawable.pu_telescope_32));
 
         itemBonus.setSticky(true);
-        
         final ToolbarAction quickAction = new ToolbarAction(this, ToolbarAction.HORIZONTAL);
 		
 		// add action items into QuickAction
@@ -140,6 +130,22 @@ public class PlaceActivity
 				quickAction.setAnimStyle(ToolbarAction.ANIM_REFLECT);
 			}
 		});        	
+	}
+	
+	private void setupListView() {
+		list = (ListView) findViewById(R.id.place_xml_listview_places);
+		adapter = new PlaceItemAdapter(this.getApplicationContext(), placeItemList);
+		list.setAdapter(adapter);
+		
+		list.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getApplicationContext(), PlaceMainActivity.class);
+				Bundle extras = new Bundle();
+				extras.putInt("place_id", placeItemList.get(position).getId());
+				intent.putExtras(extras);
+				startActivity(intent);
+			}
+		});
 	}
 	
 	@Override
