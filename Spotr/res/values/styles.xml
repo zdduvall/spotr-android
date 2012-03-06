@@ -498,9 +498,14 @@
     <!-- End Map -->
     
     <!-- Friends: Friends tab -->    
-    <style name="LinearLayoutShadow.FriendsList">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
+<!--     <style name="LinearLayoutShadow.FriendsList"> -->
+<!--         <item name="android:layout_width">match_parent</item> -->
+<!--         <item name="android:layout_height">match_parent</item> -->
+<!--     </style> -->
+
+    <style name="FriendList" parent="RoundedRectListView">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>
     
     <style name="UserItemRow">
@@ -508,6 +513,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">7dp</item>
+        <item name="android:background">@drawable/listview_row_selector</item>
     </style>
     
     <style name="UserItemAvatar">
@@ -524,7 +530,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum6</item>        
+        <item name="android:textColor">@color/listview_text_selector</item>     
     </style>
     <!-- End Friends: Friends tab -->
     
@@ -938,13 +944,16 @@
         <item name="android:background">@drawable/rectangle_rounded_white</item>
     </style>
     
-    <style name="RoundedRectListView">
+    <style name="CustomListView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:divider">@color/aluminum2</item>
         <item name="android:dividerHeight">1dp</item>
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
+    </style>
+    
+    <style name="RoundedRectListView" parent="CustomListView">
         <item name="android:background">@drawable/rectangle_rounded_white</item>        
     </style>
 
