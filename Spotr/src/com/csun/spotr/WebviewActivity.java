@@ -19,6 +19,11 @@ public class WebviewActivity extends Activity {
 		// get place id
 		Bundle extrasBundle = getIntent().getExtras();
 		webUrl = extrasBundle.getString("place_web_url");
+		
+		setupWebView();
+	}
+	
+	private void setupWebView() {
 		WebView wv = (WebView) findViewById(R.id.webview_xml_place_webview);
 		wv.setWebViewClient(new WebCallBack());
 		WebSettings settings = wv.getSettings();

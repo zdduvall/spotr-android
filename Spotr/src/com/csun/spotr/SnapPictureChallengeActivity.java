@@ -75,7 +75,6 @@ public class SnapPictureChallengeActivity
 				startActivityForResult(intent, 1);
 			}
 		});
-		
 	}
 	
 	@Override

@@ -45,6 +45,11 @@ public class TreasureActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.treasure);
 
+		setupListView();
+		new GetUserTreasuresTask(this).execute();
+	}
+	
+	private void setupListView() {
 		listview = (ListView) findViewById(R.id.treasure_xml_listview);
 		adapter = new TreasureAdapter(this, treasureList);
 		listview.setAdapter(adapter);
@@ -54,9 +59,6 @@ public class TreasureActivity
 				
 			}
 		});
-		
-
-		new GetUserTreasuresTask(this).execute();
 	}
 	
 	private static class GetUserTreasuresTask
