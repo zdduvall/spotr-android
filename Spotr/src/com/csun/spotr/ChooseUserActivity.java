@@ -10,32 +10,32 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.csun.spotr.adapter.ChooseUserItemAdapter;
-import com.csun.spotr.adapter.UserItemAdapter;
 import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
+
 /**
- * Description: This class will retrieve a list of friends from database.
- */
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
+ * Description: 
+ * 		This class will retrieve a list of friends from database.
+ **/
 public class ChooseUserActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<UserItem> {
@@ -51,7 +51,13 @@ public class ChooseUserActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose_user);
-
+		setupUserListView();
+		// initially, we load 10 items and show user immediately
+		task = new GetFriendsTask(this, true);
+		task.execute();
+	}
+	
+	private void setupUserListView() {
 		// initialize list view
 		listview = (ListView) findViewById(R.id.choose_user_xml_listview);
 
@@ -70,19 +76,13 @@ public class ChooseUserActivity
 				finish();
 			}
 		});
-
-		// initially, we load 10 items and show user immediately
-		task = new GetFriendsTask(this, true);
-		task.execute();
 	}
 
 	private static class GetFriendsTask 
 		extends AsyncTask<Integer, UserItem, Boolean> 
 			implements IAsyncTask<ChooseUserActivity> {
 
-		private List<NameValuePair> data = new ArrayList<NameValuePair>();
 		private WeakReference<ChooseUserActivity> ref;
-		private JSONArray userJsonArray = null;
 
 		public GetFriendsTask(ChooseUserActivity a, boolean flag) {
 			attach(a);
@@ -99,21 +99,22 @@ public class ChooseUserActivity
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
-			// send user id
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			// retrieve data from server
-			userJsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
-			if (userJsonArray != null) {
+			
+			JSONArray array = null;
+			array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
+			if (array != null) {
 				try {
 					if(ref.get().task.isCancelled()){
 						return true;
 					}
-					for (int i = 0; i < userJsonArray.length(); ++i) {
+					for (int i = 0; i < array.length(); ++i) {
 						publishProgress(
 							new UserItem(
-								userJsonArray.getJSONObject(i).getInt("users_tbl_id"), 
-								userJsonArray.getJSONObject(i).getString("users_tbl_username"), 
-								userJsonArray.getJSONObject(i).getString("users_tbl_user_image_url")));
+								array.getJSONObject(i).getInt("users_tbl_id"), 
+								array.getJSONObject(i).getString("users_tbl_username"), 
+								array.getJSONObject(i).getString("users_tbl_user_image_url")));
 					}
 				}
 				catch (JSONException e) {
@@ -153,15 +154,33 @@ public class ChooseUserActivity
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
 		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

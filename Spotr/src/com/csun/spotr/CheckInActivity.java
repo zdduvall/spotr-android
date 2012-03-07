@@ -37,6 +37,10 @@ import android.widget.Gallery;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 public class CheckInActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<String> {
@@ -62,11 +66,16 @@ public class CheckInActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.check_in);
 		
-		Bundle extras = getIntent().getExtras();
-		usersId = extras.getString("users_id");
-		spotsId = extras.getString("spots_id");
-		challengesId = extras.getString("challenges_id");
-		
+		initUserDataFromBundle();
+		setupCheckInUserGallery();
+		setupEventListView();
+		setupCheckInButton();
+	
+		new GetCheckInUsersTask(this, spotsId).execute();
+		new GetEventTask(this, spotsId).execute();
+	}
+	
+	private void setupCheckInButton() {
 		Button checkin = (Button) findViewById(R.id.check_in_xml_button_checkin);
 		checkin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -74,19 +83,27 @@ public class CheckInActivity
 				task.execute();
 			}
 		});
-		
+	}
+	
+	private void initUserDataFromBundle() {
+		Bundle extras = getIntent().getExtras();
+		usersId = extras.getString("users_id");
+		spotsId = extras.getString("spots_id");
+		challengesId = extras.getString("challenges_id");
+	}
+	
+	private void setupCheckInUserGallery() {
 		userImageList = new ArrayList<String>();
 		gallery = (Gallery) findViewById(R.id.check_in_xml_gallery_checkin_people);
 		adapter = new CheckInUserItemAdapter(this, userImageList);
 		gallery.setAdapter(adapter);
-		
+	}
+	
+	private void setupEventListView() {
 		eventList = new ArrayList<Event>();
 		listview = (ListView) findViewById(R.id.check_in_xml_listview_events);
 		eventAdapter = new EventAdapter(this, eventList);
 		listview.setAdapter(eventAdapter);
-		
-		new GetCheckInUsersTask(this, spotsId).execute();
-		new GetEventTask(this, spotsId).execute();
 	}
 	
 	private static class CheckInTask 
@@ -105,10 +122,14 @@ public class CheckInActivity
 			this.challengesId = challengesId;
 		}
 	
-		@Override
-		protected void onPreExecute() {
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("users_id", usersId));
+			data.add(new BasicNameValuePair("spots_id", spotsId));
+			data.add(new BasicNameValuePair("challenges_id", challengesId));
+			return data;
 		}
-	
+		
 		@Override
 		protected String doInBackground(Void... voids) {
 			/*
@@ -131,11 +152,7 @@ public class CheckInActivity
 			 * 4. The return of this query is the number points is added the points added to the user account.
 			 */
 			
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("users_id", usersId));
-			data.add(new BasicNameValuePair("spots_id", spotsId));
-			data.add(new BasicNameValuePair("challenges_id", challengesId));
-			
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(DO_CHECK_IN_URL, data);
 			
 			String result = "";
@@ -307,6 +324,11 @@ public class CheckInActivity
 		return null;
 	}
 	
+	public void updateAsyncTaskProgress(String u) {
+		userImageList.add(u);
+		adapter.notifyDataSetChanged();
+	}
+	
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
@@ -330,9 +352,10 @@ public class CheckInActivity
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
-
-	public void updateAsyncTaskProgress(String u) {
-		userImageList.add(u);
-		adapter.notifyDataSetChanged();
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 }

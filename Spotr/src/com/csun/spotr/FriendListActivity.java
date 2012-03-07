@@ -33,6 +33,10 @@ import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		This class will retrieve a list of friends from database.
  */
@@ -82,6 +86,7 @@ public class FriendListActivity
 		extends AsyncTask<Void, UserItem, Boolean> 
 			implements IAsyncTask<FriendListActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetFriendTask";
 		private WeakReference<FriendListActivity> ref;
 		private int offset;
 
@@ -90,8 +95,11 @@ public class FriendListActivity
 			this.offset = offset;
 		}
 		
-		@Override
-		protected void onPreExecute() {
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			return data;
 		}
 
 		@Override
@@ -101,17 +109,8 @@ public class FriendListActivity
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
-			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			
-			// send offset
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-			
-			// retrieve data from server
+			List<NameValuePair> data = prepareUploadData();
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
-			
 			if (array != null) {
 				try {
 					if (ref.get().task.isCancelled()) {
@@ -126,7 +125,7 @@ public class FriendListActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFriendTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -176,18 +175,6 @@ public class FriendListActivity
 		myAlertDialog.show();
 	}
 
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -258,5 +245,35 @@ public class FriendListActivity
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

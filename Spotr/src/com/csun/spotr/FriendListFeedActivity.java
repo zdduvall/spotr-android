@@ -36,9 +36,13 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		Display friends' feeds like Facebook/Google+
- */
+ **/
 public class FriendListFeedActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<FriendFeedItem> {
@@ -86,8 +90,8 @@ public class FriendListFeedActivity
 		extends AsyncTask<Void, FriendFeedItem, Boolean> 
 			implements IAsyncTask<FriendListFeedActivity> {
 	
+    	private static final String TAG = "[AsyncTask].GetFriendTask";
     	private WeakReference<FriendListFeedActivity> ref;
-    	private JSONArray array = null;
     	private int offset;
     	
     	public GetFriendFeedTask(FriendListFeedActivity a, int offset) {
@@ -98,9 +102,12 @@ public class FriendListFeedActivity
     		this.offset = offset;
     	}
     	
-    	@Override
-    	protected void onPreExecute() {
-    	}
+    	private List<NameValuePair> prepareUploadData() {
+    		List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+    		data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+    		data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			return data;
+		}
     	
     	@Override
     	protected void onProgressUpdate(FriendFeedItem... f) {
@@ -109,10 +116,8 @@ public class FriendListFeedActivity
     	
     	@Override
     	protected Boolean doInBackground(Void...voids) {
-    		List<NameValuePair> data = new ArrayList<NameValuePair>(); 
-    		data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-    		data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-    		array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_FEED_URL, data);
+    		List<NameValuePair> data = prepareUploadData();
+    		JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_FEED_URL, data);
     		JSONArray temp;
     		if (array != null) { 
     			try {

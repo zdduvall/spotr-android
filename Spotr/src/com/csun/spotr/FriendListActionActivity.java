@@ -40,6 +40,10 @@ import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.UserItemAdapter;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		Handle search for friends and send messages 
  */
@@ -62,11 +66,8 @@ public class FriendListActionActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_search);
-		
 		setupTextSearchBar();
-		
 		setupListView();
-		
 		setupSearchButton();
 	}
 	
@@ -82,7 +83,6 @@ public class FriendListActionActivity
 			public void onClick(View v) {
 				userItemList.clear();
 				adapter.notifyDataSetChanged();
-				// start task
 				task = new SearchFriendsTask(FriendListActionActivity.this, editTextSearch.getText().toString(), 0);
 				task.execute();
 			}
@@ -108,6 +108,7 @@ public class FriendListActionActivity
 		extends AsyncTask<Void, UserItem, Boolean> 
 			implements IAsyncTask<FriendListActionActivity> {
 			
+		private static final String TAG = "[AsyncTask].SearchFriendTask";
 		private WeakReference<FriendListActionActivity> ref;
 		private final String criteria;
 		private final int offset;
@@ -118,9 +119,12 @@ public class FriendListActionActivity
 			attach(a);
 		}
 
-		@Override
-		protected void onPreExecute() {
-		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("text", criteria));
+			data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			return data;
 		}
 
 		@Override
@@ -130,10 +134,7 @@ public class FriendListActionActivity
 
 		@Override
 		protected Boolean doInBackground(Void...voids) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("text", criteria));
-			data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
+			List<NameValuePair> data = prepareUploadData();
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(SEARCH_FRIENDS_URL, data);
 			if (array != null) {
 				try {
@@ -146,7 +147,7 @@ public class FriendListActionActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "SearchFriendTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -271,18 +272,6 @@ public class FriendListActionActivity
 		return true;
 	}
 
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-
 	public void updateAsyncTaskProgress(UserItem u) {
 		userItemList.add(u);
 		adapter.notifyDataSetChanged();
@@ -318,5 +307,35 @@ public class FriendListActionActivity
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }
