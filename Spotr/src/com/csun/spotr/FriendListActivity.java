@@ -19,6 +19,7 @@ import com.csun.spotr.util.JsonHelper;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.AbsListView;
@@ -61,6 +62,12 @@ public class FriendListActivity
 	private void setupListView() {
 		// initialize list view
 		listView = new ExpandableListView(this);
+		
+		// set indicators
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		int width = metrics.widthPixels;
+		listView.setIndicatorBounds(width - getDipsFromPixel(50), width - getDipsFromPixel(10));
 		listView.setGroupIndicator(getResources().getDrawable(R.drawable.arrow_down));
 		listView.setChildIndicator(null);
 		
@@ -71,7 +78,15 @@ public class FriendListActivity
 		// handle item scrolling event
 		listView.setOnScrollListener(new FeedOnScrollListener());
 	}
-
+	
+    public int getDipsFromPixel(float pixels) {
+     // get the screen's density scale
+     final float scale = getResources().getDisplayMetrics().density;
+     
+     // convert the dps to pixels, based on density scale
+     return (int) (pixels * scale + 0.5f);
+    }
+    
 	private static class GetFriendsTask 
 		extends	AsyncTask<Void, UserItem, Boolean> 
 		implements IAsyncTask<FriendListActivity> {

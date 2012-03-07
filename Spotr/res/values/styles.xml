@@ -512,7 +512,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:padding">7dp</item>
+        <item name="android:padding">10dp</item>
         <item name="android:background">@drawable/listview_row_selector</item>
     </style>
     
@@ -530,7 +530,50 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/listview_text_selector</item>     
+        <item name="android:textColor">@color/listview_text_selector</item>
+    </style>
+    
+    <style name="FriendActionRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/aluminum5_5</item>
+    </style>
+    
+    <style name="FriendActionsShadowBorderTop">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">6dp</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:background">@drawable/shadow_border_top</item>
+    </style>
+
+    <style name="FriendActionsShadowBorderBottom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">6dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">@drawable/shadow_border_bottom</item>
+    </style>
+    
+    <style name="FriendActionsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="FriendBtnMessage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:drawableTop">@drawable/ic_main_menu_inbox_default</item>
+        <item name="android:text">Send message</item>
+    </style>
+    
+    <style name="FriendBtnProfile">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:drawableTop">@drawable/ic_main_menu_me_default</item>
+        <item name="android:text">View profile</item>
     </style>
     <!-- End Friends: Friends tab -->
     

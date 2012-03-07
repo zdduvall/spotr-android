@@ -78,9 +78,7 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 	 * @param groupPosition the child's parent position
 	 */
 	private void setupChildButtons(int groupPosition) {
-		holderChild.btnSendMessage.setText(contents[0]);
 		holderChild.btnSendMessage.setTag(groupPosition);
-		holderChild.btnViewProfile.setText(contents[1]);
 		holderChild.btnViewProfile.setTag(groupPosition);
 		
 		holderChild.btnSendMessage.setOnClickListener(new OnClickListener() {
