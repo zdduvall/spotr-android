@@ -4,14 +4,14 @@ public class Event {
 	private int id;
 	private String name;
 	private String context;
-	private String imageUrl;
+	private String url;
 	private String time;
 
-	public Event(int id, String name, String context, String imageUrl, String time) {
+	public Event(int id, String name, String context, String url, String time) {
 		this.id = id;
 		this.name = name;
 		this.context = context;
-		this.imageUrl = imageUrl;
+		this.url = url;
 		this.time = time;
 	}
 
@@ -39,12 +39,12 @@ public class Event {
 		this.context = context;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getTime() {

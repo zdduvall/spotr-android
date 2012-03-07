@@ -26,12 +26,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ListView;
@@ -65,7 +68,6 @@ public class CheckInActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.check_in);
-		
 		initUserDataFromBundle();
 		setupCheckInUserGallery();
 		setupEventListView();
@@ -104,12 +106,20 @@ public class CheckInActivity
 		listview = (ListView) findViewById(R.id.check_in_xml_listview_events);
 		eventAdapter = new EventAdapter(this, eventList);
 		listview.setAdapter(eventAdapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getApplicationContext(), EventActivity.class);
+				intent.putExtra("event_link", eventList.get(position).getUrl());
+				startActivity(intent);
+			}
+		});
 	}
 	
 	private static class CheckInTask 
 		extends AsyncTask<Void, Void, String> 
 			implements IAsyncTask<CheckInActivity> {
 	
+		private static final String TAG = "[AsyncTask].CheckInTask";
 		private WeakReference<CheckInActivity> ref;
 		private String usersId;
 		private String spotsId;
@@ -161,7 +171,7 @@ public class CheckInActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "CheckInTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 			}
 			return result;
 		}
@@ -270,7 +280,7 @@ public class CheckInActivity
 								array.getJSONObject(i).getInt("event_tbl_id"),
 								array.getJSONObject(i).getString("event_tbl_name"),
 								array.getJSONObject(i).getString("event_tbl_context"),
-								array.getJSONObject(i).getString("event_tbl_image_url"),
+								array.getJSONObject(i).getString("event_tbl_url"),
 								array.getJSONObject(i).getString("event_tbl_time")));
 					}
 				}
