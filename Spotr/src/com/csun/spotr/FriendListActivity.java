@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -43,7 +44,7 @@ public class FriendListActivity
 	private static final String TAG = "(FriendListActivity)";
 	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
 
-	public ExpandableListView listView;	
+	public ExpandableListView listView = null;	
 	public ExpandableUserItemAdapter adapter = null;
 	public List<UserItem> userItemList = new ArrayList<UserItem>();
 	public GetFriendsTask task = null;
@@ -51,8 +52,8 @@ public class FriendListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.friend_list_main_alt);
 		setupListView();
-		setContentView(listView);
 
 		// initially, we load 10 items and show users immediately
 		task = new GetFriendsTask(this, 0);
@@ -61,15 +62,13 @@ public class FriendListActivity
 	
 	private void setupListView() {
 		// initialize list view
-		listView = new ExpandableListView(this);
-		
+		listView = (ExpandableListView) findViewById(R.id.friend_list_main_xml_listview_friends_alt);
+
 		// set indicators
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		int width = metrics.widthPixels;
 		listView.setIndicatorBounds(width - getDipsFromPixel(50), width - getDipsFromPixel(10));
-		listView.setGroupIndicator(getResources().getDrawable(R.drawable.arrow_down));
-		listView.setChildIndicator(null);
 		
 		// set up list view adapter
 		adapter = new ExpandableUserItemAdapter(this, userItemList);

@@ -498,14 +498,10 @@
     <!-- End Map -->
     
     <!-- Friends: Friends tab -->    
-<!--     <style name="LinearLayoutShadow.FriendsList"> -->
-<!--         <item name="android:layout_width">match_parent</item> -->
-<!--         <item name="android:layout_height">match_parent</item> -->
-<!--     </style> -->
-
-    <style name="FriendList" parent="RoundedRectListView">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:listSelector">@android:color/transparent</item>
+    <style name="FriendList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:groupIndicator">@drawable/ic_expander</item>
     </style>
     
     <style name="UserItemRow">
@@ -565,6 +561,8 @@
     <style name="FriendBtnMessage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@null</item>
         <item name="android:drawableTop">@drawable/ic_main_menu_inbox_default</item>
         <item name="android:text">Send message</item>
     </style>
@@ -572,6 +570,8 @@
     <style name="FriendBtnProfile">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@null</item>
         <item name="android:drawableTop">@drawable/ic_main_menu_me_default</item>
         <item name="android:text">View profile</item>
     </style>
