@@ -29,12 +29,11 @@ import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class FriendListActivity extends Activity implements
+public class ExpandableFriendListActivity extends Activity implements
 		IActivityProgressUpdate<UserItem> {
 	private static final String TAG = "(FriendListActivity)";
 	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
 
-	public ExpandableListView listView;	
 	public ExpandableUserItemAdapter adapter = null;
 	public List<UserItem> userItemList = new ArrayList<UserItem>();
 	public GetFriendsTask task = null;
@@ -42,19 +41,16 @@ public class FriendListActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		listView = new ExpandableListView(this);
+
+		ExpandableListView listView = new ExpandableListView(this);
 		listView.setGroupIndicator(null);
 		listView.setChildIndicator(null);
 
-		 adapter = new ExpandableUserItemAdapter(this, userItemList);
-		 listView.setAdapter(adapter);
-		 listView.setVisibility(View.VISIBLE);
-		 listView.setOnScrollListener(new FeedOnScrollListener());
-			task = new GetFriendsTask(this, 0);
-			task.execute();
-			setContentView(listView);
-
+		adapter = new ExpandableUserItemAdapter(this, userItemList);
+		listView.setAdapter(adapter);
+		listView.setVisibility(View.VISIBLE);
+		listView.setOnScrollListener(new FeedOnScrollListener());
+		setContentView(listView);
 	}
 
 	public void updateAsyncTaskProgress(UserItem u) {
@@ -64,12 +60,12 @@ public class FriendListActivity extends Activity implements
 
 	private static class GetFriendsTask extends
 			AsyncTask<Void, UserItem, Boolean> implements
-			IAsyncTask<FriendListActivity> {
+			IAsyncTask<ExpandableFriendListActivity> {
 
-		private WeakReference<FriendListActivity> ref;
+		private WeakReference<ExpandableFriendListActivity> ref;
 		private int offset;
 
-		public GetFriendsTask(FriendListActivity a, int offset) {
+		public GetFriendsTask(ExpandableFriendListActivity a, int offset) {
 			attach(a);
 			this.offset = offset;
 		}
@@ -125,14 +121,15 @@ public class FriendListActivity extends Activity implements
 			detach();
 		}
 
-		public void attach(FriendListActivity a) {
-			ref = new WeakReference<FriendListActivity>(a);
+		public void attach(ExpandableFriendListActivity a) {
+			ref = new WeakReference<ExpandableFriendListActivity>(a);
 		}
 
 		public void detach() {
 			ref.clear();
 		}
 	}
+
 	@Override
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
@@ -144,38 +141,40 @@ public class FriendListActivity extends Activity implements
 		Log.v(TAG, "I'm destroyed!");
 		super.onDestroy();
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case 0:
-			return new 
-				AlertDialog.Builder(this)
+			return new AlertDialog.Builder(this)
 					.setIcon(R.drawable.error_circle)
 					.setTitle("Error Message")
 					.setMessage("No friends!")
-					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							
-						}
-					}).create();
-		
-		case 1: 
-			return new 
-					AlertDialog.Builder(this)
-						.setIcon(R.drawable.error_circle)
-						.setTitle("Error Message")
-						.setMessage("<undefined>")
-						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								
-							}
-						}).create();
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+
+								}
+							}).create();
+
+		case 1:
+			return new AlertDialog.Builder(this)
+					.setIcon(R.drawable.error_circle)
+					.setTitle("Error Message")
+					.setMessage("<undefined>")
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+
+								}
+							}).create();
 		}
 		return null;
 	}
-	
-	@Override 
+
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 			task.cancel(true);
@@ -184,37 +183,41 @@ public class FriendListActivity extends Activity implements
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	public class FeedOnScrollListener implements OnScrollListener {
-	    private int visibleThreshold = 10;
-	    private int currentPage = 0;
-	    private int previousTotal = 0;
-	    private boolean loading = true;
-	 
-	    public FeedOnScrollListener() {
-	    	
-	    }
-	    public FeedOnScrollListener(int visibleThreshold) {
-	        this.visibleThreshold = visibleThreshold;
-	    }
-	 
-	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-	        if (loading) {
-	            if (totalItemCount > previousTotal) {
-	                loading = false;
-	                previousTotal = totalItemCount;
-	                currentPage += 10;
-	            }
-	        }
-	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-	            new GetFriendsTask(FriendListActivity.this, currentPage).execute();
-	            loading = true;
-	        }
-	    }
-	 
-	    public void onScrollStateChanged(AbsListView view, int scrollState) {
-	    	// TODO : not use
-	    }
+		private int visibleThreshold = 10;
+		private int currentPage = 0;
+		private int previousTotal = 0;
+		private boolean loading = true;
+
+		public FeedOnScrollListener() {
+
+		}
+
+		public FeedOnScrollListener(int visibleThreshold) {
+			this.visibleThreshold = visibleThreshold;
+		}
+
+		public void onScroll(AbsListView view, int firstVisibleItem,
+				int visibleItemCount, int totalItemCount) {
+			if (loading) {
+				if (totalItemCount > previousTotal) {
+					loading = false;
+					previousTotal = totalItemCount;
+					currentPage += 10;
+				}
+			}
+			if (!loading
+					&& (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+				new GetFriendsTask(ExpandableFriendListActivity.this,
+						currentPage).execute();
+				loading = true;
+			}
+		}
+
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+			// TODO : not use
+		}
 	}
 
 }

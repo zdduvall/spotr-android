@@ -9,71 +9,87 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.csun.spotr.adapter.ExpandableUserItemAdapter;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+
 import com.csun.spotr.core.adapter_item.UserItem;
+import com.csun.spotr.adapter.UserItemAdapter;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ExpandableListView;
-import android.widget.AbsListView.OnScrollListener;
-
-public class FriendListActivity extends Activity implements
-		IActivityProgressUpdate<UserItem> {
+/**
+ * Description:
+ * 		This class will retrieve a list of friends from database.
+ */
+public class CopyOfFriendListActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<UserItem> {
+	
 	private static final String TAG = "(FriendListActivity)";
 	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
-
-	public ExpandableListView listView;	
-	public ExpandableUserItemAdapter adapter = null;
+	
+	private ListView listview = null;
+	public UserItemAdapter adapter = null;
 	public List<UserItem> userItemList = new ArrayList<UserItem>();
 	public GetFriendsTask task = null;
-
-	@Override
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.friend_list_main);
+
+		setupListView();
+		// initially, we load 10 items and show user immediately
+		task = new GetFriendsTask(this, 0);
+		task.execute();
+	}
+	
+	private void setupListView() {
+		// initialize list view
+		listview = (ListView) findViewById(R.id.friend_list_main_xml_listview_friends);
+
+		// set up list view adapter
+		adapter = new UserItemAdapter(this, userItemList);
+		listview.setAdapter(adapter);
+		listview.setVisibility(View.VISIBLE);
+
+		// handle item click event
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				startDialog(userItemList.get(position));
+			}
+		});
+				
+		// handle scrolling event
+		listview.setOnScrollListener(new FeedOnScrollListener());
+	}
+
+	private static class GetFriendsTask 
+		extends AsyncTask<Void, UserItem, Boolean> 
+			implements IAsyncTask<CopyOfFriendListActivity> {
 		
-		listView = new ExpandableListView(this);
-		listView.setGroupIndicator(null);
-		listView.setChildIndicator(null);
-
-		 adapter = new ExpandableUserItemAdapter(this, userItemList);
-		 listView.setAdapter(adapter);
-		 listView.setVisibility(View.VISIBLE);
-		 listView.setOnScrollListener(new FeedOnScrollListener());
-			task = new GetFriendsTask(this, 0);
-			task.execute();
-			setContentView(listView);
-
-	}
-
-	public void updateAsyncTaskProgress(UserItem u) {
-		userItemList.add(u);
-		adapter.notifyDataSetChanged();
-	}
-
-	private static class GetFriendsTask extends
-			AsyncTask<Void, UserItem, Boolean> implements
-			IAsyncTask<FriendListActivity> {
-
-		private WeakReference<FriendListActivity> ref;
+		private WeakReference<CopyOfFriendListActivity> ref;
 		private int offset;
 
-		public GetFriendsTask(FriendListActivity a, int offset) {
+		public GetFriendsTask(CopyOfFriendListActivity a, int offset) {
 			attach(a);
 			this.offset = offset;
 		}
-
+		
 		@Override
 		protected void onPreExecute() {
 		}
@@ -86,34 +102,31 @@ public class FriendListActivity extends Activity implements
 		@Override
 		protected Boolean doInBackground(Void... voids) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-
+			
 			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser
-					.getCurrentUser().getId())));
-
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			
 			// send offset
 			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-
+			
 			// retrieve data from server
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(
-					GET_FRIENDS_URL, data);
-
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
+			
 			if (array != null) {
 				try {
 					if (ref.get().task.isCancelled()) {
 						return true;
 					}
 					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(new UserItem(array.getJSONObject(i)
-								.getInt("users_tbl_id"), array.getJSONObject(i)
-								.getString("users_tbl_username"), array
-								.getJSONObject(i).getString(
-										"users_tbl_user_image_url")));
+						publishProgress(
+							new UserItem(
+								array.getJSONObject(i).getInt("users_tbl_id"), 
+								array.getJSONObject(i).getString("users_tbl_username"), 
+								array.getJSONObject(i).getString("users_tbl_user_image_url")));
 					}
-				} catch (JSONException e) {
-					Log.e(TAG
-							+ "GetFriendTask.doInBackGround(Integer... offsets) : ",
-							"JSON error parsing data" + e.toString());
+				}
+				catch (JSONException e) {
+					Log.e(TAG + "GetFriendTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -124,15 +137,45 @@ public class FriendListActivity extends Activity implements
 		protected void onPostExecute(Boolean result) {
 			detach();
 		}
-
-		public void attach(FriendListActivity a) {
-			ref = new WeakReference<FriendListActivity>(a);
+		
+		public void attach(CopyOfFriendListActivity a) {
+			ref = new WeakReference<CopyOfFriendListActivity>(a);
 		}
-
+		
 		public void detach() {
 			ref.clear();
 		}
 	}
+	
+	public void updateAsyncTaskProgress(UserItem u) {
+		userItemList.add(u);
+		adapter.notifyDataSetChanged();
+	}
+
+	private void startDialog(final UserItem user) {
+		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
+		myAlertDialog.setTitle("Friend Dialog");
+		myAlertDialog.setMessage("Pick an option");
+		myAlertDialog.setPositiveButton("Send a message", new DialogInterface.OnClickListener() {
+			// do something when the button is clicked
+			public void onClick(DialogInterface arg0, int arg1) {
+				
+			}
+		});
+
+		myAlertDialog.setNegativeButton("View profile", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface arg0, int arg1) {
+				Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+				Bundle extras = new Bundle();
+				extras.putInt("user_id", user.getId());
+				intent.putExtras(extras);
+				startActivity(intent);
+				finish();
+			}
+		});
+		myAlertDialog.show();
+	}
+
 	@Override
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
@@ -207,7 +250,7 @@ public class FriendListActivity extends Activity implements
 	            }
 	        }
 	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-	            new GetFriendsTask(FriendListActivity.this, currentPage).execute();
+	            new GetFriendsTask(CopyOfFriendListActivity.this, currentPage).execute();
 	            loading = true;
 	        }
 	    }
@@ -216,5 +259,4 @@ public class FriendListActivity extends Activity implements
 	    	// TODO : not use
 	    }
 	}
-
 }
