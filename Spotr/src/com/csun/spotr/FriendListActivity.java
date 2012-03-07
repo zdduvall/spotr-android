@@ -17,20 +17,23 @@ import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class FriendListActivity extends Activity implements
-		IActivityProgressUpdate<UserItem> {
+/**
+ * Description:
+ * 		This class will retrieve a list of friends from database.
+ *
+ */
+public class FriendListActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<UserItem> {
+	
 	private static final String TAG = "(FriendListActivity)";
 	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
 
@@ -42,24 +45,26 @@ public class FriendListActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		listView = new ExpandableListView(this);
-		listView.setGroupIndicator(null);
-		listView.setChildIndicator(null);
+		setupListView();
+		setContentView(listView);
 
-		 adapter = new ExpandableUserItemAdapter(this, userItemList);
-		 listView.setAdapter(adapter);
-		 listView.setVisibility(View.VISIBLE);
-		 listView.setOnScrollListener(new FeedOnScrollListener());
-			task = new GetFriendsTask(this, 0);
-			task.execute();
-			setContentView(listView);
-
+		// initially, we load 10 items and show users immediately
+		task = new GetFriendsTask(this, 0);
+		task.execute();
 	}
-
-	public void updateAsyncTaskProgress(UserItem u) {
-		userItemList.add(u);
-		adapter.notifyDataSetChanged();
+	
+	private void setupListView() {
+		// initialize list view
+		listView = new ExpandableListView(this);
+		listView.setGroupIndicator(getResources().getDrawable(R.drawable.arrow_down));
+		listView.setChildIndicator(null);
+		
+		// set up list view adapter
+		adapter = new ExpandableUserItemAdapter(this, userItemList);
+		listView.setAdapter(adapter);
+		
+		// handle item scrolling event
+		listView.setOnScrollListener(new FeedOnScrollListener());
 	}
 
 	private static class GetFriendsTask extends
@@ -145,36 +150,11 @@ public class FriendListActivity extends Activity implements
 		super.onDestroy();
 	}
 	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case 0:
-			return new 
-				AlertDialog.Builder(this)
-					.setIcon(R.drawable.error_circle)
-					.setTitle("Error Message")
-					.setMessage("No friends!")
-					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							
-						}
-					}).create();
-		
-		case 1: 
-			return new 
-					AlertDialog.Builder(this)
-						.setIcon(R.drawable.error_circle)
-						.setTitle("Error Message")
-						.setMessage("<undefined>")
-						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								
-							}
-						}).create();
-		}
-		return null;
+	public void updateAsyncTaskProgress(UserItem u) {
+		userItemList.add(u);
+		adapter.notifyDataSetChanged();
 	}
-	
+		
 	@Override 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -191,9 +171,8 @@ public class FriendListActivity extends Activity implements
 	    private int previousTotal = 0;
 	    private boolean loading = true;
 	 
-	    public FeedOnScrollListener() {
-	    	
-	    }
+	    public FeedOnScrollListener() {}
+	    
 	    public FeedOnScrollListener(int visibleThreshold) {
 	        this.visibleThreshold = visibleThreshold;
 	    }
@@ -216,5 +195,4 @@ public class FriendListActivity extends Activity implements
 	    	// TODO : not use
 	    }
 	}
-
 }
