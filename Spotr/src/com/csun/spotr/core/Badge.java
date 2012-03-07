@@ -1,6 +1,29 @@
 package com.csun.spotr.core;
 
 public class Badge {
+	public static final int BADGE_100_POINTS 		  = 1;
+	public static final int BADGE_1000_POINTS 		  = 2;
+	public static final int BADGE_10000_POINTS        = 3;
+	public static final int BADGE_FIRST_CHECK_IN 	  = 4;
+	public static final int BADGE_FIRST_QUEST 		  = 5;
+	public static final int BADGE_NEWBIE 			  = 6;
+	public static final int BADGE_TRAVELER 		      = 7;
+	public static final int BADGE_EXPLORER 		      = 8;
+	public static final int BADGE_ADVENTURE 		  = 9;
+	public static final int BADGE_POWER_ATHELETE      = 10;
+	public static final int BADGE_BOOK_WORM 		  = 11;
+	public static final int BADGE_COFFEE_AFICIANADO   = 12;
+	public static final int BADGE_MR_PHOTOGRAPHER     = 13;
+	public static final int BADGE_NIGHT_OWL 		  = 14;
+	public static final int BADGE_JAVA_LEGENDRY 	  = 15;
+	public static final int BADGE_CPP_LEGENDRY 	      = 16;
+	public static final int BADGE_CSHARP_LEGENDRY 	  = 17;
+	public static final int BADGE_POPULAR_FEED 	      = 18;
+	public static final int BADGE_FAMOUS_FEED 	      = 19;
+	public static final int BADGE_NOTORIOUS_FEED      = 20;
+	public static final int BADGE_ADDICT 			  = 21;
+	public static final int BADGE_BEST_REWARD         = 22;
+	
 	private final int id;
 	private final String date;
 	private final String url;
