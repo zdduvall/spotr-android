@@ -16,31 +16,27 @@ import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-/*
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		Load messages from friends
- */
+ **/
 public class InboxActivity 
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<Inbox> {
@@ -56,13 +52,9 @@ public class InboxActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.inbox);
-
 		setupTitleBar();
-		
 		setupListView();
-		
 		setupComposeButton();
-		
 		task = new GetInboxTask(this);
 		task.execute();
 	}
@@ -97,15 +89,11 @@ public class InboxActivity
 		extends AsyncTask<Integer, Inbox, Boolean> 
 			implements IAsyncTask<InboxActivity> {
 
+		private static final String TAG = "[AsyncTask].GetInboxTask";
 		private WeakReference<InboxActivity> ref;
 
 		public GetInboxTask(InboxActivity a) {
 			attach(a);
-		}
-
-		@Override
-		protected void onPreExecute() {
-
 		}
 
 		@Override
@@ -134,7 +122,7 @@ public class InboxActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetInboxTask.doInBackGround(Integer... ids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... ids) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -167,15 +155,33 @@ public class InboxActivity
 		adapter.notifyDataSetChanged();
 	}
 	
-	@Override
-	public void onPause() {
-		Log.v(TAG,"I'm paused");
-		super.onPause();
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
 	public void onDestroy() {
-		Log.v(TAG,"I'm destroyed");
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
 }

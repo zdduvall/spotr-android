@@ -1,59 +1,52 @@
 package com.csun.spotr;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.R.color;
 import android.app.Activity;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.widget.Button;
 
 import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.LeaderboardItemAdapter;
 import com.csun.spotr.core.User;
 
-public class LeaderboardActivity extends Activity {
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+public class LeaderboardActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<User> {
+	
 	private static final String TAG = "(LeaderboardActivity)";
 	private static final String GET_USERS_URL = "http://107.22.209.62/android/get_users.php";
 	private ListView listview = null;
 	private LeaderboardItemAdapter adapter = null;
 	private List<User> userList = new ArrayList<User>();
-	private boolean small_view = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.leaderboard);
-		
 		setupListView();
-		new GetUsersTask().execute();				
+		new GetUsersTask(this).execute();				
 	}
 	
 	private void setupListView() {
@@ -63,12 +56,23 @@ public class LeaderboardActivity extends Activity {
 		listview.setAdapter(adapter);
 	}
 	
-	private class GetUsersTask extends AsyncTask<Void, User, Boolean> {
+	private static class GetUsersTask 
+		extends AsyncTask<Void, User, Boolean> 
+			implements IAsyncTask<LeaderboardActivity> {
+		
+		private static final String TAG = "[AsyncTask].GetUsersTask";
 		private  ProgressDialog progressDialog = null;
+		private WeakReference<LeaderboardActivity> ref;
+		int position = 0;
+		
+		public GetUsersTask(LeaderboardActivity a) {
+			attach(a);
+		}
+		
 		@Override
 		protected void onPreExecute() {
 			// display waiting dialog
-			progressDialog = new ProgressDialog(LeaderboardActivity.this);
+			progressDialog = new ProgressDialog(ref.get());
 			progressDialog.setMessage("Loading...");
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
@@ -78,8 +82,7 @@ public class LeaderboardActivity extends Activity {
 		@Override
 	    protected void onProgressUpdate(User... users) {
 			progressDialog.dismiss();
-			userList.add(users[0]);
-			adapter.notifyDataSetChanged();
+			ref.get().updateAsyncTaskProgress(users[0]);
 	    }
 		
 		@Override
@@ -87,58 +90,12 @@ public class LeaderboardActivity extends Activity {
 			JSONArray array = JsonHelper.getJsonArrayFromUrl(GET_USERS_URL);
 			if (array != null) { 
 				try {
-					
-					User current_user = CurrentUser.getCurrentUser();
-					int position = current_user.getRank();
-					String name = current_user.getUsername();
-					
-					for (int i = 0; i < array.length(); ++i) { 
-							
-								new User.Builder(
-									// required parameters
-									array.getJSONObject(i).getInt("users_tbl_id"),
-									array.getJSONObject(i).getString("users_tbl_username"),
-									array.getJSONObject(i).getString("users_tbl_password"))
-										// optional parameters
-										.challengesDone(array.getJSONObject(i).getInt("users_tbl_challenges_done"))
-										.placesVisited(array.getJSONObject(i).getInt("users_tbl_places_visited"))
-										.points(array.getJSONObject(i).getInt("users_tbl_points"))
-										.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
-											.build();
-								String current_name = array.getJSONObject(i).getString("users_tbl_username");
-								if(current_name.equalsIgnoreCase(name)) {
-									position = array.getJSONObject(i).getInt("users_tbl_rank");
-									CurrentUser.setRank(position);
-								}
-									
-
-									
+					for (int i = 0; i < array.length(); ++i) {
+						// update user's location
+						if (array.getJSONObject(i).getInt("users_tbl_id") == CurrentUser.getCurrentUser().getId()) {
+							position = i;
 						}
-					int end_list = position + 10;
-					if(position < 10)
-						position = 10;
-					if(end_list > array.length())
-						end_list = array.length();
-										
-					if(small_view == true)
-						for (int i = position - 10; i < end_list; ++i)
-						{
-							publishProgress(
-								new User.Builder(
-									// required parameters
-									array.getJSONObject(i).getInt("users_tbl_id"),
-									array.getJSONObject(i).getString("users_tbl_username"),
-									array.getJSONObject(i).getString("users_tbl_password"))
-										// optional parameters
-										.challengesDone(array.getJSONObject(i).getInt("users_tbl_challenges_done"))
-										.placesVisited(array.getJSONObject(i).getInt("users_tbl_places_visited"))
-										.points(array.getJSONObject(i).getInt("users_tbl_points"))
-										.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
-											.build());
-						}
-					if(small_view == false)
-						for (int i = 0; i < array.length(); ++i)
-						{
+						
 						publishProgress(
 							new User.Builder(
 								// required parameters
@@ -151,11 +108,10 @@ public class LeaderboardActivity extends Activity {
 									.points(array.getJSONObject(i).getInt("users_tbl_points"))
 									.rank(array.getJSONObject(i).getInt("users_tbl_rank"))
 										.build());
-						}
-					
+					}	
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFriendTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -166,15 +122,28 @@ public class LeaderboardActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
-			// highlight player row and put it in view
-			int rank = CurrentUser.getRank();
-			adapter.setPositionFound(rank - 1);
-			listview.setSelection(rank - 1);
-
 			progressDialog.dismiss();
-			
-
+			ref.get().updateRank(position);
+			detach();
 		}
+
+		public void attach(LeaderboardActivity a) {
+			ref = new WeakReference<LeaderboardActivity>(a);
+		}
+
+		public void detach() {
+			ref.clear();
+		}
+	}
+	
+	private void updateRank(int position) {
+		adapter.setPositionFound(position);
+		listview.setSelection(position);
+	}
+	
+	public void updateAsyncTaskProgress(User u) {
+		userList.add(u);
+		adapter.notifyDataSetChanged();
 	}
 	
 	@Override
@@ -184,46 +153,33 @@ public class LeaderboardActivity extends Activity {
 		return true;
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_refresh_icon:
-				userList.clear();
-				adapter.notifyDataSetChanged();
-				new GetUsersTask().execute();
-				break;
-		}
-		return true;
-	}
-
-	@Override
-    public void onPause() {
-		Log.v(TAG, "I'm paused!");
-        super.onPause();
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
-    public void onDestroy() {
+	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

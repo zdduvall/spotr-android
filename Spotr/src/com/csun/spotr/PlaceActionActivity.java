@@ -40,10 +40,15 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 /**
  * Description:
  * 		The Missions tab content in Spots.
- */
+ **/
 public class PlaceActionActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Challenge> {
@@ -62,20 +67,15 @@ public class PlaceActionActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place_action);
-	
 		// get place id
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
-
+		
 		setupInfoButton();
-		
 		setupTreasureButton();
-		
 		setupListView();
-
 		// run GetPlaceDetailTask
 		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
-
 		// run GetChallengeTask
 		new GetChallengesTask(PlaceActionActivity.this).execute();
 	}
@@ -217,6 +217,7 @@ public class PlaceActionActivity
 		extends AsyncTask<String, Challenge, Boolean> 
 			implements IAsyncTask<PlaceActionActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetChallengeTask";
 		private WeakReference<PlaceActionActivity> ref;
 		
 		public GetChallengesTask(PlaceActionActivity a) {
@@ -237,7 +238,6 @@ public class PlaceActionActivity
 		protected Boolean doInBackground(String... text) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-			
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_CHALLENGES_URL, data);
 			
 			if (array != null) { 
@@ -258,7 +258,7 @@ public class PlaceActionActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetChallengesTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}

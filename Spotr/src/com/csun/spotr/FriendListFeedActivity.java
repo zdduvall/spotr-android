@@ -109,6 +109,27 @@ public class FriendListFeedActivity
 			return data;
 		}
     	
+    	private Comment getFirstComment(int activityId) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+			data.add(new BasicNameValuePair("activity_id", Integer.toString(activityId)));
+			Comment firstComment = new Comment(-1, "", "", "", "");
+			JSONArray temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+			try {
+				if (temp != null) {
+					firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
+					firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));
+					firstComment.setPictureUrl(temp.getJSONObject(0).getString("users_tbl_user_image_url"));
+					firstComment.setTime(temp.getJSONObject(0).getString("comments_tbl_time"));
+					firstComment.setContent(temp.getJSONObject(0).getString("comments_tbl_content"));
+				}	
+			}
+			catch (JSONException e) {
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+			}
+			
+			return firstComment;
+		}
+    	
     	@Override
     	protected void onProgressUpdate(FriendFeedItem... f) {
     		ref.get().updateAsyncTaskProgress(f[0]);
@@ -118,7 +139,6 @@ public class FriendListFeedActivity
     	protected Boolean doInBackground(Void...voids) {
     		List<NameValuePair> data = prepareUploadData();
     		JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_FEED_URL, data);
-    		JSONArray temp;
     		if (array != null) { 
     			try {
     				for (int i = 0; i < array.length(); ++i) { 
@@ -176,25 +196,12 @@ public class FriendListFeedActivity
     										.build();
     					
     					
-    					data.clear();
-    					data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-    					temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
-    					Comment firstComment = new Comment(-1, "", "", "", "");
-    					
-    					if (temp != null) {
-    						firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
-    						firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));
-    						firstComment.setPictureUrl(temp.getJSONObject(0).getString("users_tbl_user_image_url"));
-    						firstComment.setTime(temp.getJSONObject(0).getString("comments_tbl_time"));
-    						firstComment.setContent(temp.getJSONObject(0).getString("comments_tbl_content"));
-    					}
-    					
-    					ffi.setFirstComment(firstComment);
+    					ffi.setFirstComment(getFirstComment(ffi.getActivityId()));
     					publishProgress(ffi);
     				}
     			}
     			catch (JSONException e) {
-    				Log.e(TAG + "GetFriendFeedTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+    				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
     			}
     			return true;
     		}
@@ -250,18 +257,6 @@ public class FriendListFeedActivity
 		return true;
 	}
     
-    @Override
-    public void onPause() {
-    	Log.v(TAG, "I'm paused!");
-        super.onPause();
-	}
-    
-    @Override
-    public void onDestroy() {
-    	Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
-	}
-
 	public void updateAsyncTaskProgress(FriendFeedItem f) {
 		friendFeedList.add(f);
 		adapter.notifyDataSetChanged();
@@ -307,5 +302,35 @@ public class FriendListFeedActivity
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }
