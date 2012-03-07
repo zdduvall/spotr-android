@@ -4,14 +4,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,22 +17,15 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.EditText;
 import android.widget.ImageView.ScaleType;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.util.Log;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
 
 import android.location.Location;
 
@@ -59,9 +48,13 @@ import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.PlaceItemAdapter;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
- * Display all places around current phone's location
- */
+ * 		Display all places around current phone's location
+ **/
 public class PlaceActivity 
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<PlaceItem> {
@@ -89,16 +82,11 @@ public class PlaceActivity
 		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
-
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
 		setupTitleBar();
-		
 		setupListView();
-		
 		setupPowerupToolbar();
-		
 		findLocation(); // refresh button activated once location is found
 	}
 	
@@ -197,10 +185,20 @@ public class PlaceActivity
 		extends AsyncTask<Void, PlaceItem, Boolean> 
 			implements IAsyncTask<PlaceActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetSpotsTask";
 		private WeakReference<PlaceActivity> ref;
 		
 		public GetSpotsTask(PlaceActivity a) {
 			attach(a);
+		}
+		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			// now sending latitude, longitude and radius to retrieve places
+			data.add(new BasicNameValuePair("latitude", Double.toString(ref.get().lastKnownLocation.getLatitude())));
+			data.add(new BasicNameValuePair("longitude", Double.toString(ref.get().lastKnownLocation.getLongitude())));
+			data.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
+			return data;
 		}
 		
 		private List<NameValuePair> constructGooglePlace() {
@@ -248,7 +246,7 @@ public class PlaceActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetSpotsTask.constructGooglePlace() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data" + e.toString());
 			}
 			// send data to our server
 			sentData.add(new BasicNameValuePair("google_array", reformattedData.toString()));
@@ -256,27 +254,17 @@ public class PlaceActivity
 		}
 		
 		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
 		protected void onProgressUpdate(PlaceItem... p) {
 			ref.get().updateAsyncTaskProgress(p[0]);
 		}
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> placeData = new ArrayList<NameValuePair>();
 			// send Google data to our server to update 'spots' table
 			JsonHelper.getJsonObjectFromUrlWithData(UPDATE_GOOGLE_PLACES_URL, constructGooglePlace());
-			
-			// now sending latitude, longitude and radius to retrieve places
-			placeData.add(new BasicNameValuePair("latitude", Double.toString(ref.get().lastKnownLocation.getLatitude())));
-			placeData.add(new BasicNameValuePair("longitude", Double.toString(ref.get().lastKnownLocation.getLongitude())));
-			placeData.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
-			
+			List<NameValuePair> data = prepareUploadData();
 			// get places as JSON format from our database
-			JSONArray jsonPlaceArray = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, placeData);
+			JSONArray jsonPlaceArray = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, data);
 			if (jsonPlaceArray != null) {
 				try {
 					for (int i = 0; i < jsonPlaceArray.length(); ++i) {
@@ -350,6 +338,23 @@ public class PlaceActivity
 		return true;
 	}
 
+	public void updateAsyncTaskProgress(PlaceItem p) {
+		placeItemList.add(p);
+		adapter.notifyDataSetChanged();
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
 	@Override
 	public void onRestart() {
 		Log.v(TAG, "I'm restarted!");
@@ -366,16 +371,5 @@ public class PlaceActivity
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-
-	public void updateAsyncTaskProgress(PlaceItem p) {
-		placeItemList.add(p);
-		adapter.notifyDataSetChanged();
 	}
 }

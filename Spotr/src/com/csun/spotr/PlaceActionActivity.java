@@ -285,7 +285,7 @@ public class PlaceActionActivity
 		extends AsyncTask<Void, Integer, Place> 
 			implements IAsyncTask<PlaceActionActivity> {
 	
-		private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
+		private static final String TAG = "[AsyncTask].GetPlaceDetailTask]";
 		private WeakReference<PlaceActionActivity> ref;
 	
 		public GetPlaceDetailTask(PlaceActionActivity a) {
@@ -294,8 +294,9 @@ public class PlaceActionActivity
 
 		@Override
 		protected Place doInBackground(Void... voids) {
-			placeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, placeData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, data);
 			Place place = null;
 			try {
 				// create a place
@@ -378,18 +379,6 @@ public class PlaceActionActivity
 		return true;
 	}
     
-    @Override
-    public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-	
-	@Override
-    public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
-	}
-
 	public void updateAsyncTaskProgress(Challenge c) {
 		challengeList.add(c);
 		adapter.notifyDataSetChanged();
@@ -459,5 +448,35 @@ public class PlaceActionActivity
 		
 		}
 		return null;
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

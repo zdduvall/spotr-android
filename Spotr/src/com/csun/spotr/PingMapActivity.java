@@ -49,23 +49,27 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description:
  * 		Ping user's current location to friends or view friends' locations
- */
+ **/
 public class PingMapActivity 
 	extends MapActivity 
 		implements IActivityProgressUpdate<FriendAndLocation> {
 	
-	private static final 	String 						TAG = "(PingMapActivity)";
-	private static final 	String 						GET_FRIEND_LOCATION_URL = "http://107.22.209.62/android/get_friend_locations.php";
-	private static final 	String 						PING_ME_URL = "http://107.22.209.62/android/ping_me.php";
+	private static final String TAG = "(PingMapActivity)";
+	private static final String GET_FRIEND_LOCATION_URL = "http://107.22.209.62/android/get_friend_locations.php";
+	private static final String PING_ME_URL = "http://107.22.209.62/android/ping_me.php";
 
-	private 				MapView 					mapView = null;
-	private 				List<Overlay> 				mapOverlays = null;
-	private 				CustomItemizedOverlay 		itemizedOverlay = null;
-	private 				MapController 				mapController = null;
-	private 				FineLocation 				fineLocation = new FineLocation();
-	private 				Location 					lastKnownLocation = null;
+	private MapView mapView = null;
+	private List<Overlay> mapOverlays = null;
+	private CustomItemizedOverlay itemizedOverlay = null;
+	private MapController mapController = null;
+	private FineLocation fineLocation = new FineLocation();
+	private Location lastKnownLocation = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -227,7 +231,7 @@ public class PingMapActivity
 		extends AsyncTask<Void, FriendAndLocation, Boolean> 
 			implements IAsyncTask<PingMapActivity> {
 		
-		private List<NameValuePair> userData = new ArrayList<NameValuePair>();
+		private static final String TAG = "[AsyncTask].GetFriendLocationsTask";
 		private WeakReference<PingMapActivity> ref;
 		
 		public GetFriendLocationsTask(PingMapActivity a) {
@@ -245,8 +249,9 @@ public class PingMapActivity
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			userData.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_LOCATION_URL, userData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIEND_LOCATION_URL, data);
 			if (array != null) {
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -263,7 +268,7 @@ public class PingMapActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFriendLocationTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -293,7 +298,7 @@ public class PingMapActivity
 		extends AsyncTask<Location, Void, String> 
 			implements IAsyncTask<PingMapActivity> {
 		
-		private List<NameValuePair> userData = new ArrayList<NameValuePair>();
+		private static final String TAG = "[AsyncTask].PingMeTask";
 		private WeakReference<PingMapActivity> ref;
 		private String pingMessage = null;
 		private int pingDuration;
@@ -304,28 +309,26 @@ public class PingMapActivity
 			pingDuration = duration;
 		}
 		
-		@Override
-		protected void onPreExecute() {
-			
+		private List<NameValuePair> prepareUploadData(Location location) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("latitude", Double.toString(location.getLatitude())));
+			data.add(new BasicNameValuePair("longitude", Double.toString(location.getLongitude())));
+			data.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("message", pingMessage));
+			data.add(new BasicNameValuePair("duration", Integer.toString(pingDuration)));
+			return data;
 		}
 
 		@Override
 		protected String doInBackground(Location... locations) {
-			userData.add(new BasicNameValuePair("latitude", Double.toString(locations[0].getLatitude())));
-			userData.add(new BasicNameValuePair("longitude", Double.toString(locations[0].getLongitude())));
-			userData.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			userData.add(new BasicNameValuePair("message", pingMessage));
-			userData.add(new BasicNameValuePair("duration", Integer.toString(pingDuration)));
-
-
-
-			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(PING_ME_URL, userData);
+			List<NameValuePair> data = prepareUploadData(locations[0]);
+			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(PING_ME_URL, data);
 			String result = "";
 			try {
 				result = json.getString("result");
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "PingMeTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Location... locations) : ", "JSON error parsing data" + e.toString());
 			}
 			return result;
 		}

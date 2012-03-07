@@ -45,10 +45,15 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 /**
  * Description:
- * Display map view of places
- */
+ * 		Display map view of places
+ **/
 public class LocalMapViewActivity 
 	extends MapActivity 
 		implements IActivityProgressUpdate<Place> {
@@ -209,6 +214,7 @@ public class LocalMapViewActivity
 		extends AsyncTask<Location, Place, Boolean> 
 			implements IAsyncTask<LocalMapViewActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetSpotsTask";
 		private WeakReference<LocalMapViewActivity> ref;
 		
 		public GetSpotsTask(LocalMapViewActivity a) {
@@ -260,7 +266,7 @@ public class LocalMapViewActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetSpotsTask.constructGooglePlace() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data" + e.toString());
 			}
 			// send data to our server
 			sentData.add(new BasicNameValuePair("google_array", reformattedData.toString()));
@@ -276,20 +282,21 @@ public class LocalMapViewActivity
 			ref.get().updateAsyncTaskProgress(p[0]);
 		}
 		
+		
+		private List<NameValuePair> prepareUploadData(Location location) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("latitude", Double.toString(location.getLatitude())));
+			data.add(new BasicNameValuePair("longitude", Double.toString(location.getLongitude())));
+			data.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
+			return data;
+		}
+		
 		@Override
 		protected Boolean doInBackground(Location... locations) {
-			List<NameValuePair> placeData = new ArrayList<NameValuePair>();
-			
 			// send Google data to our server to update 'spots' table
 			JsonHelper.getJsonObjectFromUrlWithData(UPDATE_GOOGLE_PLACES_URL, constructGooglePlace(locations[0]));
-			
-			// now sending latitude, longitude and radius to retrieve places
-			placeData.add(new BasicNameValuePair("latitude", Double.toString(locations[0].getLatitude())));
-			placeData.add(new BasicNameValuePair("longitude", Double.toString(locations[0].getLongitude())));
-			placeData.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
-			
-			// get places as JSON format from our database
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, placeData);
+			List<NameValuePair> data = prepareUploadData(locations[0]);
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, data);
 			if (array != null) {
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -305,7 +312,7 @@ public class LocalMapViewActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetSpotsTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 				}
 				return true;
 			}
@@ -326,30 +333,6 @@ public class LocalMapViewActivity
 		public void detach() {
 			ref.clear();
 		}
-	}
-
-	@Override
-	public void onRestart() {
-		Log.v(TAG, "I'm restarted!");
-		super.onRestart();
-	}
-
-	@Override
-	public void onStop() {
-		Log.v(TAG, "I'm stopped!");
-		super.onStop();
-	}
-
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
 	}
 
 	@Override
@@ -389,5 +372,35 @@ public class LocalMapViewActivity
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
 		itemizedOverlay.addOverlay(overlay, p);
 		mapView.invalidate();
+	}
+
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }
