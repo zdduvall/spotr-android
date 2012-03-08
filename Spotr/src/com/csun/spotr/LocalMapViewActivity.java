@@ -3,6 +3,7 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -35,9 +36,11 @@ import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.GooglePlaceHelper;
 import com.csun.spotr.util.JsonHelper;
+import com.csun.spotr.util.PlaceIconUtil;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.core.Place;
 import com.csun.spotr.custom_gui.CustomItemizedOverlay;
+import com.csun.spotr.custom_gui.ImpactOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -58,16 +61,20 @@ public class LocalMapViewActivity
 	extends MapActivity 
 		implements IActivityProgressUpdate<Place> {
 	
-	private static final 	String 						TAG = "(LocalMapViewActivity)";
-	private static final 	String 						GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
-	private static final 	String 						UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
-
-	private 				MapView 					mapView = null;
-	private 				List<Overlay> 				mapOverlays = null;
-	private 				MapController 				mapController = null;
-	private 				FineLocation 				fineLocation = new FineLocation();
-	public 					Location 					lastKnownLocation = null;
-	public 					CustomItemizedOverlay 		itemizedOverlay = null;
+	private static final String TAG = "(LocalMapViewActivity)";
+	private static final String GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
+	private static final String UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
+	private static final int USER_MAP_RADIUS_10M  =  10;
+	private static final int USER_MAP_RADIUS_20M  =  20;
+	private static final int USER_MAP_RADIUS_50M  =  50;
+	private static final int USER_MAP_RADIUS_100M = 100;
+	
+	private MapView mapView = null;
+	private List<Overlay> mapOverlays = null;
+	private MapController mapController = null;
+	private FineLocation fineLocation = new FineLocation();
+	public Location lastKnownLocation = null;
+	public CustomItemizedOverlay itemizedOverlay = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -126,13 +133,21 @@ public class LocalMapViewActivity
 		locateButton.setScaleType(ScaleType.FIT_XY);
 		locateButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "My location", "Hello");
-				Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
-				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+				// draw user's icon
+				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
+				Drawable icon = PlaceIconUtil.getMapIconByType(LocalMapViewActivity.this, -1);
 				ovl.setMarker(icon);
+				// construct a place with id = -1, so that 
+				// user can't go to place mission
 				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
+				// add that overlay
 				itemizedOverlay.addOverlay(ovl, place);
-
+				// add radius around user
+				mapOverlays.add(
+						new ImpactOverlay(
+							new GeoPoint(	
+								(int) (lastKnownLocation.getLatitude() * 1E6),
+								(int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M));
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapController.setZoom(19);				
 			}	
@@ -369,9 +384,49 @@ public class LocalMapViewActivity
 	}
 
 	public void updateAsyncTaskProgress(Place p) {
-		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
-		itemizedOverlay.addOverlay(overlay, p);
+		itemizedOverlay.addOverlay(createOverlayItemByType(p), p);
 		mapView.invalidate();
+	}
+	
+	private OverlayItem createOverlayItemByType(Place p) {
+		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
+		/*
+		 * Temporary algorithm 
+		 * 		Random 
+		 */
+		Random rand = new Random();
+		int id = rand.nextInt(6);
+		switch (id) {
+		case -1:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, -1));
+			break;
+			
+		case 0:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 0));
+			break;
+			
+		case 1:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 1));
+			break;	
+			
+		case 2:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 2));
+			break;	
+			
+		case 3:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 3));
+			break;
+			
+		case 4:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 4));
+			break;
+		
+		case 5:
+			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 5));
+			break;
+		}
+		
+		return overlay;
 	}
 
 	@Override 

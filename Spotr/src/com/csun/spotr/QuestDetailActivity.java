@@ -495,7 +495,6 @@ public class QuestDetailActivity
 			Location spot = new Location("Current Spot");
 			spot.setLongitude(places.get(index).getLongitude());
 			spot.setLatitude(places.get(index).getLatitude());
-
 			if (!item.getTitle().equalsIgnoreCase("My Current Location")) {
 				if (spot.distanceTo(lastKnownLocation) < RANGE_LIMIT) {
 					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");

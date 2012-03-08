@@ -47,7 +47,7 @@ public class FineLocation {
 			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networkListener);
 		
 		clock = new Timer();
-		clock.schedule(new GetLastLocation(), 20000);
+		clock.schedule(new GetLastLocation(), 50000);
 		return true;
 	}
 

@@ -64,11 +64,8 @@ public class SnapPictureActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.snap_picture);
-		
 		initChallengeInfoFromBundle();
-		
 		setupLinkButton();
-		
 		setupTakePicture();
 	}
 	
