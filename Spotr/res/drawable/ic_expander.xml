@@ -4,8 +4,5 @@
         android:drawable="@drawable/ic_expander_pressed"
         android:state_expanded="true" />
     <item
-        android:drawable="@drawable/ic_expander_default"
-        android:state_empty="true" />
-    <item
         android:drawable="@drawable/ic_expander_default" />
 </selector>

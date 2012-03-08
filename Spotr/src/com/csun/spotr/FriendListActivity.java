@@ -22,10 +22,16 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ExpandableListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ExpandableListView.OnGroupCollapseListener;
+import android.widget.ExpandableListView.OnGroupExpandListener;
 
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012
@@ -52,7 +58,7 @@ public class FriendListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.friend_list_main_alt);
+		setContentView(R.layout.friend_list_main);
 		setupListView();
 
 		// initially, we load 10 items and show users immediately
@@ -62,7 +68,7 @@ public class FriendListActivity
 	
 	private void setupListView() {
 		// initialize list view
-		listView = (ExpandableListView) findViewById(R.id.friend_list_main_xml_listview_friends_alt);
+		listView = (ExpandableListView) findViewById(R.id.friend_list_main_xml_listview_friends);
 
 		// set indicators
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -73,6 +79,39 @@ public class FriendListActivity
 		// set up list view adapter
 		adapter = new ExpandableUserItemAdapter(this, userItemList);
 		listView.setAdapter(adapter);
+		
+		// set up group indicator
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander_default));				
+			}
+			
+		});
+		
+		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander_default));
+				
+			}
+
+			public void onNothingSelected(AdapterView<?> arg0) {
+				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander));
+				
+			}
+			
+		});
+		
+		listView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
+
+			public void onGroupCollapse(int groupPosition) {
+				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander));
+			}
+			
+		});
 		
 		// handle item scrolling event
 		listView.setOnScrollListener(new FeedOnScrollListener());

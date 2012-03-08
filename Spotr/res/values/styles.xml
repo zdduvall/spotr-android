@@ -501,7 +501,11 @@
     <style name="FriendList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/aluminum1</item>
         <item name="android:groupIndicator">@drawable/ic_expander</item>
+        <item name="android:divider">@color/aluminum2</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:childDivider">@android:color/transparent</item>
     </style>
     
     <style name="UserItemRow">
@@ -509,7 +513,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">10dp</item>
-        <item name="android:background">@drawable/listview_row_selector</item>
+        <item name="android:background">@drawable/listview_row_selector_friends</item>
     </style>
     
     <style name="UserItemAvatar">
@@ -526,7 +530,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/listview_text_selector</item>
+        <item name="android:textColor">@color/listview_text_selector_friends</item>
     </style>
     
     <style name="FriendActionRow">
@@ -534,21 +538,21 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@color/aluminum5_5</item>
+        <item name="android:background">@color/vimeo_grey</item>
     </style>
     
     <style name="FriendActionsShadowBorderTop">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">6dp</item>
+        <item name="android:layout_height">3dp</item>
         <item name="android:layout_alignParentTop">true</item>
-        <item name="android:background">@drawable/shadow_border_top</item>
+        <item name="android:background">@drawable/shadow_border_top_friends</item>
     </style>
 
     <style name="FriendActionsShadowBorderBottom">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">6dp</item>
+        <item name="android:layout_height">3dp</item>
         <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:background">@drawable/shadow_border_bottom</item>
+        <item name="android:background">@drawable/shadow_border_bottom_friends</item>
     </style>
     
     <style name="FriendActionsContainer">
@@ -561,19 +565,22 @@
     <style name="FriendBtnMessage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:padding">7dp</item>
         <item name="android:background">@null</item>
-        <item name="android:drawableTop">@drawable/ic_main_menu_inbox_default</item>
+        <item name="android:drawableTop">@drawable/ic_friendlist_message_default</item>
         <item name="android:text">Send message</item>
+        <item name="android:textSize">12sp</item>
     </style>
     
     <style name="FriendBtnProfile">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:padding">7dp</item>
         <item name="android:background">@null</item>
-        <item name="android:drawableTop">@drawable/ic_main_menu_me_default</item>
+        <item name="android:drawableTop">@drawable/ic_friendlist_profile_default</item>
         <item name="android:text">View profile</item>
+        <item name="android:textSize">12sp</item>
     </style>
     <!-- End Friends: Friends tab -->
     
