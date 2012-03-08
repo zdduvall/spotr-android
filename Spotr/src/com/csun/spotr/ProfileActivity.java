@@ -435,7 +435,7 @@ public class ProfileActivity
 		
 		@Override
     	protected void onProgressUpdate(FriendFeedItem... f) {
-    		ref.get().updateAsyncTaskProgress(f[0]);
+			ref.get().updateAsyncTaskProgress(f[0]);
         }
 
 		@Override

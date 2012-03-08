@@ -13,6 +13,14 @@
         android:textColor="@color/darkTurquoise"
         android:textStyle="bold" />
 
+    <EditText
+        android:id="@+id/weapon_xml_edittext_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <requestFocus />
+    </EditText>
+
     <ListView
         android:id="@+id/weapon_xml_listview_weapons"
         android:layout_width="fill_parent"

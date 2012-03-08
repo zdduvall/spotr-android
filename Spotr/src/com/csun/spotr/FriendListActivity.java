@@ -82,35 +82,26 @@ public class FriendListActivity
 		
 		// set up group indicator
 		listView.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander_default));				
 			}
 			
 		});
 		
 		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander_default));
-				
 			}
 
 			public void onNothingSelected(AdapterView<?> arg0) {
 				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander));
-				
 			}
-			
 		});
 		
 		listView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
-
 			public void onGroupCollapse(int groupPosition) {
 				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander));
 			}
-			
 		});
 		
 		// handle item scrolling event
@@ -118,11 +109,11 @@ public class FriendListActivity
 	}
 	
     public int getDipsFromPixel(float pixels) {
-     // get the screen's density scale
-     final float scale = getResources().getDisplayMetrics().density;
+    	// get the screen's density scale
+    	final float scale = getResources().getDisplayMetrics().density;
      
-     // convert the dps to pixels, based on density scale
-     return (int) (pixels * scale + 0.5f);
+    	// convert the dps to pixels, based on density scale
+    	return (int) (pixels * scale + 0.5f);
     }
     
 	private static class GetFriendsTask 

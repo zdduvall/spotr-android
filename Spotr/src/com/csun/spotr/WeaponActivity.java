@@ -15,9 +15,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -50,6 +53,20 @@ public class WeaponActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.weapon);
 		setupListView();
+		EditText search = (EditText) findViewById(R.id.weapon_xml_edittext_search);
+		search.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				
+			}
+			
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
+			}
+		});
 		new GetWeaponTask(this).execute();
 	}
 	
