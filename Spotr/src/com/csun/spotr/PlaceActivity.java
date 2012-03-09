@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 
 import android.os.AsyncTask;
@@ -60,23 +61,23 @@ public class PlaceActivity
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<PlaceItem> {
 	
-	private static final 		String 				TAG = "(PlaceActivity)";
-	private static final 		String 				GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
-	private static final 		String 				UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
+	private static final String TAG = "(PlaceActivity)";
+	private static final String GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
+	private static final String UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
+	private static final int DIALOG_ID_LOADING = 1;
 	
-	private 					ListView 			list;
-	private 					PlaceItemAdapter 	adapter;
-	private 					List<PlaceItem> 	placeItemList = new ArrayList<PlaceItem>();
-	private 					FineLocation 		fineLocation = new FineLocation();
-	private 					ProgressDialog 		progressDialog;
+	private ListView list;
+	private PlaceItemAdapter adapter;
+	private List<PlaceItem> placeItemList = new ArrayList<PlaceItem>();
+	private FineLocation fineLocation = new FineLocation();
 	
-	private static final int 	ID_BONUS 	 = 1;
-	private static final int 	ID_LOAN 	 = 2;
-	private static final int 	ID_TELESCOPE = 3;
-	private static final int 	ID_TELEPORT  = 4;
-	private static final int 	ID_SNEAK 	 = 5;
-	private static final int 	ID_LUCK 	 = 6;	
-	private static final int 	ID_SHORTCUT  = 7;
+	private static final int ID_BONUS 	  = 1;
+	private static final int ID_LOAN 	  = 2;
+	private static final int ID_TELESCOPE = 3;
+	private static final int ID_TELEPORT  = 4;
+	private static final int ID_SNEAK 	  = 5;
+	private static final int ID_LUCK 	  = 6;	
+	private static final int ID_SHORTCUT  = 7;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,14 +86,26 @@ public class PlaceActivity
 		setContentView(R.layout.place);
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		// display progress dialog
-		progressDialog = ProgressDialog.show(this, "", "Loading from Google places", true, false);
 		
+		showDialog(DIALOG_ID_LOADING);
 		setupTitleBar();
 		setupListView();
 		setupPowerupToolbar();
 		findLocation(); 
 	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		if(id == DIALOG_ID_LOADING){
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			loadingDialog.setMessage("Loading from Google places...");
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(false);
+			return loadingDialog;
+		}
+		return null;
+	}
+
 	
 	private void setupPowerupToolbar() {
 		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
@@ -264,7 +277,7 @@ public class PlaceActivity
 		@Override
 		protected void onProgressUpdate(PlaceItem... p) {
 			if (ref != null && !ref.get().isFinishing()) {
-				ref.get().progressDialog.dismiss();
+				ref.get().dismissDialog(DIALOG_ID_LOADING);
 				ref.get().updateAsyncTaskProgress(p[0]);
 			}
 		}

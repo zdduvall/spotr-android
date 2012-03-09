@@ -447,7 +447,6 @@ public class LocalMapViewActivity
 	private OverlayItem createOverlayItemByType(Place p) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
 		overlay.setMarker(PlaceIconUtil.getMapIconByType(this, p.getType()));
-		
 		return overlay;
 	}
 
