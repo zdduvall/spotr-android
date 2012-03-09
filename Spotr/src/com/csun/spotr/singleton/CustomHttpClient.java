@@ -31,7 +31,7 @@ public class CustomHttpClient {
 			HttpProtocolParams.setContentCharset(params, HTTP.DEFAULT_CONTENT_CHARSET);
 			HttpProtocolParams.setUseExpectContinue(params, true);
 			ConnManagerParams.setTimeout(params, 1000);
-			HttpConnectionParams.setConnectionTimeout(params, 5000);
+			HttpConnectionParams.setConnectionTimeout(params, 10000);
 			HttpConnectionParams.setSoTimeout(params, 10000);
 			SchemeRegistry schReg = new SchemeRegistry();
 			schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));

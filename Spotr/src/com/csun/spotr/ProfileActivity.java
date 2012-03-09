@@ -329,26 +329,19 @@ public class ProfileActivity
     		picturebyteCode = pbc;
     	}
     	
-    	@Override
-    	protected void onPreExecute() {
-    		
-    	}
+    	private List<NameValuePair> prepareUploadData() {
+    		List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+    		data.add(new BasicNameValuePair("image", picturebyteCode));
+    		data.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
+    		data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			return data;
+		}
     
     	@Override
     	protected String doInBackground(Void... voids) {
-    		List<NameValuePair> datas = new ArrayList<NameValuePair>();
-    		// send encoded data to server
-    		datas.add(new BasicNameValuePair("image", picturebyteCode));
-    		// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
-    		// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
-    		datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
-    		
-    		// send the rest of data
-    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-    		
-    		
+    		List<NameValuePair> data = prepareUploadData();
     		// get JSON to check result
-    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
+    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, data);
     		String result = "";
     		try {
     			result = json.getString("result");
@@ -433,6 +426,27 @@ public class ProfileActivity
 			attach(a);
 		}
 		
+		private Comment getFirstComment(int activityId) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+			data.add(new BasicNameValuePair("activity_id", Integer.toString(activityId)));
+			Comment firstComment = new Comment(-1, "", "", "", "");
+			JSONArray temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+			try {
+				if (temp != null) {
+					firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
+					firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));
+					firstComment.setPictureUrl(temp.getJSONObject(0).getString("users_tbl_user_image_url"));
+					firstComment.setTime(temp.getJSONObject(0).getString("comments_tbl_time"));
+					firstComment.setContent(temp.getJSONObject(0).getString("comments_tbl_content"));
+				}	
+			}
+			catch (JSONException e) {
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+			}
+			
+			return firstComment;
+		}
+		
 		@Override
     	protected void onProgressUpdate(FriendFeedItem... f) {
 			ref.get().updateAsyncTaskProgress(f[0]);
@@ -450,9 +464,6 @@ public class ProfileActivity
 			
 			// user's feeds
 			JSONArray feedArray = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_FEEDS, data);
-			
-			// comments in user's feed
-			JSONArray commentArray;
 			
 			try {
 				if (isCancelled()) {
@@ -512,22 +523,8 @@ public class ProfileActivity
         									.build();
         				
         				
-        				data.clear();
-        				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-        				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
-        				
-        				Comment firstComment = new Comment(-1, "", "", "", "");
-        				
-        				if (commentArray != null) {
-        					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
-        					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
-        					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
-        					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
-        					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
-        				}
-        				
-        				ffi.setFirstComment(firstComment);
-        				publishProgress(ffi);
+        				ffi.setFirstComment(getFirstComment(ffi.getActivityId()));
+    					publishProgress(ffi);
     				}
 				}
 				

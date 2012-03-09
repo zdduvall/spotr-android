@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,8 +67,8 @@ public class PlaceActivity
 	private 					ListView 			list;
 	private 					PlaceItemAdapter 	adapter;
 	private 					List<PlaceItem> 	placeItemList = new ArrayList<PlaceItem>();
-	private 					Location 			lastKnownLocation = null;
 	private 					FineLocation 		fineLocation = new FineLocation();
+	private 					ProgressDialog 		progressDialog;
 	
 	private static final int 	ID_BONUS 	 = 1;
 	private static final int 	ID_LOAN 	 = 2;
@@ -84,10 +85,13 @@ public class PlaceActivity
 		setContentView(R.layout.place);
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		// display progress dialog
+		progressDialog = ProgressDialog.show(this, "", "Loading from Google places", true, false);
+		
 		setupTitleBar();
 		setupListView();
 		setupPowerupToolbar();
-		findLocation(); // refresh button activated once location is found
+		findLocation(); 
 	}
 	
 	private void setupPowerupToolbar() {
@@ -151,7 +155,9 @@ public class PlaceActivity
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
-				lastKnownLocation = location;
+				if (location != null) {
+					new GetSpotsTask(PlaceActivity.this, location).execute();
+				}
 				activateRefreshButton();
 			}
 		});
@@ -169,7 +175,7 @@ public class PlaceActivity
 		refreshButton.setScaleType(ScaleType.FIT_XY);
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new GetSpotsTask(PlaceActivity.this).execute();
+				// do nothing
 			}
 		});
 	}
@@ -187,16 +193,18 @@ public class PlaceActivity
 		
 		private static final String TAG = "[AsyncTask].GetSpotsTask";
 		private WeakReference<PlaceActivity> ref;
+		private Location location;
 		
-		public GetSpotsTask(PlaceActivity a) {
+		public GetSpotsTask(PlaceActivity a, Location loc) {
 			attach(a);
+			location = loc;
 		}
 		
 		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			// now sending latitude, longitude and radius to retrieve places
-			data.add(new BasicNameValuePair("latitude", Double.toString(ref.get().lastKnownLocation.getLatitude())));
-			data.add(new BasicNameValuePair("longitude", Double.toString(ref.get().lastKnownLocation.getLongitude())));
+			data.add(new BasicNameValuePair("latitude", Double.toString(location.getLatitude())));
+			data.add(new BasicNameValuePair("longitude", Double.toString(location.getLongitude())));
 			data.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
 			return data;
 		}
@@ -206,7 +214,7 @@ public class PlaceActivity
 			List<NameValuePair> sentData = new ArrayList<NameValuePair>();
 			// we reformat the original data to include only what we need
 			JSONArray reformattedData = new JSONArray();
-			JSONObject json = JsonHelper.getJsonFromUrl(GooglePlaceHelper.buildGooglePlacesUrl(ref.get().lastKnownLocation, GooglePlaceHelper.GOOGLE_RADIUS_IN_METER));
+			JSONObject json = JsonHelper.getJsonFromUrl(GooglePlaceHelper.buildGooglePlacesUrl(location, GooglePlaceHelper.GOOGLE_RADIUS_IN_METER));
 			JSONObject temp = null;
 			
 			try {
@@ -255,7 +263,10 @@ public class PlaceActivity
 		
 		@Override
 		protected void onProgressUpdate(PlaceItem... p) {
-			ref.get().updateAsyncTaskProgress(p[0]);
+			if (ref != null && !ref.get().isFinishing()) {
+				ref.get().progressDialog.dismiss();
+				ref.get().updateAsyncTaskProgress(p[0]);
+			}
 		}
 
 		@Override
