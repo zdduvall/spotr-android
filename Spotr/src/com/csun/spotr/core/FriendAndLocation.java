@@ -7,17 +7,23 @@ public class FriendAndLocation {
     private final double longitude;
     private final String time;
     private final String msg;
+    private final String pictureUrl;
     
-    public FriendAndLocation(int userId, String name, double latitude, double longitude, String time, String msg) {
+    public FriendAndLocation(int userId, String name, double latitude, double longitude, String time, String msg, String pictureUrl) {
     	this.userId = userId;
     	this.name = name;
     	this.latitude = latitude;
     	this.longitude = longitude;
     	this.time = time;
     	this.msg = msg;
+    	this.pictureUrl = pictureUrl;
     }
 
-    public int getUserId() {
+    public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public int getUserId() {
         return userId;
     }
 

@@ -1,6 +1,8 @@
 package com.csun.spotr;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
+import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.core.FriendAndLocation;
@@ -70,6 +73,7 @@ public class PingMapActivity
 	private MapController mapController = null;
 	private FineLocation fineLocation = new FineLocation();
 	private Location lastKnownLocation = null;
+	private ImageLoader imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,8 @@ public class PingMapActivity
 		setContentView(R.layout.ping_map);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_ping);
 
+		imageLoader = new ImageLoader(this);
+		
 		setupTitleBar();
 		setupMapGraphics();
 		findLocation(); // ping button activated once location is found
@@ -263,7 +269,8 @@ public class PingMapActivity
 										array.getJSONObject(i).getDouble("users_locations_tbl_latitude"), 
 										array.getJSONObject(i).getDouble("users_locations_tbl_longitude"), 
 										array.getJSONObject(i).getString("users_locations_tbl_created"),
-										array.getJSONObject(i).getString("users_locations_tbl_msg")));
+										array.getJSONObject(i).getString("users_locations_tbl_msg"),
+										array.getJSONObject(i).getString("users_tbl_user_image_url")));
 						}
 					}
 				}
@@ -450,6 +457,15 @@ public class PingMapActivity
 
 	public void updateAsyncTaskProgress(FriendAndLocation f) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getName(), f.getTime());
+		try {
+			Drawable icon = getImageFromUrl(f.getPictureUrl());
+			icon.setBounds(0, 0, icon.getIntrinsicWidth() / 4, icon.getIntrinsicWidth() / 4);
+			overlay.setMarker(icon);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		// add to item to map
 		itemizedOverlay.addOverlay(overlay, f);
 		mapController.animateTo(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)));
@@ -472,10 +488,14 @@ public class PingMapActivity
 			CurrentUser.getCurrentUser().getId(), 
 			CurrentUser.getCurrentUser().getUsername(), 
 			loc.getLatitude(), 
-			loc.getLongitude(), "just now", "");
+			loc.getLongitude(), "just now", "", "");
 		
 		itemizedOverlay.addOverlay(ovl, yourLocation);
 		mapController.animateTo(new GeoPoint((int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6)));
 		mapController.setZoom(18);
 	}
+	
+	 private Drawable getImageFromUrl(String url) throws Exception {
+		 return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
+	 }
 }
