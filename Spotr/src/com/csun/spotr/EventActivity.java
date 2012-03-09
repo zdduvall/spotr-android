@@ -15,7 +15,6 @@ import android.webkit.WebSettings.ZoomDensity;
 
 public class EventActivity extends Activity {
 	private static final String TAG = "(EventActivity)";
-	private ProgressDialog pd;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +22,6 @@ public class EventActivity extends Activity {
 		setContentView(R.layout.event);
 		Bundle extrasBundle = getIntent().getExtras();
 		String eventLink = extrasBundle.getString("event_link");
-		pd = ProgressDialog.show(this, "", "Loading...", true);
 		setupWebView(eventLink);
 	}
 	
@@ -48,7 +46,6 @@ public class EventActivity extends Activity {
 		
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			pd.dismiss();
 		}
 	}
 	

@@ -360,11 +360,12 @@ public class PingMapActivity
 		}
 	}
 
-	private static class CustomItemizedOverlay 
+	private class CustomItemizedOverlay 
 		extends BalloonItemizedOverlay<OverlayItem> {
 		
 		private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 		private List<FriendAndLocation> friendLocationList = new ArrayList<FriendAndLocation>();
+		private WeakReference<PingMapActivity> ref;
 
 		public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 			super(boundCenter(defaultMarker), mapView);
@@ -394,6 +395,9 @@ public class PingMapActivity
 
 		@Override
 		protected boolean onBalloonTap(int index, OverlayItem item) {
+			Intent intent = new Intent(PingMapActivity.this.getApplicationContext(), ProfileActivity.class);
+			intent.putExtra("user_id", friendLocationList.get(index).getUserId());
+			startActivity(intent);
 			return true;
 		}
 	}

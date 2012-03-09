@@ -41,6 +41,7 @@
         <activity
             android:name=".SignupActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.SignupActivity" />
@@ -66,22 +67,10 @@
         <activity
             android:name=".ChallengeActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/CustomTheme" >
-            <intent-filter>
-                <action android:name="com.csun.spotr.ChallengeActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <!-- Map View Activity -->
-        <activity
-            android:name=".MapViewActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
-                <action android:name="com.csun.spotr.MapViewActivity" />
+                <action android:name="com.csun.spotr.ChallengeActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -104,6 +93,7 @@
         <activity
             android:name=".RewardActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.RewardActivity" />
@@ -116,6 +106,7 @@
         <activity
             android:name=".RewardViewActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.RewardViewActivity" />
@@ -128,6 +119,7 @@
         <activity
             android:name=".ChallengeInfoActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ChallengeInfoActivity" />
@@ -192,6 +184,7 @@
         <activity
             android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.SettingsActivity" />
@@ -282,6 +275,7 @@
         <activity
             android:name=".MapLocationActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.MapLocationActivity" />
@@ -293,6 +287,7 @@
         <!-- Leaderboard Activity -->
         <activity
             android:name=".LeaderboardActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/CustomTheme" >
             <intent-filter>
@@ -306,6 +301,7 @@
         <activity
             android:name=".ProfileMainActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ProfileMainActivity" />
@@ -318,6 +314,7 @@
         <activity
             android:name=".ProfileActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ProfileActivity" />
@@ -330,6 +327,7 @@
         <activity
             android:name=".FriendProfileActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.FriendProfileActivity" />
@@ -342,6 +340,7 @@
         <activity
             android:name=".ProfileEditActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ProfileEditActivity" />
@@ -354,6 +353,7 @@
         <activity
             android:name=".ProfilePreferenceActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ProfilePreferenceActivity" />
@@ -366,6 +366,7 @@
         <activity
             android:name=".WriteOnWallActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.WriteOnWallActivity" />
@@ -378,6 +379,7 @@
         <activity
             android:name=".SnapPictureActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.SnapPictureActivity" />
@@ -390,6 +392,7 @@
         <activity
             android:name=".SnapPictureChallengeActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.SnapPictureChallengeActivity" />
@@ -402,6 +405,7 @@
         <activity
             android:name=".QuestionAnswerActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.QuestionAnswerActivity" />
@@ -414,6 +418,7 @@
         <activity
             android:name=".WebviewActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.WebviewActivity" />
@@ -426,6 +431,7 @@
         <activity
             android:name=".PingMapActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.PingMapActivity" />
@@ -438,6 +444,7 @@
         <activity
             android:name=".FinderActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.FinderActivity" />
@@ -450,6 +457,7 @@
         <activity
             android:name=".CreateFinderActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.CreateFinderActivity" />
@@ -501,6 +509,7 @@
         <activity
             android:name=".FinderItemDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.FinderItemDetailActivity" />
@@ -513,6 +522,7 @@
         <activity
             android:name=".GenerateTreasureActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.GenerateTreasureActivity" />
@@ -525,6 +535,7 @@
         <activity
             android:name=".TreasureActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.TreasureActivity" />
@@ -537,6 +548,7 @@
         <activity
             android:name=".WeaponActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.WeaponActivity" />
@@ -549,6 +561,7 @@
         <activity
             android:name=".InventoryActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.InventoryActivity" />
@@ -561,6 +574,7 @@
         <activity
             android:name=".InboxActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.InboxActivity" />
@@ -573,6 +587,7 @@
         <activity
             android:name=".CommentActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.CommentActivity" />
@@ -585,6 +600,7 @@
         <activity
             android:name=".ComposeMessageActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ComposeMessageActivity" />
@@ -597,6 +613,7 @@
         <activity
             android:name=".ChooseUserActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.ChooseUserActivity" />
@@ -609,6 +626,7 @@
         <activity
             android:name=".AddWebLinkActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.AddWebLinkActivity" />
@@ -621,6 +639,7 @@
         <activity
             android:name=".CheckInActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.CheckInActivity" />
@@ -633,6 +652,7 @@
         <activity
             android:name=".FinderMainActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.FinderMainActivity" />
@@ -645,6 +665,7 @@
         <activity
             android:name=".UserFinderActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.UserFinderActivity" />
@@ -657,6 +678,7 @@
         <activity
             android:name=".FinderFoundActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.FinderFoundActivity" />
@@ -669,6 +691,7 @@
         <activity
             android:name=".NoTreasureActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.NoTreasureActivity" />
@@ -681,6 +704,7 @@
         <activity
             android:name=".EventActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.EventActivity" />
