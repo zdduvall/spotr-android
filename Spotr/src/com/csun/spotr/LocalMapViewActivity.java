@@ -373,11 +373,13 @@ public class LocalMapViewActivity
 							new Place.Builder(
 								// require parameters
 								array.getJSONObject(i).getDouble("spots_tbl_longitude"), 
-								array.getJSONObject(i).getDouble("spots_tbl_latitude"), 
+								array.getJSONObject(i).getDouble("spots_tbl_latitude"),
 								array.getJSONObject(i).getInt("spots_tbl_id"))
 									// optional parameters
 									.name(array.getJSONObject(i).getString("spots_tbl_name"))
-									.address(array.getJSONObject(i).getString("spots_tbl_description")).build());
+									.type(array.getJSONObject(i).getInt("spots_tbl_type"))
+									.address(array.getJSONObject(i).getString("spots_tbl_description")).build()
+							);
 					}
 				}
 				catch (JSONException e) {
@@ -444,42 +446,7 @@ public class LocalMapViewActivity
 	
 	private OverlayItem createOverlayItemByType(Place p) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
-		/*
-		 * Temporary algorithm 
-		 * 		Random 
-		 */
-		Random rand = new Random();
-		int id = rand.nextInt(6);
-		switch (id) {
-		case -1:
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, -1));
-			break;
-			
-		case 0:
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 0));
-			break;
-			
-		case 1:
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 1));
-			break;	
-			
-		case 2:
-			
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 2));
-			break;	
-			
-		case 3:
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 3));
-			break;
-			
-		case 4:
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 4));
-			break;
-		
-		case 5:
-			overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 5));
-			break;
-		}
+		overlay.setMarker(PlaceIconUtil.getMapIconByType(this, p.getType()));
 		
 		return overlay;
 	}

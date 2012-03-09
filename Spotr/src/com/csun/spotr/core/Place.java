@@ -16,6 +16,7 @@ public class Place {
 	private String phoneNumber;
 	private String websiteUrl;
 	private int rating;
+	private int type;
 	private Set<Integer> challenges;
 
 	public static class Builder {
@@ -31,7 +32,7 @@ public class Place {
 		private String iconUrl = "n/a";
 		private String phoneNumber = "(888) 888-8888";
 		private String websiteUrl = "http://www.google.com/";
-		private String types = "n/a";
+		private int type = 0;
 		private Set<Integer> challenges = new HashSet<Integer>();
 		private int rating = 0;
 
@@ -53,8 +54,8 @@ public class Place {
 			return this;
 		}
 
-		public Builder types(String types) {
-			this.types = types;
+		public Builder type(int type) {
+			this.type = type;
 			return this;
 		}
 
@@ -97,7 +98,7 @@ public class Place {
 
 		// optional parameters
 		address = builder.address;
-		types = builder.types;
+		type = builder.type;
 		name = builder.name;
 		iconUrl = builder.iconUrl;
 		phoneNumber = builder.phoneNumber;
@@ -130,8 +131,8 @@ public class Place {
 		return address;
 	}
 
-	public String getTypes() {
-		return types;
+	public int getType() {
+		return type;
 	}
 
 	public void setTypes(String types) {
@@ -225,5 +226,4 @@ public class Place {
 			return false;
 		return true;
 	}
-
 }
