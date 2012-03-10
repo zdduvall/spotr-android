@@ -646,7 +646,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">0dp</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/aluminum1</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
     
     <style name="SpotsSearchBarLabel">
@@ -673,7 +673,9 @@
     </style>
     
     <style name="SpotsResultsList" parent="RoundedRectListView">
-        <item name="android:background">@color/aluminum1</item>
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:divider">@color/vimeo_light_grey</item>
+        <item name="android:dividerHeight">1px</item>
         <item name="android:listSelector">@android:color/transparent</item>
     </style>
     
