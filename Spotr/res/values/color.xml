@@ -26,7 +26,9 @@
     <color name="watermelon">#84ff4444</color>
     <color name="watermelonRed">#ffff4444</color>
     
+    <color name="lightTurquoise">#ff6bd6fd</color>
     <color name="darkTurquoise">#ff33b5e5</color>
+    <color name="darkerTurquoise">#ff0099CC</color>
     <color name="twitterGrey">#ffe5e5e5</color>
     <color name="fb_background">#fff7f7f7</color>
     <color name="fb_header">#ff3b5998</color>

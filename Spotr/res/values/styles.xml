@@ -131,9 +131,10 @@
     <style name="TabText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/aluminum1</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
     <!-- End TabWidget -->
 
@@ -508,13 +509,7 @@
         <item name="android:childDivider">@android:color/transparent</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="android:listSelector">@color/light_grey</item>
-    </style>
-    
-    <style name="HorizontalSpacer.FriendList">
-        <item name="android:layout_width">2px</item>
-        <item name="android:background">@drawable/horizontal_divider</item>
-    </style>
-    
+    </style>  
     
     <style name="UserItemRow">
         <item name="android:layout_width">match_parent</item>

@@ -33,7 +33,7 @@ public class FriendListMainActivity extends TabActivity {
 		
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
 		FlingableTabHost.TabSpec spec; 
-		Intent intent; 
+		Intent intent;
 
 		// Create an Intent to launch an Activity for the tab (to be reused)
 		intent = new Intent().setClass(getApplicationContext(), FriendListActivity.class); 
