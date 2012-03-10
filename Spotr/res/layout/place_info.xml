@@ -77,11 +77,7 @@
 
     <com.google.android.maps.MapView
         android:id="@+id/place_info_xml_mapview"
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:apiKey="@string/google_api_key"
-        android:clickable="true" />
-    <!-- Border -->
+        style="@style/MapView" />
 
     <View
         android:layout_width="fill_parent"
