@@ -45,7 +45,7 @@ import android.widget.Toast;
  **/
 
 public class CheckInActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<String> {
 	
 	private static final String TAG = "(CheckInActivity)";
@@ -68,6 +68,7 @@ public class CheckInActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.check_in);
+		setupTitleBar();
 		initUserDataFromBundle();
 		setupCheckInUserGallery();
 		setupEventListView();
@@ -75,6 +76,10 @@ public class CheckInActivity
 	
 		new GetCheckInUsersTask(this, spotsId).execute();
 		new GetEventTask(this, spotsId).execute();
+	}
+	
+	protected void setupTitleBar() {
+		super.setupTitleBar();
 	}
 	
 	private void setupCheckInButton() {
