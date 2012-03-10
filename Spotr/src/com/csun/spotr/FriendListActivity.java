@@ -80,30 +80,6 @@ public class FriendListActivity
 		adapter = new ExpandableUserItemAdapter(this, userItemList);
 		listView.setAdapter(adapter);
 		
-		// set up group indicator
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander_default));				
-			}
-			
-		});
-		
-		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander_default));
-			}
-
-			public void onNothingSelected(AdapterView<?> arg0) {
-				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander));
-			}
-		});
-		
-		listView.setOnGroupCollapseListener(new OnGroupCollapseListener() {
-			public void onGroupCollapse(int groupPosition) {
-				listView.setGroupIndicator(getResources().getDrawable(R.drawable.ic_expander));
-			}
-		});
-		
 		// handle item scrolling event
 		listView.setOnScrollListener(new FeedOnScrollListener());
 	}

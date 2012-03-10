@@ -12,18 +12,23 @@
     <color name="aluminum5">#ff555753</color>
     <color name="aluminum5_5">#ff50575a</color>
     <color name="aluminum6">#ff2e3436</color>
+    
+    <color name="light_grey">#ffeef0f2</color>
     <color name="vimeo_light_grey">#ffd6dbe1</color>
     <color name="vimeo_grey">#ffc5ccd4</color>
+    <color name="vimeo_dark_grey">#ff7a818a</color>
+    
     <color name="blue2">#ffe2f4fb</color>
+    
     <color name="red1">#ffffe4e4</color>
     <color name="red2">#ffffcaca</color>
     <color name="red5">#ffff7979</color>
     <color name="watermelon">#84ff4444</color>
     <color name="watermelonRed">#ffff4444</color>
+    
     <color name="darkTurquoise">#ff33b5e5</color>
     <color name="twitterGrey">#ffe5e5e5</color>
     <color name="fb_background">#fff7f7f7</color>
     <color name="fb_header">#ff3b5998</color>
     <color name="fb_text_bg">#ffeceff5</color>
-    
 </resources>
