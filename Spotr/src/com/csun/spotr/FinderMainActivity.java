@@ -20,7 +20,7 @@ public class FinderMainActivity extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(TAG, "Starting FinderMainActivity");
-		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.place_main);
 		
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost();

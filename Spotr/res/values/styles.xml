@@ -510,7 +510,7 @@
         <item name="android:dividerHeight">1px</item>
         <item name="android:childDivider">@android:color/transparent</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:listSelector">@color/light_grey</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>  
     
     <style name="UserItemRow">
@@ -518,7 +518,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">10dp</item>
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@drawable/listview_row_selector_friends</item>
     </style>
     
     <style name="UserItemAvatar">
@@ -535,7 +535,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textColor">@color/listview_text_selector_friends</item>
     </style>
     
     <style name="FriendActionRow">
