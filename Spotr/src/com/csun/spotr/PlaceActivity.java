@@ -19,11 +19,14 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ImageView.ScaleType;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 
 import android.content.Intent;
@@ -92,6 +95,24 @@ public class PlaceActivity
 		setupListView();
 		setupPowerupToolbar();
 		findLocation(); 
+	}
+	
+	public void setupDynamicSearch() {
+		EditText edittextSearch = (EditText) findViewById(R.id.place_xml_edittext_search);
+		edittextSearch.setEnabled(true);
+		edittextSearch.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				
+			}
+			
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
+			}
+		});
 	}
 	
 	@Override
@@ -309,7 +330,7 @@ public class PlaceActivity
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			detach();
+			ref.get().setupDynamicSearch();
 		}
 
 		public void attach(PlaceActivity a) {
@@ -320,46 +341,6 @@ public class PlaceActivity
 			ref.clear();
 		}
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon :
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			break;
-		case R.id.options_menu_xml_item_logout_icon :
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			break;
-		case R.id.options_menu_xml_item_mainmenu_icon :
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			break;
-			
-		case R.id.options_menu_xml_item_toolbar_icon:
-			HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.place_xml_imageview_toolbar_button);
-			if (toolbar.getVisibility() == View.VISIBLE) {
-				toolbar.setVisibility(View.GONE);
-			}
-			else {
-				toolbar.setVisibility(View.VISIBLE);
-			}
-			break;
-		}
-		return true;
 	}
 
 	public void updateAsyncTaskProgress(PlaceItem p) {
