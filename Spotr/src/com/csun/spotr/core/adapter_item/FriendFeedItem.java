@@ -7,7 +7,8 @@ public class FriendFeedItem {
 	// required parameters
 	private final int activityId;
 	private final int friendId;
-	private final String friendName;
+	private String friendName;
+
 	private final Challenge.Type challengeType;
 	private final String activityTime;
 	private final String placeName;
@@ -100,12 +101,12 @@ public class FriendFeedItem {
 			this.firstComment = firstComment;
 			return this;
 		}
-		
+
 		public Builder treasureIconUrl(String treasureIconUrl) {
 			this.treasureIconUrl = treasureIconUrl;
 			return this;
 		}
-		
+
 		public Builder treasureCompany(String treasureCompany) {
 			this.treasureCompany = treasureCompany;
 			return this;
@@ -180,7 +181,7 @@ public class FriendFeedItem {
 	public String getActivitySnapPictureUrl() {
 		return activitySnapPictureUrl;
 	}
-	
+
 	public void setActivitySnapPictureUrl(String activitySnapPictureUrl) {
 		this.activitySnapPictureUrl = activitySnapPictureUrl;
 	}
@@ -213,6 +214,10 @@ public class FriendFeedItem {
 		return friendName;
 	}
 
+	public void setFriendName(String friendName) {
+		this.friendName = friendName;
+	}
+
 	public Challenge.Type getChallengeType() {
 		return challengeType;
 	}
@@ -232,7 +237,7 @@ public class FriendFeedItem {
 	public void setFirstComment(Comment firstComment) {
 		this.firstComment = firstComment;
 	}
-	
+
 	public String getTreasureIconUrl() {
 		return treasureIconUrl;
 	}
@@ -248,7 +253,7 @@ public class FriendFeedItem {
 	public void setTreasureCompany(String treasureCompany) {
 		this.treasureCompany = treasureCompany;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

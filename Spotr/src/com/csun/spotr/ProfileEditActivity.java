@@ -17,6 +17,7 @@ import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.UploadFileHelper;
+import com.csun.spotr.util.UrlConstant;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +26,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Picture;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,26 +37,47 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ProfileEditActivity extends Activity {
 	private static final String TAG = "(ProfileEditActivity)";
 	private static final String UPDATE_USER_DETAIL_URL = "http://107.22.209.62/android/update_user_detail.php";
 	private static final String UPDATE_PICTURE_URL = "http://107.22.209.62/images/upload_user_picture.php";
+	private static final int INTENT_RESULT_CAMERA_PICTURE  = 0;
+	private static final int INTENT_RESULT_GALLERY_PICTURE = 1;
 
 	private int userId = -1;
 	private Bitmap bitmapUserPicture = null;
-
-	private static final int CAMERA_PICTURE = 111;
-	private static final int GALLERY_PICTURE = 222;
+	private String userImageUrl = "";
+	private String newPictureName = CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png";
+	private boolean pictureChanged = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile_edit);
-		
+
 		Bundle extrasBundle = getIntent().getExtras();
 		userId = extrasBundle.getInt("user_id");
+		userImageUrl = extrasBundle.getString("imageUrl");
 		
+		setupUserDetailInformation(extrasBundle);
+		setupUserPictureImageView(extrasBundle);
+	}
+	
+	private void setupUserPictureImageView(Bundle extrasBundle) {
+		String imageUrl = extrasBundle.getString("imageUrl");
+		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
+		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_edit_xml_imageview_user_picture);
+		imageLoader.displayImage(imageUrl, imageViewUserPicture);
+		imageViewUserPicture.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startDialog();
+			}
+		});
+	}
+
+	private void setupUserDetailInformation(Bundle extrasBundle) {
 		final Button saveButton = (Button) findViewById(R.id.profile_edit_xml_button_save);
 		final EditText edittextEmail = (EditText) findViewById(R.id.profile_edit_xml_edittext_email);
 		final EditText edittextPassword = (EditText) findViewById(R.id.profile_edit_xml_edittext_password);
@@ -70,38 +93,17 @@ public class ProfileEditActivity extends Activity {
 		edittextHometown.setText(extrasBundle.getString("hometown"));
 		edittextHobbies.setText(extrasBundle.getString("hobbies"));
 
-		String imageUrl = extrasBundle.getString("imageUrl");
-		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
-		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_edit_xml_imageview_user_picture);
-		imageLoader.displayImage(imageUrl, imageViewUserPicture);
+		// set up save button
+		setupSaveButton(edittextEmail, edittextPassword, edittextName, edittextEducation, edittextHometown, edittextHobbies);
+	}
 
-		imageViewUserPicture.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				startDialog();
-			}
-		});
+	private void setupSaveButton(final EditText edittextEmail, final EditText edittextPassword, final EditText edittextName, final EditText edittextEducation, final EditText edittextHometown, final EditText edittextHobbies) {
 
+		final Button saveButton = (Button) findViewById(R.id.profile_edit_xml_button_save);
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				ProfileEditTask task = new ProfileEditTask(
-					ProfileEditActivity.this, 
-					userId, 
-					edittextEmail.getText().toString().trim(),
-					edittextPassword.getText().toString().trim(),
-					edittextName.getText().toString().trim(),
-					edittextEducation.getText().toString().trim(),
-					edittextHometown.getText().toString().trim(),
-					edittextHobbies.getText().toString().trim());
-					
+				ProfileEditTask task = new ProfileEditTask(ProfileEditActivity.this, userId, edittextEmail.getText().toString().trim(), edittextPassword.getText().toString().trim(), edittextName.getText().toString().trim(), edittextEducation.getText().toString().trim(), edittextHometown.getText().toString().trim(), edittextHobbies.getText().toString().trim());
 				task.execute();
-				
-				Intent intent;
-				Bundle extras = new Bundle();
-				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-				intent = new Intent(getApplicationContext(), ProfileMainActivity.class);
-				intent.putExtras(extras);
-				startActivity(intent);
-				finish();
 			}
 		});
 	}
@@ -110,10 +112,11 @@ public class ProfileEditActivity extends Activity {
 		extends AsyncTask<Void, Integer, Boolean> 
 			implements IAsyncTask<ProfileEditActivity> {
 
+		private static final String TAG = "[AsyncTask].ProfileEditTask";
 		private WeakReference<ProfileEditActivity> ref;
-		
+
 		private int userId;
-		private String email;
+		private String username;
 		private String password;
 		private String name;
 		private String education;
@@ -122,7 +125,7 @@ public class ProfileEditActivity extends Activity {
 
 		public ProfileEditTask(ProfileEditActivity a, int userId, String email, String password, String name, String education, String hometown, String hobbies) {
 			this.userId = userId;
-			this.email = email;
+			this.username = email;
 			this.password = password;
 			this.name = name;
 			this.education = education;
@@ -131,31 +134,58 @@ public class ProfileEditActivity extends Activity {
 			attach(a);
 		}
 
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
+			data.add(new BasicNameValuePair("username", username));
+			data.add(new BasicNameValuePair("password", password));
+			data.add(new BasicNameValuePair("name", name));
+			data.add(new BasicNameValuePair("education", education));
+			data.add(new BasicNameValuePair("hometown", hometown));
+			data.add(new BasicNameValuePair("hobbies", hobbies));
+			return data;
+		}
+
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> datas = new ArrayList<NameValuePair>();
-			
-			datas.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
-			datas.add(new BasicNameValuePair("username", email));
-			datas.add(new BasicNameValuePair("password", password));
-			datas.add(new BasicNameValuePair("name", name));
-			datas.add(new BasicNameValuePair("education", education));
-			datas.add(new BasicNameValuePair("hometown", hometown));
-			datas.add(new BasicNameValuePair("hobbies", hobbies));
-			
-			/*
-			 * check for success?
-			 */
-			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(UPDATE_USER_DETAIL_URL, datas);
-			return true;
+			List<NameValuePair> data = prepareUploadData();
+			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(UPDATE_USER_DETAIL_URL, data);
+			try {
+				if (json.getString("result").equals("success"))
+					return true;
+			}
+			catch (JSONException e) {
+				Log.e(TAG, ".doInBackground(Void... voids)");
+			}
+			return false;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if (result == false) {
-				// handle error?
+			if (result == true) {
+				sendDataBack();
+			}
+			else { 
+				Toast.makeText(ref.get().getApplicationContext(), "Update use info failed!", Toast.LENGTH_SHORT);
 			}
 			detach();
+		}
+
+		private void sendDataBack() {
+			Intent intent = new Intent();
+			intent.putExtra("username", username);
+			/*
+			 * If the user has changed his/her picture, 
+			 * we send back the new url
+			 */
+			if (!ref.get().pictureChanged) {
+				intent.putExtra("user_image_url", ref.get().userImageUrl);
+			}
+			else {
+				intent.putExtra("user_image_url", UrlConstant.URL_CONSTANT_IMAGE + ref.get().newPictureName);
+			}
+			ref.get().setResult(RESULT_OK, intent);
+			ref.get().finish();
 		}
 
 		public void attach(ProfileEditActivity a) {
@@ -176,14 +206,14 @@ public class ProfileEditActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_PICTURE);
+				startActivityForResult(Intent.createChooser(intent, "Select Picture"), INTENT_RESULT_GALLERY_PICTURE);
 			}
 		});
 
 		myAlertDialog.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				startActivityForResult(intent, CAMERA_PICTURE);
+				startActivityForResult(intent, INTENT_RESULT_CAMERA_PICTURE);
 			}
 		});
 		myAlertDialog.show();
@@ -192,38 +222,41 @@ public class ProfileEditActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		ImageView temp = (ImageView) findViewById(R.id.profile_edit_xml_imageview_user_picture);
 		if (resultCode == RESULT_OK) {
-			if (requestCode == GALLERY_PICTURE) {
+			if (requestCode == INTENT_RESULT_GALLERY_PICTURE) {
 				Uri selectedImageUri = data.getData();
 				String selectedImagePath = getPath(selectedImageUri);
 				bitmapUserPicture = BitmapFactory.decodeFile(selectedImagePath);
 				temp.setImageBitmap(bitmapUserPicture);
 			}
-			else if (requestCode == CAMERA_PICTURE) {
+			else if (requestCode == INTENT_RESULT_CAMERA_PICTURE) {
 				if (data.getExtras() != null) {
-					// here is the image from camera
 					bitmapUserPicture = (Bitmap) data.getExtras().get("data");
 					temp.setImageBitmap(bitmapUserPicture);
 				}
 			}
+			else {
+				Log.e(TAG, "Unexpected error has occured!");
+			}
 
-			// create byte stream array
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-			// compress picture and add to stream (PNG)
-			bitmapUserPicture.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-
-			// create raw data src
-			byte[] src = stream.toByteArray();
-
-			// encode it
-			String byteCode = Base64.encodeBytes(src);
-
-			UploadPictueTask task = new UploadPictueTask(this, byteCode);
+			UploadPictueTask task = new UploadPictueTask(this, getPictureByteCode(bitmapUserPicture));
 			task.execute();
 		}
 	}
+	
+	private String getPictureByteCode(Bitmap bitmap) {
+		// create byte stream array
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		// compress picture and add to stream (PNG)
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+		// create raw data src
+		byte[] src = stream.toByteArray();
+		// encode it
+		return Base64.encodeBytes(src);
+	}
 
-	private static class UploadPictueTask extends AsyncTask<Void, Integer, String> implements IAsyncTask<ProfileEditActivity> {
+	private static class UploadPictueTask 
+		extends AsyncTask<Void, Integer, Boolean> 
+			implements IAsyncTask<ProfileEditActivity> {
 
 		private WeakReference<ProfileEditActivity> ref;
 		private String picturebyteCode;
@@ -233,43 +266,33 @@ public class ProfileEditActivity extends Activity {
 			picturebyteCode = pbc;
 		}
 
-		@Override
-		protected void onPreExecute() {
-
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("image", picturebyteCode));
+			data.add(new BasicNameValuePair("file_name", ref.get().newPictureName));
+			data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			return data;
 		}
 
 		@Override
-		protected String doInBackground(Void... voids) {
-			List<NameValuePair> datas = new ArrayList<NameValuePair>();
-			// send encoded data to server
-			datas.add(new BasicNameValuePair("image", picturebyteCode));
-
-			// send a file name where file name = "username" +
-			// "current date time UTC", to make sure that we have a unique id
-			// picture every time.
-			// since the username is unique, we should take advantage of this
-			// otherwise two or more users could potentially snap pictures at
-			// the same time.
-			datas.add(new BasicNameValuePair("file_name", CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
-
-			// send the rest of data
-			datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-
-			// get JSON to check result
+		protected Boolean doInBackground(Void... voids) {
+			List<NameValuePair> datas = prepareUploadData();
 			JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
-			String result = "";
 			try {
-				result = json.getString("result");
+				if (json.getString("result").equals("success"))
+					return true;
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
 			}
-			return result;
+			return false;
 		}
 
 		@Override
-		protected void onPostExecute(String result) {
-			if (result.equals("success")) {
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				Toast.makeText(ref.get().getApplicationContext(), "Picture changed", Toast.LENGTH_SHORT).show();
+				ref.get().pictureChanged = true;
 			}
 
 			detach();
@@ -291,5 +314,34 @@ public class ProfileEditActivity extends Activity {
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
 	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
 
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
+	}
 }
