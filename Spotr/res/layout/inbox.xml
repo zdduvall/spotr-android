@@ -5,23 +5,6 @@
     android:orientation="vertical" 
     android:background="#f7f7f7">
 
-    <TextView
-        android:id="@+id/inbox_xml_textview_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Inbox"
-        android:textColor="#cc0000"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Button
-        android:id="@+id/inbox_xml_button_compose"
-        style="@style/TreasureButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Compose Message" />
-
     <ListView
         android:id="@+id/inbox_xml_listview"
         android:layout_width="fill_parent"

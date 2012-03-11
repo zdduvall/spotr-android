@@ -21,10 +21,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -60,7 +62,7 @@ public class InboxActivity
 	}
 	
 	private void setupComposeButton() {
-		final Button buttonCompose = (Button) findViewById(R.id.inbox_xml_button_compose);
+		final ImageButton buttonCompose = (ImageButton) findViewById(R.id.title_bar_inbox_btn_compose);
 		buttonCompose.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), ComposeMessageActivity.class);
@@ -81,8 +83,11 @@ public class InboxActivity
 	}
 	
 	@Override
-	protected void setupTitleBar() {
-		super.setupTitleBar();
+	protected void setupTitleBar() {	
+		// Custom title bar [Zach 3/10/2012]
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_inbox);
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("potr Inbox");
 	}
 
 	private static class GetInboxTask 

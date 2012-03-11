@@ -117,8 +117,9 @@ public class PlaceItemAdapter extends BaseAdapter {
 			
 			private List<PlaceItem> getFilterList(CharSequence constraint) {
 				List<PlaceItem> data = new ArrayList<PlaceItem>();
+				String criteria = constraint.toString().toLowerCase();
 				for (PlaceItem p : origin) { 
-					if (p.getName().contains(constraint))
+					if (p.getName().toLowerCase().contains(criteria))
 						data.add(p);
 				}
 				return data;

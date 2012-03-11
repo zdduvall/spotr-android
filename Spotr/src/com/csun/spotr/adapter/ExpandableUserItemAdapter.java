@@ -194,9 +194,10 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 			}
 			
 			private List<UserItem> getFilterList(CharSequence constraint) {
+				String criteria = constraint.toString().toLowerCase();
 				List<UserItem> data = new ArrayList<UserItem>();
 				for (UserItem u : origin) { 
-					if (u.getUsername().contains(constraint))
+					if (u.getUsername().toLowerCase().contains(criteria))
 						data.add(u);
 				}
 				return data;
