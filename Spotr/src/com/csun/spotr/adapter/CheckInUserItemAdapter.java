@@ -61,7 +61,8 @@ public class CheckInUserItemAdapter extends BaseAdapter {
 
         viewHolder.imageViewPicture.setLayoutParams(new Gallery.LayoutParams(110, 110));
         viewHolder.imageViewPicture.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        viewHolder.imageViewPicture.setBackgroundResource(background);
+//        viewHolder.imageViewPicture.setBackgroundResource(background);
+        viewHolder.imageViewPicture.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
 		imageLoader.displayImage(items.get(position), viewHolder.imageViewPicture);
 		return convertView;
 	}

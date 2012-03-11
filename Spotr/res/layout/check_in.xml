@@ -41,7 +41,8 @@
             <Gallery
                 android:id="@+id/check_in_xml_gallery_checkin_people"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:spacing="5dp" />
         </LinearLayout>
     </LinearLayout>
 
