@@ -167,6 +167,18 @@ public class QuestionAnswerActivity
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
 			}
+			else if(result.equals("fail"))
+			{
+				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
+				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
+				dialogMessage.setMessage("You have already answered this question.");
+				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				dialogMessage.show();	
+			}
 				
 		}
 

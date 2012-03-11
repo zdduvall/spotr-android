@@ -17,7 +17,9 @@ import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.UploadFileHelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -218,6 +220,18 @@ public class SnapPictureActivity
 				intent.setData(Uri.parse("done"));
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
+			}
+			else if(result.equals("fail"))
+			{
+				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
+				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
+				dialogMessage.setMessage("You can only upload one picture a day for any spot. Try again later.");
+				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				dialogMessage.show();	
 			}
 			
 			detach();
