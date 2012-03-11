@@ -90,7 +90,7 @@ public class LocalMapViewActivity
 	private void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("port Map");
+		title.setText("up Map");
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class LocalMapViewActivity
 		mapController = mapView.getController(); 									// get map controller
 		mapView.setBuiltInZoomControls(true); 										// set zoom button
 		mapOverlays = mapView.getOverlays(); 										// get overlays
-		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green); // get the display icon on map
+		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green); // get default icon
 		itemizedOverlay = new CustomItemizedOverlay(drawable, mapView); 			// initialize overlay item
 		mapOverlays.add(itemizedOverlay); 											// add them to the map
 	}
@@ -138,6 +138,7 @@ public class LocalMapViewActivity
 			}
 		});
 	}
+	
 	
 	/**
 	 * Allow user to choose different views for map

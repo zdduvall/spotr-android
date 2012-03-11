@@ -95,11 +95,11 @@ public class PlaceIconUtil {
 				break;
 			default:
 				icon = c.getResources().getDrawable(R.drawable.ic_map_default);
-				break;
-				
+				break;	
 		}
 		
-		icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+	//	icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+		icon.setBounds(-icon.getIntrinsicWidth()/2, -icon.getIntrinsicHeight(), icon.getIntrinsicWidth() /2, 0);
 		return icon;
 	}
 }
