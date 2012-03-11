@@ -3,41 +3,55 @@
     style="@style/SpotrGeneralBackground.CheckIn" >
 
     <!-- Place info and check-in -->
-    <LinearLayout style="@style/LinearLayoutShadow.CheckIn" >
-    
-	    <LinearLayout style="@style/LinearLayoutRounded.CheckIn" >
-	
-	        <TextView
-	            android:id="@+id/textView1"
-	            style="@style/SpotName.CheckIn" />
-	
-	        <TextView
-	            android:id="@+id/textView2"
-	            style="@style/SpotAddress.CheckIn" />
-		    
-		    <Button
-		        android:id="@+id/check_in_xml_button_checkin"
-		        style="@style/MainCheckInButton"/>
-	    </LinearLayout>
-    </LinearLayout>
 
+    <LinearLayout 
+        style="@style/LinearLayoutShadow.CheckIn"
+        android:layout_marginBottom="15dp" >
+
+        <LinearLayout style="@style/LinearLayoutRounded.CheckIn" >
+
+            <TextView
+                android:id="@+id/textView1"
+                style="@style/SpotName.CheckIn" />
+
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/SpotAddress.CheckIn" />
+
+            <Button
+                android:id="@+id/check_in_xml_button_checkin"
+                style="@style/MainCheckInButton" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="See who&apos;s here"
-        android:textStyle="normal" />
+        android:text="Who else is here"
+        android:textColor="@color/aluminum6"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <Gallery
-        android:id="@+id/check_in_xml_gallery_checkin_people"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+    <LinearLayout 
+        style="@style/LinearLayoutShadow.CheckIn"
+        android:layout_marginBottom="15dp" >
+
+        <LinearLayout style="@style/LinearLayoutRounded.CheckIn" >
+
+            <Gallery
+                android:id="@+id/check_in_xml_gallery_checkin_people"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upcoming events"
-        android:textStyle="normal" />
+        android:textColor="@color/aluminum6"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <LinearLayout style="@style/LinearLayoutShadow.CheckIn" >
 

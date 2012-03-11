@@ -866,8 +866,11 @@
         <item name="android:background">@drawable/button_orange</item>
         <item name="android:text">Check in</item>
     </style>
-    <!-- Spots: End Check-in -->
     
+    <style name="EventItemRow" parent="UserItemRow">
+        <item name="android:background">@drawable/listview_row_selector_events</item>
+    </style>
+    <!-- Spots: End Check-in -->
     
     <style name="ToolbarButton">
         <item name="android:layout_width">80dp</item>
