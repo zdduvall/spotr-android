@@ -325,7 +325,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_above">@id/spacer</item>
-        <item name="android:background">@drawable/cloudy_sky</item>
+        <item name="android:background">@android:color/white</item>
+<!--         <item name="android:background">@drawable/cloudy_sky</item> -->
     </style>    
     
     <style name="MainMenuButton">
@@ -508,7 +509,7 @@
         <item name="android:dividerHeight">1px</item>
         <item name="android:childDivider">@android:color/transparent</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:listSelector">@color/light_grey</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>  
     
     <style name="UserItemRow">
@@ -516,7 +517,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">10dp</item>
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@drawable/listview_row_selector_friends</item>
     </style>
     
     <style name="UserItemAvatar">
@@ -533,7 +534,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textColor">@color/listview_text_selector_friends</item>
     </style>
     
     <style name="FriendActionRow">
@@ -644,7 +645,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">0dp</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/aluminum1</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
     
     <style name="SpotsSearchBarLabel">
@@ -671,7 +672,9 @@
     </style>
     
     <style name="SpotsResultsList" parent="RoundedRectListView">
-        <item name="android:background">@color/aluminum1</item>
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:divider">@color/vimeo_light_grey</item>
+        <item name="android:dividerHeight">1px</item>
         <item name="android:listSelector">@android:color/transparent</item>
     </style>
     
@@ -830,6 +833,44 @@
     </style>
     <!-- End Spots: Missions tab -->
     
+    <!-- Spots: Check-in -->
+    <style name="SpotrGeneralBackground.CheckIn">
+        <item name="android:background">@color/vimeo_grey</item>
+    </style>
+    
+    <style name="LinearLayoutShadow.CheckIn">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    
+    <style name="LinearLayoutRounded.CheckIn">
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="SpotName.CheckIn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:text">Name</item>
+    </style>
+    
+    <style name="SpotAddress.CheckIn">
+        <item name="android:text">Address</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+    
+    <style name="MainCheckInButton" parent="LoginScreenButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/button_orange</item>
+        <item name="android:text">Check in</item>
+    </style>
+    
+    <style name="EventItemRow" parent="UserItemRow">
+        <item name="android:background">@drawable/listview_row_selector_events</item>
+    </style>
+    <!-- Spots: End Check-in -->
     
     <style name="ToolbarButton">
         <item name="android:layout_width">80dp</item>

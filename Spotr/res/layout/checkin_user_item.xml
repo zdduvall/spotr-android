@@ -2,5 +2,4 @@
     android:id="@+id/checkin_user_item_xml_imageview_picture"
     android:layout_gravity="center"
     android:scaleType="centerCrop"
-    android:src="@drawable/user_default"
-    />
+    android:src="@drawable/user_default" />
