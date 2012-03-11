@@ -371,6 +371,8 @@ public class LocalMapViewActivity
 
 	public void updateAsyncTaskProgress(Place p) {
 		itemizedOverlay.addOverlay(createOverlayItemByType(p), p);
+		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
+		mapController.setZoom(19);								
 		mapView.invalidate();
 	}
 	

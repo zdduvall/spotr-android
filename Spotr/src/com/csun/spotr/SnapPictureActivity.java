@@ -116,10 +116,8 @@ public class SnapPictureActivity
 			if (resultCode == RESULT_OK) {
 				// get bitmap from the take picture actvity
 				takenPictureBitmap = (Bitmap) data.getExtras().get("data");
-				
 				// display it
 				displayNewTakenImage(takenPictureBitmap);
-				
 				// now activate upload button
 				activateUploadButton();
 			}
@@ -221,8 +219,7 @@ public class SnapPictureActivity
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
 			}
-			else if(result.equals("fail"))
-			{
+			else if (result.equals("fail")) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
 				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
 				dialogMessage.setMessage("You can only upload one picture a day for any spot. Try again later.");
@@ -232,6 +229,9 @@ public class SnapPictureActivity
 					}
 				});
 				dialogMessage.show();	
+			}
+			else {
+				Log.e(TAG, "unexpected error has occured!");
 			}
 			
 			detach();
@@ -248,39 +248,6 @@ public class SnapPictureActivity
 		private String getPictureFileName() {
 			return CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png";
 		}
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-		}
-		return true;
 	}
 	
 	@Override 

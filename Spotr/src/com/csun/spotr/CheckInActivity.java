@@ -28,6 +28,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -186,6 +187,10 @@ public class CheckInActivity
 			if (result.equals("success")) {
 				Button checkin = (Button) ref.get().findViewById(R.id.check_in_xml_button_checkin);
 				checkin.setBackgroundColor(Color.RED);
+				Intent intent = new Intent();
+				intent.setData(Uri.parse("done"));
+				ref.get().setResult(RESULT_OK, intent);
+				ref.get().finish();
 			}
 			else {
 				ref.get().showDialog(0);

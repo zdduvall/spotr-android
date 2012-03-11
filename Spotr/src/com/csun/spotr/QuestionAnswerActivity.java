@@ -107,6 +107,7 @@ public class QuestionAnswerActivity
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<QuestionAnswerActivity> {
 		
+		private static final String TAG = "[AsyncTask].QuestionAnswerTask";
 		private ProgressDialog progressDialog;
 		private WeakReference<QuestionAnswerActivity> ref;
 		private String usersId;
@@ -167,8 +168,7 @@ public class QuestionAnswerActivity
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
 			}
-			else if(result.equals("fail"))
-			{
+			else if(result.equals("fail")) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
 				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
 				dialogMessage.setMessage("You have already answered this question.");
@@ -179,7 +179,9 @@ public class QuestionAnswerActivity
 				});
 				dialogMessage.show();	
 			}
-				
+			else {
+				Log.e(TAG, "unexpected error has occured!");
+			}
 		}
 
 		public void attach(QuestionAnswerActivity a) {
@@ -201,38 +203,6 @@ public class QuestionAnswerActivity
 			}
 		});
 		dialogMessage.show();	
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-		}
-		return true;
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -199,8 +199,7 @@ public class WriteOnWallActivity
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
 			}
-			else if(result.equals("fail"))
-			{
+			else if(result.equals("fail")) {
 				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
 				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
 				dialogMessage.setMessage("You can only Write On Wall once per day. Sorry.");
@@ -210,6 +209,9 @@ public class WriteOnWallActivity
 					}
 				});
 				dialogMessage.show();	
+			}
+			else {
+				Log.e(TAG, "unexpected error has occured!");
 			}
 			
 			detach();

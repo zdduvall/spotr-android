@@ -149,10 +149,7 @@ public class PlaceActionActivity
 		// initialize list view of challenges
 		list = (ListView) findViewById(R.id.place_action_xml_listview_actions);
 		adapter = new PlaceActionItemAdapter(this, challengeList);
-		
-				
 		list.setAdapter(adapter);
-		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Challenge c = (Challenge) challengeList.get(position);
