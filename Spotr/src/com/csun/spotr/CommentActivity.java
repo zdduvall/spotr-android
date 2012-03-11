@@ -46,11 +46,18 @@ public class CommentActivity
 		implements IActivityProgressUpdate<Comment> {
 
 	private static final String TAG = "(CommentActivity)";
+	/*  Reason Comment:
+	 *  removed PHP script which would interact with the user_requests table on the database.
+	 *  Would input a comment update for the notifications table. 
+	 *  No time to implement LIVE notifications
+	 * 
+	 *  Date commented out: March 10, 2012
+	 *  Commenter:	Edgardo A. Campos
+	 *  WHAT WAS COMMENTED OUT:	
+	 *  private static final String POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
+	 */	
 	
-	// private static final String POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
 	private static final String GET_COMMENTS_URL = "http://107.22.209.62/android/get_comments.php";
-	
-	// Commented out original to work with beta which also updates the user_requests table - ED
 	private static final String POST_COMMENT_URL = "http://107.22.209.62/android/do_post_comment.php";
 
 	private ListView listview = null;
