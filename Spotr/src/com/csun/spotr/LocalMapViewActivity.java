@@ -39,7 +39,7 @@ import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.PlaceIconUtil;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.core.Place;
-import com.csun.spotr.custom_gui.CustomItemizedOverlay;
+import com.csun.spotr.custom_gui.PlaceCustomItemizedOverlay;
 import com.csun.spotr.custom_gui.ImpactOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -74,7 +74,7 @@ public class LocalMapViewActivity
 	private MapController mapController = null;
 	private FineLocation fineLocation = new FineLocation();
 	public Location lastKnownLocation = null;
-	public CustomItemizedOverlay itemizedOverlay = null;
+	public PlaceCustomItemizedOverlay itemizedOverlay = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,7 +102,7 @@ public class LocalMapViewActivity
 		mapView.setBuiltInZoomControls(true); 										// set zoom button
 		mapOverlays = mapView.getOverlays(); 										// get overlays
 		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green); // get default icon
-		itemizedOverlay = new CustomItemizedOverlay(drawable, mapView); 			// initialize overlay item
+		itemizedOverlay = new PlaceCustomItemizedOverlay(drawable, mapView); 			// initialize overlay item
 		mapOverlays.add(itemizedOverlay); 											// add them to the map
 	}
 	

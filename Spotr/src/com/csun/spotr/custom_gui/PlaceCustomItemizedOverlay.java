@@ -12,12 +12,12 @@ import com.csun.spotr.core.Place;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class CustomItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
+public class PlaceCustomItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 	private List<Place> places = new ArrayList<Place>();
 	private Context context;
 
-	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView) {
+	public PlaceCustomItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 		super(boundCenterBottom(defaultMarker), mapView);
 		context = mapView.getContext();
 		this.setBalloonBottomOffset(53);
