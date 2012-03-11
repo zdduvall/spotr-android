@@ -118,7 +118,7 @@ public class ChooseUserActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFriendTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetFriendTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}

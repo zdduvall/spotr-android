@@ -182,7 +182,7 @@ public class FinderItemDetailActivity extends Activity {
 				result = json.getString("result");
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".FinderItemDetailActivity", e.toString());
+				Log.e(TAG + ".FinderItemDetailActivity", "JSONFailception", e );
 			}
 	
 			return result;
@@ -261,7 +261,7 @@ public class FinderItemDetailActivity extends Activity {
 					
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 					Toast.makeText(refActivity.get(), "Error retrieving item's pictures", Toast.LENGTH_SHORT);
 				}
 				return true;
@@ -313,7 +313,7 @@ public class FinderItemDetailActivity extends Activity {
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 					Toast.makeText(refActivity.get(), "Error retrieving item's pictures", Toast.LENGTH_SHORT);
 				}
 				return true;

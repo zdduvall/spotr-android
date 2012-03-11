@@ -109,7 +109,7 @@ public class ExpandableFriendListActivity extends Activity implements
 				} catch (JSONException e) {
 					Log.e(TAG
 							+ "GetFriendTask.doInBackGround(Integer... offsets) : ",
-							"JSON error parsing data" + e.toString());
+							"JSON error parsing data", e );
 				}
 				return true;
 			}

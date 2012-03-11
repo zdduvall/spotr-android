@@ -150,7 +150,7 @@ public class CommentActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetCommentTask.doInBackGround(Integer... ids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetCommentTask.doInBackGround(Integer... ids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -209,7 +209,7 @@ public class CommentActivity
 					return true;
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "PostCommentTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "PostCommentTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return false;
 		}

@@ -227,7 +227,7 @@ public class FinderFoundActivity extends Activity {
 				result = json.getString("result");
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".FinderFoundActivity", e.toString());
+				Log.e(TAG + ".FinderFoundActivity", "JSONFailception", e );
 			}
 	
 			return result;

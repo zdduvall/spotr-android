@@ -158,7 +158,7 @@ public class FriendListActivity
 								array.getJSONObject(i).getString("users_tbl_user_image_url")));
 					}
 				} catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}

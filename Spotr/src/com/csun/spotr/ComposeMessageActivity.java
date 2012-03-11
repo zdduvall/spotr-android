@@ -130,7 +130,7 @@ public class ComposeMessageActivity extends Activity {
 					return true;
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return false;
 		}
@@ -161,12 +161,13 @@ public class ComposeMessageActivity extends Activity {
 		}
 	}
 
+	/*Commenting since it's unused.
 	private boolean canSend() {
 		if (toUserId != -1 && editTextMessage.getText().toString().length() > 0) {
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
 	@Override 
 	public void onResume() {

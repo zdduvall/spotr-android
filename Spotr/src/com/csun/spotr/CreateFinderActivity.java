@@ -227,7 +227,7 @@ public class CreateFinderActivity extends Activity {
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + ": GetUserPoints()", e.toString());
+					Log.e(TAG + ": GetUserPoints()", "JSONFailception", e );
 				}
 
 				return true;
@@ -291,7 +291,7 @@ public class CreateFinderActivity extends Activity {
 				result = json.getString("result");
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".submitLostItem", e.toString());
+				Log.e(TAG + ".submitLostItem", "JSONFailception", e );
 			}
 
 			return result;
