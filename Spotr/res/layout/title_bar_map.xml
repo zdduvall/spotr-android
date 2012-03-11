@@ -14,7 +14,7 @@
                 style="@style/TitleBarHomeBeacon" />
             
 	        <ImageView style="@style/TitleBarLogo" />
-	
+
         </LinearLayout>
         
         <TextView

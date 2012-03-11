@@ -18,11 +18,12 @@ public class CustomItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	private Context context;
 
 	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView) {
-		super(boundCenter(defaultMarker), mapView);
+		super(boundCenterBottom(defaultMarker), mapView);
 		context = mapView.getContext();
+		this.setBalloonBottomOffset(53);
 		populate();
 	}
-
+	
 	public void addOverlay(OverlayItem overlay, Place place) {
 		overlays.add(overlay);
 		places.add(place);
@@ -43,7 +44,7 @@ public class CustomItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	public int size() {
 		return overlays.size();
 	}
-
+	
 	@Override
 	protected boolean onBalloonTap(int index, OverlayItem item) {
 		if (places.get(index).getId() != -1) {
