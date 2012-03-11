@@ -1,10 +1,13 @@
 package com.csun.spotr.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.csun.spotr.ProfileActivity;
 import com.csun.spotr.R;
+import com.csun.spotr.core.adapter_item.PlaceItem;
 import com.csun.spotr.core.adapter_item.UserItem;
+import com.csun.spotr.uat.ExampleTest;
 import com.csun.spotr.util.ImageLoader;
 
 import android.content.Context;
@@ -16,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +36,7 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 	
 	private Context context;
 	private List<UserItem> items;
+	private List<UserItem> origin;
 	private String[] contents;
 	private GroupViewHolder holderGroup;
 	private ChildViewHolder holderChild;
@@ -40,6 +45,7 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 	public ExpandableUserItemAdapter(Context context, List<UserItem> items) {
 		this.context = context.getApplicationContext();
 		this.items = items;
+		this.origin = items;
 		contents = new String[2];
 		contents[0] = "Send a message";
 		contents[1] = "View profile";
@@ -159,5 +165,42 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 	public static class ChildViewHolder {
 		Button btnSendMessage;
 		Button btnViewProfile;
+	}
+	
+	public Filter getFilter() {
+		return new Filter() {
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint, FilterResults results) {
+				items = (List<UserItem>) results.values;
+				ExpandableUserItemAdapter.this.notifyDataSetChanged();
+			}
+
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+				List<UserItem> filteredResults = null;
+				
+				// use original data
+				if (constraint.toString().equals("")) {
+					filteredResults = origin;
+				}
+				else {
+					filteredResults = getFilterList(constraint);
+				}
+
+				results.values = filteredResults;
+				return results;
+			}
+			
+			private List<UserItem> getFilterList(CharSequence constraint) {
+				List<UserItem> data = new ArrayList<UserItem>();
+				for (UserItem u : origin) { 
+					if (u.getUsername().contains(constraint))
+						data.add(u);
+				}
+				return data;
+			}
+		};
 	}
 }

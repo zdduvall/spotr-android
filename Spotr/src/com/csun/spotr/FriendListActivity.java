@@ -19,6 +19,8 @@ import com.csun.spotr.util.JsonHelper;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ExpandableListView;
@@ -64,6 +67,24 @@ public class FriendListActivity
 		// initially, we load 10 items and show users immediately
 		task = new GetFriendsTask(this, 0);
 		task.execute();
+	}
+	
+	public void setupDynamicSearch() {
+		EditText edittextSearch = (EditText) findViewById(R.id.friend_list_main_xml_edittext_search);
+		edittextSearch.setEnabled(true);
+		edittextSearch.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				
+			}
+			
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
+			}
+		});
 	}
 	
 	private void setupListView() {
@@ -143,6 +164,7 @@ public class FriendListActivity
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			ref.get().setupDynamicSearch();
 			detach();
 		}
 
