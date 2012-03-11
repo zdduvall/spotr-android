@@ -3,31 +3,31 @@
     style="@style/TitleBarBackground" >
 
     <!-- Navigation/Title -->
+
     <LinearLayout style="@style/TitleBarNav" >
-        
+
         <LinearLayout
             android:id="@+id/title_bar_home_container"
             style="@style/TitleBarHomeContainer" >
-        
+
             <ImageView
                 android:id="@+id/title_bar_home_beacon"
                 style="@style/TitleBarHomeBeacon" />
-            
-	        <ImageView style="@style/TitleBarLogo" />
 
+            <ImageView style="@style/TitleBarLogo" />
         </LinearLayout>
-        
+
         <TextView
             android:id="@+id/title_bar_title"
             style="@style/TitleBarTitle" />
-        
     </LinearLayout>
 
     <!-- Buttons -->
+
     <LinearLayout
         android:id="@+id/title_bar_actions"
         style="@style/TitleBarActions" >
-        
+
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton
@@ -39,7 +39,18 @@
         <ImageButton
             android:id="@+id/title_bar_map_btn_places"
             style="@style/TitleBarButton.MapPlaces" />
-        
+
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+        <ImageButton
+            android:id="@+id/title_bar_map_btn_ping_me"
+            style="@style/TitleBarButton.Ping" />
+
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+        <ImageButton
+            android:id="@+id/title_bar_map_btn_friends"
+            style="@style/TitleBarButton.PingFriends" />
     </LinearLayout>
 
 </LinearLayout>

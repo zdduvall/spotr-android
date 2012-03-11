@@ -1,6 +1,8 @@
 package com.csun.spotr;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,9 +30,12 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView.ScaleType;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
@@ -38,9 +43,14 @@ import com.csun.spotr.util.GooglePlaceHelper;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.PlaceIconUtil;
 import com.csun.spotr.util.FineLocation.LocationResult;
+import com.csun.spotr.asynctask.GetFriendLocationsTask;
+import com.csun.spotr.asynctask.GetMapSpotsTask;
+import com.csun.spotr.asynctask.PingMeTask;
+import com.csun.spotr.core.FriendAndLocation;
 import com.csun.spotr.core.Place;
 import com.csun.spotr.custom_gui.PlaceCustomItemizedOverlay;
 import com.csun.spotr.custom_gui.ImpactOverlay;
+import com.csun.spotr.custom_gui.UserCustomItemizedOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -48,51 +58,52 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012
  **/
 
 /**
- * Description:
- * 		Display map view of places
+ * Description: Display map view of places
  **/
-public class LocalMapViewActivity 
-	extends MapActivity 
-		implements IActivityProgressUpdate<Place> {
-	
+public class LocalMapViewActivity extends MapActivity {
+
 	private static final String TAG = "(LocalMapViewActivity)";
-	private static final String GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
-	private static final String UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
-	private static final int USER_MAP_RADIUS_10M  =  10;
-	private static final int USER_MAP_RADIUS_20M  =  20;
-	private static final int USER_MAP_RADIUS_50M  =  50;
+	private static final int USER_MAP_RADIUS_10M = 10;
+	private static final int USER_MAP_RADIUS_20M = 20;
+	private static final int USER_MAP_RADIUS_50M = 50;
 	private static final int USER_MAP_RADIUS_100M = 100;
 	
+	private static final int PING_DURATION_ONE_DAY = 86400;
+	private static final int PING_DURATION_THREE_DAY = 259200;
+	private static final int PING_DURATION_SEVEN_DAY = 604800;
+	
+	private static final int ID_DIALOG_PING = 1;
+
 	private MapView mapView = null;
 	private List<Overlay> mapOverlays = null;
 	private MapController mapController = null;
 	private FineLocation fineLocation = new FineLocation();
 	public Location lastKnownLocation = null;
-	public PlaceCustomItemizedOverlay itemizedOverlay = null;
-	
+	public PlaceCustomItemizedOverlay placeOverlay = null;
+	public UserCustomItemizedOverlay userOverlay = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.mapview);
-		
-		setupTitleBar();
-		setupMapGraphics();
-		findLocation();	// locate and places buttons activated once location found		
+		setupTitleBar();        // 1. set up title bar
+		setupFriendButton();    // 2. set up friend button 
+		setupMapGraphics();     // 2. set up map
+		findLocation();         // 2. listen to new location
 	}
-	
+
 	private void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("up Map");
+		title.setText("");
 	}
-	
+
 	/**
 	 * Initialize the map view, along with associated icons and overlays.
 	 */
@@ -102,13 +113,15 @@ public class LocalMapViewActivity
 		mapView.setBuiltInZoomControls(true); 										// set zoom button
 		mapOverlays = mapView.getOverlays(); 										// get overlays
 		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_green); // get default icon
-		itemizedOverlay = new PlaceCustomItemizedOverlay(drawable, mapView); 		// initialize overlay item
-		mapOverlays.add(itemizedOverlay); 											// add them to the map
+		placeOverlay = new PlaceCustomItemizedOverlay(drawable, mapView); 			// initialize place overlay
+		mapOverlays.add(placeOverlay); 												// add them to the map
+		userOverlay = new UserCustomItemizedOverlay(drawable, mapView); 			// initialize user overlay
+		mapOverlays.add(userOverlay); 												// add them to the map
 	}
-	
+
 	/**
-	 * Retrieve current location. Upon finding the current location, set up
-	 * the locate and places buttons.
+	 * Retrieve current location. Upon finding the current location, set up the
+	 * locate and places buttons.
 	 */
 	private void findLocation() {
 		LocationResult locationResult = (new LocationResult() {
@@ -117,14 +130,15 @@ public class LocalMapViewActivity
 				lastKnownLocation = location;
 				activateLocateButton();
 				activatePlacesButton();
+				activatePingButton();
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
 	}
-	
+
 	/**
-	 * Set up the locate button to be clickable, to have a new image, and
-	 * to handle its click event.
+	 * Set up the locate button to be clickable, to have a new image, and to
+	 * handle its click event.
 	 */
 	private void activateLocateButton() {
 		ImageButton locateButton = (ImageButton) findViewById(R.id.title_bar_map_btn_locate);
@@ -137,57 +151,82 @@ public class LocalMapViewActivity
 				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
 				Drawable icon = PlaceIconUtil.getMapIconByType(LocalMapViewActivity.this, -1);
 				ovl.setMarker(icon);
-				// construct a place with id = -1, so that 
+				// construct a place with id = -1, so that
 				// user can't go to place mission
 				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
 				// add that overlay
-				itemizedOverlay.addOverlay(ovl, place);
+				placeOverlay.addOverlay(ovl, place);
 				// add radius around user
-				mapOverlays.add(
-						new ImpactOverlay(
-							new GeoPoint(	
-								(int) (lastKnownLocation.getLatitude() * 1E6),
-								(int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M));
+				mapOverlays.add(new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M));
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
-				mapController.setZoom(19);				
-			}	
+				mapController.setZoom(19);
+			}
 		});
 	}
-	
+
 	/**
-	 * Set up the places button to be clickable, to have a new image, and
-	 * to handle its click event.
+	 * Set up the places button to be clickable, to have a new image, and to
+	 * handle its click event.
 	 */
 	private void activatePlacesButton() {
-		ImageButton placesButton = (ImageButton) findViewById(R.id.title_bar_map_btn_places);
+		final ImageButton placesButton = (ImageButton) findViewById(R.id.title_bar_map_btn_places);
 		placesButton.setClickable(true);
 		placesButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_places_enabled));
 		placesButton.setScaleType(ScaleType.FIT_XY);
 		placesButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new GetSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
+				placesButton.setEnabled(false);
+				new GetMapSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
 			}
 		});
 	}
 	
 	/**
+	 * Set up the ping button to be clickable, to have a new image, and 
+	 * to handle its click event.
+	 */
+	private void activatePingButton() {
+		ImageButton pingButton = (ImageButton) findViewById(R.id.title_bar_map_btn_ping_me);
+		pingButton.setClickable(true);
+		pingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_ping_enabled));
+		pingButton.setScaleType(ScaleType.FIT_XY);
+		pingButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startDialog(ID_DIALOG_PING);
+			}
+		});
+	}
+	
+	private void setupFriendButton() {
+		final ImageButton friendsButton = (ImageButton) findViewById(R.id.title_bar_map_btn_friends);
+		friendsButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				friendsButton.setEnabled(false);
+				new GetFriendLocationsTask(LocalMapViewActivity.this).execute();
+			}
+		});
+	}
+
+	/**
 	 * Open the Main Menu activity (dashboard). If that activity is already
 	 * running, a new instance of that activity will not be launched--instead,
-	 * all activities on top of the old instance are removed as the old 
-	 * instance is brought to the top.
-	 * @param button the button clicked
+	 * all activities on top of the old instance are removed as the old instance
+	 * is brought to the top.
+	 * 
+	 * @param button
+	 *            the button clicked
 	 */
 	public void goToMainMenu(View button) {
 		LinearLayout homeContainer = (LinearLayout) findViewById(R.id.title_bar_home_container);
 		homeContainer.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
 
-	    final Intent intent = new Intent(this, MainMenuActivity.class);
-	    intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    startActivity (intent);
+		final Intent intent = new Intent(this, MainMenuActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
 	}
-	
+
 	/**
-	 * A pop-up dialog for changing the map view type. 
+	 * A pop-up dialog for changing the map view type.
 	 */
 	private void displayMapViewDialog() {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
@@ -225,130 +264,38 @@ public class LocalMapViewActivity
 		return false;
 	}
 
-	private static class GetSpotsTask 
-		extends AsyncTask<Location, Place, Boolean> 
-			implements IAsyncTask<LocalMapViewActivity> {
+	private void startDialog(int dialog) {
+		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
+		switch (dialog){
+			case ID_DIALOG_PING:
+				final EditText input = new EditText(this);
+				myAlertDialog.setView(input);
+				myAlertDialog.setTitle("Ping Options");
+				myAlertDialog.setMessage("Enter a message and how long your ping should stay on map");
+				
+				myAlertDialog.setPositiveButton("1 Day", new DialogInterface.OnClickListener() {
+					// do something when the button is clicked
+					public void onClick(DialogInterface arg0, int arg1) {
+						new PingMeTask(
+							LocalMapViewActivity.this, input.getText().toString(), lastKnownLocation, PING_DURATION_ONE_DAY).execute();
+					}
+				});
 		
-		private static final String TAG = "[AsyncTask].GetSpotsTask";
-		private WeakReference<LocalMapViewActivity> ref;
+				myAlertDialog.setNeutralButton("3 Days", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						new PingMeTask(
+							LocalMapViewActivity.this, input.getText().toString(), lastKnownLocation, PING_DURATION_THREE_DAY).execute();
+					}
+				});
 		
-		public GetSpotsTask(LocalMapViewActivity a) {
-			attach(a);
-		}
-
-		private List<NameValuePair> constructGooglePlace(Location loc) {
-			// this is data we will send to our server
-			List<NameValuePair> sentData = new ArrayList<NameValuePair>();
-			// we reformat the original data to include only what we need
-			JSONArray reformattedData = new JSONArray();
-			JSONObject json = JsonHelper.getJsonFromUrl(GooglePlaceHelper.buildGooglePlacesUrl(loc, GooglePlaceHelper.GOOGLE_RADIUS_IN_METER));
-			JSONObject temp = null;
-			
-			try {
-				JSONArray originalGoogleDataArray = json.getJSONArray("results");
-				for (int i = 0; i < originalGoogleDataArray.length(); i++) {
-					// id: is used to verify place existence 
-					JSONObject e = new JSONObject();
-					e.put("id", originalGoogleDataArray.getJSONObject(i).getString("id"));
-					e.put("name", originalGoogleDataArray.getJSONObject(i).getString("name"));
-					e.put("lat", originalGoogleDataArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
-					e.put("lon", originalGoogleDataArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
-					temp = JsonHelper.getJsonFromUrl(GooglePlaceHelper.buildGooglePlaceDetailsUrl(originalGoogleDataArray.getJSONObject(i).getString("reference")));
-					
-					if (temp.getJSONObject("result").has("formatted_address")) {
-						e.put("addr", temp.getJSONObject("result").getString("formatted_address"));
+				myAlertDialog.setNegativeButton("7 Days", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						new PingMeTask(
+							LocalMapViewActivity.this, input.getText().toString(), lastKnownLocation, PING_DURATION_SEVEN_DAY).execute();
 					}
-					else {
-						e.put("addr", "default address");
-					}
-					
-					if (temp.getJSONObject("result").has("formatted_phone_number")) {
-						e.put("phone", temp.getJSONObject("result").getString("formatted_phone_number"));
-					}
-					else {
-						e.put("phone", "(888) 888-8888");
-					}
-					
-					if (temp.getJSONObject("result").has("url")) {
-						e.put("url", temp.getJSONObject("result").getString("url"));
-					}
-					else {
-						e.put("url", "https://www.google.com/");
-					}
-					
-					// put e
-					reformattedData.put(e);
-				}
-			}
-			catch (JSONException e) {
-				Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data" + e.toString());
-			}
-			// send data to our server
-			sentData.add(new BasicNameValuePair("google_array", reformattedData.toString()));
-			return sentData;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected void onProgressUpdate(Place... p) {
-			ref.get().updateAsyncTaskProgress(p[0]);
-		}
-		
-		
-		private List<NameValuePair> prepareUploadData(Location location) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("latitude", Double.toString(location.getLatitude())));
-			data.add(new BasicNameValuePair("longitude", Double.toString(location.getLongitude())));
-			data.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
-			return data;
-		}
-		
-		@Override
-		protected Boolean doInBackground(Location... locations) {
-			// send Google data to our server to update 'spots' table
-			JsonHelper.getJsonObjectFromUrlWithData(UPDATE_GOOGLE_PLACES_URL, constructGooglePlace(locations[0]));
-			List<NameValuePair> data = prepareUploadData(locations[0]);
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, data);
-			if (array != null) {
-				try {
-					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(
-							new Place.Builder(
-								// require parameters
-								array.getJSONObject(i).getDouble("spots_tbl_longitude"), 
-								array.getJSONObject(i).getDouble("spots_tbl_latitude"),
-								array.getJSONObject(i).getInt("spots_tbl_id"))
-									// optional parameters
-									.name(array.getJSONObject(i).getString("spots_tbl_name"))
-									.type(array.getJSONObject(i).getInt("spots_tbl_type"))
-									.address(array.getJSONObject(i).getString("spots_tbl_description")).build()
-							);
-					}
-				}
-				catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
-				}
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			detach();
-		}
-
-		public void attach(LocalMapViewActivity a) {
-			ref = new WeakReference<LocalMapViewActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
+				});
+				myAlertDialog.show();
+				break;
 		}
 	}
 
@@ -362,32 +309,55 @@ public class LocalMapViewActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.map_menu_xml_item_mapview:
-				displayMapViewDialog();
-				break;
+		case R.id.map_menu_xml_item_mapview :
+			displayMapViewDialog();
+			break;
 		}
 		return true;
 	}
 
-	public void updateAsyncTaskProgress(Place p) {
-		itemizedOverlay.addOverlay(createOverlayItemByType(p), p);
+	public void updatePlaceTaskProgress(Place p) {
+		placeOverlay.addOverlay(createOverlayItemByType(p), p);
 		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
-		mapController.setZoom(19);								
+		mapController.setZoom(19);
 		mapView.invalidate();
 	}
 	
+	public void updateFriendTaskProgress(FriendAndLocation f) {
+		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getName(), f.getTime());
+		try {
+			Drawable icon = getImageFromUrl(f.getPictureUrl());
+			icon.setBounds(0, 0, 50, 50);
+			overlay.setMarker(icon);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "getImageFromUrl() has encountered unexpected error", e);
+		}
+		
+		// add to item to map
+		userOverlay.addOverlay(overlay, f);
+		mapController.animateTo(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)));
+		mapController.setZoom(19);
+		mapView.invalidate();
+	}
+
 	private OverlayItem createOverlayItemByType(Place p) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)), p.getName(), p.getAddress());
 		overlay.setMarker(PlaceIconUtil.getMapIconByType(this, p.getType()));
 		return overlay;
 	}
+	
+	private Drawable getImageFromUrl(String url) throws Exception {
+		return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
+	}
+	
 
-	@Override 
+	@Override
 	public void onResume() {
 		Log.v(TAG, "I'm resumed");
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
