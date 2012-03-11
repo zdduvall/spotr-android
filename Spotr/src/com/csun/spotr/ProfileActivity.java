@@ -1,59 +1,37 @@
 package com.csun.spotr;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.csun.spotr.adapter.FriendFeedItemAdapter;
-import com.csun.spotr.adapter.ProfileItemAdapter;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.User;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
-import com.csun.spotr.singleton.CurrentDateTime;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.util.UploadFileHelper;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
 
 /**
  * Description:
@@ -255,7 +233,7 @@ public class ProfileActivity
 				
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data", e );
 			}
 			return user;
 		}
@@ -306,7 +284,7 @@ public class ProfileActivity
 				}	
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			
 			return firstComment;
@@ -395,7 +373,7 @@ public class ProfileActivity
 				
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetUserFeedTask.doInBackground() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "GetUserFeedTask.doInBackground() : ", "JSON error parsing data", e );
 			}
 			return true;
 		}

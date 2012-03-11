@@ -4,28 +4,16 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.csun.spotr.adapter.PlaceActionItemAdapter;
-import com.csun.spotr.core.Challenge;
-import com.csun.spotr.core.Place;
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,10 +23,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import com.csun.spotr.adapter.PlaceActionItemAdapter;
+import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Place;
+import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
 
 
 /**
@@ -255,7 +250,7 @@ public class PlaceActionActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -315,7 +310,7 @@ public class PlaceActionActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data", e );
 			}
 			return place;
 		}

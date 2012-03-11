@@ -98,7 +98,7 @@ public class GenerateTreasureActivity
 						);
 				}
 				catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Void... voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void... voids) : ", "JSON error parsing data", e );
 					
 					
 				}

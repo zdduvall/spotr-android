@@ -120,7 +120,7 @@ public class PlaceInfoActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data", e );
 			}
 			return place;
 		}
@@ -165,10 +165,11 @@ public class PlaceInfoActivity
 			populate();
 		}
 
+		/*Commenting since it isn't used.
 		public void clear() {
 			overlays.clear();
 			placeInformations.clear();
-		}
+		}*/
 
 		@Override
 		protected OverlayItem createItem(int i) {

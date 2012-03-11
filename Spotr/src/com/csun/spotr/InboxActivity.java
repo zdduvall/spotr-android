@@ -127,7 +127,7 @@ public class InboxActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Integer... ids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... ids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}

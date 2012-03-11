@@ -3,54 +3,42 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageView.ScaleType;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-
-import android.content.Intent;
-import android.content.SharedPreferences;
-
-import android.location.Location;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.csun.spotr.adapter.PlaceItemAdapter;
 import com.csun.spotr.core.adapter_item.PlaceItem;
 import com.csun.spotr.custom_gui.ActionItem;
 import com.csun.spotr.custom_gui.ToolbarAction;
-import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.util.GooglePlaceHelper;
 import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.adapter.PlaceItemAdapter;
 
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012
@@ -287,7 +275,7 @@ public class PlaceActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data", e );
 			}
 			// send data to our server
 			sentData.add(new BasicNameValuePair("google_array", reformattedData.toString()));
@@ -320,7 +308,7 @@ public class PlaceActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetSpotsTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetSpotsTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}

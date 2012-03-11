@@ -3,47 +3,36 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.adapter.FriendRequestItemAdapter;
-import com.csun.spotr.core.adapter_item.FriendRequestItem;
-import com.csun.spotr.custom_gui.DashboardLayout;
-import com.csun.spotr.custom_gui.DraggableGridView;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import com.csun.spotr.adapter.FriendRequestItemAdapter;
+import com.csun.spotr.core.adapter_item.FriendRequestItem;
+import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
 
 /**
  * Description:
@@ -71,7 +60,7 @@ public class MainMenuActivity
 	
 	private 				List<FriendRequestItem> 	friendRequestList = null;
 	private 				int 						currentSelectedFriendId;
-	private 				DashboardLayout 			dashboard = null;
+	//private 				DashboardLayout 			dashboard = null;
 	private 				ListView 					listview;
 	private 				FriendRequestItemAdapter 	adapter;
 	
@@ -207,7 +196,7 @@ public class MainMenuActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFriendRequestTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetFriendRequestTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -261,7 +250,7 @@ public class MainMenuActivity
 				}
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "AcceptFriendTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "AcceptFriendTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return false;
 		}

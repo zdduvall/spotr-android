@@ -193,7 +193,7 @@ public class LoginActivity
 				userId = json.getInt("result");
 			}
 			catch (Exception e) {
-				Log.e(TAG + "LoginTask.doInBackground(Void... voids)", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "LoginTask.doInBackground(Void... voids)", "JSON error parsing data", e );
 			}
 			return userId;
 		}
