@@ -966,7 +966,6 @@
         <item name="android:paddingRight">2dp</item>
     </style>
 
-
     <style name="Animations" />
 
     <!-- PopDownMenu -->
