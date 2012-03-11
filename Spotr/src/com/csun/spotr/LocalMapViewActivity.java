@@ -1,25 +1,14 @@
 package com.csun.spotr;
 
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -33,14 +22,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
-import com.csun.spotr.util.GooglePlaceHelper;
-import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.util.PlaceIconUtil;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.asynctask.GetFriendLocationsTask;
@@ -59,7 +42,7 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 /**
- * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ * NOTE: Refactoring by Chan Nguyen: 03/11/2012
  **/
 
 /**
@@ -68,6 +51,7 @@ import com.google.android.maps.OverlayItem;
 public class LocalMapViewActivity extends MapActivity {
 
 	private static final String TAG = "(LocalMapViewActivity)";
+	
 	private static final int USER_MAP_RADIUS_10M = 10;
 	private static final int USER_MAP_RADIUS_20M = 20;
 	private static final int USER_MAP_RADIUS_50M = 50;

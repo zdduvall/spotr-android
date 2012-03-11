@@ -143,8 +143,7 @@ public class MainMenuActivity
 			startActivity(intent);
 		}
 		else if (id == R.id.main_menu_btn_ping) {
-		 	intent = new Intent(getApplicationContext(), PingMapActivity.class);
-			startActivity(intent);   
+		 	// remove ping map activity
 		}
 		else if (id == R.id.main_menu_btn_inventory) {
 			intent = new Intent(getApplicationContext(), InventoryActivity.class);
