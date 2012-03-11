@@ -46,7 +46,7 @@ public class SendFriendRequestTask
 			}
 		}
 		catch (JSONException e) {
-			Log.e(TAG + ".doInBackGround(String... datas) : ", "JSON error parsing data" + e.toString());
+			Log.e(TAG + ".doInBackGround(String... datas) : ", "JSON error parsing data", e );
 		}
 		return false;
 	}

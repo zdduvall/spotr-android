@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-
 import com.csun.spotr.core.Place;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;

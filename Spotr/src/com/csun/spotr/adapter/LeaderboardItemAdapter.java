@@ -1,15 +1,11 @@
 package com.csun.spotr.adapter;
 
 import java.util.List;
-import java.util.zip.Inflater;
-
 import com.csun.spotr.R;
 import com.csun.spotr.core.User;
 import com.csun.spotr.singleton.CurrentUser;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;

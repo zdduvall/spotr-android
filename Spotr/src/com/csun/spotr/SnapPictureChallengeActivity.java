@@ -17,7 +17,6 @@ import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.UploadFileHelper;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -32,7 +31,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -170,7 +168,7 @@ public class SnapPictureChallengeActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}

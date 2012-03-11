@@ -18,14 +18,10 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -154,7 +150,7 @@ public class QuestionAnswerActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "QuestionAnswerTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "QuestionAnswerTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}

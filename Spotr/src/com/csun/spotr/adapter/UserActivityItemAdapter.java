@@ -1,26 +1,14 @@
 package com.csun.spotr.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.csun.spotr.R;
-import com.csun.spotr.core.adapter_item.PlaceActionItem;
 
 public class UserActivityItemAdapter extends BaseAdapter {
 	private List<String> items;

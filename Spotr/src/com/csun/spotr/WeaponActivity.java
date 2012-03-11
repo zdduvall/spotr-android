@@ -120,7 +120,7 @@ public class WeaponActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetWeaponTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetWeaponTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}

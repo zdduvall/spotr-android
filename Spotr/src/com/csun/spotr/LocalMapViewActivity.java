@@ -1,7 +1,5 @@
 package com.csun.spotr;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 import android.app.AlertDialog;

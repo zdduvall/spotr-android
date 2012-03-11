@@ -180,7 +180,7 @@ public class QuestActionActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -250,7 +250,7 @@ public class QuestActionActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "CheckInTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "CheckInTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}

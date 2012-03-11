@@ -15,9 +15,7 @@ import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -116,7 +114,7 @@ public class RewardViewActivity extends Activity {
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "ConvertBadgeTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "ConvertBadgeTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}

@@ -3,11 +3,7 @@ package com.csun.spotr.adapter;
 import java.util.List;
 
 import com.csun.spotr.R;
-import com.csun.spotr.adapter.FinderItemAdapter.ItemViewHolder;
 import com.csun.spotr.core.Badge;
-import com.csun.spotr.core.adapter_item.SeekingItem;
-import com.csun.spotr.util.ImageLoader;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

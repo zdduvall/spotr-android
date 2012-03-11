@@ -3,15 +3,9 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -22,11 +16,12 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
 
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012
@@ -43,7 +38,7 @@ public class SignupActivity
 	private static final String SIGN_UP_URL = "http://107.22.209.62/android/signup.php";
 	
 	private boolean passwordVisible = false;
-	private boolean validInformation = false;
+	//private boolean validInformation = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -129,7 +124,7 @@ public class SignupActivity
 					return true;
 			}
 			catch (Exception e) {
-				Log.e(TAG + "SignupTask.doInBackground(Void... voids)", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "SignupTask.doInBackground(Void... voids)", "JSON error parsing data", e );
 			}
 			return false;
 		}

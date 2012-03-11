@@ -5,13 +5,10 @@ import java.util.List;
 
 import com.csun.spotr.core.PowerUp;
 import com.csun.spotr.core.Weapon;
-import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.R;
 import com.csun.spotr.util.ImageLoader;
 
-import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

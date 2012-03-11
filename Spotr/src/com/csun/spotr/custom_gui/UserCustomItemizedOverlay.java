@@ -1,6 +1,5 @@
 package com.csun.spotr.custom_gui;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 

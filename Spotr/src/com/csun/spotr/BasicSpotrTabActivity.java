@@ -2,11 +2,9 @@ package com.csun.spotr;
 
 
 import android.app.TabActivity;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 /**
 * This class provides a foundation of basic features (e.g. Spotr's custom

@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.csun.spotr.ProfileActivity;
 import com.csun.spotr.R;
-import com.csun.spotr.core.adapter_item.PlaceItem;
 import com.csun.spotr.core.adapter_item.UserItem;
-import com.csun.spotr.uat.ExampleTest;
 import com.csun.spotr.util.ImageLoader;
 
 import android.content.Context;

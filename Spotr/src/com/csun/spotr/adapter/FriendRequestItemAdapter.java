@@ -5,11 +5,9 @@ import java.util.List;
 import com.csun.spotr.R;
 import com.csun.spotr.core.adapter_item.FriendRequestItem;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;

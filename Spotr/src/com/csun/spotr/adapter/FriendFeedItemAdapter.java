@@ -8,7 +8,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,13 +25,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.csun.spotr.CommentActivity;
-import com.csun.spotr.LocalMapViewActivity;
-import com.csun.spotr.LoginActivity;
 import com.csun.spotr.R;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
@@ -324,7 +318,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 					return true;
 			}
 			catch (Exception e) {
-				Log.e(TAG + "LikeActivityTask.doInBackground(Void... voids)", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "LikeActivityTask.doInBackground(Void... voids)", "JSON error parsing data", e );
 			}
 			return false;
 		}

@@ -4,15 +4,11 @@ import java.util.List;
 
 import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.R;
-import com.csun.spotr.util.ImageLoader;
-
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ChooseUserItemAdapter extends BaseAdapter {

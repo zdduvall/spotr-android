@@ -78,7 +78,7 @@ public class GetMapSpotsTask
 			}
 		}
 		catch (JSONException e) {
-			Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data" + e.toString());
+			Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data", e );
 		}
 		// send data to our server
 		sentData.add(new BasicNameValuePair("google_array", reformattedData.toString()));
@@ -125,7 +125,7 @@ public class GetMapSpotsTask
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return true;
 		}

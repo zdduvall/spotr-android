@@ -56,7 +56,7 @@ public class PingMeTask
 			result = json.getString("result");
 		}
 		catch (JSONException e) {
-			Log.e(TAG + ".doInBackGround(Location... locations) : ", "JSON error parsing data" + e.toString());
+			Log.e(TAG + ".doInBackGround(Location... locations) : ", "JSON error parsing data", e );
 		}
 		return result;
 	}

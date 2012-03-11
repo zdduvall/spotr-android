@@ -3,7 +3,6 @@ package com.csun.spotr;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
 
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012

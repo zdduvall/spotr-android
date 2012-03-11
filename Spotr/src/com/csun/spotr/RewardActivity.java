@@ -29,7 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -126,7 +125,7 @@ public class RewardActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetBadgesTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetBadgesTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}

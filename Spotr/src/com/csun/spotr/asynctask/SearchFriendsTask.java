@@ -62,7 +62,7 @@ public class SearchFriendsTask
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 			}
 			return true;
 		}

@@ -6,7 +6,6 @@ import com.csun.spotr.R;
 import com.csun.spotr.core.adapter_item.QuestDetailItem;
 import com.csun.spotr.util.ImageLoader;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;

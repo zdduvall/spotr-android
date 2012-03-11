@@ -5,7 +5,6 @@ import java.util.List;
 import com.csun.spotr.core.adapter_item.QuestItem;
 import com.csun.spotr.R;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

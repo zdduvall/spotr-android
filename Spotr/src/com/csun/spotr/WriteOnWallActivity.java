@@ -185,7 +185,7 @@ public class WriteOnWallActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "WriteOnWallTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "WriteOnWallTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}

@@ -1,13 +1,6 @@
 package com.csun.spotr.core;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Vector;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 
 public class User {
 	// required parameters
