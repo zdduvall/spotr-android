@@ -117,63 +117,9 @@ public class LocalMapViewActivity
 				lastKnownLocation = location;
 				activateLocateButton();
 				activatePlacesButton();
-				activateChangeViewButton();
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
-	}
-	
-	/*
-	 * Set up and activate change view button
-	 * TODO: add different icon for map title bar, temporarily use places icon
-	 */
-	private void activateChangeViewButton() {
-		ImageButton changeViewButton = (ImageButton) findViewById(R.id.title_bar_map_btn_change_view);
-		changeViewButton.setClickable(true);
-		changeViewButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_places_enabled));
-		changeViewButton.setScaleType(ScaleType.FIT_XY);
-		changeViewButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				showMapViewDialog();
-			}
-		});
-	}
-	
-	/**
-	 * Allow user to choose different views for map
-	 * 		- Street view
-	 * 	 	- Satellite view
-	 * 		- Traffic view
-	 */
-	private void showMapViewDialog() {
-		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
-		myAlertDialog.setTitle("Map View Option");
-		myAlertDialog.setMessage("Pick a map view");
-		myAlertDialog.setPositiveButton("Street", new DialogInterface.OnClickListener() {
-			// do something when the button is clicked
-			public void onClick(DialogInterface arg0, int arg1) {
-				mapView.setSatellite(false);
-				mapView.setTraffic(false);
-				mapView.invalidate();
-			}
-		});
-
-		myAlertDialog.setNeutralButton("Satellite", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				mapView.setSatellite(true);
-				mapView.setTraffic(false);
-				mapView.invalidate();
-			}
-		});
-
-		myAlertDialog.setNegativeButton("Traffic", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				mapView.setSatellite(false);
-				mapView.setTraffic(true);
-				mapView.invalidate();
-			}
-		});
-		myAlertDialog.show();
 	}
 	
 	/**
@@ -415,26 +361,10 @@ public class LocalMapViewActivity
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.map_menu_xml_item_setting_icon:
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			break;
-		case R.id.map_menu_xml_item_logout_icon:
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			break;
-		case R.id.map_menu_xml_item_mainmenu_icon:
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			break;
-		case R.id.map_menu_xml_item_mapview:
-			displayMapViewDialog();
-			break;
+			case R.id.map_menu_xml_item_mapview:
+				displayMapViewDialog();
+				break;
 		}
 		return true;
 	}

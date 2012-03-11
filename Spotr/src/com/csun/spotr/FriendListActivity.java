@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -63,6 +64,8 @@ public class FriendListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_main);
 		setupListView();
+		// make sure keyboard of edit text do not populate
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		// initially, we load 10 items and show users immediately
 		task = new GetFriendsTask(this, 0);
