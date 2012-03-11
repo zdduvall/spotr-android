@@ -290,27 +290,37 @@ public class PlaceActionActivity
 			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, data);
 			Place place = null;
-			try {
-				// create a place
-				place = new Place.Builder(
-				// required parameters
-					array.getJSONObject(0).getDouble("spots_tbl_longitude"),
-					array.getJSONObject(0).getDouble("spots_tbl_latitude"), 
-					array.getJSONObject(0).getInt("spots_tbl_id"))
-					// optional parameters
-					.name(array.getJSONObject(0).getString("spots_tbl_name"))
-					.address(array.getJSONObject(0).getString("spots_tbl_description")).build();
-				
-				if (array.getJSONObject(0).has("spots_tbl_phone")) {
-					place.setPhoneNumber(array.getJSONObject(0).getString("spots_tbl_phone"));
+			if (array != null) {
+				try {
+					// create a place
+					place = new Place.Builder(
+					// required parameters
+							array.getJSONObject(0).getDouble(
+									"spots_tbl_longitude"), array
+									.getJSONObject(0).getDouble(
+											"spots_tbl_latitude"), array
+									.getJSONObject(0).getInt("spots_tbl_id"))
+							// optional parameters
+							.name(array.getJSONObject(0).getString(
+									"spots_tbl_name"))
+							.address(
+									array.getJSONObject(0).getString(
+											"spots_tbl_description")).build();
+
+					if (array.getJSONObject(0).has("spots_tbl_phone")) {
+						place.setPhoneNumber(array.getJSONObject(0).getString(
+								"spots_tbl_phone"));
+					}
+
+					if (array.getJSONObject(0).has("spots_tbl_url")) {
+						place.setWebsiteUrl(array.getJSONObject(0).getString(
+								"spots_tbl_url"));
+					}
+				} catch (JSONException e) {
+					Log.e(TAG
+							+ "GetPlaceDetailTask.doInBackground(Void...voids) : ",
+							"JSON error parsing data", e);
 				}
-				
-				if (array.getJSONObject(0).has("spots_tbl_url")) {
-					place.setWebsiteUrl(array.getJSONObject(0).getString("spots_tbl_url"));
-				}
-			}
-			catch (JSONException e) {
-				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data", e );
 			}
 			return place;
 		}

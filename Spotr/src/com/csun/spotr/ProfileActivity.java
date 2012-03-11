@@ -210,30 +210,49 @@ public class ProfileActivity
 			if (isCancelled()) {
 				return null;
 			}
-				
 			User user = null;
-			try {
-				user = new User.Builder( 
-						// required parameters
-						array.getJSONObject(0).getInt("users_tbl_id"), 
-						array.getJSONObject(0).getString("users_tbl_username"), 
-						array.getJSONObject(0).getString("users_tbl_password"))
+			if (array != null) {
+				try {
+					user = new User.Builder(
+							// required parameters
+							array.getJSONObject(0).getInt("users_tbl_id"),
+							array.getJSONObject(0).getString(
+									"users_tbl_username"), array.getJSONObject(
+									0).getString("users_tbl_password"))
 							// optional parameters
-							.challengesDone(array.getJSONObject(0).getInt("users_tbl_challenges_done"))
-							.placesVisited(array.getJSONObject(0).getInt("users_tbl_places_visited"))
-							.points(array.getJSONObject(0).getInt("users_tbl_points"))
-							.imageUrl(array.getJSONObject(0).getString("users_tbl_user_image_url"))
-							.numFriends(array.getJSONObject(0).getInt("num_friends"))
-							.numBadges(array.getJSONObject(0).getInt("num_badges"))
-							.realname(array.getJSONObject(0).getString("users_tbl_real_name"))
-							.education(array.getJSONObject(0).getString("users_tbl_education"))
-							.hometown(array.getJSONObject(0).getString("users_tbl_hometown"))
-							.hobbies(array.getJSONObject(0).getString("users_tbl_hobbies"))
-								.build();
-				
-			}
-			catch (JSONException e) {
-				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data", e );
+							.challengesDone(
+									array.getJSONObject(0).getInt(
+											"users_tbl_challenges_done"))
+							.placesVisited(
+									array.getJSONObject(0).getInt(
+											"users_tbl_places_visited"))
+							.points(array.getJSONObject(0).getInt(
+									"users_tbl_points"))
+							.imageUrl(
+									array.getJSONObject(0).getString(
+											"users_tbl_user_image_url"))
+							.numFriends(
+									array.getJSONObject(0)
+											.getInt("num_friends"))
+							.numBadges(
+									array.getJSONObject(0).getInt("num_badges"))
+							.realname(
+									array.getJSONObject(0).getString(
+											"users_tbl_real_name"))
+							.education(
+									array.getJSONObject(0).getString(
+											"users_tbl_education"))
+							.hometown(
+									array.getJSONObject(0).getString(
+											"users_tbl_hometown"))
+							.hobbies(
+									array.getJSONObject(0).getString(
+											"users_tbl_hobbies")).build();
+
+				} catch (JSONException e) {
+					Log.e(TAG + "GetUserDetailTask.doInBackground() : ",
+							"JSON error parsing data", e);
+				}
 			}
 			return user;
 		}

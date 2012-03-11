@@ -128,7 +128,8 @@ public class JsonHelper {
 		}
 		
 		try {
-			jsonArray = new JSONArray(result);
+			if ( result != null && !result.equals("null\n") ) 
+				jsonArray = new JSONArray(result);
 		}
 		catch (JSONException e) {
 			Log.v(TAG + "getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data ", e );
