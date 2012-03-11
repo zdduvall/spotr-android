@@ -2,29 +2,14 @@ package com.csun.spotr;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.csun.spotr.adapter.CheckInUserItemAdapter;
-import com.csun.spotr.adapter.EventAdapter;
-import com.csun.spotr.core.Event;
-import com.csun.spotr.core.adapter_item.SeekingItem;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -39,7 +24,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ListView;
-import android.widget.Toast;
+import com.csun.spotr.adapter.CheckInUserItemAdapter;
+import com.csun.spotr.adapter.EventAdapter;
+import com.csun.spotr.core.Event;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
 
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012
@@ -177,7 +167,7 @@ public class CheckInActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}
@@ -238,7 +228,7 @@ public class CheckInActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetCheckInUsersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetCheckInUsersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 			}
 			return true;
@@ -295,7 +285,7 @@ public class CheckInActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetEventTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetEventTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 			}
 			return true;
