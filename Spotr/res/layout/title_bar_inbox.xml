@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Zach [3/10/2012] -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TitleBarBackground" >
+
+    <!-- Navigation/Title -->
+    <LinearLayout style="@style/TitleBarNav" >
+        
+        <LinearLayout
+            android:id="@+id/title_bar_home_container"
+            style="@style/TitleBarHomeContainer" >
+        
+            <ImageView
+                android:id="@+id/title_bar_home_beacon"
+                style="@style/TitleBarHomeBeacon" />
+            
+	        <ImageView style="@style/TitleBarLogo" />
+	
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/title_bar_title"
+            style="@style/TitleBarTitle" />
+        
+    </LinearLayout>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:id="@+id/title_bar_actions"
+        style="@style/TitleBarActions" >
+        
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+        <ImageButton
+            android:id="@+id/title_bar_inbox_btn_compose"
+            style="@style/TitleBarButton.ComposeMail" />
+
+        <View style="@style/VerticalSpacer.TitleBar" />
+
+    </LinearLayout>
+
+</LinearLayout>
