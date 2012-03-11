@@ -33,7 +33,7 @@ public class JsonHelper {
 			input = entity.getContent();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonFromUrl(String url)", "Error in http connection " + e.toString());
+			Log.e(TAG + ".getJsonFromUrl(String url)", "Error in http connection ", e );
 		}
 
 		try {
@@ -47,14 +47,14 @@ public class JsonHelper {
 			result = content.toString();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonFromURL(String url)", "Error parsing result " + e.toString());
+			Log.e(TAG + ".getJsonFromURL(String url)", "Error parsing result ", e );
 		}
 
 		try {
 			json = new JSONObject(result);
 		}
 		catch (JSONException e) {
-			Log.e(TAG + ".getJsonFromURL()", "Error converting data " + e.toString());
+			Log.e(TAG + ".getJsonFromURL()", "Error converting data ", e );
 		}
 		return json;
 	}
@@ -71,7 +71,7 @@ public class JsonHelper {
 			input = entity.getContent();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonArrayFromUrl(String url)", "Error in http connection " + e.toString()); 
+			Log.e(TAG + ".getJsonArrayFromUrl(String url)", "Error in http connection " + e ); 
 		}
 
 		try {
@@ -85,14 +85,14 @@ public class JsonHelper {
 			result = content.toString();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonArrayFromUrl(String url)", "Error parsing result " + e.toString());
+			Log.e(TAG + ".getJsonArrayFromUrl(String url)", "Error parsing result ", e );
 		}
 
 		try {
 			jsonArray = new JSONArray(result);
 		}
 		catch (JSONException e) {
-			Log.e(TAG + "getJsonArrayFromUrl(String url)", "Error converting data " + e.toString());
+			Log.e(TAG + "getJsonArrayFromUrl(String url)", "Error converting data ", e );
 		}
 		return jsonArray;
 	}
@@ -110,7 +110,7 @@ public class JsonHelper {
 			input = entity.getContent();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error in http connection " + e.toString()); 
+			Log.e(TAG + ".getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error in http connection ", e ); 
 		}
 
 		try {
@@ -124,14 +124,14 @@ public class JsonHelper {
 			result = content.toString();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error parsing result " + e.toString());
+			Log.e(TAG + ".getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error parsing result ", e);
 		}
 		
 		try {
 			jsonArray = new JSONArray(result);
 		}
 		catch (JSONException e) {
-			Log.v(TAG + "getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data " + e.toString());
+			Log.v(TAG + "getJsonArrayFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data ", e );
 			return null; // should this be here?
 		}
 		return jsonArray;
@@ -150,7 +150,7 @@ public class JsonHelper {
 			input = entity.getContent();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonObjectFromUrlWithData(String url, List<NameValuePair> datas)", "Error in http connection " + e.toString()); 
+			Log.e(TAG + ".getJsonObjectFromUrlWithData(String url, List<NameValuePair> datas)", "Error in http connection ", e ); 
 		}
 
 		try {
@@ -164,13 +164,13 @@ public class JsonHelper {
 			result = content.toString();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".getJsonObjectFromUrlWithData(String url, List<NameValuePair> datas)", "Error parsing result " + e.toString());
+			Log.e(TAG + ".getJsonObjectFromUrlWithData(String url, List<NameValuePair> datas)", "Error parsing result ", e );
 		}
 		try {
 			json = new JSONObject(result);
 		}
 		catch (JSONException e) {
-			Log.e(TAG + ".getJsonObjectFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data " + e.toString());
+			Log.e(TAG + ".getJsonObjectFromUrlWithData(String url, List<NameValuePair> datas)", "Error converting data ", e );
 		}
 		return json;
 	}
