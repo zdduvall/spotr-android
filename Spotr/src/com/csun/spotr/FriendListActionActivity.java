@@ -38,9 +38,11 @@ import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.UserItemAdapter;
+import com.csun.spotr.asynctask.SearchFriendsTask;
+import com.csun.spotr.asynctask.SendFriendRequestTask;
 
 /**
- * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ * NOTE: Refactoring by Chan Nguyen: 03/11/2012
  **/
 
 /**
@@ -52,15 +54,13 @@ public class FriendListActionActivity
 		implements IActivityProgressUpdate<UserItem> {
 	
 	private static final String TAG = "(FriendListActionActivity)";
-	private static final String SEARCH_FRIENDS_URL = "http://107.22.209.62/android/search_friends.php";
-	private static final String SEND_REQUEST_URL = "http://107.22.209.62/android/send_friend_request.php";
 	
-	private ListView 			listview = null;
-	private UserItemAdapter 	adapter = null;
-	private List<UserItem> 		userItemList = null;
+	private ListView listview = null;
+	private UserItemAdapter adapter = null;
+	private List<UserItem> userItemList = null;
 	
-	private EditText 			editTextSearch = null;
-	private	SearchFriendsTask 	task = null;
+	private EditText editTextSearch = null;
+	private	SearchFriendsTask task = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -104,72 +104,6 @@ public class FriendListActionActivity
 		listview.setOnScrollListener(new SeachFriendsOnScrollListener());
 	}
 
-	private class SearchFriendsTask 
-		extends AsyncTask<Void, UserItem, Boolean> 
-			implements IAsyncTask<FriendListActionActivity> {
-			
-		private static final String TAG = "[AsyncTask].SearchFriendTask";
-		private WeakReference<FriendListActionActivity> ref;
-		private final String criteria;
-		private final int offset;
-
-		public SearchFriendsTask(FriendListActionActivity a, String criteria, int offset) {
-			this.criteria = criteria;
-			this.offset = offset;
-			attach(a);
-		}
-
-		private List<NameValuePair> prepareUploadData() {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("text", criteria));
-			data.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-			return data;
-		}
-
-		@Override
-		protected void onProgressUpdate(UserItem... u) {
-			ref.get().updateAsyncTaskProgress(u[0]);
-		}
-
-		@Override
-		protected Boolean doInBackground(Void...voids) {
-			List<NameValuePair> data = prepareUploadData();
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(SEARCH_FRIENDS_URL, data);
-			if (array != null) {
-				try {
-					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(
-							new UserItem(
-								array.getJSONObject(i).getInt("users_tbl_id"), 
-								array.getJSONObject(i).getString("users_tbl_username"), 
-								array.getJSONObject(i).getString("users_tbl_user_image_url")));
-					}
-				}
-				catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
-				}
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			detach();
-		}
-
-		public void attach(FriendListActionActivity a) {
-			ref = new WeakReference<FriendListActionActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
-		}
-	}
-
 	private void startDialog(final UserItem user) {
 		AlertDialog.Builder builder;
 		final AlertDialog dialog;
@@ -199,77 +133,6 @@ public class FriendListActionActivity
 		
 		dialog = builder.create();
 		dialog.show();
-	}
-
-	private static class SendFriendRequestTask 
-		extends AsyncTask<String, Integer, Boolean> 
-			implements IAsyncTask<FriendListActionActivity> {
-		
-		private static final String TAG = "[AsyncTask].SendFriendRequestTask";
-		private WeakReference<FriendListActionActivity> ref;
-
-		public SendFriendRequestTask(FriendListActionActivity a) {
-			attach(a);
-		}
-		
-		@Override
-		protected Boolean doInBackground(String... datas) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("users_id", datas[0].toString()));
-			data.add(new BasicNameValuePair("friend_id", datas[1].toString()));
-			data.add(new BasicNameValuePair("friend_message", datas[2].toString()));
-			
-			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(SEND_REQUEST_URL, data);
-			
-			try {
-				if (json.getString("result").equals("success")) {
-					return true;
-				}
-			}
-			catch (JSONException e) {
-				Log.e(TAG + ".doInBackGround(String... datas) : ", "JSON error parsing data" + e.toString());
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			detach();
-		}
-		
-		public void attach(FriendListActionActivity a) {
-			ref = new WeakReference<FriendListActionActivity>(a);
-		}
-		
-		public void detach() {
-			ref.clear();
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon :
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_logout_icon :
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_mainmenu_icon :
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			finish();
-			break;
-		}
-		return true;
 	}
 
 	public void updateAsyncTaskProgress(UserItem u) {
