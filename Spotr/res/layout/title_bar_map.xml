@@ -14,7 +14,7 @@
                 style="@style/TitleBarHomeBeacon" />
             
 	        <ImageView style="@style/TitleBarLogo" />
-	
+
         </LinearLayout>
         
         <TextView
@@ -40,11 +40,6 @@
             android:id="@+id/title_bar_map_btn_places"
             style="@style/TitleBarButton.MapPlaces" />
         
-         <View style="@style/VerticalSpacer.TitleBar" />
-
-        <ImageButton
-            android:id="@+id/title_bar_map_btn_change_view"
-            style="@style/TitleBarButton.MapPlaces" />
     </LinearLayout>
 
 </LinearLayout>

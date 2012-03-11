@@ -19,13 +19,17 @@ import com.csun.spotr.util.JsonHelper;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ExpandableListView;
@@ -46,7 +50,7 @@ import android.widget.ExpandableListView.OnGroupExpandListener;
 public class FriendListActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<UserItem> {
-	
+
 	private static final String TAG = "(FriendListActivity)";
 	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
 
@@ -60,12 +64,32 @@ public class FriendListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_main);
 		setupListView();
+		// make sure keyboard of edit text do not populate
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		// initially, we load 10 items and show users immediately
 		task = new GetFriendsTask(this, 0);
 		task.execute();
 	}
-	
+
+	public void setupDynamicSearch() {
+		EditText edittextSearch = (EditText) findViewById(R.id.friend_list_main_xml_edittext_search);
+		edittextSearch.setEnabled(true);
+		edittextSearch.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
+			}
+		});
+	}
+
 	private void setupListView() {
 		// initialize list view
 		listView = (ExpandableListView) findViewById(R.id.friend_list_main_xml_listview_friends);
@@ -75,15 +99,15 @@ public class FriendListActivity
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		int width = metrics.widthPixels;
 		listView.setIndicatorBounds(width - getDipsFromPixel(50), width - getDipsFromPixel(10));
-		
+
 		// set up list view adapter
 		adapter = new ExpandableUserItemAdapter(this, userItemList);
 		listView.setAdapter(adapter);
-		
+
 		// handle item scrolling event
 		listView.setOnScrollListener(new FeedOnScrollListener());
 	}
-	
+
     public int getDipsFromPixel(float pixels) {
     	// get the screen's density scale
     	final float scale = getResources().getDisplayMetrics().density;
@@ -143,6 +167,7 @@ public class FriendListActivity
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			ref.get().setupDynamicSearch();
 			detach();
 		}
 
@@ -154,12 +179,12 @@ public class FriendListActivity
 			ref.clear();
 		}
 	}
-	
+
 	public void updateAsyncTaskProgress(UserItem u) {
 		userItemList.add(u);
 		adapter.notifyDataSetChanged();
 	}
-				
+
 	@Override 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -169,20 +194,20 @@ public class FriendListActivity
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	public class FeedOnScrollListener implements OnScrollListener {
 	    private int visibleThreshold = 10;
 	    private int currentPage = 0;
 	    private int previousTotal = 0;
 	    private boolean loading = true;
-	 
+
 	    public FeedOnScrollListener() {
-	    	
+
 	    }
 	    public FeedOnScrollListener(int visibleThreshold) {
 	        this.visibleThreshold = visibleThreshold;
 	    }
-	 
+
 	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 	        if (loading) {
 	            if (totalItemCount > previousTotal) {
@@ -196,18 +221,18 @@ public class FriendListActivity
 	            loading = true;
 	        }
 	    }
-	 
+
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
 	}
-	
+
 	@Override 
 	public void onResume() {
 		Log.v(TAG, "I'm resumed");
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");

@@ -84,7 +84,6 @@ public class PlaceActivity
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
 		// make sure keyboard of edit text do not populate
