@@ -52,7 +52,6 @@ public class SnapPictureChallengeActivity
 	private 				String 			spotsId;
 	private 				String 			challengesId;
 	private 				String 			description;
-	private 				String			link;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,9 +110,8 @@ public class SnapPictureChallengeActivity
 						// encode it
 						String byteCode = Base64.encodeBytes(src);
 						
-						EditText editTextLink = (EditText) findViewById(R.id.snap_picture_xml_edittext_link);
-						link = editTextLink.getText().toString();
-						UploadPictueTask task = new UploadPictueTask(SnapPictureChallengeActivity.this, byteCode, usersId, spotsId, challengesId, description, link);
+						
+						UploadPictueTask task = new UploadPictueTask(SnapPictureChallengeActivity.this, byteCode, usersId, spotsId, challengesId, description, null);
 						task.execute();
 					}
 				});
