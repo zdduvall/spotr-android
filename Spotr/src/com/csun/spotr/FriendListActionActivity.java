@@ -1,22 +1,12 @@
 package com.csun.spotr;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -27,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -35,8 +24,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.UserItemAdapter;
 import com.csun.spotr.asynctask.SearchFriendsTask;
 import com.csun.spotr.asynctask.SendFriendRequestTask;

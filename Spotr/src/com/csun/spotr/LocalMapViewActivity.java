@@ -309,15 +309,6 @@ public class LocalMapViewActivity extends MapActivity {
 	
 	public void updateFriendTaskProgress(FriendAndLocation f) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getName(), f.getTime());
-		try {
-			Drawable icon = getImageFromUrl(f.getPictureUrl());
-			icon.setBounds(0, 0, 50, 50);
-			overlay.setMarker(icon);
-		}
-		catch (Exception e) {
-			Log.e(TAG, "getImageFromUrl() has encountered unexpected error", e);
-		}
-		
 		// add to item to map
 		userOverlay.addOverlay(overlay, f);
 		mapController.animateTo(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)));
@@ -332,7 +323,7 @@ public class LocalMapViewActivity extends MapActivity {
 	}
 	
 	private Drawable getImageFromUrl(String url) throws Exception {
-		return Drawable.createFromStream((InputStream)new URL(url).getContent(), "src");
+		return Drawable.createFromStream((InputStream) new URL(url).getContent(), "src");
 	}
 	
 
