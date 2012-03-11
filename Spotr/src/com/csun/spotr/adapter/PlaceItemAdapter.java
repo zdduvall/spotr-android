@@ -1,5 +1,6 @@
 package com.csun.spotr.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.csun.spotr.core.adapter_item.PlaceItem;
@@ -11,12 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
 import android.widget.TextView;
-
 
 public class PlaceItemAdapter extends BaseAdapter {
 	private Context context;
 	private List<PlaceItem> items;
+	private List<PlaceItem> origin;
 	private static LayoutInflater inflater;
 	private ItemViewHolder holder;
 	
@@ -25,6 +27,7 @@ public class PlaceItemAdapter extends BaseAdapter {
 		this.context = context.getApplicationContext();
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.items = items;
+		this.origin = items;
 	}
 
 	public int getCount() {
@@ -85,5 +88,42 @@ public class PlaceItemAdapter extends BaseAdapter {
 		}
 		return address;
 	}
+	
+	public Filter getFilter() {
+		return new Filter() {
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint, FilterResults results) {
+				items = (List<PlaceItem>) results.values;
+				PlaceItemAdapter.this.notifyDataSetChanged();
+			}
 
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+				List<PlaceItem> filteredResults = null;
+				
+				// use original data
+				if (constraint.toString().equals("")) {
+					filteredResults = origin;
+				}
+				else {
+					filteredResults = getFilterList(constraint);
+				}
+
+				results.values = filteredResults;
+				return results;
+			}
+			
+			private List<PlaceItem> getFilterList(CharSequence constraint) {
+				List<PlaceItem> data = new ArrayList<PlaceItem>();
+				for (PlaceItem p : origin) { 
+					if (p.getName().contains(constraint))
+						data.add(p);
+				}
+				return data;
+			}
+		};
+	}
+	
 }
