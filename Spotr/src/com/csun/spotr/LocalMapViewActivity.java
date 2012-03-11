@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.PlaceIconUtil;
 import com.csun.spotr.util.FineLocation.LocationResult;
+import com.csun.spotr.asynctask.DownloadImageTask;
 import com.csun.spotr.asynctask.GetFriendLocationsTask;
 import com.csun.spotr.asynctask.GetMapSpotsTask;
 import com.csun.spotr.asynctask.PingMeTask;
@@ -309,6 +310,7 @@ public class LocalMapViewActivity extends MapActivity {
 	
 	public void updateFriendTaskProgress(FriendAndLocation f) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getName(), f.getTime());
+		new DownloadImageTask(this, overlay).execute(f.getPictureUrl());
 		// add to item to map
 		userOverlay.addOverlay(overlay, f);
 		mapController.animateTo(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)));
@@ -321,11 +323,6 @@ public class LocalMapViewActivity extends MapActivity {
 		overlay.setMarker(PlaceIconUtil.getMapIconByType(this, p.getType()));
 		return overlay;
 	}
-	
-	private Drawable getImageFromUrl(String url) throws Exception {
-		return Drawable.createFromStream((InputStream) new URL(url).getContent(), "src");
-	}
-	
 
 	@Override
 	public void onResume() {
