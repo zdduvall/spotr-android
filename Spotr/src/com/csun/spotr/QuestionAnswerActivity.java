@@ -18,50 +18,48 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-/*
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description
  * 		Display question and let user response 
- */
+ **/
 public class QuestionAnswerActivity 
 	extends Activity {
 	
-	private static final 	String 					TAG = "(SnapPictureActivity)";
-	private static final 	String 					QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
+	private static final String TAG = "(QuestionAnswerActivity)";
+	private static final String QUESTION_ANSWER_URL = "http://107.22.209.62/android/do_question_answer.php";
+	private static final int INTENT_RESULT_LINK = 0;
+	private String usersId;
+	private String spotsId;
+	private String challengesId;
+	private String challengeQuestion;
+	private String userAnswer;
+	private String link;
 	
-	private 				String 					usersId;
-	private 				String 					spotsId;
-	private 				String 					challengesId;
-	private 				String 					challengeQuestion;
-	private 				String 					userAnswer;
-	private 				String 					link;
-	
-	private 				QuestionAnswerTask 		task = null;
+	private QuestionAnswerTask task = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.question_answer);
-		
-		Bundle extras = getIntent().getExtras();
-		usersId = extras.getString("users_id");
-		spotsId = extras.getString("spots_id");
-		challengesId = extras.getString("challenges_id");
-		challengeQuestion = extras.getString("question_description");
+		initChallengeInfoFromBundle();
+		setupUIandListener();
+	}
 	
+	private void setupUIandListener() {
 		TextView textViewQuestion = (TextView) findViewById(R.id.question_answer_xml_textview_question);
 		textViewQuestion.setText(challengeQuestion);
 		
@@ -87,17 +85,25 @@ public class QuestionAnswerActivity
 		
 		buttonLink.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				int dummy = 0;
 				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
-				startActivityForResult(intent, 0);
+				startActivityForResult(intent, INTENT_RESULT_LINK);
 			}
 		});
+	}
+	
+	private void initChallengeInfoFromBundle() {
+		Bundle extras = getIntent().getExtras();
+		usersId = extras.getString("users_id");
+		spotsId = extras.getString("spots_id");
+		challengesId = extras.getString("challenges_id");
+		challengeQuestion = extras.getString("question_description");
 	}
 
 	private static class QuestionAnswerTask 
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<QuestionAnswerActivity> {
 		
+		private static final String TAG = "[AsyncTask].QuestionAnswerTask";
 		private ProgressDialog progressDialog;
 		private WeakReference<QuestionAnswerActivity> ref;
 		private String usersId;
@@ -125,23 +131,26 @@ public class QuestionAnswerActivity
 			progressDialog.show();
 		}
 
-		@Override
-		protected String doInBackground(Void... params) {
+		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
 			data.add(new BasicNameValuePair("users_id", usersId));
 			data.add(new BasicNameValuePair("spots_id", spotsId));
 			data.add(new BasicNameValuePair("challenges_id", challengesId));
 			data.add(new BasicNameValuePair("user_answer", userAnswer));
 			data.add(new BasicNameValuePair("link", link));
-			
+			return data;
+		}
+		
+		@Override
+		protected String doInBackground(Void... params) {
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(QUESTION_ANSWER_URL, data);
 			String result = "";
 			try {
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "QuestionAnswerTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "QuestionAnswerTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}
@@ -155,7 +164,20 @@ public class QuestionAnswerActivity
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
 			}
-				
+			else if(result.equals("fail")) {
+				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
+				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
+				dialogMessage.setMessage("You have already answered this question.");
+				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				dialogMessage.show();	
+			}
+			else {
+				Log.e(TAG, "unexpected error has occured!");
+			}
 		}
 
 		public void attach(QuestionAnswerActivity a) {
@@ -179,11 +201,21 @@ public class QuestionAnswerActivity
 		dialogMessage.show();	
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 0) {
+			if (resultCode == RESULT_OK) {
+				Bundle b = data.getExtras();
+				String url = b.getString("link");
+				EditText editTextUrl = (EditText) findViewById(R.id.question_answer_xml_edittext_link);
+				editTextUrl.setText(url);
+			}
+		}
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
@@ -208,41 +240,5 @@ public class QuestionAnswerActivity
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-		}
-		return true;
-	}
-	
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 0) {
-			if (resultCode == RESULT_OK) {
-				Bundle b = data.getExtras();
-				String url = b.getString("link");
-				EditText editTextUrl = (EditText) findViewById(R.id.question_answer_xml_edittext_link);
-				editTextUrl.setText(url);
-			}
-		}
 	}
 }

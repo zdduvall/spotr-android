@@ -15,9 +15,7 @@ import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +25,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 public class RewardViewActivity extends Activity {
 	private static final String TAG = "(RewardViewActivity)";
@@ -38,36 +40,46 @@ public class RewardViewActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reward_view);
-		
+		final Bundle extras = getIntent().getExtras();
+		displayBadgeInfo(extras);
+		displayImage(extras.getString("url"));
+		setupConvertButton(CurrentUser.getCurrentUser().getId(), extras.getInt("id"), extras.getInt("points"));
+	}
+	
+	private void displayBadgeInfo(Bundle extras) {
 		TextView textViewName = (TextView) findViewById(R.id.reward_view_xml_textview_name);
 		TextView textViewDescription = (TextView) findViewById(R.id.reward_view_xml_textview_description);
 		TextView textViewPoints = (TextView) findViewById(R.id.reward_view_xml_textview_points);
 		TextView textViewDate = (TextView) findViewById(R.id.reward_view_xml_textview_date);
-		ImageView imageViewBadge = (ImageView) findViewById(R.id.reward_view_xml_imageview_badge);
 		Button buttonConvert = (Button) findViewById(R.id.reward_view_xml_button_convert);
 		
-		final Bundle extras = getIntent().getExtras();
+		if (extras.getInt("points") == -1) {
+			buttonConvert.setVisibility(View.GONE);
+			textViewPoints.setVisibility(View.GONE);
+			textViewDate.setVisibility(View.GONE);
+		}
+		
 		textViewName.setText(extras.getString("name"));
 		textViewDescription.setText(extras.getString("description"));
 		textViewDate.setText(extras.getString("date"));
 		textViewPoints.setText(Integer.toString(extras.getInt("points")));
-		
+	}
+	
+	private void displayImage(String url) {
+		ImageView imageViewBadge = (ImageView) findViewById(R.id.reward_view_xml_imageview_badge);
 		ImageLoader imageLoader = new ImageLoader(this);
-		imageLoader.displayImage(extras.getString("url"), imageViewBadge);
-		
+		imageLoader.displayImage(url, imageViewBadge);
+	}
+	
+	private void setupConvertButton(final int userId, final int badgeId, final int points) {
+		Button buttonConvert = (Button) findViewById(R.id.reward_view_xml_button_convert);
 		buttonConvert.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				task = new ConvertBadgeTask(
-					RewardViewActivity.this, 
-					CurrentUser.getCurrentUser().getId(), 
-					extras.getInt("id"), 
-					extras.getInt("points"));
-				
+				task = new ConvertBadgeTask(RewardViewActivity.this, userId, badgeId, points);
 				task.execute();
 			}
 		});
 	}
-	
 	private static class ConvertBadgeTask 
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<RewardViewActivity> {
@@ -102,7 +114,7 @@ public class RewardViewActivity extends Activity {
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "ConvertBadgeTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "ConvertBadgeTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}

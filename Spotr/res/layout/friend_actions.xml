@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/FriendActionRow" >
+    
+    <LinearLayout
+        style="@style/FriendActionsContainer" >
+        
+	    <Button
+	        android:id="@+id/friend_btn_send_message"
+	        style="@style/FriendBtnMessage" />
+	    
+	    <Button
+	        android:id="@+id/friend_btn_view_profile"
+	        style="@style/FriendBtnProfile" />
+    </LinearLayout>
+    
+    <View style="@style/FriendActionsShadowBorderTop" />
+    
+    <View style="@style/FriendActionsShadowBorderBottom" />
+    
+</RelativeLayout>

@@ -163,6 +163,7 @@ public class ImageLoader {
 		public void run() {
 			if (imageViewReused(photoToLoad))
 				return;
+			
 			if (bitmap != null) {
 				photoToLoad.imageView.setImageBitmap(bitmap);
 			}

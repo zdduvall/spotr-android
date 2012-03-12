@@ -3,13 +3,11 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.csun.spotr.core.Treasure;
 import com.csun.spotr.singleton.CurrentUser;
@@ -22,13 +20,12 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 /**
  * Description:
@@ -60,6 +57,7 @@ public class GenerateTreasureActivity
 		extends AsyncTask<Void, Treasure, Boolean> 
 			implements IAsyncTask<GenerateTreasureActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetRandomTreasureTask";
 		private WeakReference<GenerateTreasureActivity> ref;
 		private int placeId;
 		private int userId;
@@ -70,9 +68,11 @@ public class GenerateTreasureActivity
 			this.placeId = placeId;
 		}
 
-		@Override
-		protected void onPreExecute() {
-		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("spot_id", Integer.toString(placeId)));
+			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
+			return data;
 		}
 
 		@Override
@@ -82,10 +82,7 @@ public class GenerateTreasureActivity
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("spot_id", Integer.toString(placeId)));
-			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
-			
+			List<NameValuePair> data = prepareUploadData();
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_RANDOM_TREASURE_URL, data);
 			if (array != null) {
 				try {
@@ -101,7 +98,7 @@ public class GenerateTreasureActivity
 						);
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetRandomTreasureTask.doInBackGround(Void... voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void... voids) : ", "JSON error parsing data", e );
 					
 					
 				}
@@ -127,17 +124,55 @@ public class GenerateTreasureActivity
 	}
 	
 	public void updateAsyncTaskProgress(Treasure t) {
+		displayTreasureInfo(t);
+		displayTreasureImage(t);
+	}
+	
+	private void displayTreasureInfo(Treasure t) {
 		TextView textViewName = (TextView) findViewById(R.id.generate_treasure_xml_textview_name);
 		TextView textViewCompany = (TextView) findViewById(R.id.generate_treasure_xml_textview_company);
 		TextView textViewExpirationDate = (TextView) findViewById(R.id.generate_treasure_xml_textview_expiration_date);
 		TextView textViewBarcode = (TextView) findViewById(R.id.generate_treasure_xml_textview_barcode);
-		ImageView imageViewIcon = (ImageView) findViewById(R.id.generate_treasure_xml_imageview_icon);
 		
-		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 		textViewName.setText(t.getName());
 		textViewCompany.setText(t.getCompany());
 		textViewExpirationDate.setText(t.getExpirationDate());
 		textViewBarcode.setText(t.getCode());
+	}
+	
+	private void displayTreasureImage(Treasure t) {
+		ImageView imageViewIcon = (ImageView) findViewById(R.id.generate_treasure_xml_imageview_icon);
+		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 		imageLoader.displayImage(t.getIconUrl(), imageViewIcon);
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

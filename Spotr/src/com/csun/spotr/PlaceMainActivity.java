@@ -4,27 +4,31 @@ import com.csun.spotr.custom_gui.FlingableTabHost;
 
 import android.app.TabActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.TabHost;
 import android.widget.TextView;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 /**
  * Description:
  * 		Framework for Spots
  */
-public class PlaceMainActivity extends BasicSpotrTabActivity {
+public class PlaceMainActivity extends TabActivity {
 	private static final String TAG = "(PlaceMainActivity)";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.place_main);
 		
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
@@ -61,23 +65,6 @@ public class PlaceMainActivity extends BasicSpotrTabActivity {
 				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
-
-		/*
-		intent = new Intent().setClass(this, PlaceInfoActivity.class);
-		// pass this extra to PlaceInfoActivity
-		intent.putExtras(extras);
-		
-		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
-	    tv = (TextView) customTabView.findViewById(R.id.tabText);
-	    tv.setText("About");
-		spec = tabHost
-				.newTabSpec("about")
-				.setIndicator(customTabView)
-				.setContent(intent);
-		tabHost.addTab(spec);
-		// set current tab to action
-		tabHost.setCurrentTab(0);
-		*/
 	}
 		
 	@Override
@@ -90,5 +77,36 @@ public class PlaceMainActivity extends BasicSpotrTabActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return true;
+	}
+	
+
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

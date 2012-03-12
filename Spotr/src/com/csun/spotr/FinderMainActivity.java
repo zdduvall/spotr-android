@@ -13,14 +13,14 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-public class FinderMainActivity extends BasicSpotrTabActivity {
+public class FinderMainActivity extends TabActivity {
 	private final static String TAG = "(FinderMainActivity)";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(TAG, "Starting FinderMainActivity");
-		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.place_main);
 		
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost();

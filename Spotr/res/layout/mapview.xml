@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/aluminum6"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/aluminum6"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/mapview_xml_button_friend_distance"
+            style="@style/TreasureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Friend distance"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/mapview_xml_button_place_distance"
+            style="@style/TreasureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Place distance"
+            android:textSize="10dp" />
+    </LinearLayout>
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview_xml_map"
-        android:apiKey="@string/google_api_key"
         style="@style/MapView" />
-    
+
 </LinearLayout>

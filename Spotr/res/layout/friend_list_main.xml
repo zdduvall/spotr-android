@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/SpotrGeneralBackground" >
+    style="@style/SpotrGeneralBackground">
 
-    <LinearLayout style="@style/LinearLayoutShadow.FriendsList" >
+    <EditText
+        android:id="@+id/friend_list_main_xml_edittext_search"
+        style="@style/SpotsSearchBar"
+        android:enabled="false" />
 
-        <com.csun.spotr.custom_gui.RoundedRectListView
-            android:id="@+id/friend_list_main_xml_listview_friends"
-            style="@style/RoundedRectListView" >
-        </com.csun.spotr.custom_gui.RoundedRectListView>
-    </LinearLayout>
+    <ExpandableListView
+        android:id="@+id/friend_list_main_xml_listview_friends"
+        style="@style/FriendList" />
 
 </LinearLayout>

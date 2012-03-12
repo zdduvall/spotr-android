@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.csun.spotr.R;
-import com.csun.spotr.adapter.CommentItemAdapter.ItemViewHolder;
-import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.Inbox;
 import com.csun.spotr.util.ImageLoader;
 

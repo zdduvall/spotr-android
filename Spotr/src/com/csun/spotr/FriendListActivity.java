@@ -9,212 +9,111 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-
+import com.csun.spotr.adapter.ExpandableUserItemAdapter;
+import com.csun.spotr.asynctask.GetFriendsTask;
 import com.csun.spotr.core.adapter_item.UserItem;
-import com.csun.spotr.adapter.UserItemAdapter;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.AbsListView.OnScrollListener;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ * NOTE: Merged commit by Chris: 03/07/2012
+ **/
+
 /**
  * Description:
  * 		This class will retrieve a list of friends from database.
+ *
  */
 public class FriendListActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<UserItem> {
-	
+
 	private static final String TAG = "(FriendListActivity)";
-	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
-	
-	private ListView listview = null;
-	public UserItemAdapter adapter = null;
+
+	public ExpandableListView listView = null;	
+	public ExpandableUserItemAdapter adapter = null;
 	public List<UserItem> userItemList = new ArrayList<UserItem>();
 	public GetFriendsTask task = null;
-	
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.friend_list_main);
+		setupListView();
+		// make sure keyboard of edit text do not populate
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		// initialize list view
-		listview = (ListView) findViewById(R.id.friend_list_main_xml_listview_friends);
-
-		// set up list view adapter
-		adapter = new UserItemAdapter(this, userItemList);
-		listview.setAdapter(adapter);
-		listview.setVisibility(View.VISIBLE);
-
-		// handle item click event
-		listview.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startDialog(userItemList.get(position));
-			}
-		});
-
-		// initially, we load 10 items and show user immediately
+		// initially, we load 10 items and show users immediately
 		task = new GetFriendsTask(this, 0);
 		task.execute();
-
-		// handle scrolling event
-		listview.setOnScrollListener(new FeedOnScrollListener());
 	}
 
-	private static class GetFriendsTask 
-		extends AsyncTask<Void, UserItem, Boolean> 
-			implements IAsyncTask<FriendListActivity> {
-		
-		private WeakReference<FriendListActivity> ref;
-		private int offset;
+	public void setupDynamicSearch() {
+		EditText edittextSearch = (EditText) findViewById(R.id.friend_list_main_xml_edittext_search);
+		edittextSearch.setEnabled(true);
+		edittextSearch.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-		public GetFriendsTask(FriendListActivity a, int offset) {
-			attach(a);
-			this.offset = offset;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected void onProgressUpdate(UserItem... u) {
-			ref.get().updateAsyncTaskProgress(u[0]);
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
-			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			
-			// send offset
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-			
-			// retrieve data from server
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
-			
-			if (array != null) {
-				try {
-					if (ref.get().task.isCancelled()) {
-						return true;
-					}
-					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(
-							new UserItem(
-								array.getJSONObject(i).getInt("users_tbl_id"), 
-								array.getJSONObject(i).getString("users_tbl_username"), 
-								array.getJSONObject(i).getString("users_tbl_user_image_url")));
-					}
-				}
-				catch (JSONException e) {
-					Log.e(TAG + "GetFriendTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
-				}
-				return true;
 			}
-			return false;
-		}
 
-		@Override
-		protected void onPostExecute(Boolean result) {
-			detach();
-		}
-		
-		public void attach(FriendListActivity a) {
-			ref = new WeakReference<FriendListActivity>(a);
-		}
-		
-		public void detach() {
-			ref.clear();
-		}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
+			}
+		});
 	}
-	
+
+	private void setupListView() {
+		// initialize list view
+		listView = (ExpandableListView) findViewById(R.id.friend_list_main_xml_listview_friends);
+
+		// set indicators
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		int width = metrics.widthPixels;
+		listView.setIndicatorBounds(width - getDipsFromPixel(50), width - getDipsFromPixel(10));
+
+		// set up list view adapter
+		adapter = new ExpandableUserItemAdapter(this, userItemList);
+		listView.setAdapter(adapter);
+
+		// handle item scrolling event
+		listView.setOnScrollListener(new FeedOnScrollListener());
+	}
+
+    public int getDipsFromPixel(float pixels) {
+    	// get the screen's density scale
+    	final float scale = getResources().getDisplayMetrics().density;
+     
+    	// convert the dps to pixels, based on density scale
+    	return (int) (pixels * scale + 0.5f);
+    }
+    
 	public void updateAsyncTaskProgress(UserItem u) {
 		userItemList.add(u);
 		adapter.notifyDataSetChanged();
 	}
 
-	private void startDialog(final UserItem user) {
-		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
-		myAlertDialog.setTitle("Friend Dialog");
-		myAlertDialog.setMessage("Pick an option");
-		myAlertDialog.setPositiveButton("Send a message", new DialogInterface.OnClickListener() {
-			// do something when the button is clicked
-			public void onClick(DialogInterface arg0, int arg1) {
-				
-			}
-		});
-
-		myAlertDialog.setNegativeButton("View profile", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-				Bundle extras = new Bundle();
-				extras.putInt("user_id", user.getId());
-				intent.putExtras(extras);
-				startActivity(intent);
-				finish();
-			}
-		});
-		myAlertDialog.show();
-	}
-
-	@Override
-	public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case 0:
-			return new 
-				AlertDialog.Builder(this)
-					.setIcon(R.drawable.error_circle)
-					.setTitle("Error Message")
-					.setMessage("No friends!")
-					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							
-						}
-					}).create();
-		
-		case 1: 
-			return new 
-					AlertDialog.Builder(this)
-						.setIcon(R.drawable.error_circle)
-						.setTitle("Error Message")
-						.setMessage("<undefined>")
-						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								
-							}
-						}).create();
-		}
-		return null;
-	}
-	
 	@Override 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -224,20 +123,20 @@ public class FriendListActivity
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	public class FeedOnScrollListener implements OnScrollListener {
 	    private int visibleThreshold = 10;
 	    private int currentPage = 0;
 	    private int previousTotal = 0;
 	    private boolean loading = true;
-	 
+
 	    public FeedOnScrollListener() {
-	    	
+
 	    }
 	    public FeedOnScrollListener(int visibleThreshold) {
 	        this.visibleThreshold = visibleThreshold;
 	    }
-	 
+
 	    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 	        if (loading) {
 	            if (totalItemCount > previousTotal) {
@@ -251,9 +150,39 @@ public class FriendListActivity
 	            loading = true;
 	        }
 	    }
-	 
+
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

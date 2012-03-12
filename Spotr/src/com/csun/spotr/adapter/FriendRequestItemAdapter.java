@@ -5,11 +5,9 @@ import java.util.List;
 import com.csun.spotr.R;
 import com.csun.spotr.core.adapter_item.FriendRequestItem;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -43,6 +41,18 @@ public class FriendRequestItemAdapter extends BaseAdapter {
 		TextView textViewTime;
 	}
 
+	
+	/*  Reason Comment:
+	 *  Removed if/else ladder. Part of NOTIFICATION FEED
+	 *   
+	 *  Date commented out: March 10, 2012
+	 *  Commenter:	Edgardo A. Campos
+	 *  
+	 *  WHAT WAS COMMENTED OUT:	
+	 *  
+	 *  if/else ladder. items.get(position).getType() returns an Integer value. Notification list
+	 *  message would have been patterned to the notification type. Strings are placeholders and can change at any time
+	 */	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ItemViewHolder holder;
 		if (convertView == null) {
@@ -57,18 +67,8 @@ public class FriendRequestItemAdapter extends BaseAdapter {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
 		holder.textViewOrder.setText(items.get(position).getFriendName());
-		if(items.get(position).getType() == 1)
-		{
-			holder.textViewMessage.setText(" has sent you a request \"" + items.get(position).getMessage() + "\"");
-		}
-		else if(items.get(position).getType() == 2)
-		{
-			holder.textViewMessage.setText(" has replied to your comment.");
-		}
-		else //curently assumed reward
-			holder.textViewMessage.setText(" REWARD TIME!");
+		holder.textViewMessage.setText(" has sent you a request \"" + items.get(position).getMessage() + "\"");
 		holder.textViewTime.setText(items.get(position).getTime());
-		
 		return convertView;
 	}
 }

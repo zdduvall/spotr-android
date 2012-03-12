@@ -13,7 +13,6 @@ import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -29,11 +28,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 /*
  * Description
@@ -42,33 +44,52 @@ import android.widget.TextView;
 public class WriteOnWallActivity 
 		extends BasicSpotrActivity {
 	
-	private static final 	String 		TAG = "(WriteOnWallActivity)";
-	private static final 	String 		WRITE_ON_WALL_URL = "http://107.22.209.62/android/do_write_on_wall.php";
+	private static final String TAG = "(WriteOnWallActivity)";
+	private static final String WRITE_ON_WALL_URL = "http://107.22.209.62/android/do_write_on_wall.php";
+	private static final int INTENT_RESULT_LINK = 0;
 	
-	private 				String 		usersId;
-	private 				String 		spotsId;
-	private 				String 		challengesId;
-	private 				String 		message;
-	private 				String 		link;
+	private String usersId;
+	private String spotsId;
+	private String challengesId;
+	private String message;
+	private String link;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.write_on_wall);
 		
-		final Button buttonPost = (Button) findViewById(R.id.write_on_wall_xml_button_submit);
-		buttonPost.setEnabled(false);
+		initChallengeInfoFromBundle();
 		
-		final Button buttonLink = (Button) findViewById(R.id.write_on_wall_xml_button_choose_link);
-		final TextView textViewCount = (TextView) findViewById(R.id.write_on_wall_xml_textview_character_count);
-		final EditText editTextMessage = (EditText) findViewById(R.id.write_on_wall_xml_edittext_message_box);
+		setupMessageBox();
 		
+		setupLinkButton();
+	}
+	
+	private void initChallengeInfoFromBundle() {
 		Bundle extras = getIntent().getExtras();
 		usersId = extras.getString("users_id");
 		spotsId = extras.getString("spots_id");
 		challengesId = extras.getString("challenges_id");
-
+	}
+	
+	private void setupLinkButton() {
+		Button buttonLink = (Button) findViewById(R.id.write_on_wall_xml_button_choose_link);
+		buttonLink.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
+				startActivityForResult(intent, INTENT_RESULT_LINK);
+			}
+		});
+	}
+	
+	private void setupMessageBox() {
+		final Button buttonPost = (Button) findViewById(R.id.write_on_wall_xml_button_submit);
+		final EditText editTextMessage = (EditText) findViewById(R.id.write_on_wall_xml_edittext_message_box);
+		final TextView textViewCount = (TextView) findViewById(R.id.write_on_wall_xml_textview_character_count);
+		
+		buttonPost.setEnabled(false);
+		
 		editTextMessage.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				textViewCount.setText(String.valueOf(s.length()) + "/100");
@@ -100,15 +121,6 @@ public class WriteOnWallActivity
 				}
 			}
 		});
-		
-		buttonLink.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				int dummy = 0;
-				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
-				startActivityForResult(intent, 0);
-			}
-		});
-		
 	}
 	
 	private void displayErrorMessage() {
@@ -154,23 +166,26 @@ public class WriteOnWallActivity
 			progressDialog.show();
 		}
 
-		@Override
-		protected String doInBackground(Void... voids) {
+		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
 			data.add(new BasicNameValuePair("users_id", usersId));
 			data.add(new BasicNameValuePair("spots_id", spotsId));
 			data.add(new BasicNameValuePair("challenges_id", challengesId));
 			data.add(new BasicNameValuePair("comment", message));
 			data.add(new BasicNameValuePair("link", link));
-			
+			return data;
+		}
+		
+		@Override
+		protected String doInBackground(Void... voids) {
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(WRITE_ON_WALL_URL, data);
 			String result = "";
 			try {
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "WriteOnWallTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "WriteOnWallTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}
@@ -183,6 +198,20 @@ public class WriteOnWallActivity
 				intent.setData(Uri.parse("done"));
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
+			}
+			else if(result.equals("fail")) {
+				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
+				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
+				dialogMessage.setMessage("You can only Write On Wall once per day. Sorry.");
+				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				dialogMessage.show();	
+			}
+			else {
+				Log.e(TAG, "unexpected error has occured!");
 			}
 			
 			detach();
@@ -235,6 +264,12 @@ public class WriteOnWallActivity
 				editTextUrl.setText(url);
 			}
 		}
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override

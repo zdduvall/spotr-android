@@ -9,15 +9,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -46,17 +43,21 @@ public class QuestActivity
 	private QuestItemAdapter adapter;
 	private List<QuestItem> questList = new ArrayList<QuestItem>();
 	private GetQuestTask task = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest);
-		
 		setupTitleBar();
-
+		setupListView();
+		task = new GetQuestTask(this);
+		task.execute();
+	}
+	
+	private void setupListView() {
 		listview = (ListView) findViewById(R.id.quest_xml_listview_quest_list);
 		adapter = new QuestItemAdapter(getApplicationContext(), questList);
 		listview.setAdapter(adapter);
-		
 		
 		// handle event when click on specific quest
 		listview.setOnItemClickListener(new OnItemClickListener() {
@@ -73,8 +74,10 @@ public class QuestActivity
 			}
 		});
 		
-		task = new GetQuestTask(this);
-		task.execute();
+		/**
+		 * TODO: need to handle OnsSrollListener event for ListView
+		 **/
+		Log.v(TAG, "need to handle OnScrollListener event for ListView");
 	}
 	
 	@Override
@@ -88,6 +91,7 @@ public class QuestActivity
 		extends AsyncTask<Integer, QuestItem, Boolean> 
 			implements IAsyncTask<QuestActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetQuestTask";
 		private WeakReference<QuestActivity> ref;
 		
 		public GetQuestTask(QuestActivity a) {
@@ -141,7 +145,7 @@ public class QuestActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetQuestTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -162,18 +166,6 @@ public class QuestActivity
 		}
 	}
 	
-	@Override
-	public void onPause() {
-		Log.v(TAG,"I'm paused");
-		super.onPause();
-	}
-	
-	@Override
-	public void onDestroy() {
-		Log.v(TAG,"I'm destroyed");
-		super.onPause();
-	}
-
 	public void updateAsyncTaskProgress(QuestItem q) {
 		questList.add(q);
 		adapter.notifyDataSetChanged();
@@ -187,5 +179,36 @@ public class QuestActivity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

@@ -3,7 +3,6 @@ package com.csun.spotr.adapter;
 import java.util.List;
 
 import com.csun.spotr.core.Comment;
-import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.R;
 import com.csun.spotr.util.ImageLoader;
 

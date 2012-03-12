@@ -3,64 +3,64 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.adapter.FriendRequestItemAdapter;
-import com.csun.spotr.core.adapter_item.FriendRequestItem;
-import com.csun.spotr.custom_gui.DashboardLayout;
-import com.csun.spotr.custom_gui.DraggableGridView;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import com.csun.spotr.adapter.FriendRequestItemAdapter;
+import com.csun.spotr.core.adapter_item.FriendRequestItem;
+import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
 
 /**
  * Description:
  * 		Main menu
  */
+
 public class MainMenuActivity 
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<FriendRequestItem> {
 	
 	private static final 	String 						TAG = "(MainMenuActivity)";
-	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/beta_get_friend_requests.php";
+/*  Reason Comment: BETA php script commented out due to the fact that the group ran out of time
+ *  for implementing actual LIVE notifications.
+ *  Left in comments in the event LIVE notifications want to be implemented AFTER the project showcase
+ *  Date commented out: March 10, 2012
+ *  Commenter:	Edgardo A. Campos
+ *  WHAT WAS COMMENTED OUT:
+ *  
+ *	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/beta_get_friend_requests.php";
+ *
+ */	
+	private static final 	String 						GET_REQUEST_URL = "http://107.22.209.62/android/get_friend_requests.php";
 	private static final 	String 						ADD_FRIEND_URL = "http://107.22.209.62/android/add_friend.php";
 	private static final 	String 						IGNORE_FRIEND_URL = "http://107.22.209.62/android/ignore_friend.php";
 	
 	private 				List<FriendRequestItem> 	friendRequestList = null;
 	private 				int 						currentSelectedFriendId;
-	private 				DashboardLayout 			dashboard = null;
+	//private 				DashboardLayout 			dashboard = null;
 	private 				ListView 					listview;
 	private 				FriendRequestItemAdapter 	adapter;
 	
@@ -86,8 +86,8 @@ public class MainMenuActivity
 		/*
 		 * Chan Nguyen (3/3/2012): temporary disable due to crashing other activities
 		 */
-		// GetFriendRequestTask task = new GetFriendRequestTask(this);
-		// task.execute();
+		 GetFriendRequestTask task = new GetFriendRequestTask(this);
+		 task.execute();
 	}
 	
 	@Override
@@ -132,8 +132,7 @@ public class MainMenuActivity
 			startActivity(intent);
 		}
 		else if (id == R.id.main_menu_btn_ping) {
-		 	intent = new Intent(getApplicationContext(), PingMapActivity.class);
-			startActivity(intent);   
+		 	// remove ping map activity
 		}
 		else if (id == R.id.main_menu_btn_inventory) {
 			intent = new Intent(getApplicationContext(), InventoryActivity.class);
@@ -169,6 +168,18 @@ public class MainMenuActivity
 		protected void onPreExecute() {
 		}
 		
+		
+		/*  Reason Comment:
+		 *  Removing item in doInBackground(Void...voids) to return Notification feed back to a 
+		 *  plain friends list notification. Does not interact with old PHP script
+		 *
+		 *  Date commented out: March 10, 2012
+		 *  Commenter:	Edgardo A. Campos
+		 *  
+		 *  WHAT WAS COMMENTED OUT/REMOVED:	
+		 *  
+		 *  array.getJSONObject(i).getInt("user_requests_tbl_type")));
+		 */	
 		@Override
 		protected Boolean doInBackground(Void...voids) {
 			friendData.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
@@ -181,12 +192,11 @@ public class MainMenuActivity
 								array.getJSONObject(i).getInt("user_requests_tbl_friend_id"),
 								array.getJSONObject(i).getString("users_tbl_username"),
 								array.getJSONObject(i).getString("user_requests_tbl_friend_message"),
-								array.getJSONObject(i).getString("user_requests_tbl_time"),
-								array.getJSONObject(i).getInt("user_requests_tbl_type")));
+								array.getJSONObject(i).getString("user_requests_tbl_time")));
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetFriendRequestTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetFriendRequestTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -240,7 +250,7 @@ public class MainMenuActivity
 				}
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "AcceptFriendTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "AcceptFriendTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return false;
 		}
@@ -335,96 +345,46 @@ public class MainMenuActivity
 		return null;
 	}
 	
+	/*  Reason Comment:
+	 *  Removed the start dialog box that created item specific dialog boxes for Friend Requests,
+	 *  User Comments, and Rewards for the Notification Feed.
+	 * 
+	 *  Date commented out: March 10, 2012
+	 *  Commenter:	Edgardo A. Campos
+	 *  
+	 *  WHAT WAS COMMENTED OUT:	
+	 *	
+	 *	an if/else branch that got the type for each specific friendRequestList.get(position) and generated 
+	 *  a dialogBox with accept/decline options based on the type of notification.
+	 *  estimated 18-28 lines of code
+	 *  
+	 */	
+	
 	public void startDialog(final int position) {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
-		if(friendRequestList.get(position).getType() == 1)
-		{
 		myAlertDialog.setTitle("Request Dialog");
 		myAlertDialog.setMessage("Accept this Friend Request?");
-		myAlertDialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+		myAlertDialog.setPositiveButton("Accept Request", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
 				if(friendRequestList.size() != 0)
 				{
 					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-				//	task.execute(ADD_FRIEND_URL);
+					task.execute(ADD_FRIEND_URL);
 				}
 			}
 		});
 		
-		myAlertDialog.setNegativeButton("Decline Friend Request", new DialogInterface.OnClickListener() {
+		myAlertDialog.setNegativeButton("Decline Request", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface arg0, int arg1) {
 				UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
 				if(friendRequestList.size() != 0)
 				{
-				currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-			//	task.execute(IGNORE_FRIEND_URL);
+					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
+					task.execute(IGNORE_FRIEND_URL);
 				}
 			}
 		});
 		myAlertDialog.show();
-		}
-		else if(friendRequestList.get(position).getType() == 2)
-		{	//Custom Dialog for the comment Notification
-			myAlertDialog.setTitle("Comment Dialog");
-			myAlertDialog.setMessage("View Comment Thread?");
-			myAlertDialog.setPositiveButton("Show Me!", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-					if(friendRequestList.size() != 0)
-					{
-						Bundle extras = new Bundle();
-						extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-						Intent newIntent = new Intent(getApplicationContext(), ProfileMainActivity.class);
-						newIntent.putExtras(extras);
-						//task.execute(IGNORE_FRIEND_URL);
-						startActivity(newIntent);
-					}
-				}
-			});
-			
-			myAlertDialog.setNegativeButton("Ignore/Hide", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-					if(friendRequestList.size() != 0)
-					{
-					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-					//task.execute(IGNORE_FRIEND_URL);
-					}
-				}
-			});
-			myAlertDialog.show();
-		}
-		else
-		{	//For Now everything else will be treated as a reward
-			myAlertDialog.setTitle("Rewards Dialog");
-			myAlertDialog.setMessage("View Rewards");
-			myAlertDialog.setPositiveButton("Lets Go!", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-					if(friendRequestList.size() != 0)
-					{
-						Bundle extras = new Bundle();
-						extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-						Intent newIntent = new Intent(getApplicationContext(), RewardActivity.class);
-						newIntent.putExtras(extras);
-						//task.execute(IGNORE_FRIEND_URL);
-						startActivity(newIntent);
-					}
-				}
-			});
-			
-			myAlertDialog.setNegativeButton("Ignore/Hide", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface arg0, int arg1) {
-					UpdateFriendTask task = new UpdateFriendTask(MainMenuActivity.this);
-					if(friendRequestList.size() != 0)
-					{
-					currentSelectedFriendId = friendRequestList.get(position).getFriendId();
-					//task.execute(IGNORE_FRIEND_URL);
-					}
-				}
-			});
-			myAlertDialog.show();
-		}
 	}
 }

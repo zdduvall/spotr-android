@@ -2,20 +2,28 @@ package com.csun.spotr;
 
 import com.csun.spotr.custom_gui.FlingableTabHost;
 
+import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
-public class ProfileMainActivity extends BasicSpotrTabActivity {
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+public class ProfileMainActivity extends TabActivity {
 	private final static String TAG = "(ProfileMainActivity)";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.place_main);
 		
 		FlingableTabHost tabHost = (FlingableTabHost) getTabHost(); 
@@ -72,5 +80,35 @@ public class ProfileMainActivity extends BasicSpotrTabActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.all_menu, menu);
 		return true;
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

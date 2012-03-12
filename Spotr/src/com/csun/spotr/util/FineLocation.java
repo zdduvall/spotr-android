@@ -11,6 +11,9 @@ import android.util.Log;
 
 public class FineLocation {
 	private static final String TAG = "(FineLocation)";
+	private static final int TWO_MINUTES = 1000 * 60 * 2;
+	private static final int ONE_MINUTE = 1000 * 60 * 1;
+	
 	Timer clock;
 	LocationManager lm;
 	LocationResult locationResult;
@@ -47,7 +50,7 @@ public class FineLocation {
 			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networkListener);
 		
 		clock = new Timer();
-		clock.schedule(new GetLastLocation(), 20000);
+		clock.schedule(new GetLastLocation(), TWO_MINUTES);
 		return true;
 	}
 

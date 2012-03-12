@@ -6,7 +6,6 @@ import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.R;
 import com.csun.spotr.util.ImageLoader;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,7 @@ public class UserItemAdapter extends BaseAdapter {
 		TextView textViewName;
 		ImageView imageViewPicture;
 	}
-
+	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.user_item, null);

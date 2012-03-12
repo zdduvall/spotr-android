@@ -19,6 +19,9 @@ import org.apache.http.protocol.HTTP;
 public class CustomHttpClient {
 	private static final String TAG = "[CustomHttpClient]";
 	private static HttpClient customHttpClient;
+	private static final int ONE_SECOND = 1000;
+	private static final int ONE_MINUTE = ONE_SECOND * 60;
+	private static final int TWO_MINUTE = ONE_SECOND * 120;
 	
 	/* A private Constructor prevents any other class from instantiating. */
 	private CustomHttpClient() {
@@ -30,9 +33,9 @@ public class CustomHttpClient {
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, HTTP.DEFAULT_CONTENT_CHARSET);
 			HttpProtocolParams.setUseExpectContinue(params, true);
-			ConnManagerParams.setTimeout(params, 1000);
-			HttpConnectionParams.setConnectionTimeout(params, 5000);
-			HttpConnectionParams.setSoTimeout(params, 10000);
+			ConnManagerParams.setTimeout(params, TWO_MINUTE);
+			HttpConnectionParams.setConnectionTimeout(params, TWO_MINUTE);
+			HttpConnectionParams.setSoTimeout(params, TWO_MINUTE);
 			SchemeRegistry schReg = new SchemeRegistry();
 			schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 			schReg.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));

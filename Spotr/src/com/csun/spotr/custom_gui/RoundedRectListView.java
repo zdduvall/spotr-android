@@ -1,15 +1,11 @@
 package com.csun.spotr.custom_gui;
 
-import com.csun.spotr.R;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Path.Direction;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
-import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 import android.widget.ListView;
 

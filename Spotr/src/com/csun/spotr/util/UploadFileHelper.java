@@ -32,7 +32,7 @@ public class UploadFileHelper {
 			input = entity.getContent();
 		}
 		catch (Exception e) {
-			Log.e("TAG", "Error in Http connection" + e.toString());
+			Log.e("TAG", "Error in Http connection", e );
 		}
 		
 		try {
@@ -46,13 +46,13 @@ public class UploadFileHelper {
 			result = content.toString();
 		}
 		catch (Exception e) {
-			Log.e(TAG + ".uploadFileToServer(String url, List<NameValuePair> datas)", "Error parsing result " + e.toString());
+			Log.e(TAG + ".uploadFileToServer(String url, List<NameValuePair> datas)", "Error parsing result ", e );
 		}
 		try {
 			json = new JSONObject(result);
 		}
 		catch (JSONException e) {
-			Log.e(TAG + ".uploadFileToServer(String url, List<NameValuePair> datas)", "Error converting data " + e.toString());
+			Log.e(TAG + ".uploadFileToServer(String url, List<NameValuePair> datas)", "Error converting data ", e );
 		}
 		return json;
 	}

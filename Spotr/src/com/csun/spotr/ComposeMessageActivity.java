@@ -6,21 +6,15 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.Inbox;
-import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +27,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 public class ComposeMessageActivity extends Activity {
 
@@ -47,7 +46,10 @@ public class ComposeMessageActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.compose_message);
-
+		setupSendMessageUI();
+	}
+	
+	private void setupSendMessageUI() {
 		final Button buttonChooseUser = (Button) findViewById(R.id.compose_message_xml_button_choose_user);
 		editTextTo = (EditText) findViewById(R.id.compose_message_xml_edittext_to);
 		editTextMessage = (EditText) findViewById(R.id.compose_message_xml_edittext_message);
@@ -96,6 +98,7 @@ public class ComposeMessageActivity extends Activity {
 		extends AsyncTask<Void, Inbox, Boolean> 
 			implements IAsyncTask<ComposeMessageActivity> {
 
+		private static final String TAG = "[AsyncTask].SendMessageTask";
 		private WeakReference<ComposeMessageActivity> ref;
 		private int userId;
 		private int friendId;
@@ -108,18 +111,17 @@ public class ComposeMessageActivity extends Activity {
 			attach(a);
 		}
 
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... voids) {
+		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("user_id", Integer.toString(userId)));
 			data.add(new BasicNameValuePair("friend_id", Integer.toString(friendId)));
 			data.add(new BasicNameValuePair("friend_message", message));
+			return data;
+		}
 
+		@Override
+		protected Boolean doInBackground(Void... voids) {
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(SEND_INBOX_MESSAGE_URL, data);
 			String result = "";
 			try {
@@ -128,7 +130,7 @@ public class ComposeMessageActivity extends Activity {
 					return true;
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "SendMessageTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return false;
 		}
@@ -159,22 +161,41 @@ public class ComposeMessageActivity extends Activity {
 		}
 	}
 
+	/*Commenting since it's unused.
 	private boolean canSend() {
 		if (toUserId != -1 && editTextMessage.getText().toString().length() > 0) {
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
-	@Override
-	public void onPause() {
-		Log.v(TAG,"I'm paused");
-		super.onPause();
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
 	public void onDestroy() {
-		Log.v(TAG,"I'm destroyed");
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
 }

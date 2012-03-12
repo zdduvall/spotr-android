@@ -2,43 +2,41 @@ package com.csun.spotr;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.csun.spotr.adapter.CheckInUserItemAdapter;
-import com.csun.spotr.adapter.EventAdapter;
-import com.csun.spotr.core.Event;
-import com.csun.spotr.core.adapter_item.SeekingItem;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ListView;
-import android.widget.Toast;
+import com.csun.spotr.adapter.CheckInUserItemAdapter;
+import com.csun.spotr.adapter.EventAdapter;
+import com.csun.spotr.core.Event;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 public class CheckInActivity 
-	extends Activity 
+	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<String> {
 	
 	private static final String TAG = "(CheckInActivity)";
@@ -61,12 +59,21 @@ public class CheckInActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.check_in);
-		
-		Bundle extras = getIntent().getExtras();
-		usersId = extras.getString("users_id");
-		spotsId = extras.getString("spots_id");
-		challengesId = extras.getString("challenges_id");
-		
+		setupTitleBar();
+		initUserDataFromBundle();
+		setupCheckInUserGallery();
+		setupEventListView();
+		setupCheckInButton();
+	
+		new GetCheckInUsersTask(this, spotsId).execute();
+		new GetEventTask(this, spotsId).execute();
+	}
+	
+	protected void setupTitleBar() {
+		super.setupTitleBar();
+	}
+	
+	private void setupCheckInButton() {
 		Button checkin = (Button) findViewById(R.id.check_in_xml_button_checkin);
 		checkin.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -74,25 +81,41 @@ public class CheckInActivity
 				task.execute();
 			}
 		});
-		
+	}
+	
+	private void initUserDataFromBundle() {
+		Bundle extras = getIntent().getExtras();
+		usersId = extras.getString("users_id");
+		spotsId = extras.getString("spots_id");
+		challengesId = extras.getString("challenges_id");
+	}
+	
+	private void setupCheckInUserGallery() {
 		userImageList = new ArrayList<String>();
 		gallery = (Gallery) findViewById(R.id.check_in_xml_gallery_checkin_people);
 		adapter = new CheckInUserItemAdapter(this, userImageList);
 		gallery.setAdapter(adapter);
-		
+	}
+	
+	private void setupEventListView() {
 		eventList = new ArrayList<Event>();
 		listview = (ListView) findViewById(R.id.check_in_xml_listview_events);
 		eventAdapter = new EventAdapter(this, eventList);
 		listview.setAdapter(eventAdapter);
-		
-		new GetCheckInUsersTask(this, spotsId).execute();
-		new GetEventTask(this, spotsId).execute();
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getApplicationContext(), EventActivity.class);
+				intent.putExtra("event_link", eventList.get(position).getUrl());
+				startActivity(intent);
+			}
+		});
 	}
 	
 	private static class CheckInTask 
 		extends AsyncTask<Void, Void, String> 
 			implements IAsyncTask<CheckInActivity> {
 	
+		private static final String TAG = "[AsyncTask].CheckInTask";
 		private WeakReference<CheckInActivity> ref;
 		private String usersId;
 		private String spotsId;
@@ -105,10 +128,14 @@ public class CheckInActivity
 			this.challengesId = challengesId;
 		}
 	
-		@Override
-		protected void onPreExecute() {
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("users_id", usersId));
+			data.add(new BasicNameValuePair("spots_id", spotsId));
+			data.add(new BasicNameValuePair("challenges_id", challengesId));
+			return data;
 		}
-	
+		
 		@Override
 		protected String doInBackground(Void... voids) {
 			/*
@@ -131,11 +158,7 @@ public class CheckInActivity
 			 * 4. The return of this query is the number points is added the points added to the user account.
 			 */
 			
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("users_id", usersId));
-			data.add(new BasicNameValuePair("spots_id", spotsId));
-			data.add(new BasicNameValuePair("challenges_id", challengesId));
-			
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(DO_CHECK_IN_URL, data);
 			
 			String result = "";
@@ -144,7 +167,7 @@ public class CheckInActivity
 				result = json.getString("result");
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "CheckInTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return result;
 		}
@@ -154,6 +177,10 @@ public class CheckInActivity
 			if (result.equals("success")) {
 				Button checkin = (Button) ref.get().findViewById(R.id.check_in_xml_button_checkin);
 				checkin.setBackgroundColor(Color.RED);
+				Intent intent = new Intent();
+				intent.setData(Uri.parse("done"));
+				ref.get().setResult(RESULT_OK, intent);
+				ref.get().finish();
 			}
 			else {
 				ref.get().showDialog(0);
@@ -201,7 +228,7 @@ public class CheckInActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetCheckInUsersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetCheckInUsersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 			}
 			return true;
@@ -253,12 +280,12 @@ public class CheckInActivity
 								array.getJSONObject(i).getInt("event_tbl_id"),
 								array.getJSONObject(i).getString("event_tbl_name"),
 								array.getJSONObject(i).getString("event_tbl_context"),
-								array.getJSONObject(i).getString("event_tbl_image_url"),
+								array.getJSONObject(i).getString("event_tbl_url"),
 								array.getJSONObject(i).getString("event_tbl_time")));
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetEventTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetEventTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 			}
 			return true;
@@ -307,6 +334,11 @@ public class CheckInActivity
 		return null;
 	}
 	
+	public void updateAsyncTaskProgress(String u) {
+		userImageList.add(u);
+		adapter.notifyDataSetChanged();
+	}
+	
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");
@@ -330,9 +362,10 @@ public class CheckInActivity
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
-
-	public void updateAsyncTaskProgress(String u) {
-		userImageList.add(u);
-		adapter.notifyDataSetChanged();
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 }

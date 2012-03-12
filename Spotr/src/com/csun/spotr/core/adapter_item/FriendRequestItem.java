@@ -11,25 +11,24 @@ public class FriendRequestItem {
 		this.friendName = friendName;
 		this.message = message;
 		this.time = time;
-		this.type = 1;
-	}
-	/* Little test area. Adding a type variable
-	 * Author: Edgardo C.*/
-	private int type;
-	public FriendRequestItem(int friendId, String friendName, String message, String time, int type)
-	{
-		this.friendId = friendId;
-		this.friendName = friendName;
-		this.message = message;
-		this.time = time;
-		this.type = type;
 	}
 	
-	public int getType()
-	{
-		return type;
-	}
-	/* end little test area */
+	/* Reason for Comment:
+	 * 	Removed due to lack of time to implement a LIVE notification
+	 * 
+	 * Author: Edgardo A. Campos
+	 * Date: March 10, 2012
+	 *  
+	 *  WHAT WAS REMOVED
+	 *  
+	 *  private int type;
+	 *  public FriendRequestItem(int friendId, String friendName, String message, String time, int type)
+	 *  {	this.friendId = friendId;	this.friendName = friendName;	this.message = message;
+	 *	    this.time = time;	this.type = type;	}
+	 *	
+	 *	public int getType()
+	 *	{	return type;	}
+	 */
 	public int getFriendId() {
 		return friendId;
 	}

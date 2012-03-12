@@ -27,6 +27,10 @@ import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 
 /**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
+/**
  * Description: 
  * Display user's treasures
  **/
@@ -45,6 +49,11 @@ public class TreasureActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.treasure);
 
+		setupListView();
+		new GetUserTreasuresTask(this).execute();
+	}
+	
+	private void setupListView() {
 		listview = (ListView) findViewById(R.id.treasure_xml_listview);
 		adapter = new TreasureAdapter(this, treasureList);
 		listview.setAdapter(adapter);
@@ -54,15 +63,13 @@ public class TreasureActivity
 				
 			}
 		});
-		
-
-		new GetUserTreasuresTask(this).execute();
 	}
 	
 	private static class GetUserTreasuresTask
 		extends AsyncTask<Integer, Treasure, Boolean> 
 			implements IAsyncTask<TreasureActivity> {
 
+		private static final String TAG = "[AsyncTask].GetUserTreasuresTask";
 		private WeakReference<TreasureActivity> ref;
 
 		public GetUserTreasuresTask(TreasureActivity a) {
@@ -101,7 +108,7 @@ public class TreasureActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetUserTreasureTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -131,15 +138,33 @@ public class TreasureActivity
 		return null;
 	}
 	
-	@Override
-	public void onPause() {
-		Log.v(TAG,"I'm paused");
-		super.onPause();
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
 	public void onDestroy() {
-		Log.v(TAG,"I'm destroyed");
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
 }

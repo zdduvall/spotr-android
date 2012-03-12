@@ -3,115 +3,119 @@ package com.csun.spotr;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.EditText;
-import android.widget.ImageView.ScaleType;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.util.Log;
-
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
-
-import android.location.Location;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.csun.spotr.adapter.PlaceItemAdapter;
 import com.csun.spotr.core.adapter_item.PlaceItem;
 import com.csun.spotr.custom_gui.ActionItem;
 import com.csun.spotr.custom_gui.ToolbarAction;
-import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.util.GooglePlaceHelper;
 import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.adapter.PlaceItemAdapter;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 /**
  * Description:
- * Display all places around current phone's location
- */
+ * 		Display all places around current phone's location
+ **/
 public class PlaceActivity 
 	extends BasicSpotrActivity 
 		implements IActivityProgressUpdate<PlaceItem> {
 	
-	private static final 		String 				TAG = "(PlaceActivity)";
-	private static final 		String 				GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
-	private static final 		String 				UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
+	private static final String TAG = "(PlaceActivity)";
+	private static final String GET_SPOTS_URL = "http://107.22.209.62/android/get_spots.php";
+	private static final String UPDATE_GOOGLE_PLACES_URL = "http://107.22.209.62/android/update_google_places.php";
+	private static final int DIALOG_ID_LOADING = 1;
 	
-	private 					ListView 			list;
-	private 					PlaceItemAdapter 	adapter;
-	private 					List<PlaceItem> 	placeItemList = new ArrayList<PlaceItem>();
-	private 					Location 			lastKnownLocation = null;
-	private 					FineLocation 		fineLocation = new FineLocation();
+	private ListView list;
+	private PlaceItemAdapter adapter;
+	private List<PlaceItem> placeItemList = new ArrayList<PlaceItem>();
+	private FineLocation fineLocation = new FineLocation();
 	
-	private static final int 	ID_BONUS 	 = 1;
-	private static final int 	ID_LOAN 	 = 2;
-	private static final int 	ID_TELESCOPE = 3;
-	private static final int 	ID_TELEPORT  = 4;
-	private static final int 	ID_SNEAK 	 = 5;
-	private static final int 	ID_LUCK 	 = 6;	
-	private static final int 	ID_SHORTCUT  = 7;
+	private static final int ID_BONUS 	  = 1;
+	private static final int ID_LOAN 	  = 2;
+	private static final int ID_TELESCOPE = 3;
+	private static final int ID_TELEPORT  = 4;
+	private static final int ID_SNEAK 	  = 5;
+	private static final int ID_LUCK 	  = 6;	
+	private static final int ID_SHORTCUT  = 7;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.v(TAG, "I'm created!");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place);
-
-		setupTitleBar();
-		
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-	
-		list = (ListView) findViewById(R.id.place_xml_listview_places);
-		adapter = new PlaceItemAdapter(this.getApplicationContext(), placeItemList);
-		list.setAdapter(adapter);
 		
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(getApplicationContext(), PlaceMainActivity.class);
-				Bundle extras = new Bundle();
-				extras.putInt("place_id", placeItemList.get(position).getId());
-				intent.putExtras(extras);
-				startActivity(intent);
+		showDialog(DIALOG_ID_LOADING);
+		setupTitleBar();
+		setupListView();
+		setupPowerupToolbar();
+		findLocation(); 
+	}
+	
+	public void setupDynamicSearch() {
+		EditText edittextSearch = (EditText) findViewById(R.id.place_xml_edittext_search);
+		edittextSearch.setEnabled(true);
+		edittextSearch.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				
+			}
+			
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
 			}
 		});
-				
-		findLocation(); // refresh button activated once location is found
-		
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		if(id == DIALOG_ID_LOADING){
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			loadingDialog.setMessage("Loading from Google places...");
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(false);
+			return loadingDialog;
+		}
+		return null;
+	}
+
+	
+	private void setupPowerupToolbar() {
 		ActionItem itemBonus = new ActionItem(ID_BONUS, "Bonus", getResources().getDrawable(R.drawable.pu_bonus_32));
 		ActionItem itemLoan = new ActionItem(ID_LOAN, "Loan", getResources().getDrawable(R.drawable.pu_loan_32));
         ActionItem itemLuck = new ActionItem(ID_LUCK, "Luck", getResources().getDrawable(R.drawable.pu_luck_32));
@@ -121,7 +125,6 @@ public class PlaceActivity
         ActionItem itemTelescope = new ActionItem(ID_TELESCOPE, "Telescope", getResources().getDrawable(R.drawable.pu_telescope_32));
 
         itemBonus.setSticky(true);
-        
         final ToolbarAction quickAction = new ToolbarAction(this, ToolbarAction.HORIZONTAL);
 		
 		// add action items into QuickAction
@@ -142,6 +145,22 @@ public class PlaceActivity
 		});        	
 	}
 	
+	private void setupListView() {
+		list = (ListView) findViewById(R.id.place_xml_listview_places);
+		adapter = new PlaceItemAdapter(this.getApplicationContext(), placeItemList);
+		list.setAdapter(adapter);
+		
+		list.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getApplicationContext(), PlaceMainActivity.class);
+				Bundle extras = new Bundle();
+				extras.putInt("place_id", adapter.getCurrentItem(position).getId());
+				intent.putExtras(extras);
+				startActivity(intent);
+			}
+		});
+	}
+	
 	@Override
 	protected void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
@@ -157,7 +176,9 @@ public class PlaceActivity
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
-				lastKnownLocation = location;
+				if (location != null) {
+					new GetSpotsTask(PlaceActivity.this, location).execute();
+				}
 				activateRefreshButton();
 			}
 		});
@@ -175,7 +196,7 @@ public class PlaceActivity
 		refreshButton.setScaleType(ScaleType.FIT_XY);
 		refreshButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new GetSpotsTask(PlaceActivity.this).execute();
+				// do nothing
 			}
 		});
 	}
@@ -191,10 +212,22 @@ public class PlaceActivity
 		extends AsyncTask<Void, PlaceItem, Boolean> 
 			implements IAsyncTask<PlaceActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetSpotsTask";
 		private WeakReference<PlaceActivity> ref;
+		private Location location;
 		
-		public GetSpotsTask(PlaceActivity a) {
+		public GetSpotsTask(PlaceActivity a, Location loc) {
 			attach(a);
+			location = loc;
+		}
+		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			// now sending latitude, longitude and radius to retrieve places
+			data.add(new BasicNameValuePair("latitude", Double.toString(location.getLatitude())));
+			data.add(new BasicNameValuePair("longitude", Double.toString(location.getLongitude())));
+			data.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
+			return data;
 		}
 		
 		private List<NameValuePair> constructGooglePlace() {
@@ -202,7 +235,7 @@ public class PlaceActivity
 			List<NameValuePair> sentData = new ArrayList<NameValuePair>();
 			// we reformat the original data to include only what we need
 			JSONArray reformattedData = new JSONArray();
-			JSONObject json = JsonHelper.getJsonFromUrl(GooglePlaceHelper.buildGooglePlacesUrl(ref.get().lastKnownLocation, GooglePlaceHelper.GOOGLE_RADIUS_IN_METER));
+			JSONObject json = JsonHelper.getJsonFromUrl(GooglePlaceHelper.buildGooglePlacesUrl(location, GooglePlaceHelper.GOOGLE_RADIUS_IN_METER));
 			JSONObject temp = null;
 			
 			try {
@@ -242,7 +275,7 @@ public class PlaceActivity
 				}
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetSpotsTask.constructGooglePlace() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + ".constructGooglePlace() : ", "JSON error parsing data", e );
 			}
 			// send data to our server
 			sentData.add(new BasicNameValuePair("google_array", reformattedData.toString()));
@@ -250,27 +283,20 @@ public class PlaceActivity
 		}
 		
 		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
 		protected void onProgressUpdate(PlaceItem... p) {
-			ref.get().updateAsyncTaskProgress(p[0]);
+			if (ref != null && !ref.get().isFinishing()) {
+				ref.get().dismissDialog(DIALOG_ID_LOADING);
+				ref.get().updateAsyncTaskProgress(p[0]);
+			}
 		}
 
 		@Override
 		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> placeData = new ArrayList<NameValuePair>();
 			// send Google data to our server to update 'spots' table
 			JsonHelper.getJsonObjectFromUrlWithData(UPDATE_GOOGLE_PLACES_URL, constructGooglePlace());
-			
-			// now sending latitude, longitude and radius to retrieve places
-			placeData.add(new BasicNameValuePair("latitude", Double.toString(ref.get().lastKnownLocation.getLatitude())));
-			placeData.add(new BasicNameValuePair("longitude", Double.toString(ref.get().lastKnownLocation.getLongitude())));
-			placeData.add(new BasicNameValuePair("radius", GooglePlaceHelper.RADIUS_IN_KM));
-			
+			List<NameValuePair> data = prepareUploadData();
 			// get places as JSON format from our database
-			JSONArray jsonPlaceArray = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, placeData);
+			JSONArray jsonPlaceArray = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOTS_URL, data);
 			if (jsonPlaceArray != null) {
 				try {
 					for (int i = 0; i < jsonPlaceArray.length(); ++i) {
@@ -282,7 +308,7 @@ public class PlaceActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetSpotsTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetSpotsTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -291,7 +317,7 @@ public class PlaceActivity
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			detach();
+			ref.get().setupDynamicSearch();
 		}
 
 		public void attach(PlaceActivity a) {
@@ -304,44 +330,21 @@ public class PlaceActivity
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
+	public void updateAsyncTaskProgress(PlaceItem p) {
+		placeItemList.add(p);
+		adapter.notifyDataSetChanged();
 	}
-
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon :
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			break;
-		case R.id.options_menu_xml_item_logout_icon :
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			break;
-		case R.id.options_menu_xml_item_mainmenu_icon :
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			break;
-			
-		case R.id.options_menu_xml_item_toolbar_icon:
-			HorizontalScrollView toolbar = (HorizontalScrollView)findViewById(R.id.place_xml_imageview_toolbar_button);
-			if (toolbar.getVisibility() == View.VISIBLE) {
-				toolbar.setVisibility(View.GONE);
-			}
-			else {
-				toolbar.setVisibility(View.VISIBLE);
-			}
-			break;
-		}
-		return true;
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
 	}
 
 	@Override
@@ -360,16 +363,5 @@ public class PlaceActivity
 	public void onPause() {
 		Log.v(TAG, "I'm paused!");
 		super.onPause();
-	}
-
-	@Override
-	public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-		super.onDestroy();
-	}
-
-	public void updateAsyncTaskProgress(PlaceItem p) {
-		placeItemList.add(p);
-		adapter.notifyDataSetChanged();
 	}
 }

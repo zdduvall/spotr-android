@@ -1,83 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#34B7E3"
-    android:orientation="vertical" >
+    style="@style/SpotrGeneralBackground.CheckIn" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#34B7E3"
-        android:orientation="horizontal" >
+    <!-- Place info and check-in -->
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/city_map" />
+    <LinearLayout 
+        style="@style/LinearLayoutShadow.CheckIn"
+        android:layout_marginBottom="15dp" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+        <LinearLayout style="@style/LinearLayoutRounded.CheckIn" >
 
             <TextView
                 android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Place Name"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/SpotName.CheckIn" />
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Andress" />
+                style="@style/SpotAddress.CheckIn" />
+
+            <Button
+                android:id="@+id/check_in_xml_button_checkin"
+                style="@style/MainCheckInButton" />
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/check_in_xml_button_checkin"
-        android:layout_width="fill_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/btn_green_matte"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="Check In Here"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:text="Who else is here"
+        android:textColor="@color/aluminum6"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:text="See who's here"
-        />
-    <Gallery
-        android:id="@+id/check_in_xml_gallery_checkin_people"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:text="Upcoming events"
-        />
+    <LinearLayout 
+        style="@style/LinearLayoutShadow.CheckIn"
+        android:layout_marginBottom="15dp" >
 
-    <com.csun.spotr.custom_gui.RoundedRectListView
-        android:id="@+id/check_in_xml_listview_events"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </com.csun.spotr.custom_gui.RoundedRectListView>
-    
+        <LinearLayout style="@style/LinearLayoutRounded.CheckIn" >
+
+            <Gallery
+                android:id="@+id/check_in_xml_gallery_checkin_people"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:spacing="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upcoming events"
+        android:textColor="@color/aluminum6"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout style="@style/LinearLayoutShadow.CheckIn" >
+
+        <com.csun.spotr.custom_gui.RoundedRectListView
+            android:id="@+id/check_in_xml_listview_events"
+            style="@style/RoundedRectListView" >
+        </com.csun.spotr.custom_gui.RoundedRectListView>
+    </LinearLayout>
+
 </LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@drawable/rectangle_gradient_al6_al5d5" />
+    
+    <item android:bottom="44dp">
+        
+        <shape android:shape="rectangle" >
+            
+            <solid android:color="#32ffffff" />
+        </shape>
+    </item>
+    
+    <item android:top="44dp">
+        
+        <shape android:shape="rectangle" >
+            
+            <solid android:color="#462e3436" />
+        </shape>  
+    </item>
+
+</layer-list>

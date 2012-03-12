@@ -14,16 +14,17 @@
         style="@style/SpotsSearchBarLabel"
         android:visibility="gone" />
 
-    <!-- WTF IS THIS? WHY IS THIS HERE? I DON'T UNDERSTAND WHAT IT'S FOR -->
+   
     <EditText
         android:id="@+id/place_xml_edittext_search"
+        android:enabled="false"
         style="@style/SpotsSearchBar"
-        android:visibility="gone" />
+        />
 
     <TextView
         android:id="@+id/place_xml_textview_search_title"
         style="@style/SpotsResultsLabel"
-        android:visibility="gone" />
+        />
     
     <ListView
         android:id="@+id/place_xml_listview_places"

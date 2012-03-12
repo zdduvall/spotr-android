@@ -1,6 +1,8 @@
 package com.csun.spotr.asynctask;
 
 import com.csun.spotr.singleton.CustomHttpClient;
+import com.google.android.maps.OverlayItem;
+
 import java.io.IOException;
 
 import org.apache.http.HttpResponse;
@@ -11,47 +13,37 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-public class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
+public class DownloadImageTask extends AsyncTask<String, Integer, Drawable> {
 	private Context context;
+	private OverlayItem overlay;
 
-	DownloadImageTask(Context context) {
+	public DownloadImageTask(Context context, OverlayItem overlay) {
 		this.context = context;
+		this.overlay = overlay;
 	}
 
-	protected void onPreExecute() {
-		// We could do some setup work here before doInBackground() runs
+	protected Drawable doInBackground(String... urls) {
+		return scaleBitmapToDrawable(downloadImage(urls));
 	}
 
-	protected Bitmap doInBackground(String... urls) {
-		Log.v("doInBackground", "doing download of image");
-		return downloadImage(urls);
+	@Override
+	protected void onPostExecute(Drawable result) {
+		result.setBounds(0, 0, result.getIntrinsicWidth(), result.getIntrinsicHeight());
+		overlay.setMarker(result);
 	}
-
-	protected void onProgressUpdate(Integer... progress) {
-		// TextView mText = (TextView) ((Activity) mContext).findViewById(R.id.text);
-		// mText.setText("Progress so far: " + progress[0]);
-	}
-
-	protected void onPostExecute(Bitmap result) {
-		/*
-		if (result != null) {
-			ImageView mImage = (ImageView) ((Activity) context).findViewById(R.id.image);
-			mImage.setImageBitmap(result);
-		}
-		else {
-			TextView errorMsg = (TextView) ((Activity) context).findViewById(R.id.errorMsg);
-			errorMsg.setText("Problem downloading image. Please try again later.");
-		}
-		*/
+	
+	private Drawable scaleBitmapToDrawable(Bitmap bitmap) {
+		Drawable d = new BitmapDrawable(Bitmap.createScaledBitmap(bitmap, 45, 45, true));
+		bitmap.recycle();
+		bitmap = null;
+		return d;
 	}
 
 	private Bitmap downloadImage(String... urls) {
@@ -61,22 +53,12 @@ public class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
 			HttpParams params = new BasicHttpParams();
 			HttpConnectionParams.setSoTimeout(params, 60000); // 1 minute
 			request.setParams(params);
-			publishProgress(25);
 			HttpResponse response = httpClient.execute(request);
-			publishProgress(50);
 			byte[] image = EntityUtils.toByteArray(response.getEntity());
-			publishProgress(75);
 			Bitmap mBitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-			publishProgress(100);
 			return mBitmap;
 		}
 		catch (IOException e) {
-			// covers:
-			// ClientProtocolException
-			// ConnectTimeoutException
-			// ConnectionPoolTimeoutException
-			// SocketTimeoutException
-			e.printStackTrace();
 		}
 		return null;
 	}

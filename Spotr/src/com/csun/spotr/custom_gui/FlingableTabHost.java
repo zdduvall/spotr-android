@@ -1,6 +1,5 @@
 package com.csun.spotr.custom_gui;
 
-import android.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.TabHost;
 

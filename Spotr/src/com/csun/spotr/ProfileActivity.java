@@ -1,58 +1,37 @@
 package com.csun.spotr;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.csun.spotr.adapter.FriendFeedItemAdapter;
-import com.csun.spotr.adapter.ProfileItemAdapter;
-import com.csun.spotr.core.Challenge;
-import com.csun.spotr.core.Comment;
-import com.csun.spotr.core.User;
-import com.csun.spotr.core.adapter_item.FriendFeedItem;
-import com.csun.spotr.singleton.CurrentDateTime;
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.Base64;
-import com.csun.spotr.util.ImageLoader;
-import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.util.UploadFileHelper;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
+import com.csun.spotr.adapter.FriendFeedItemAdapter;
+import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Comment;
+import com.csun.spotr.core.User;
+import com.csun.spotr.core.adapter_item.FriendFeedItem;
+import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.ImageLoader;
+import com.csun.spotr.util.JsonHelper;
 
 /**
  * Description:
@@ -66,10 +45,8 @@ public class ProfileActivity
 	private static final String GET_USER_DETAIL_URL = "http://107.22.209.62/android/get_user_detail.php";
 	private static final String GET_USER_FEEDS = "http://107.22.209.62/android/get_current_user_feeds.php";
 	private static final String GET_FIRST_COMMENT_URL = "http://107.22.209.62/android/get_comment_first.php";
-	private static final String	UPDATE_PICTURE_URL = "http://107.22.209.62/images/upload_user_picture.php";
 	
-	private static final 	int CAMERA_PICTURE = 111;
-	private static final 	int GALLERY_PICTURE = 222;
+	private static final int INTENT_RESULT_EDIT_PROFILE = 1;
 	
 	private ListView 				listview;
 	private FriendFeedItemAdapter   adapter;
@@ -112,6 +89,8 @@ public class ProfileActivity
 		
 		Bundle extrasBundle = getIntent().getExtras();
 		userId = extrasBundle.getInt("user_id");
+		if(userId != CurrentUser.getCurrentUser().getId())
+			editButton.setVisibility(View.GONE);
 
 		// get user detail task for top portion
 		if (userId != -1) {
@@ -144,8 +123,7 @@ public class ProfileActivity
 			    extras.putString("hobbies", hobbies);
 				intent = new Intent("com.csun.spotr.ProfileEditActivity");
 				intent.putExtras(extras);
-				startActivity(intent);
-				finish();
+				startActivityForResult(intent, INTENT_RESULT_EDIT_PROFILE);
 			}
 		});
 		
@@ -177,69 +155,29 @@ public class ProfileActivity
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		ImageView temp = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
 		if (resultCode == RESULT_OK) {
-			if (requestCode == GALLERY_PICTURE) {
-				Uri selectedImageUri = data.getData();
-				String selectedImagePath = getPath(selectedImageUri);
-				bitmapUserPicture = BitmapFactory.decodeFile(selectedImagePath);
-				temp.setImageBitmap(bitmapUserPicture);
+			if (requestCode == INTENT_RESULT_EDIT_PROFILE) {
+				Bundle bundle = data.getExtras();
+				String imageUrl = bundle.getString("user_image_url"); 
+				String name = bundle.getString("username");
+				ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
+				ImageLoader imageLoader = new ImageLoader(getApplicationContext());
+				imageLoader.displayImage(imageUrl, imageViewUserPicture);
+				TextView textViewName = (TextView) findViewById(R.id.profile_xml_textview_profilename);
+				textViewName.setText(name);
+				updateFeedListView(name, imageUrl);
 			}
-			else if (requestCode == CAMERA_PICTURE) {
-				if (data.getExtras() != null) {
-					// here is the image from camera
-					bitmapUserPicture = (Bitmap) data.getExtras().get("data");
-					temp.setImageBitmap(bitmapUserPicture);
-				}
-			}
-			
-			// create byte stream array
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			
-			// compress picture and add to stream (PNG)
-			bitmapUserPicture.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-			
-			// create raw data src
-			byte[] src = stream.toByteArray();
-			
-			// encode it
-			String byteCode = Base64.encodeBytes(src);
-			
-			UploadPictueTask task = new UploadPictueTask(this, byteCode);
-			task.execute();
 		}
 	}
-
-	private void startDialog() {
-		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this);
-		myAlertDialog.setTitle("Upload Pictures Option");
-		myAlertDialog.setMessage("How do you want to set your picture?");
-		myAlertDialog.setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				Intent intent = new Intent();
-				intent.setType("image/*");
-				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_PICTURE);
-			}
-		});
-
-		myAlertDialog.setNegativeButton("Camera", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface arg0, int arg1) {
-				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				startActivityForResult(intent, CAMERA_PICTURE);
-			}
-		});
-		myAlertDialog.show();
+	
+	private void updateFeedListView(String name, String imageUrl) {
+		for (int i = 0; i < feedList.size(); ++i) {
+			feedList.get(i).setFriendName(name);
+			feedList.get(i).setFriendPictureUrl(imageUrl); 
+		}
+		adapter.notifyDataSetChanged();
 	}
-
-	public String getPath(Uri uri) {
-		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = managedQuery(uri, projection, null, null, null);
-		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		cursor.moveToFirst();
-		return cursor.getString(column_index);
-	}
-
+	
 	private static class GetUserDetailTask 
 		extends AsyncTask<Void, FriendFeedItem, User> 
 			implements IAsyncTask<ProfileActivity> {
@@ -272,30 +210,49 @@ public class ProfileActivity
 			if (isCancelled()) {
 				return null;
 			}
-				
 			User user = null;
-			try {
-				user = new User.Builder( 
-						// required parameters
-						array.getJSONObject(0).getInt("users_tbl_id"), 
-						array.getJSONObject(0).getString("users_tbl_username"), 
-						array.getJSONObject(0).getString("users_tbl_password"))
+			if (array != null) {
+				try {
+					user = new User.Builder(
+							// required parameters
+							array.getJSONObject(0).getInt("users_tbl_id"),
+							array.getJSONObject(0).getString(
+									"users_tbl_username"), array.getJSONObject(
+									0).getString("users_tbl_password"))
 							// optional parameters
-							.challengesDone(array.getJSONObject(0).getInt("users_tbl_challenges_done"))
-							.placesVisited(array.getJSONObject(0).getInt("users_tbl_places_visited"))
-							.points(array.getJSONObject(0).getInt("users_tbl_points"))
-							.imageUrl(array.getJSONObject(0).getString("users_tbl_user_image_url"))
-							.numFriends(array.getJSONObject(0).getInt("num_friends"))
-							.numBadges(array.getJSONObject(0).getInt("num_badges"))
-							.realname(array.getJSONObject(0).getString("users_tbl_real_name"))
-							.education(array.getJSONObject(0).getString("users_tbl_education"))
-							.hometown(array.getJSONObject(0).getString("users_tbl_hometown"))
-							.hobbies(array.getJSONObject(0).getString("users_tbl_hobbies"))
-								.build();
-				
-			}
-			catch (JSONException e) {
-				Log.e(TAG + "GetUserDetailTask.doInBackground() : ", "JSON error parsing data" + e.toString());
+							.challengesDone(
+									array.getJSONObject(0).getInt(
+											"users_tbl_challenges_done"))
+							.placesVisited(
+									array.getJSONObject(0).getInt(
+											"users_tbl_places_visited"))
+							.points(array.getJSONObject(0).getInt(
+									"users_tbl_points"))
+							.imageUrl(
+									array.getJSONObject(0).getString(
+											"users_tbl_user_image_url"))
+							.numFriends(
+									array.getJSONObject(0)
+											.getInt("num_friends"))
+							.numBadges(
+									array.getJSONObject(0).getInt("num_badges"))
+							.realname(
+									array.getJSONObject(0).getString(
+											"users_tbl_real_name"))
+							.education(
+									array.getJSONObject(0).getString(
+											"users_tbl_education"))
+							.hometown(
+									array.getJSONObject(0).getString(
+											"users_tbl_hometown"))
+							.hobbies(
+									array.getJSONObject(0).getString(
+											"users_tbl_hobbies")).build();
+
+				} catch (JSONException e) {
+					Log.e(TAG + "GetUserDetailTask.doInBackground() : ",
+							"JSON error parsing data", e);
+				}
 			}
 			return user;
 		}
@@ -317,108 +274,6 @@ public class ProfileActivity
 		}
 	}
 	
-	private static class UploadPictueTask 
-    	extends AsyncTask<Void, Integer, String> 
-    		implements IAsyncTask<ProfileActivity> {
-    	
-    	private WeakReference<ProfileActivity> ref;
-    	private String picturebyteCode;
-    	
-    	public UploadPictueTask(ProfileActivity a, String pbc) {
-    		attach(a);
-    		picturebyteCode = pbc;
-    	}
-    	
-    	@Override
-    	protected void onPreExecute() {
-    		
-    	}
-    
-    	@Override
-    	protected String doInBackground(Void... voids) {
-    		List<NameValuePair> datas = new ArrayList<NameValuePair>();
-    		// send encoded data to server
-    		datas.add(new BasicNameValuePair("image", picturebyteCode));
-    		// send a file name where file name = "username" + "current date time UTC", to make sure that we have a unique id picture every time.
-    		// since the username is unique, we should take advantage of this otherwise two or more users could potentially snap pictures at the same time.
-    		datas.add(new BasicNameValuePair("file_name",  CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png"));
-    		
-    		// send the rest of data
-    		datas.add(new BasicNameValuePair("users_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-    		
-    		
-    		// get JSON to check result
-    		JSONObject json = UploadFileHelper.uploadFileToServer(UPDATE_PICTURE_URL, datas);
-    		String result = "";
-    		try {
-    			result = json.getString("result");
-    		} 
-    		catch (JSONException e) {
-    			Log.e(TAG + "UploadPictueTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
-    		}
-    		return result;
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(String result) {
-    		detach();
-    	}
-    	
-    	public void attach(ProfileActivity a) {
-    		ref = new WeakReference<ProfileActivity>(a);
-    	}
-    	
-    	public void detach() {
-    		ref.clear();
-    	}
-    }
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.profile_setting_menu, menu);
-		return true;
-	}
-
-    
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.profile_setting_menu_xml_edit:
-				intent = new Intent("com.csun.spotr.ProfileEditActivity");
-				Bundle extras = new Bundle();
-				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
-				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
-				extras.putString("imageUrl", imageLocation);
-				intent = new Intent("com.csun.spotr.ProfileEditActivity");
-				intent.putExtras(extras);
-				startActivity(intent);
-				finish();
-				break;
-		}
-		return true;
-	}
-	
 	private static class GetUserFeedTask 
 		extends AsyncTask<Void, FriendFeedItem, Boolean> 
 			implements IAsyncTask<ProfileActivity> {
@@ -433,9 +288,30 @@ public class ProfileActivity
 			attach(a);
 		}
 		
+		private Comment getFirstComment(int activityId) {
+			List<NameValuePair> data = new ArrayList<NameValuePair>(); 
+			data.add(new BasicNameValuePair("activity_id", Integer.toString(activityId)));
+			Comment firstComment = new Comment(-1, "", "", "", "");
+			JSONArray temp = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
+			try {
+				if (temp != null) {
+					firstComment.setId(temp.getJSONObject(0).getInt("comments_tbl_id"));
+					firstComment.setUsername(temp.getJSONObject(0).getString("users_tbl_username"));
+					firstComment.setPictureUrl(temp.getJSONObject(0).getString("users_tbl_user_image_url"));
+					firstComment.setTime(temp.getJSONObject(0).getString("comments_tbl_time"));
+					firstComment.setContent(temp.getJSONObject(0).getString("comments_tbl_content"));
+				}	
+			}
+			catch (JSONException e) {
+				Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
+			}
+			
+			return firstComment;
+		}
+		
 		@Override
     	protected void onProgressUpdate(FriendFeedItem... f) {
-    		ref.get().updateAsyncTaskProgress(f[0]);
+			ref.get().updateAsyncTaskProgress(f[0]);
         }
 
 		@Override
@@ -450,9 +326,6 @@ public class ProfileActivity
 			
 			// user's feeds
 			JSONArray feedArray = JsonHelper.getJsonArrayFromUrlWithData(GET_USER_FEEDS, data);
-			
-			// comments in user's feed
-			JSONArray commentArray;
 			
 			try {
 				if (isCancelled()) {
@@ -512,28 +385,14 @@ public class ProfileActivity
         									.build();
         				
         				
-        				data.clear();
-        				data.add(new BasicNameValuePair("activity_id", Integer.toString(ffi.getActivityId())));
-        				commentArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FIRST_COMMENT_URL, data);
-        				
-        				Comment firstComment = new Comment(-1, "", "", "", "");
-        				
-        				if (commentArray != null) {
-        					firstComment.setId(commentArray.getJSONObject(0).getInt("comments_tbl_id"));
-        					firstComment.setUsername(commentArray.getJSONObject(0).getString("users_tbl_username"));
-        					firstComment.setPictureUrl(commentArray.getJSONObject(0).getString("users_tbl_user_image_url"));
-        					firstComment.setTime(commentArray.getJSONObject(0).getString("comments_tbl_time"));
-        					firstComment.setContent(commentArray.getJSONObject(0).getString("comments_tbl_content"));
-        				}
-        				
-        				ffi.setFirstComment(firstComment);
-        				publishProgress(ffi);
+        				ffi.setFirstComment(getFirstComment(ffi.getActivityId()));
+    					publishProgress(ffi);
     				}
 				}
 				
 			}
 			catch (JSONException e) {
-				Log.e(TAG + "GetUserFeedTask.doInBackground() : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "GetUserFeedTask.doInBackground() : ", "JSON error parsing data", e );
 			}
 			return true;
 		}
@@ -552,25 +411,6 @@ public class ProfileActivity
 		}
 	}
 	
-	
-	@Override
-    public void onPause() {
-		Log.v(TAG, "I'm paused!");
-        super.onPause();
-	}
-	
-	@Override
-    public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-	
-		if (bitmapUserPicture != null) {
-			bitmapUserPicture.recycle();
-			bitmapUserPicture = null;
-		}
-		
-        super.onDestroy();
-	}
-
 	public void updateAsyncTaskProgress(FriendFeedItem f) {
 		feedList.add(f);
 		adapter.notifyDataSetChanged();
@@ -650,5 +490,41 @@ public class ProfileActivity
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+	
+	@Override
+    public void onPause() {
+		Log.v(TAG, "I'm paused!");
+        super.onPause();
+	}
+	
+	@Override
+    public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+	
+		if (bitmapUserPicture != null) {
+			bitmapUserPicture.recycle();
+			bitmapUserPicture = null;
+		}
+		
+        super.onDestroy();
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
 	}
 }

@@ -4,28 +4,16 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.csun.spotr.adapter.PlaceActionItemAdapter;
-import com.csun.spotr.core.Challenge;
-import com.csun.spotr.core.Place;
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,15 +23,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import com.csun.spotr.adapter.PlaceActionItemAdapter;
+import com.csun.spotr.core.Challenge;
+import com.csun.spotr.core.Place;
+import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
+
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 /**
  * Description:
  * 		The Missions tab content in Spots.
- */
+ **/
 public class PlaceActionActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Challenge> {
@@ -60,17 +60,23 @@ public class PlaceActionActivity
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// set layout
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.place_action);
-	
 		// get place id
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
-
-		// spot more info button
+		
+		setupInfoButton();
+		setupTreasureButton();
+		setupListView();
+		// run GetPlaceDetailTask
+		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
+		// run GetChallengeTask
+		new GetChallengesTask(PlaceActionActivity.this).execute();
+	}
+	
+	private void setupInfoButton() {
 		Button buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
-
 		buttonMoreInfo.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Bundle extras = new Bundle();
@@ -80,7 +86,9 @@ public class PlaceActionActivity
 				startActivity(intent);
 			}
 		});
-		
+	}
+	
+	private void setupTreasureButton() {
 		/**
 		 * Description
 		 * To open a treasure, user need to have at least 1000 pts. 
@@ -130,14 +138,13 @@ public class PlaceActionActivity
 				alert.show();
 			}
 		});
-		
+	}
+	
+	private void setupListView() {
 		// initialize list view of challenges
 		list = (ListView) findViewById(R.id.place_action_xml_listview_actions);
 		adapter = new PlaceActionItemAdapter(this, challengeList);
-		
-				
 		list.setAdapter(adapter);
-		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Challenge c = (Challenge) challengeList.get(position);
@@ -196,18 +203,13 @@ public class PlaceActionActivity
 				}
 			}
 		});
-
-		// run GetPlaceDetailTask
-		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
-
-		// run GetChallengeTask
-		new GetChallengesTask(PlaceActionActivity.this).execute();
 	}
 	
 	private static class GetChallengesTask 
 		extends AsyncTask<String, Challenge, Boolean> 
 			implements IAsyncTask<PlaceActionActivity> {
 		
+		private static final String TAG = "[AsyncTask].GetChallengeTask";
 		private WeakReference<PlaceActionActivity> ref;
 		
 		public GetChallengesTask(PlaceActionActivity a) {
@@ -228,7 +230,6 @@ public class PlaceActionActivity
 		protected Boolean doInBackground(String... text) {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-			
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_CHALLENGES_URL, data);
 			
 			if (array != null) { 
@@ -249,7 +250,7 @@ public class PlaceActionActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetChallengesTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -276,7 +277,7 @@ public class PlaceActionActivity
 		extends AsyncTask<Void, Integer, Place> 
 			implements IAsyncTask<PlaceActionActivity> {
 	
-		private List<NameValuePair> placeData = new ArrayList<NameValuePair>();
+		private static final String TAG = "[AsyncTask].GetPlaceDetailTask]";
 		private WeakReference<PlaceActionActivity> ref;
 	
 		public GetPlaceDetailTask(PlaceActionActivity a) {
@@ -285,30 +286,41 @@ public class PlaceActionActivity
 
 		@Override
 		protected Place doInBackground(Void... voids) {
-			placeData.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, placeData);
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
+			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_SPOT_DETAIL_URL, data);
 			Place place = null;
-			try {
-				// create a place
-				place = new Place.Builder(
-				// required parameters
-					array.getJSONObject(0).getDouble("spots_tbl_longitude"),
-					array.getJSONObject(0).getDouble("spots_tbl_latitude"), 
-					array.getJSONObject(0).getInt("spots_tbl_id"))
-					// optional parameters
-					.name(array.getJSONObject(0).getString("spots_tbl_name"))
-					.address(array.getJSONObject(0).getString("spots_tbl_description")).build();
-				
-				if (array.getJSONObject(0).has("spots_tbl_phone")) {
-					place.setPhoneNumber(array.getJSONObject(0).getString("spots_tbl_phone"));
+			if (array != null) {
+				try {
+					// create a place
+					place = new Place.Builder(
+					// required parameters
+							array.getJSONObject(0).getDouble(
+									"spots_tbl_longitude"), array
+									.getJSONObject(0).getDouble(
+											"spots_tbl_latitude"), array
+									.getJSONObject(0).getInt("spots_tbl_id"))
+							// optional parameters
+							.name(array.getJSONObject(0).getString(
+									"spots_tbl_name"))
+							.address(
+									array.getJSONObject(0).getString(
+											"spots_tbl_description")).build();
+
+					if (array.getJSONObject(0).has("spots_tbl_phone")) {
+						place.setPhoneNumber(array.getJSONObject(0).getString(
+								"spots_tbl_phone"));
+					}
+
+					if (array.getJSONObject(0).has("spots_tbl_url")) {
+						place.setWebsiteUrl(array.getJSONObject(0).getString(
+								"spots_tbl_url"));
+					}
+				} catch (JSONException e) {
+					Log.e(TAG
+							+ "GetPlaceDetailTask.doInBackground(Void...voids) : ",
+							"JSON error parsing data", e);
 				}
-				
-				if (array.getJSONObject(0).has("spots_tbl_url")) {
-					place.setWebsiteUrl(array.getJSONObject(0).getString("spots_tbl_url"));
-				}
-			}
-			catch (JSONException e) {
-				Log.e(TAG + "GetPlaceDetailTask.doInBackground(Void...voids) : ", "JSON error parsing data" + e.toString());
 			}
 			return place;
 		}
@@ -369,18 +381,6 @@ public class PlaceActionActivity
 		return true;
 	}
     
-    @Override
-    public void onPause() {
-		Log.v(TAG, "I'm paused!");
-		super.onPause();
-	}
-	
-	@Override
-    public void onDestroy() {
-		Log.v(TAG, "I'm destroyed!");
-        super.onDestroy();
-	}
-
 	public void updateAsyncTaskProgress(Challenge c) {
 		challengeList.add(c);
 		adapter.notifyDataSetChanged();
@@ -450,5 +450,35 @@ public class PlaceActionActivity
 		
 		}
 		return null;
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
+		super.onPause();
 	}
 }

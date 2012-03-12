@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:drawable="@drawable/ic_expander_pressed_alt"
+        android:state_expanded="true" />
+    <item
+        android:drawable="@drawable/ic_expander_default_alt" />
+</selector>
+<!-- CURRENTLY NOT IN USE -->

@@ -11,8 +11,6 @@ import org.json.JSONException;
 
 import com.csun.spotr.adapter.BadgeAdapter;
 import com.csun.spotr.core.Badge;
-import com.csun.spotr.core.adapter_item.SeekingItem;
-import com.csun.spotr.custom_gui.DraggableGridView;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
@@ -31,9 +29,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
 
 public class RewardActivity 
 	extends Activity 
@@ -41,6 +42,7 @@ public class RewardActivity
 	
 	private static final String TAG = "(RewardActivity)";
 	private static final String GET_BADGES_URL = "http://107.22.209.62/android/get_badges.php";
+	private static final int INTENT_RESULT_REMOVE_BADGE = 0;
 	
 	private GridView gridview;
 	private BadgeAdapter adapter;
@@ -52,12 +54,16 @@ public class RewardActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.badge);
-
+		setupBadgeGridView();
+		task = new GetBadgesTask(this);
+		task.execute();
+	}
+	
+	private void setupBadgeGridView() {
 		badgeList = new ArrayList<Badge>();
-		gridview = (GridView) findViewById(R.id.badge_xml_gridview);
+		gridview = (GridView) findViewById(R.id.badge_xml_gridview_userbadges);
 		adapter = new BadgeAdapter(this, badgeList);
 		gridview.setAdapter(adapter);
-
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(getApplicationContext(), RewardViewActivity.class);
@@ -67,20 +73,17 @@ public class RewardActivity
 				intent.putExtra("date", badgeList.get(position).getDate());
 				intent.putExtra("url", badgeList.get(position).getUrl());
 				intent.putExtra("points", badgeList.get(position).getPoints());
-				int dummy = 0;
-				startActivityForResult(intent, dummy);
+				startActivityForResult(intent, INTENT_RESULT_REMOVE_BADGE);
 				removePosition = position;
 			}
 		});
-		
-		task = new GetBadgesTask(this);
-		task.execute();
 	}
 
 	private static class GetBadgesTask 
 		extends AsyncTask<Integer, Badge, Boolean> 
 			implements IAsyncTask<RewardActivity> {
 
+		private static final String TAG = "[AsyncTask].GetBadgesTask";
 		private WeakReference<RewardActivity> ref;
 		private ProgressDialog progressDialog = null;
 
@@ -122,7 +125,7 @@ public class RewardActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetBadgesTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetBadgesTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -147,6 +150,7 @@ public class RewardActivity
 		}
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -198,7 +202,7 @@ public class RewardActivity
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 0) {
+		if (requestCode == INTENT_RESULT_REMOVE_BADGE) {
 			if (resultCode == RESULT_OK) {
 				badgeList.remove(removePosition);
 				adapter.notifyDataSetChanged();

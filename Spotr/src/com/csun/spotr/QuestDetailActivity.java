@@ -47,6 +47,10 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 public class QuestDetailActivity 
 	extends MapActivity 
 		implements IActivityProgressUpdate<QuestDetailItem>{
@@ -78,69 +82,71 @@ public class QuestDetailActivity
 	private CustomQuestItemizedOverlay itemizedGreenOverlay;
 	private CustomQuestItemizedOverlay itemizedRedOverlay;
 	
+	private MapView mapView;
+	private MapController mapController;
+	private List<Overlay> mapOverlays;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest_detail);
 
+		initQuestDataFromIntent();
+		
+		setupMapView();
+		
+		setupListView();
+		
+		setupViewSpotButton();
+		
+		setupMeButton();
+		
+		setupQuestTitle();
+		
+		findLocation();
+		
+		new GetQuestDetailTask(this).execute();
+	}
+	
+	private void initQuestDataFromIntent() {
 		// Get data from super activity
 		questId = this.getIntent().getExtras().getInt("quest_id");
 		numQuest = this.getIntent().getExtras().getInt("numberChallenges");
 		questName = this.getIntent().getExtras().getString("quest_name");
 		questDescription = this.getIntent().getExtras().getString("quest_description");
 		userId = CurrentUser.getCurrentUser().getId();
-
-		questDetailListView = (ListView) findViewById(R.id.quest_detail_xml_listview_quest_list);
-		questDetailItemAdapter = new QuestDetailItemAdapter(this.getApplicationContext(), questDetailList);
-		questDetailListView.setAdapter(questDetailItemAdapter);
-
-		/*
-		 * meButton & viewSpotButton are only enabled 
-		 * if location is available 
-		 */
-		final Button meButton = (Button) findViewById(R.id.quest_detail_xml_me_button);
-		final Button viewSpotButton = (Button) findViewById(R.id.quest_detail_xml_spot_button);
-		meButton.setEnabled(false);
-		viewSpotButton.setEnabled(false);
-
-		// initialize Map View
-		final MapView mapView = (MapView) findViewById(R.id.quest_detail_xml_map);
-		final MapController mapController = mapView.getController();
-		mapView.setBuiltInZoomControls(true);
-		
-		// add overlay 
-		final List<Overlay> mapOverlays = mapView.getOverlays();
-		
-		itemizedGreenOverlay = 
-			new CustomQuestItemizedOverlay(getResources().getDrawable(R.drawable.map_maker_green), mapView);
-		itemizedRedOverlay = 
-			new CustomQuestItemizedOverlay(getResources().getDrawable(R.drawable.map_maker_red), mapView);
-		
-		mapOverlays.add(itemizedGreenOverlay);
-		mapOverlays.add(itemizedRedOverlay);
-
+	}
+	
+	private void setupQuestTitle() {
 		// initialize detail description of specific quest
 		TextView questNameTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_name);
 		TextView questDescriptionTextView = (TextView) findViewById(R.id.quest_detail_xml_textview_description);
-		
+				
 		questNameTextView.setText(questName);
 		questDescriptionTextView.setText(questDescription);
-
-		/*
-		 * If user's location is available
-		 * make meButton & viewSpotButton enable
-		 */
+	}
+	
+	private void findLocation() {
 		LocationResult locationResult = (new LocationResult() {
 			@Override
-			public void gotLocation (final Location location) {
+			public void gotLocation(final Location location) {
 				lastKnownLocation = location;
-				meButton.setEnabled(true);
-				viewSpotButton.setEnabled(true);
+				activateMeAndSpotButton();
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
-		
-		//handle on click event on Me Button
+	}
+	
+	private void activateMeAndSpotButton() {
+		final Button meButton = (Button) findViewById(R.id.quest_detail_xml_me_button);
+		meButton.setEnabled(true);
+		final Button viewSpotButton = (Button) findViewById(R.id.quest_detail_xml_spot_button);
+		viewSpotButton.setEnabled(true);
+	}
+	
+	private void setupMeButton() {
+		final Button meButton = (Button) findViewById(R.id.quest_detail_xml_me_button);
+		meButton.setEnabled(false);
 		meButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (flagMeButton == false) {
@@ -172,25 +178,50 @@ public class QuestDetailActivity
 				mapController.setZoom(17);
 			}	
 		});
-
+	}
+	
+	private void setupViewSpotButton() {
+		final Button viewSpotButton = (Button) findViewById(R.id.quest_detail_xml_spot_button);
+		viewSpotButton.setEnabled(false);
 		//handle on click event when click on ViewSpot button
 		viewSpotButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				double centerLongitude = 0;
 				double centerLatitude = 0;
-				
 				for (int i = 0; i < questDetailList.size(); i++) {
 					centerLongitude += questDetailList.get(i).getLongitude();
 					centerLatitude += questDetailList.get(i).getLatitude();
 				}
-				
 				centerLongitude = centerLongitude / questDetailList.size();
 				centerLatitude = centerLatitude / questDetailList.size();
 				mapController.animateTo(new GeoPoint((int) (centerLatitude * 1E6), (int) (centerLongitude * 1E6)));
 				mapController.setZoom(16);	
 			}
 		});
-
+	}
+	
+	private void setupMapView() {
+		// initialize Map View
+		mapView = (MapView) findViewById(R.id.quest_detail_xml_map);
+		mapController = mapView.getController();
+		mapView.setBuiltInZoomControls(true);
+		
+		// add overlay 
+		mapOverlays = mapView.getOverlays();
+		
+		itemizedGreenOverlay = 
+			new CustomQuestItemizedOverlay(getResources().getDrawable(R.drawable.map_maker_green), mapView);
+		itemizedRedOverlay = 
+			new CustomQuestItemizedOverlay(getResources().getDrawable(R.drawable.map_maker_red), mapView);
+		
+		mapOverlays.add(itemizedGreenOverlay);
+		mapOverlays.add(itemizedRedOverlay);
+	}
+	
+	private void setupListView() {
+		questDetailListView = (ListView) findViewById(R.id.quest_detail_xml_listview_quest_list);
+		questDetailItemAdapter = new QuestDetailItemAdapter(this.getApplicationContext(), questDetailList);
+		questDetailListView.setAdapter(questDetailItemAdapter);
 		// handle event when click on specific spot in the ListView
 		questDetailListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -209,15 +240,13 @@ public class QuestDetailActivity
 				}
 			}
 		});
-
-		new GetQuestDetailTask(this).execute();
-
 	}
 
 	private static class GetQuestDetailTask 
 		extends AsyncTask<Integer, QuestDetailItem, Boolean> 
 			implements IAsyncTask<QuestDetailActivity> {
 
+		private static final String TAG = "[AsyncTask].GetQuestDetailTask";
 		private WeakReference<QuestDetailActivity> ref;
 
 		public GetQuestDetailTask(QuestDetailActivity a) {
@@ -228,6 +257,14 @@ public class QuestDetailActivity
 		protected void onPreExecute() {
 
 		}
+		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+			data.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
+			data.add(new BasicNameValuePair("spot_id", Integer.toString(ref.get().spotId)));
+			return data;
+		}
 
 		@Override
 		protected void onProgressUpdate(QuestDetailItem... spots) {
@@ -236,20 +273,8 @@ public class QuestDetailActivity
 
 		@Override
 		protected Boolean doInBackground(Integer... offsets) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			
-			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			
-			// send quest id
-			data.add(new BasicNameValuePair("quest_id", Integer.toString(ref.get().questId)));
-			
-			// send spot id
-			data.add(new BasicNameValuePair("spot_id", Integer.toString(ref.get().spotId)));
-			
-			// retrieve data from server
+			List<NameValuePair> data = prepareUploadData();
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_QUEST_DETAIL_URL, data);
-			
 			if (array != null) {
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -264,7 +289,7 @@ public class QuestDetailActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetQuestDetailTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -273,10 +298,7 @@ public class QuestDetailActivity
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			TextView challengedoneTextView = (TextView) (ref.get()).findViewById(R.id.quest_detail_xml_textview_challengedone);
-			challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
-			ProgressBar progressbar = (ProgressBar) (ref.get()).findViewById(R.id.quest_detail_progressBar);
-			progressbar.setProgress(100 * ref.get().spotCompleted / numQuest);
+			updateProgressBar();
 			detach();
 		}
 
@@ -286,6 +308,13 @@ public class QuestDetailActivity
 
 		public void detach() {
 			ref.clear();
+		}
+		
+		private void updateProgressBar() {
+			TextView challengedoneTextView = (TextView) (ref.get()).findViewById(R.id.quest_detail_xml_textview_challengedone);
+			challengedoneTextView.setText(Integer.toString(ref.get().spotCompleted) + "/" + Integer.toString(numQuest));
+			ProgressBar progressbar = (ProgressBar) (ref.get()).findViewById(R.id.quest_detail_progressBar);
+			progressbar.setProgress(100 * ref.get().spotCompleted / numQuest);
 		}
 	}
 
@@ -297,6 +326,7 @@ public class QuestDetailActivity
 		extends AsyncTask<Void, Void, Void> 
 			implements IAsyncTask<QuestDetailActivity> {
 
+		private static final String TAG = "[AsyncTask].GiveQuestPointTask";
 		private WeakReference<QuestDetailActivity> ref;
 		private int userId;
 		private int questId;
@@ -307,19 +337,22 @@ public class QuestDetailActivity
 			this.questId = questId;
 		}
 		
+		private List<NameValuePair> prepareUploadData() {
+			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			data.add(new BasicNameValuePair("id", Integer.toString(userId)));
+			data.add(new BasicNameValuePair("quest_id", Integer.toString(questId)));
+			return data;
+		}
+		
 		@Override
 		protected Void doInBackground(Void... voids) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
+			List<NameValuePair> data = prepareUploadData();
+			/** 
+			 * TODO: handle error return from server
+			 **/
+			Log.v(TAG, "TODO: require handling error from server");
 			
-			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(userId)));
-			
-			// send quest id
-			data.add(new BasicNameValuePair("quest_id", Integer.toString(questId)));
-			
-			// retrieve data from server
 			JsonHelper.getJsonArrayFromUrlWithData(GIVE_QUEST_POINT_URL, data);
-			
 			return null;
 		}
 		
@@ -335,7 +368,6 @@ public class QuestDetailActivity
 	
 	public void updateAsyncTaskProgress(QuestDetailItem q) {
 		questDetailList.add(q);
-		
 		if (q.getStatus().equalsIgnoreCase("done")) {
 			this.spotCompleted++;
 		}
@@ -343,13 +375,11 @@ public class QuestDetailActivity
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int)(q.getLatitude()*1E6), (int)(q.getLongitude()*1E6)), q.getName(), q.getDescription());
 		Place place = new Place.Builder(q.getLongitude(), q.getLatitude(), q.getId()).build();
 		
-		if (q.getStatus().equalsIgnoreCase("done")) {
+		if (q.getStatus().equalsIgnoreCase("done")) 
 			itemizedRedOverlay.addOverlay(overlay, place);
-		}
-		else {
+		else 
 			itemizedGreenOverlay.addOverlay(overlay, place);
-		}
-		
+	
 		questDetailItemAdapter.notifyDataSetChanged();
 	}
 
@@ -465,7 +495,6 @@ public class QuestDetailActivity
 			Location spot = new Location("Current Spot");
 			spot.setLongitude(places.get(index).getLongitude());
 			spot.setLatitude(places.get(index).getLatitude());
-
 			if (!item.getTitle().equalsIgnoreCase("My Current Location")) {
 				if (spot.distanceTo(lastKnownLocation) < RANGE_LIMIT) {
 					Intent intent = new Intent("com.csun.spotr.QuestActionActivity");
@@ -496,5 +525,23 @@ public class QuestDetailActivity
 		Log.v(TAG, "I'm destroyed!");
 		flagMeButton = false;
 		super.onDestroy();
+	}
+	
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+	
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 }

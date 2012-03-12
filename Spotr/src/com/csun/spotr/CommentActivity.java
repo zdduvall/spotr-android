@@ -33,6 +33,10 @@ import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.CommentItemAdapter;
 
+/**
+ * NOTE: Refactoring by Chan Nguyen: 03/06/2012
+ **/
+
 /*
  * Description:
  * 		Write a comment on an Activity wall
@@ -42,8 +46,19 @@ public class CommentActivity
 		implements IActivityProgressUpdate<Comment> {
 
 	private static final String TAG = "(CommentActivity)";
-	private static final String GET_COMMENTS_URL = "http://107.22.209.62/android/beta_get_comments.php";
-	private static final String POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
+	/*  Reason Comment:
+	 *  removed PHP script which would interact with the user_requests table on the database.
+	 *  Would input a comment update for the notifications table. 
+	 *  No time to implement LIVE notifications
+	 * 
+	 *  Date commented out: March 10, 2012
+	 *  Commenter:	Edgardo A. Campos
+	 *  WHAT WAS COMMENTED OUT:	
+	 *  private static final String POST_COMMENT_URL = "http://107.22.209.62/android/beta_do_post_comment.php";
+	 */	
+	
+	private static final String GET_COMMENTS_URL = "http://107.22.209.62/android/get_comments.php";
+	private static final String POST_COMMENT_URL = "http://107.22.209.62/android/do_post_comment.php";
 
 	private ListView listview = null;
 	private CommentItemAdapter adapter = null;
@@ -55,28 +70,23 @@ public class CommentActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
-
+		initCommentDataFromBundle();
+		setupCommentListView();
+		setupPostButton();
+		task = new GetCommentTask(this);
+		task.execute(activityId);
+	}
+	
+	private void initCommentDataFromBundle() {
 		Bundle extrasBundle = getIntent().getExtras();
 		activityId = extrasBundle.getInt("activity_id");
 		userId = CurrentUser.getCurrentUser().getId();
-
+	}
+	
+	private void setupPostButton() {
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		final Button buttonPost = (Button) findViewById(R.id.comment_xml_button_post);
 		final EditText edittextComment = (EditText) findViewById(R.id.comment_xml_edittext_user_comment);
-		listview = (ListView) findViewById(R.id.comment_xml_listview);
-		
-		adapter = new CommentItemAdapter(this.getApplicationContext(), commentList);
-		listview.setAdapter(adapter);
-
-		listview.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-			}
-		});
-		
-		task = new GetCommentTask(this);
-		task.execute(activityId);
-
 		buttonPost.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (!edittextComment.getText().toString().equals("")) {
@@ -90,20 +100,27 @@ public class CommentActivity
 			}
 		});
 	}
+	
+	private void setupCommentListView() {
+		listview = (ListView) findViewById(R.id.comment_xml_listview);
+		adapter = new CommentItemAdapter(this.getApplicationContext(), commentList);
+		listview.setAdapter(adapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+			}
+		});
+	}
 
 	private static class GetCommentTask 
 		extends AsyncTask<Integer, Comment, Boolean> 
 			implements IAsyncTask<CommentActivity> {
 
+		private static final String TAG = "[AsyncTask].GetCommentTask";
 		private WeakReference<CommentActivity> ref;
 
 		public GetCommentTask(CommentActivity a) {
 			attach(a);
-		}
-
-		@Override
-		protected void onPreExecute() {
-
 		}
 
 		@Override
@@ -133,7 +150,7 @@ public class CommentActivity
 					}
 				}
 				catch (JSONException e) {
-					Log.e(TAG + "GetCommentTask.doInBackGround(Integer... ids) : ", "JSON error parsing data" + e.toString());
+					Log.e(TAG + "GetCommentTask.doInBackGround(Integer... ids) : ", "JSON error parsing data", e );
 				}
 				return true;
 			}
@@ -160,6 +177,7 @@ public class CommentActivity
 		extends AsyncTask<Void, Comment, Boolean> 
 			implements IAsyncTask<CommentActivity> {
 
+		private static final String TAG = "[AsyncTask].PostCommentTask";
 		private WeakReference<CommentActivity> ref;
 		private int userId;
 		private int activityId;
@@ -172,18 +190,17 @@ public class CommentActivity
 			attach(a);
 		}
 
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... voids) {
+		private List<NameValuePair> prepareUploadData() {
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("users_id", Integer.toString(userId)));
 			data.add(new BasicNameValuePair("activity_id", Integer.toString(activityId)));
 			data.add(new BasicNameValuePair("comment", comment));
-			
+			return data;
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... voids) {
+			List<NameValuePair> data = prepareUploadData();
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(POST_COMMENT_URL, data);
 			String result = "";
 			try {
@@ -192,7 +209,7 @@ public class CommentActivity
 					return true;
 			} 
 			catch (JSONException e) {
-				Log.e(TAG + "PostCommentTask.doInBackGround(Void ...voids) : ", "JSON error parsing data" + e.toString());
+				Log.e(TAG + "PostCommentTask.doInBackGround(Void ...voids) : ", "JSON error parsing data", e );
 			}
 			return false;
 		}
@@ -224,6 +241,7 @@ public class CommentActivity
 		commentList.clear();
 		adapter.notifyDataSetChanged();
 	}
+	
 	@Override 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -234,15 +252,33 @@ public class CommentActivity
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	@Override
-	public void onPause() {
-		Log.v(TAG,"I'm paused");
-		super.onPause();
+	@Override 
+	public void onResume() {
+		Log.v(TAG, "I'm resumed");
+		super.onResume();
 	}
 	
 	@Override
 	public void onDestroy() {
-		Log.v(TAG,"I'm destroyed");
+		Log.v(TAG, "I'm destroyed!");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onRestart() {
+		Log.v(TAG, "I'm restarted!");
+		super.onRestart();
+	}
+
+	@Override
+	public void onStop() {
+		Log.v(TAG, "I'm stopped!");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		Log.v(TAG, "I'm paused!");
 		super.onPause();
 	}
 }
