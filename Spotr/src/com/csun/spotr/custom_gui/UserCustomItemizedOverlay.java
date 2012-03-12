@@ -12,7 +12,7 @@ import com.csun.spotr.core.FriendAndLocation;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-public class UserCustomItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
+public class UserCustomItemizedOverlay extends UserBalloonItemizedOverlay<OverlayItem> {
 	private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 	private List<FriendAndLocation> friendLocationList = new ArrayList<FriendAndLocation>();
 	private Context context;

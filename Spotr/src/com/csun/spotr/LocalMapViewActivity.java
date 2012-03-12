@@ -307,8 +307,8 @@ public class LocalMapViewActivity extends MapActivity {
 	}
 	
 	public void updateFriendTaskProgress(FriendAndLocation f) {
-		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getName(), f.getTime());
-		new DownloadImageTask(this, overlay).execute(f.getPictureUrl());
+		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getTime(), f.getPictureUrl());
+		// new DownloadImageTask(this, overlay).execute(f.getPictureUrl());
 		// add to item to map
 		userOverlay.addOverlay(overlay, f);
 		mapController.animateTo(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)));

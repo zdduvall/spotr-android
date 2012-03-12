@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.csun.spotr.adapter.ExpandableUserItemAdapter;
+import com.csun.spotr.asynctask.GetFriendsTask;
 import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
@@ -45,7 +46,6 @@ public class FriendListActivity
 		implements IActivityProgressUpdate<UserItem> {
 
 	private static final String TAG = "(FriendListActivity)";
-	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
 
 	public ExpandableListView listView = null;	
 	public ExpandableUserItemAdapter adapter = null;
@@ -109,70 +109,6 @@ public class FriendListActivity
     	return (int) (pixels * scale + 0.5f);
     }
     
-	private static class GetFriendsTask 
-		extends	AsyncTask<Void, UserItem, Boolean> 
-		implements IAsyncTask<FriendListActivity> {
-
-		private static final String TAG = "[AsyncTask].GetFriendTask";
-		private WeakReference<FriendListActivity> ref;
-		private int offset;
-
-		public GetFriendsTask(FriendListActivity a, int offset) {
-			attach(a);
-			this.offset = offset;
-		}
-
-		private List<NameValuePair> prepareUploadData() {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-			return data;
-		}
-
-		@Override
-		protected void onProgressUpdate(UserItem... u) {
-			ref.get().updateAsyncTaskProgress(u[0]);
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> data = prepareUploadData();
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_FRIENDS_URL, data);
-			if (array != null) {
-				try {
-					if (ref.get().task.isCancelled()) {
-						return true;
-					}
-					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(
-							new UserItem(
-								array.getJSONObject(i).getInt("users_tbl_id"), 
-								array.getJSONObject(i).getString("users_tbl_username"), 
-								array.getJSONObject(i).getString("users_tbl_user_image_url")));
-					}
-				} catch (JSONException e) {
-					Log.e(TAG + ".doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
-				}
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			ref.get().setupDynamicSearch();
-			detach();
-		}
-
-		public void attach(FriendListActivity a) {
-			ref = new WeakReference<FriendListActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
-		}
-	}
-
 	public void updateAsyncTaskProgress(UserItem u) {
 		userItemList.add(u);
 		adapter.notifyDataSetChanged();

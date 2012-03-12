@@ -10,33 +10,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.csun.spotr.R;
+import com.csun.spotr.util.ImageLoader;
 import com.google.android.maps.OverlayItem;
 
-public class BalloonOverlayView<Item extends OverlayItem> extends FrameLayout {
+public class UserBalloonOverlayView<Item extends OverlayItem> extends FrameLayout {
 	private LinearLayout layout;
-	private TextView title;
-	private TextView snippet;
-	private TextView msg;
+	private TextView name;
+	private ImageView picture;
+	private ImageLoader imageLoader;
 
-	/**
-	 * Create a new BalloonOverlayView.
-	 * 
-	 * @param context
-	 *            - The activity context.
-	 * @param balloonBottomOffset
-	 *            - The bottom padding (in pixels) to be applied when rendering
-	 *            this view.
-	 */
-	public BalloonOverlayView(Context context, int balloonBottomOffset) {
+	public UserBalloonOverlayView(Context context, int balloonBottomOffset) {
 		super(context);
 		setPadding(10, 0, 10, balloonBottomOffset);
 		layout = new LinearLayout(context);
 		layout.setVisibility(VISIBLE);
+		
+		imageLoader = new ImageLoader(context.getApplicationContext());
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = inflater.inflate(R.layout.ballon_overlay, layout);
-		title = (TextView) v.findViewById(R.id.balloon_item_title);
-		snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
+		View v = inflater.inflate(R.layout.user_ballon_overlay, layout);
+		name = (TextView) v.findViewById(R.id.user_balloon_overlay_xml_name);
+		picture = (ImageView) v.findViewById(R.id.user_ballon_overlay_xml_picture);
 
 		ImageView close = (ImageView) v.findViewById(R.id.close_img_button);
 		close.setOnClickListener(new OnClickListener() {
@@ -60,20 +54,19 @@ public class BalloonOverlayView<Item extends OverlayItem> extends FrameLayout {
 	public void setData(Item item) {
 		layout.setVisibility(VISIBLE);
 		if (item.getTitle() != null) {
-			title.setVisibility(VISIBLE);
-			title.setText(item.getTitle());
+			name.setVisibility(VISIBLE);
+			name.setText(item.getTitle());
 		}
 		else {
-			title.setVisibility(GONE);
+			name.setVisibility(GONE);
 		}
 		if (item.getSnippet() != null) {
-			snippet.setVisibility(VISIBLE);
-			snippet.setText(item.getSnippet());
+			picture.setVisibility(VISIBLE);
+			imageLoader.displayImage(item.getSnippet(), picture);
 		}
 		else {
-			snippet.setVisibility(GONE);
+			picture.setVisibility(GONE);
 		}
-
 	}
 
 }

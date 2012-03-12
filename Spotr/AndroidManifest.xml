@@ -156,7 +156,7 @@
 
         <!-- Friend List Feed Activity -->
         <activity
-            android:name=".FriendListFeedActivity"
+            android:name=".ExpandableFriendListFeedActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/CustomTheme" >

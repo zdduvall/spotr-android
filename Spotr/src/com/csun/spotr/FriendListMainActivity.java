@@ -47,7 +47,7 @@ public class FriendListMainActivity extends TabActivity {
 		tabHost.addTab(spec);
 
 		// Initialize a TabSpec for each tab and add it to the TabHost
-		intent = new Intent().setClass(getApplicationContext(), FriendListFeedActivity.class);
+		intent = new Intent().setClass(getApplicationContext(), ExpandableFriendListFeedActivity.class);
 		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
 	    tv = (TextView) customTabView.findViewById(R.id.tabText);
 	    tv.setText("Chatter");

@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.csun.spotr.adapter.ExpandableUserItemAdapter;
+import com.csun.spotr.asynctask.GetFriendTaskExpandable;
+import com.csun.spotr.asynctask.GetFriendsTask;
 import com.csun.spotr.core.adapter_item.UserItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
@@ -22,17 +24,21 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.AbsListView.OnScrollListener;
 
-public class ExpandableFriendListActivity extends Activity implements
-		IActivityProgressUpdate<UserItem> {
-	private static final String TAG = "(FriendListActivity)";
-	private static final String GET_FRIENDS_URL = "http://107.22.209.62/android/get_friends.php";
+public class ExpandableFriendListActivity 
+	extends Activity 
+		implements IActivityProgressUpdate<UserItem> {
+	
+	private static final String TAG = "(ExpandableFriendListActivity)";
 
 	public ExpandableUserItemAdapter adapter = null;
 	public List<UserItem> userItemList = new ArrayList<UserItem>();
@@ -52,82 +58,28 @@ public class ExpandableFriendListActivity extends Activity implements
 		listView.setOnScrollListener(new FeedOnScrollListener());
 		setContentView(listView);
 	}
+	
+	public void setupDynamicSearch() {
+		EditText edittextSearch = (EditText) findViewById(R.id.friend_list_main_xml_edittext_search);
+		edittextSearch.setEnabled(true);
+		edittextSearch.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			public void afterTextChanged(Editable s) {
+				adapter.getFilter().filter(s.toString());
+			}
+		});
+	}
 
 	public void updateAsyncTaskProgress(UserItem u) {
 		userItemList.add(u);
 		adapter.notifyDataSetChanged();
-	}
-
-	private static class GetFriendsTask extends
-			AsyncTask<Void, UserItem, Boolean> implements
-			IAsyncTask<ExpandableFriendListActivity> {
-
-		private WeakReference<ExpandableFriendListActivity> ref;
-		private int offset;
-
-		public GetFriendsTask(ExpandableFriendListActivity a, int offset) {
-			attach(a);
-			this.offset = offset;
-		}
-
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected void onProgressUpdate(UserItem... u) {
-			ref.get().updateAsyncTaskProgress(u[0]);
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... voids) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-
-			// send user id
-			data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser
-					.getCurrentUser().getId())));
-
-			// send offset
-			data.add(new BasicNameValuePair("offset", Integer.toString(offset)));
-
-			// retrieve data from server
-			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(
-					GET_FRIENDS_URL, data);
-
-			if (array != null) {
-				try {
-					if (ref.get().task.isCancelled()) {
-						return true;
-					}
-					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(new UserItem(array.getJSONObject(i)
-								.getInt("users_tbl_id"), array.getJSONObject(i)
-								.getString("users_tbl_username"), array
-								.getJSONObject(i).getString(
-										"users_tbl_user_image_url")));
-					}
-				} catch (JSONException e) {
-					Log.e(TAG
-							+ "GetFriendTask.doInBackGround(Integer... offsets) : ",
-							"JSON error parsing data", e );
-				}
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			detach();
-		}
-
-		public void attach(ExpandableFriendListActivity a) {
-			ref = new WeakReference<ExpandableFriendListActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
-		}
 	}
 
 	@Override
@@ -207,10 +159,8 @@ public class ExpandableFriendListActivity extends Activity implements
 					currentPage += 10;
 				}
 			}
-			if (!loading
-					&& (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-				new GetFriendsTask(ExpandableFriendListActivity.this,
-						currentPage).execute();
+			if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+					new GetFriendTaskExpandable(ExpandableFriendListActivity.this, currentPage).execute();
 				loading = true;
 			}
 		}

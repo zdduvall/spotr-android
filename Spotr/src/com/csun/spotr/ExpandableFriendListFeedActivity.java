@@ -9,14 +9,15 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
 import com.csun.spotr.adapter.FriendFeedItemAdapter;
-import com.csun.spotr.asynctask.GetPlaceFeedTask;
+import com.csun.spotr.asynctask.GetFriendFeedTask;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
+import com.csun.spotr.singleton.CurrentUser;
+import com.csun.spotr.skeleton.IActivityProgressUpdate;
+import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,9 +33,8 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
+import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * NOTE: Refactoring by Chan Nguyen: 03/06/2012
@@ -42,47 +42,51 @@ import android.widget.ListView;
 
 /**
  * Description:
- * 		Display feeds of a place
- */
-public class PlaceActivityActivity 
+ * 		Display friends' feeds like Facebook/Google+
+ **/
+public class ExpandableFriendListFeedActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<FriendFeedItem> {
 	
-	private static final String TAG = "(PlaceActivityActivity)";
+	private static final String TAG = "(FriendListFeedActivity)";
 	
-	public int currentPlaceId = 0;
+	private List<FriendFeedItem> friendFeedList = new ArrayList<FriendFeedItem>();
 	private ListView listview = null;
 	private FriendFeedItemAdapter adapter = null;
-	private List<FriendFeedItem> placeFeedList = new ArrayList<FriendFeedItem>();
-	private GetPlaceFeedTask task = null;
+	private	GetFriendFeedTask task = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.friend_list_feed);
-        Bundle extrasBundle = getIntent().getExtras();
-		currentPlaceId = extrasBundle.getInt("place_id");
+    	super.onCreate(savedInstanceState);
+		setContentView(R.layout.friend_list_feed);
+		
 		setupListView();
-		task = new GetPlaceFeedTask(this, 0);
-		task.execute();	
+		
+		task = new GetFriendFeedTask(this, 0);
+		task.execute();
     }
     
     private void setupListView() {
     	listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
-		adapter = new FriendFeedItemAdapter(getApplicationContext(), placeFeedList, false);
+		adapter = new FriendFeedItemAdapter(this.getApplicationContext(), friendFeedList, false);
 		listview.setAdapter(adapter);
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
+				// TODO: handle event here?
 			}
 		});
 		
+		/* Handle onScroll event, when the user scroll to see more items,
+		 * we run another task to get more data from the server.
+		 * Since each item occupies 1/3 of the screen, we only load 5 items
+		 * at a time to save time and increase performance.
+		 */
 		listview.setOnScrollListener(new FeedOnScrollListener());
     }
     
 	public void updateAsyncTaskProgress(FriendFeedItem f) {
-		placeFeedList.add(f);
+		friendFeedList.add(f);
 		adapter.notifyDataSetChanged();
 	}
 	
@@ -105,7 +109,6 @@ public class PlaceActivityActivity
 	    public FeedOnScrollListener() {
 	    	
 	    }
-	    
 	    public FeedOnScrollListener(int visibleThreshold) {
 	        this.visibleThreshold = visibleThreshold;
 	    }
@@ -119,7 +122,7 @@ public class PlaceActivityActivity
 	            }
 	        }
 	        if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-	            new GetPlaceFeedTask(PlaceActivityActivity.this, currentPage).execute();
+	            new GetFriendFeedTask(ExpandableFriendListFeedActivity.this, currentPage).execute();
 	            loading = true;
 	        }
 	    }
