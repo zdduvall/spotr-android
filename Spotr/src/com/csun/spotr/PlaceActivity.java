@@ -154,7 +154,7 @@ public class PlaceActivity
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getApplicationContext(), PlaceMainActivity.class);
 				Bundle extras = new Bundle();
-				extras.putInt("place_id", placeItemList.get(position).getId());
+				extras.putInt("place_id", adapter.getCurrentItem(position).getId());
 				intent.putExtras(extras);
 				startActivity(intent);
 			}

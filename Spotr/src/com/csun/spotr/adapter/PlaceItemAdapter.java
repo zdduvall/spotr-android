@@ -126,4 +126,7 @@ public class PlaceItemAdapter extends BaseAdapter {
 		};
 	}
 	
+	public PlaceItem getCurrentItem(int position) {
+		return new ArrayList<PlaceItem>(items).get(position);
+	}
 }

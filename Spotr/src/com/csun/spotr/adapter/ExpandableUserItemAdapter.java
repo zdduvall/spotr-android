@@ -11,6 +11,7 @@ import com.csun.spotr.util.ImageLoader;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import android.widget.TextView;
  *
  */
 public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
+	private static final String TAG = "[ExpandableUserItemAdapter]";
 	private static LayoutInflater inflater;
 	
 	private Context context;
@@ -195,8 +197,10 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 				String criteria = constraint.toString().toLowerCase();
 				List<UserItem> data = new ArrayList<UserItem>();
 				for (UserItem u : origin) { 
-					if (u.getUsername().toLowerCase().contains(criteria))
+					if (u.getUsername().toLowerCase().contains(criteria)) {
+						Log.d(TAG, "Username: " + u.getUsername().toLowerCase() + "\nCriteria: " + criteria);
 						data.add(u);
+					}
 				}
 				return data;
 			}
