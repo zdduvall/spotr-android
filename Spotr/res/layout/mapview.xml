@@ -13,18 +13,22 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/mapview_xml_button_navigate_friend"
+            android:id="@+id/mapview_xml_button_friend_distance"
             style="@style/TreasureButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next" />
-        
+            android:enabled="false"
+            android:text="Friend distance"
+            android:textSize="10dp" />
+
         <Button
-            android:id="@+id/mapview_xml_button_distance"
+            android:id="@+id/mapview_xml_button_place_distance"
             style="@style/TreasureButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Distance" />
+            android:enabled="false"
+            android:text="Place distance"
+            android:textSize="10dp" />
     </LinearLayout>
 
     <com.google.android.maps.MapView

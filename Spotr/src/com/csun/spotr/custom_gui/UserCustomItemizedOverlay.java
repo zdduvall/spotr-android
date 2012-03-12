@@ -12,6 +12,7 @@ import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -53,6 +54,7 @@ public class UserCustomItemizedOverlay extends UserBalloonItemizedOverlay<Overla
 	private Paint getTextPaint() {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLUE);
+		paint.setTextSize(25);
 		return paint;
 	}
 	
@@ -112,7 +114,7 @@ public class UserCustomItemizedOverlay extends UserBalloonItemizedOverlay<Overla
 		    // draw line
 		    canvas.drawPath(path, paint);
 		    // draw text
-		    canvas.drawText(Integer.toString((int) (distance)) + " km", pMe.x + 20,  pMe.y + 50, textPaint);
+		    canvas.drawText(distance + " m", pFriend.x + 50,  pFriend.y, textPaint);
 		}
 		super.draw(canvas, mapView, shadow);
 	}

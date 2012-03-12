@@ -25,6 +25,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.PlaceIconUtil;
@@ -76,7 +77,10 @@ public class LocalMapViewActivity extends MapActivity {
 	public PlaceCustomItemizedOverlay placeOverlay = null;
 	public UserCustomItemizedOverlay userOverlay = null;
 	private List<FriendAndLocation> friendLocations = new ArrayList<FriendAndLocation>();
-	private int index = 0;
+	private List<Place> places = new ArrayList<Place>();
+	
+	private int indexFriend = 0;
+	private int indexPlace = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,30 +93,65 @@ public class LocalMapViewActivity extends MapActivity {
 		findLocation();         // 2. listen to new location
 	}
 	
-	private void activateDistanceButton() {
-		Button distance = (Button) findViewById(R.id.mapview_xml_button_distance);
-		distance.setOnClickListener(new OnClickListener() {
+	private void activateFriendDistanceButton() {
+		Button btn = (Button) findViewById(R.id.mapview_xml_button_friend_distance);
+		btn.setEnabled(true);
+		btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (lastKnownLocation != null && friendLocations.size() > 0) {
-					index = index % friendLocations.size();
+					indexFriend = indexFriend % friendLocations.size();
 					GeoPoint geoMe = new GeoPoint(
 						(int) (lastKnownLocation.getLatitude()* 1E6), 
 						(int) (lastKnownLocation.getLongitude()* 1E6));
 					
 					
 					GeoPoint geoFriend = new GeoPoint(
-						(int) (friendLocations.get(index).getLatitude()* 1E6), 
-						(int) (friendLocations.get(index).getLongitude()* 1E6));
+						(int) (friendLocations.get(indexFriend).getLatitude()* 1E6), 
+						(int) (friendLocations.get(indexFriend).getLongitude()* 1E6));
 					
-					userOverlay.addTwoPoints(geoMe, geoFriend, 
-						getDistance(
-							lastKnownLocation.getLatitude(),
-							lastKnownLocation.getLongitude(),
-							friendLocations.get(index).getLatitude(),
-							friendLocations.get(index).getLongitude()));
-								
+					Location location = new Location("");
+					location.setLatitude(friendLocations.get(indexFriend).getLatitude());
+					location.setLongitude(friendLocations.get(indexFriend).getLongitude());
+					
+					float d = location.distanceTo(lastKnownLocation);
+					userOverlay.addTwoPoints(geoMe, geoFriend, d);
+					mapController.animateTo(geoFriend);
+					mapController.setZoom(19);
 					mapView.invalidate();
-					index++;
+					Toast.makeText(LocalMapViewActivity.this, d + " m", Toast.LENGTH_SHORT).show();
+					indexFriend++;
+				}
+			}
+		});
+	}
+	
+	private void activatePlaceDistanceButton() {
+		Button btn = (Button) findViewById(R.id.mapview_xml_button_place_distance);
+		btn.setEnabled(true);
+		btn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (lastKnownLocation != null && places.size() > 0) {
+					indexPlace = indexPlace % places.size();
+					GeoPoint geoMe = new GeoPoint(
+						(int) (lastKnownLocation.getLatitude()* 1E6), 
+						(int) (lastKnownLocation.getLongitude()* 1E6));
+					
+					
+					GeoPoint geoPlace = new GeoPoint(
+						(int) (places.get(indexPlace).getLatitude()* 1E6), 
+						(int) (places.get(indexPlace).getLongitude()* 1E6));
+					
+					Location location = new Location("");
+					location.setLatitude(places.get(indexPlace).getLatitude());
+					location.setLongitude(places.get(indexPlace).getLongitude());
+					
+					float d = location.distanceTo(lastKnownLocation);
+					placeOverlay.addTwoPoints(geoMe, geoPlace, d);
+					mapController.animateTo(geoPlace);
+					mapController.setZoom(19);
+					mapView.invalidate();
+					Toast.makeText(LocalMapViewActivity.this, d + " m", Toast.LENGTH_SHORT).show();
+					indexPlace++;
 				}
 			}
 		});
@@ -157,30 +196,23 @@ public class LocalMapViewActivity extends MapActivity {
 				activateLocateButton();
 				activatePlacesButton();
 				activatePingButton();
-				activateDistanceButton();
+				activateFriendDistanceButton();
+				activatePlaceDistanceButton();
+				
+				/*
+				 * Add user overlay for locate button
+				 */
+				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
+				Drawable icon = getResources().getDrawable(R.drawable.map_maker_red);
+				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+				ovl.setMarker(icon);
+				mapOverlays.add(new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M));
+				mapView.invalidate();
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
 	}
 	
-	private void activateNextButton() {
-		Button next = (Button) findViewById(R.id.mapview_xml_button_navigate_friend);
-		next.setEnabled(true);
-		next.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (friendLocations.size() > 0) {
-					index = index % friendLocations.size();
-					mapController.animateTo(
-						new GeoPoint(
-							(int) (friendLocations.get(index).getLatitude() * 1E6), 
-							(int) (friendLocations.get(index).getLongitude() * 1E6)));
-					mapController.setZoom(19);
-					index++;
-				}
-			}
-		});
-	}
-
 	/**
 	 * Set up the locate button to be clickable, to have a new image, and to
 	 * handle its click event.
@@ -192,17 +224,6 @@ public class LocalMapViewActivity extends MapActivity {
 		locateButton.setScaleType(ScaleType.FIT_XY);
 		locateButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// draw user's icon
-				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
-				Drawable icon = PlaceIconUtil.getMapIconByType(LocalMapViewActivity.this, -1);
-				ovl.setMarker(icon);
-				// construct a place with id = -1, so that
-				// user can't go to place mission
-				Place place = new Place.Builder(lastKnownLocation.getLongitude(), lastKnownLocation.getLatitude(), -1).build();
-				// add that overlay
-				placeOverlay.addOverlay(ovl, place);
-				// add radius around user
-				mapOverlays.add(new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M));
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapController.setZoom(19);
 			}
@@ -248,7 +269,6 @@ public class LocalMapViewActivity extends MapActivity {
 			public void onClick(View view) {
 				friendsButton.setEnabled(false);
 				new GetFriendLocationsTask(LocalMapViewActivity.this).execute();
-				activateNextButton();
 			}
 		});
 	}
@@ -364,6 +384,7 @@ public class LocalMapViewActivity extends MapActivity {
 
 	public void updatePlaceTaskProgress(Place p) {
 		placeOverlay.addOverlay(createOverlayItemByType(p), p);
+		places.add(p);
 		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
 		mapController.setZoom(19);
 		mapView.invalidate();
