@@ -116,7 +116,7 @@ public class PlaceCustomItemizedOverlay extends BalloonItemizedOverlay<OverlayIt
 		    // draw line
 		    canvas.drawPath(path, paint);
 		    // draw text
-		    canvas.drawText(distance + " m", pPlace.x + 50,  pPlace.y, textPaint);
+		    canvas.drawText((int) distance + " m", pPlace.x + 50,  pPlace.y, textPaint);
 		}
 		super.draw(canvas, mapView, shadow);
 	}

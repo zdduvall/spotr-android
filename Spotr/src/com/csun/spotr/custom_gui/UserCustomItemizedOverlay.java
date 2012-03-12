@@ -114,7 +114,7 @@ public class UserCustomItemizedOverlay extends UserBalloonItemizedOverlay<Overla
 		    // draw line
 		    canvas.drawPath(path, paint);
 		    // draw text
-		    canvas.drawText(distance + " m", pFriend.x + 50,  pFriend.y, textPaint);
+		    canvas.drawText((int) distance + " m", pFriend.x + 50,  pFriend.y, textPaint);
 		}
 		super.draw(canvas, mapView, shadow);
 	}
