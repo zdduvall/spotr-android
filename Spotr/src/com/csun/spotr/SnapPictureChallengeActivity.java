@@ -108,7 +108,6 @@ public class SnapPictureChallengeActivity
 						// encode it
 						String byteCode = Base64.encodeBytes(src);
 						
-						
 						UploadPictueTask task = new UploadPictueTask(SnapPictureChallengeActivity.this, byteCode, usersId, spotsId, challengesId, description, null);
 						task.execute();
 					}
