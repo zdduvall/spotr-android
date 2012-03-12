@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffc5ccd4"
+    android:orientation="vertical"
+    android:padding="10sp" >
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_rounded_white" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/profile_xml_textview_profilename"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1sp"
+                android:padding="5dp"
+                android:text="Name "
+                android:textColor="@color/aluminum6"
+                android:textSize="16sp" />
+        </TableRow>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/aluminum4" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/profile_xml_imageview_user_picture"
+                android:layout_width="120sp"
+                android:layout_height="120sp"
+                android:adjustViewBounds="true"
+                android:background="#FFFFFF"
+                android:clickable="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/user_default" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/aluminum4" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120sp"
+                android:orientation="vertical" >
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="120sp"
+                    android:background="#FFFFFF" >
+
+                    <TableRow>
+
+                        <TextView
+                            android:layout_column="1"
+                            android:layout_marginLeft="2sp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="10dp"
+                            android:text="Points"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/profile_xml_textview_points"
+                            android:layout_marginLeft="80sp"
+                            android:layout_marginRight="5sp"
+                            android:gravity="right"
+                            android:text="00"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <TextView
+                            android:layout_column="1"
+                            android:layout_marginLeft="2sp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
+                            android:text="Challenges Done"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/profile_xml_textview_challenges_done"
+                            android:layout_marginLeft="80sp"
+                            android:layout_marginRight="5sp"
+                            android:gravity="right"
+                            android:text="00"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow>
+
+                        <TextView
+                            android:layout_column="1"
+                            android:layout_marginLeft="2sp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
+                            android:text="Spots Visited"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/profile_xml_textview_places_visited"
+                            android:layout_marginLeft="80sp"
+                            android:layout_marginRight="5sp"
+                            android:gravity="right"
+                            android:text="00"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal" >
+
+                        <TableLayout
+                            android:id="@+id/profile_xml_badges_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="1"
+                            android:clickable="true" >
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/aluminum4" />
+
+                            <TableRow
+                                android:id="@+id/profile_xml_badges_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingTop="10dp" >
+
+                                <ImageView
+                                    android:id="@+id/profile_xml_badges_3"
+                                    android:layout_width="30sp"
+                                    android:layout_height="match_parent"
+                                    android:background="#FFFFFF"
+                                    android:clickable="true"
+                                    android:src="@drawable/awards" >
+                                </ImageView>
+
+                                <TextView
+                                    android:id="@+id/profile_xml_textview_numrewards"
+                                    android:layout_marginLeft="10sp"
+                                    android:gravity="right"
+                                    android:text="00"
+                                    android:textColor="@color/aluminum6"
+                                    android:textSize="25sp" />
+                            </TableRow>
+                        </TableLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="50sp"
+                            android:layout_gravity="bottom"
+                            android:background="@color/aluminum4" />
+
+                        <TableLayout
+                            android:id="@+id/profile_xml_friends_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_gravity="bottom"
+                            android:layout_weight="1"
+                            android:clickable="true" >
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/aluminum4" />
+
+                            <TableRow
+                                android:id="@+id/profile_xml_friends_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingTop="10dp" >
+
+                                <ImageView
+                                    android:id="@+id/profile_xml_friends_3"
+                                    android:layout_width="30sp"
+                                    android:layout_height="match_parent"
+                                    android:background="#FFFFFF"
+                                    android:clickable="true"
+                                    android:src="@drawable/ic_main_menu_friends_default" >
+                                </ImageView>
+
+                                <TextView
+                                    android:id="@+id/profile_xml_textview_numfriends"
+                                    android:layout_marginLeft="10sp"
+                                    android:gravity="right"
+                                    android:text="00"
+                                    android:textColor="@color/aluminum6"
+                                    android:textSize="25sp" />
+                            </TableRow>     
+                        </TableLayout>
+                    </LinearLayout>
+                </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/aluminum4" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/profile_xml_button_edit"
+            android:layout_width="80sp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5sp"
+            android:textSize="10sp"
+            android:text="Edit Profile"/>
+        </LinearLayout>
+        
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10sp"
+        android:background="@drawable/rectangle_rounded_white"
+        android:padding="5sp" >
+        
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="30sp"
+            android:background="@color/aluminum3">
+             
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Activity"
+                android:textSize="10sp">
+             </TextView>
+                
+
+        </TableRow>
+        
+        <LinearLayout>
+            
+            
+            
+            
+        </LinearLayout>
+        
+        
+        
+        
+    </TableLayout>
+
+</LinearLayout>
