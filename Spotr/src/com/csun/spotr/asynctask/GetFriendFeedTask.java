@@ -9,15 +9,18 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.csun.spotr.ExpandableFriendListFeedActivity;
+import com.csun.spotr.ProfileActivity;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.DialogId;
 import com.csun.spotr.util.JsonHelper;
 
 public class GetFriendFeedTask 
@@ -33,6 +36,12 @@ public class GetFriendFeedTask
 	public GetFriendFeedTask(ExpandableFriendListFeedActivity a, int offset) {
 		attach(a);
 		this.offset = offset;
+	}
+	
+	@Override 
+	protected void onPreExecute() {
+		if (isActivityStillRunning())
+			ref.get().showDialog(DialogId.ID_LOADING);
 	}
 
 	private List<NameValuePair> prepareUploadData() {
@@ -143,6 +152,9 @@ public class GetFriendFeedTask
 
 	@Override
 	protected void onPostExecute(Boolean result) {
+		if (isActivityStillRunning()) {
+			ref.get().dismissDialog(DialogId.ID_LOADING);
+		}
 		detach();
 	}
 
@@ -152,5 +164,9 @@ public class GetFriendFeedTask
 
 	public void detach() {
 		ref.clear();
+	}
+	
+	private boolean isActivityStillRunning() {
+		return (ref != null && ref.get() != null && !ref.get().isFinishing());
 	}
 }

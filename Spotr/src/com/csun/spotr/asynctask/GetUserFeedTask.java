@@ -34,6 +34,7 @@ import com.csun.spotr.core.adapter_item.FriendFeedItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.DialogId;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
 
@@ -78,13 +79,13 @@ public class GetUserFeedTask
 	
 	@Override 
 	protected void onPreExecute() {
-		if (!isActivityDone())
+		if (!isActivityStillRunning())
 			ref.get().showDialog(ProfileActivity.DIALOG_ID_LOADING);
 	}
 	
 	@Override
 	protected void onProgressUpdate(FriendFeedItem... f) {
-		if (!isActivityDone()) 
+		if (!isActivityStillRunning()) 
 			ref.get().updateAsyncTaskProgress(f[0]);
     }
 	
@@ -177,8 +178,8 @@ public class GetUserFeedTask
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		if (ref != null && ref.get() != null && !ref.get().isFinishing()) {
-			ref.get().dismissDialog(ProfileActivity.DIALOG_ID_LOADING);
+		if (isActivityStillRunning()) {
+			ref.get().dismissDialog(DialogId.ID_LOADING);
 		}
 		detach();
 	}
@@ -191,7 +192,7 @@ public class GetUserFeedTask
 		ref.clear();
 	}
 	
-	private boolean isActivityDone() {
+	private boolean isActivityStillRunning() {
 		return (ref != null && ref.get() != null && !ref.get().isFinishing());
 	}
 }

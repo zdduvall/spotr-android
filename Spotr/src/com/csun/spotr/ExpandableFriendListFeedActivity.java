@@ -17,9 +17,12 @@ import com.csun.spotr.core.adapter_item.FriendFeedItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.DialogId;
 import com.csun.spotr.util.JsonHelper;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -130,6 +133,18 @@ public class ExpandableFriendListFeedActivity
 	    public void onScrollStateChanged(AbsListView view, int scrollState) {
 	    	// TODO : not use
 	    }
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		if(id == DialogId.ID_LOADING){
+			ProgressDialog pd = new ProgressDialog(this);
+			pd.setMessage("Loading...");
+			pd.setIndeterminate(true);
+			pd.setCancelable(false);
+			return pd;
+		}
+		return null;
 	}
 	
 	@Override 
