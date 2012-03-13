@@ -159,13 +159,14 @@ public class ProfileActivity
 			if (requestCode == INTENT_RESULT_EDIT_PROFILE) {
 				Bundle bundle = data.getExtras();
 				String imageUrl = bundle.getString("user_image_url"); 
-				String name = bundle.getString("username");
+				String username = bundle.getString("username");
+				realname = bundle.getString("name");
 				ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
 				ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 				imageLoader.displayImage(imageUrl, imageViewUserPicture);
 				TextView textViewName = (TextView) findViewById(R.id.profile_xml_textview_profilename);
-				textViewName.setText(name);
-				updateFeedListView(name, imageUrl);
+				textViewName.setText(username);
+				updateFeedListView(username, imageUrl);
 			}
 		}
 	}

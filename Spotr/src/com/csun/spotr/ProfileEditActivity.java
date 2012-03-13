@@ -173,6 +173,7 @@ public class ProfileEditActivity extends Activity {
 		private void sendDataBack() {
 			Intent intent = new Intent();
 			intent.putExtra("username", username);
+			intent.putExtra("name", name);
 			/*
 			 * If the user has changed his/her picture, 
 			 * we send back the new url
