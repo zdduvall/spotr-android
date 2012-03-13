@@ -29,4 +29,5 @@
     <ListView
         android:id="@+id/place_xml_listview_places"
         style="@style/SpotsResultsList" />
+    
 </LinearLayout>

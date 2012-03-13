@@ -265,7 +265,7 @@
     <ListView
         android:id="@+id/profile_xml_listview_user_feeds"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:background="#FFFFFF" />
 
 </LinearLayout>

@@ -104,7 +104,7 @@ public class PlaceActivity
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		if(id == DIALOG_ID_LOADING){
+		if (id == DIALOG_ID_LOADING) {
 			ProgressDialog loadingDialog = new ProgressDialog(this);
 			loadingDialog.setMessage("Loading from Google places...");
 			loadingDialog.setIndeterminate(true);
@@ -284,7 +284,7 @@ public class PlaceActivity
 		
 		@Override
 		protected void onProgressUpdate(PlaceItem... p) {
-			if (ref != null && !ref.get().isFinishing()) {
+			if (ref != null && ref.get() != null && !ref.get().isFinishing()) {
 				ref.get().dismissDialog(DIALOG_ID_LOADING);
 				ref.get().updateAsyncTaskProgress(p[0]);
 			}
