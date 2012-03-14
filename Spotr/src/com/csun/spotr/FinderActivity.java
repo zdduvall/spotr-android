@@ -1,16 +1,10 @@
 package com.csun.spotr;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,14 +12,12 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.csun.spotr.adapter.FinderItemAdapter;
+import com.csun.spotr.asynctask.GetFindersTask;
 import com.csun.spotr.core.adapter_item.SeekingItem;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
 
 /*
  * Description:
@@ -36,7 +28,6 @@ public class FinderActivity
 		implements IActivityProgressUpdate<SeekingItem> {
 	
 	private static final String TAG = "(FinderActivity)";
-	private static final String GET_FINDERS_URL = "http://107.22.209.62/android/get_finders.php";
 	private List<SeekingItem> items;
 	private GridView gridview;
 	private FinderItemAdapter adapter;
@@ -70,70 +61,6 @@ public class FinderActivity
 		
 		new GetFindersTask(this).execute();
 	}	
-	
-	private static class GetFindersTask 
-		extends AsyncTask<Integer, SeekingItem, Boolean> 
-			implements IAsyncTask<FinderActivity> {
-		
-		private WeakReference<FinderActivity> ref;
-		private ProgressDialog progressDialog = null;
-		
-		public GetFindersTask(FinderActivity a) {
-			attach(a);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(ref.get());
-			progressDialog.setMessage("Loading items...");
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
-		}
-
-		@Override
-		protected void onProgressUpdate(SeekingItem... s) {
-			ref.get().updateAsyncTaskProgress(s[0]);
-		}
-
-		@Override
-		protected Boolean doInBackground(Integer... offsets) {
-			JSONArray array = JsonHelper.getJsonArrayFromUrl(GET_FINDERS_URL);
-			if (array != null) {
-				try {
-					for (int i = 0; i < array.length(); ++i) {
-						publishProgress(
-							new SeekingItem(
-								array.getJSONObject(i).getInt("finder_tbl_id"), 
-								array.getJSONObject(i).getString("finder_tbl_name"), 
-								array.getJSONObject(i).getString("finder_tbl_image_url")));
-					}
-				}
-				catch (JSONException e) {
-					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
-				}
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			progressDialog.dismiss();
-			if (result == false) {
-				Toast.makeText(ref.get().getApplicationContext(), "No items", Toast.LENGTH_LONG);
-			}
-			detach();
-		}
-
-		public void attach(FinderActivity a) {
-			ref = new WeakReference<FinderActivity>(a);
-		}
-
-		public void detach() {
-			ref.clear();
-		}
-	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == 1) {

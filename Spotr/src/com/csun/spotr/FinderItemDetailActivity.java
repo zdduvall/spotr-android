@@ -1,6 +1,5 @@
 package com.csun.spotr;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -11,15 +10,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.csun.spotr.adapter.FinderAdditionalItemImageAdapter;
-import com.csun.spotr.singleton.CurrentDateTime;
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.Base64;
+import com.csun.spotr.asynctask.GetFinderDetailTask;
+import com.csun.spotr.asynctask.SubmitAdditionalImageTask;
 import com.csun.spotr.util.JsonHelper;
-import com.csun.spotr.util.UploadFileHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,8 +43,6 @@ import android.widget.Toast;
 public class FinderItemDetailActivity extends Activity {
 	private static final String TAG = "(FinderItemDetailActivity)";
 	private static final String GET_FINDER_ADDITIONAL_IMAGES_URL = "http://107.22.209.62/android/get_finder_additional_images.php";
-	private static final String GET_FINDER_DETAIL_URL = "http://107.22.209.62/android/get_finder_detail.php";
-	private static final String SUBMIT_ADDITIONAL_IMAGE = "http://107.22.209.62/android/do_add_finder_image.php";
 	
 	private List<String> items = new ArrayList<String>();
 	private FinderAdditionalItemImageAdapter adapter;
@@ -109,170 +102,43 @@ public class FinderItemDetailActivity extends Activity {
 		
 		adapter = new FinderAdditionalItemImageAdapter(this, items);
 		gallery.setAdapter(adapter);
-		getFinderDetailTask = new GetFinderDetailTask(this);
-		getFinderDetailTask.execute();
-		getFinderImagesTask = new GetFinderImagesTask(this);
-		getFinderImagesTask.execute();
+		new GetFinderDetailTask(this, finderId).execute();
+		new GetFinderImagesTask(this).execute();
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
-		if (resultCode == RESULT_OK) {
-			Uri selectedImageUri = intent.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-			Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-
-			ContentResolver cr = getContentResolver();
-			InputStream in = null;
-			try {
-				in = cr.openInputStream(selectedImageUri);
-			}
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			
-			Options options = new Options();
-			options.inSampleSize = 1;
-			Bitmap bitmap = BitmapFactory.decodeStream(in, null, options);
-			submitAdditionalImageTask = new SubmitAdditionalImageTask(FinderItemDetailActivity.this, bitmap);
+		if (resultCode == RESULT_OK) {			
+			Bitmap bitmap = BitmapFactory.decodeStream(getInputStream(intent), null, getOptions());
+			new SubmitAdditionalImageTask(FinderItemDetailActivity.this, bitmap, finderId).execute();
 		}
 	}
 	
-	private static class SubmitAdditionalImageTask
-		extends AsyncTask<String, Integer, String> 
-			implements IAsyncTask<FinderItemDetailActivity> {
-	
-		private WeakReference<FinderItemDetailActivity> ref;
-		private ProgressDialog progressDialog = null;
-		private Bitmap imageBitmap;
-	
-		public SubmitAdditionalImageTask(FinderItemDetailActivity a, Bitmap b) {
-			attach(a);
-			imageBitmap = b;
-		}
-	
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(ref.get());
-			progressDialog.setMessage("Submitting image...");
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
-		}
-	
-		protected String doInBackground(String... params) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-			byte[] src = stream.toByteArray();
+	private InputStream getInputStream(Intent intent) {
+		Uri selectedImageUri = intent.getData();
+		String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-			String imageBytecode = Base64.encodeBytes(src);
-			String imageFile = CurrentUser.getCurrentUser().getUsername() + CurrentDateTime.getUTCDateTime().trim() + ".png";
-			
-			data.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
-			data.add(new BasicNameValuePair("image", imageBytecode));
-			data.add(new BasicNameValuePair("filename", imageFile));
-	
-			JSONObject json = UploadFileHelper.uploadFileToServer(SUBMIT_ADDITIONAL_IMAGE, data);
-			String result = "";
-			try {
-				result = json.getString("result");
-			}
-			catch (JSONException e) {
-				Log.e(TAG + ".FinderItemDetailActivity", "JSONFailception", e );
-			}
-	
-			return result;
-		}
-	
-		@Override
-		protected void onPostExecute(String result) {
-			progressDialog.dismiss();
-			if (result.equals("success")) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
-				dialogMessage.setTitle("Image uploaded!");
-				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() 
-						+ ", image submission successful!");
-				
-				dialogMessage.setButton("Okay", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Intent intent = new Intent();
-						ref.get().setResult(RESULT_OK, intent);
-						ref.get().finish();
-					}
-				});
-				
-				dialogMessage.show();
-			}
-			else {
-				Log.d(TAG, "Result = FAIL");
-			}
-		}
-	
-		public void detach() {
-			ref.clear();
-		}
+		Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
+		cursor.moveToFirst();
 
-		public void attach(FinderItemDetailActivity a) {
-			ref = new WeakReference<FinderItemDetailActivity>(a);			
+		ContentResolver cr = getContentResolver();
+		InputStream in = null;
+		try {
+			in = cr.openInputStream(selectedImageUri);
 		}
-	
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return in;
 	}
 	
-	private class GetFinderDetailTask extends AsyncTask<Integer, String, Boolean> {
-		private WeakReference<FinderItemDetailActivity> refActivity;
-		private ProgressDialog progressDialog = null;
+	private Options getOptions() {
+		Options options = new Options();
+		options.inSampleSize = 1;
 		
-		public GetFinderDetailTask(FinderItemDetailActivity c) {
-			refActivity = new WeakReference<FinderItemDetailActivity>(c);
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(FinderItemDetailActivity.this);
-			progressDialog.setMessage("Gathering item details...");
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
-		}
-		
-		@Override 
-		protected void onProgressUpdate(String...params) {
-			refActivity.get().updateFinderInfo(params[0], params[1], params[2], params[3]);
-		}
-		
-		@Override
-		protected Boolean doInBackground(Integer... params) {
-			List<NameValuePair> data = new ArrayList<NameValuePair>();
-			data.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
-			
-			JSONArray jsonArray = JsonHelper.getJsonArrayFromUrlWithData(GET_FINDER_DETAIL_URL, data);
-			
-			if (jsonArray != null) {
-				try {
-					publishProgress(jsonArray.getJSONObject(0).getString("finder_tbl_name"), 
-							jsonArray.getJSONObject(0).getString("finder_tbl_description"), 
-							jsonArray.getJSONObject(0).getString("finder_tbl_points"),
-							jsonArray.getJSONObject(0).getString("users_tbl_username"));
-					
-				}
-				catch (JSONException e) {
-					Log.e(TAG + "GetFindersTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
-					Toast.makeText(refActivity.get(), "Error retrieving item's pictures", Toast.LENGTH_SHORT);
-				}
-				return true;
-			}
-			return false;
-		}
-		
-		@Override
-		protected void onPostExecute(Boolean result) {
-			progressDialog.dismiss();			
-		}
+		return options;
 	}
 	
 	private class GetFinderImagesTask extends AsyncTask<Integer, String, Boolean> {

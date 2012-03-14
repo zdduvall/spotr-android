@@ -59,11 +59,6 @@ public class FinderMainActivity extends TabActivity {
 		
 		tabHost.setCurrentTab(0);
 	}
-	
-	private void setupTitleBar() {
-		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("pot and Steal");
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
