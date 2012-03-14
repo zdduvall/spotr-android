@@ -192,6 +192,7 @@ public class LocalMapViewActivity extends MapActivity {
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
+				mapOverlays.clear();
 				lastKnownLocation = location;
 				activateLocateButton();
 				activatePlacesButton();
@@ -224,6 +225,7 @@ public class LocalMapViewActivity extends MapActivity {
 		locateButton.setScaleType(ScaleType.FIT_XY);
 		locateButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				findLocation();
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapController.setZoom(19);
 			}
