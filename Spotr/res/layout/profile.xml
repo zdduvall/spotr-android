@@ -2,270 +2,269 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181818"
-    android:orientation="vertical" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="25sp"
-        android:background="@color/aluminum3"
-        android:orientation="horizontal" >
-
-        <TableLayout
-            android:layout_width="280sp"
-            android:layout_height="match_parent" >
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/profile_xml_textview_profilename"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1sp"
-                    android:padding="2dp"
-                    android:text="Name "
-                    android:textColor="@color/aluminum6"
-                    android:textSize="15sp" />
-            </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="25sp"
-                android:paddingTop="2sp" >
-
-                <Button
-                    android:id="@+id/profile_xml_button_edit"
-                    android:layout_width="35sp"
-                    android:layout_height="25sp"
-                    android:layout_marginLeft="3sp"
-                    android:text="Edit"
-                    android:textColor="@color/aluminum6"
-                    android:textSize="7sp" />
-            </TableRow>
-        </TableLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/aluminum4" />
+    android:background="#ffc5ccd4"
+    android:orientation="vertical"
+    android:padding="10sp" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:background="@drawable/rectangle_rounded_white"
+        android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/profile_xml_imageview_user_picture"
-            android:layout_width="120sp"
-            android:layout_height="120sp"
-            android:adjustViewBounds="true"
-            android:background="#FFFFFF"
-            android:clickable="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/user_default" />
-
-        <View
-            android:layout_width="1dp"
+        <TextView
+            android:id="@+id/profile_xml_textview_profilename"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/aluminum4" />
+            android:layout_marginLeft="1sp"
+            android:padding="5dp"
+            android:text="Name"
+            android:textColor="@color/aluminum6"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120sp"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_rounded_white"
+            android:orientation="horizontal" >
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="120sp"
-                android:background="@color/aluminum1" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-                <TableRow>
+                <ImageView
+                    android:id="@+id/profile_xml_imageview_user_picture"
+                    android:layout_width="120sp"
+                    android:layout_height="120sp"
+                    android:adjustViewBounds="true"
+                    android:background="#FFFFFF"
+                    android:clickable="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/user_default" />
 
-                    <TextView
-                        android:layout_column="1"
-                        android:layout_marginLeft="2sp"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="10dp"
-                        android:text="Points"
-                        android:textColor="@color/aluminum6"
-                        android:textSize="10sp" />
+                <Button
+                    android:id="@+id/profile_xml_button_edit"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/button_blue"
+                    android:text="Edit Profile"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/profile_xml_textview_points"
-                        android:layout_marginLeft="30sp"
-                        android:layout_marginRight="5sp"
-                        android:gravity="right"
-                        android:text="00"
-                        android:textColor="@color/aluminum6"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </TableRow>
+            <!-- Stats -->
 
-                <TableRow>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-                    <TextView
-                        android:layout_column="1"
-                        android:layout_marginLeft="2sp"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="5dp"
-                        android:text="Challenges Done"
-                        android:textColor="@color/aluminum6"
-                        android:textSize="10sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/profile_xml_textview_challenges_done"
-                        android:layout_marginLeft="30sp"
-                        android:layout_marginRight="5sp"
-                        android:gravity="right"
-                        android:text="00"
-                        android:textColor="@color/aluminum6"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </TableRow>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
 
-                <TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginLeft="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="10dp"
+                            android:text="Points"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="14sp" />
 
-                    <TextView
-                        android:layout_column="1"
-                        android:layout_marginLeft="2sp"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="5dp"
-                        android:text="Spots Visited"
-                        android:textColor="@color/aluminum6"
-                        android:textSize="10sp" />
+                        <TextView
+                            android:id="@+id/profile_xml_textview_points"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="90sp"
+                            android:background="#FFFFFF"
+                            android:gravity="right"
+                            android:text="000"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/profile_xml_textview_places_visited"
-                        android:layout_marginLeft="30sp"
-                        android:layout_marginRight="5sp"
-                        android:gravity="right"
-                        android:text="00"
-                        android:textColor="@color/aluminum6"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </TableRow>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginLeft="2sp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
+                            android:text="Challenges Done"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/profile_xml_textview_challenges_done"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="25sp"
+                            android:gravity="right"
+                            android:text="000"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginLeft="2sp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="5dp"
+                            android:text="Spots Visited"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/profile_xml_textview_places_visited"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="50sp"
+                            android:gravity="right"
+                            android:text="000"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                     >
 
-                    <TableLayout
+                    <LinearLayout
                         android:id="@+id/profile_xml_badges_1"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_gravity="bottom"
-                        android:layout_weight="1"
-                        android:clickable="true" >
+                        android:layout_height="60dp"
+                        android:clickable="true"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:paddingBottom="5dp">
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/aluminum4" />
-
-                        <TableRow
+                        <LinearLayout
                             android:id="@+id/profile_xml_badges_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:orientation="horizontal"
                             android:paddingLeft="5dp"
-                            android:paddingTop="10dp" >
+                            android:paddingRight="5dp"
+                            android:gravity="bottom" >
 
                             <ImageView
                                 android:id="@+id/profile_xml_badges_3"
-                                android:layout_width="30sp"
-                                android:layout_height="match_parent"
-                                android:background="@color/aluminum1"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="#FFFFFF"
                                 android:clickable="true"
-                                android:src="@drawable/awards" >
-                            </ImageView>
+                                android:src="@drawable/awards"
+                                android:gravity="bottom" />
 
                             <TextView
                                 android:id="@+id/profile_xml_textview_numrewards"
-                                android:layout_marginLeft="10sp"
-                                android:gravity="right"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="00"
                                 android:textColor="@color/aluminum6"
                                 android:textSize="25sp" />
-                        </TableRow>
-                    </TableLayout>
+                        </LinearLayout>
+                    </LinearLayout>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="50sp"
-                        android:layout_gravity="bottom"
-                        android:background="@color/aluminum4" />
-
-                    <TableLayout
+                    <LinearLayout
                         android:id="@+id/profile_xml_friends_1"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_gravity="bottom"
-                        android:layout_weight="1"
-                        android:clickable="true" >
+                        android:layout_height="60dp"
+                        android:clickable="true"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="5dp" >
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/aluminum4" />
-
-                        <TableRow
+                        <LinearLayout
                             android:id="@+id/profile_xml_friends_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="10dp" >
+                            android:paddingLeft="20dp" >
 
                             <ImageView
                                 android:id="@+id/profile_xml_friends_3"
-                                android:layout_width="30sp"
-                                android:layout_height="match_parent"
-                                android:background="@color/aluminum1"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="#FFFFFF"
                                 android:clickable="true"
                                 android:src="@drawable/ic_main_menu_friends_default" >
                             </ImageView>
 
                             <TextView
                                 android:id="@+id/profile_xml_textview_numfriends"
-                                android:layout_marginLeft="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
                                 android:gravity="right"
                                 android:text="00"
                                 android:textColor="@color/aluminum6"
                                 android:textSize="25sp" />
-                        </TableRow>
-                    </TableLayout>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-            </TableLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="20sp"
-        android:background="@color/aluminum4" >
-
-        <TextView
-            android:layout_marginLeft="1sp"
-            android:padding="2dp"
-            android:text="Activity"
-            android:textColor="@color/aluminum6"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-    </TableLayout>
-
-    <ListView
-        android:id="@+id/profile_xml_listview_user_feeds"
-        android:layout_width="fill_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF" />
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:paddingTop="2dp"
+        android:text="Activity"
+        android:textColor="@color/watermelonRed"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"  >
+
+        <ListView
+            android:id="@+id/profile_xml_listview_user_feeds"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/rectangle_rounded_white"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp" >
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>
