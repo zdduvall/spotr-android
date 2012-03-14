@@ -92,7 +92,7 @@ public class WriteOnWallActivity
 		
 		editTextMessage.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				textViewCount.setText(String.valueOf(s.length()) + "/100");
+				textViewCount.setText(String.valueOf(s.length()) + "/160");
 				if (s.length() > 0) {
 					buttonPost.setEnabled(true);
 				}
