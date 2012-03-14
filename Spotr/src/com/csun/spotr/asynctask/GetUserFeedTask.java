@@ -79,13 +79,13 @@ public class GetUserFeedTask
 	
 	@Override 
 	protected void onPreExecute() {
-		if (!isActivityStillRunning())
-			ref.get().showDialog(ProfileActivity.DIALOG_ID_LOADING);
+		if (isActivityStillRunning())
+			ref.get().showDialog(DialogId.ID_LOADING);
 	}
 	
 	@Override
 	protected void onProgressUpdate(FriendFeedItem... f) {
-		if (!isActivityStillRunning()) 
+		if (isActivityStillRunning()) 
 			ref.get().updateAsyncTaskProgress(f[0]);
     }
 	

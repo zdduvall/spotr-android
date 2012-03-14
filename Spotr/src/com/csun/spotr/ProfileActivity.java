@@ -34,6 +34,7 @@ import com.csun.spotr.core.adapter_item.FriendFeedItem;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.util.DialogId;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
 
@@ -182,7 +183,7 @@ public class ProfileActivity
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		if(id == DIALOG_ID_LOADING){
+		if (id == DialogId.ID_LOADING) {
 			ProgressDialog pd = new ProgressDialog(this);
 			pd.setMessage("Loading...");
 			pd.setIndeterminate(true);
