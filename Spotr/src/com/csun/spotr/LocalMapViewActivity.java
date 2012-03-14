@@ -76,6 +76,7 @@ public class LocalMapViewActivity extends MapActivity {
 	public Location lastKnownLocation = null;
 	public PlaceCustomItemizedOverlay placeOverlay = null;
 	public UserCustomItemizedOverlay userOverlay = null;
+	public ImpactOverlay userLocationOverlay = null;
 	private List<FriendAndLocation> friendLocations = new ArrayList<FriendAndLocation>();
 	private List<Place> places = new ArrayList<Place>();
 	
@@ -192,7 +193,6 @@ public class LocalMapViewActivity extends MapActivity {
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
-				mapOverlays.clear();
 				lastKnownLocation = location;
 				activateLocateButton();
 				activatePlacesButton();
@@ -200,14 +200,33 @@ public class LocalMapViewActivity extends MapActivity {
 				activateFriendDistanceButton();
 				activatePlaceDistanceButton();
 				
-				/*
-				 * Add user overlay for locate button
-				 */
-				OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
-				Drawable icon = getResources().getDrawable(R.drawable.map_maker_red);
-				icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-				ovl.setMarker(icon);
-				mapOverlays.add(new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M));
+				addUserOverlay();
+				
+				userLocationOverlay = new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M);
+				mapOverlays.add(userLocationOverlay);
+				mapView.invalidate();
+			}
+		});
+		fineLocation.getLocation(this, locationResult);
+	}
+	
+	/*
+	 * Add user overlay for locate button; must call [mapview].invalidate() after
+	 */
+	private void addUserOverlay() {
+		OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
+		Drawable icon = getResources().getDrawable(R.drawable.map_maker_red);
+		icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+		ovl.setMarker(icon);
+	}
+	
+	// This is after initialization, when user wants to get new location
+	private void getCurrentLocation() {
+		LocationResult locationResult = (new LocationResult() {
+			@Override
+			public void gotLocation(final Location location) {
+				lastKnownLocation = location;		
+				userLocationOverlay.changePoint(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapView.invalidate();
 			}
 		});
@@ -225,7 +244,7 @@ public class LocalMapViewActivity extends MapActivity {
 		locateButton.setScaleType(ScaleType.FIT_XY);
 		locateButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				findLocation();
+				getCurrentLocation();
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapController.setZoom(19);
 			}

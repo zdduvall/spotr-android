@@ -21,6 +21,10 @@ public class ImpactOverlay extends Overlay {
 		geopoint = point;
 		radius = myRadius;
 	}
+	
+	public void changePoint(GeoPoint point) {
+		geopoint = point;
+	}
 
 	@Override
 	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
