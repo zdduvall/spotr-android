@@ -356,11 +356,13 @@ public class PlaceActionActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
+			// There is no settings activity right now
+/*			case R.id.options_menu_xml_item_setting_icon:
+				// There is no settings activity.  Perhaps we should remove this button.
 				intent = new Intent("com.csun.spotr.SettingsActivity");
 				startActivity(intent);
 				finish();
-				break;
+				break; */
 			case R.id.options_menu_xml_item_logout_icon:
 				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
 				editor.clear();

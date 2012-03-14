@@ -2,23 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/options_menu_xml_item_setting_icon"
-        android:icon="@drawable/settings"
-        android:title="settings"
-        />
-    <item
         android:id="@+id/options_menu_xml_item_mainmenu_icon"
         android:icon="@drawable/friends"
-        android:title="main menu"
+        android:title="Main Menu"
         />
     <item
         android:id="@+id/options_menu_xml_item_logout_icon"
         android:icon="@drawable/logout"
-        android:title="logout"/>
+        android:title="Logout"/>
     
       <item
         android:id="@+id/options_menu_xml_item_toolbar_icon"
         android:icon="@drawable/awards"
-        android:title="toolbar"/>
+        android:title="Toolbar"/>
 
 </menu>
