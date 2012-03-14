@@ -73,6 +73,9 @@ public class ProfileActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
 		
+		Bundle extrasBundle = getIntent().getExtras();
+		userId = extrasBundle.getInt("user_id");
+		
 		editButton = (Button) findViewById(R.id.profile_xml_button_edit);
 		
 		// views created to make entire area clickable
@@ -85,14 +88,18 @@ public class ProfileActivity
 		
 		feedList = new ArrayList<FriendFeedItem>();
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
-		adapter = new FriendFeedItemAdapter(this, feedList, true);
+		//determine if like button can be clicked
+		if(userId == CurrentUser.getCurrentUser().getId())
+			adapter = new FriendFeedItemAdapter(this, feedList, true);
+		else if(userId != CurrentUser.getCurrentUser().getId())
+			adapter = new FriendFeedItemAdapter(this, feedList, false);
 		listview.setAdapter(adapter);
 		listview.setOnScrollListener(new FeedOnScrollListener());
 		
-		Bundle extrasBundle = getIntent().getExtras();
-		userId = extrasBundle.getInt("user_id");
+		//hide edit button if not their profile
 		if(userId != CurrentUser.getCurrentUser().getId())
 			editButton.setVisibility(View.GONE);
+		
 
 		// get user detail task for top portion
 		if (userId != -1) {

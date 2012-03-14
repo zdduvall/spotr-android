@@ -276,8 +276,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		
 		if (me) {
-			holder.buttonComment.setEnabled(false);
-			holder.buttonLike.setEnabled(false);
+			holder.buttonLike.setClickable(false);
 		}
 		
 		return convertView;
