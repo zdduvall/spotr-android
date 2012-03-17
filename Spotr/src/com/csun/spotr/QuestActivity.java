@@ -69,6 +69,7 @@ public class QuestActivity
 				extras.putInt("numberChallenges", questList.get(position).getSpotnum());
 				extras.putString("quest_name", questList.get(position).getName());
 				extras.putString("quest_description", questList.get(position).getDescription());
+				extras.putString("quest_url", questList.get(position).getUrl());
 				intent.putExtras(extras);
 				startActivity(intent);
 			}

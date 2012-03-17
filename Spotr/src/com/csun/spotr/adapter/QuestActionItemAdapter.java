@@ -8,21 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.csun.spotr.R;
+import com.csun.spotr.R.color;
 import com.csun.spotr.core.Challenge;
 
+/**
+ * Adapter for each challenge item in the Missions tab of Spots. 
+ */
 public class QuestActionItemAdapter extends BaseAdapter {
 	private List<Challenge> items;
 	private Context context;
 	private static LayoutInflater inflater;
-	private	ItemViewHolder holder;
-	
+	private ItemViewHolder holder;
+
 	public QuestActionItemAdapter(Context context, List<Challenge> items) {
 		this.context = context.getApplicationContext();
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		this.items = items;
-		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	public int getCount() {
@@ -41,7 +46,9 @@ public class QuestActionItemAdapter extends BaseAdapter {
 		TextView titleTextView;
 		TextView descriptionTextView;
 		TextView pointTextView;
+		TextView pointAbbrevTextView;
 		ImageView iconImageView;
+		LinearLayout layout;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -49,10 +56,10 @@ public class QuestActionItemAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.place_action_item, null);
 			holder = new ItemViewHolder();
 			holder.titleTextView = (TextView) convertView.findViewById(R.id.place_action_item_xml_textview_title);
-			holder.descriptionTextView = (TextView) convertView.findViewById(R.id.place_action_item_xml_textview_subtitle);
 			holder.pointTextView = (TextView) convertView.findViewById(R.id.place_action_item_xml_textview_point);
+			holder.pointAbbrevTextView = (TextView) convertView.findViewById(R.id.place_action_item_xml_textview_point_abbrev);
 			holder.iconImageView = (ImageView) convertView.findViewById(R.id.place_action_item_xml_imageview_action_icon);
-
+			holder.layout = (LinearLayout) convertView.findViewById(R.id.place_action_item_xml_tablelayout_table);
 			convertView.setTag(holder);
 		}
 		else {
@@ -60,20 +67,29 @@ public class QuestActionItemAdapter extends BaseAdapter {
 		}
 
 		holder.titleTextView.setText(items.get(position).getName());
-		holder.descriptionTextView.setText(items.get(position).getDescription());
-		holder.pointTextView.setText(Integer.toString(items.get(position).getPoints()));
+		holder.pointTextView.setText(Integer.toString(items.get(position).getPoints()) + " "); // extra space at end to avoid clipping off italic text
+		holder.pointAbbrevTextView.setText(R.string.place_action_item_xml_string_pts);
 
+		if (items.get(position).getStatus().equalsIgnoreCase("done"))
+		{
+			holder.layout.setClickable(true);
+			holder.layout.setBackgroundColor(color.aluminum3);
+		}
 		if (items.get(position).getType() == Challenge.Type.CHECK_IN)
-			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_check_in);
 		else if (items.get(position).getType() == Challenge.Type.SNAP_PICTURE)
-			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_snap_picture);
 		else if (items.get(position).getType() == Challenge.Type.WRITE_ON_WALL)
-			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
-		else if (items.get(position).getType() == Challenge.Type.WRITE_ON_WALL)
-			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_write_on_wall);
+		else if (items.get(position).getType() == Challenge.Type.QUESTION_ANSWER)
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
+		else if (items.get(position).getType() == Challenge.Type.QUESTION_ANSWER)
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
+		else if (items.get(position).getType() == Challenge.Type.SNAP_PICTURE_CHALLENGE)
+			holder.iconImageView.setImageResource(R.drawable.ic_main_menu_map_default);//.mission_ask_question);
 		else
 			holder.iconImageView.setImageResource(R.drawable.ic_launcher);
-
+		
 		return convertView;
 	}
 }

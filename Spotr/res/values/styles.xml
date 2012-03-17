@@ -1101,7 +1101,7 @@
     <style name="MapView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:apiKey">0kqsfxjLdh6hBSw6P1O21ednBAHof_q1GuRuffg</item>
+        <item name="android:apiKey">0A6iKMJ5qzvkWp6ABvWwMrWtzZYf8vkqzMX3O0A</item>
         <item name="android:clickable">true</item>
     </style>
     <!-- End Misc -->

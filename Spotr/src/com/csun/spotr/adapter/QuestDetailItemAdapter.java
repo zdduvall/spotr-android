@@ -52,11 +52,11 @@ public class QuestDetailItemAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.quest_item, null);
+			convertView = inflater.inflate(R.layout.quest_detail_item, null);
 			holder = new ItemViewHolder();
-			holder.layout = (LinearLayout) convertView.findViewById(R.id.quest_item_xml_linearlayout);
-			holder.nameTextView = (TextView) convertView.findViewById(R.id.quest_item_xml_textview_name);
-			holder.imageView = (ImageView) convertView.findViewById(R.id.quest_item_xml_image);
+			holder.layout = (LinearLayout) convertView.findViewById(R.id.quest_detail_item_xml_linearlayout);
+			holder.nameTextView = (TextView) convertView.findViewById(R.id.quest_detail_item_xml_textview_name);
+			holder.imageView = (ImageView) convertView.findViewById(R.id.quest_detail_item_xml_image);
 			//holder.descriptionTextView = (TextView) convertView.findViewById(R.id.quest_item_xml_textview_description);
 			convertView.setTag(holder);
 		}

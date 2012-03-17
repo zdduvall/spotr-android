@@ -35,6 +35,7 @@ public class Challenge {
 	private String name;
 	private String description;
 	private int rating;
+	private String status;
 	
 	public static class Builder {
 		private final int id;
@@ -44,6 +45,7 @@ public class Challenge {
 		private String name;
 		private String description;
 		private int rating;
+		private String status;
 		
 		public Builder(int id, Type type, int points) {
 			this.id = id;
@@ -70,6 +72,11 @@ public class Challenge {
 			return this;
 		}
 		
+		public Builder status(String status){
+			this.status = status;
+			return this;
+		}
+		
 		public Challenge build() {
 			return new Challenge(this);
 		}
@@ -82,6 +89,7 @@ public class Challenge {
 		this.name = builder.name;
 		this.description = builder.description;
 		this.rating = builder.rating;
+		this.status = builder.status;
 	}
 	
 	public String getName() {
@@ -118,6 +126,14 @@ public class Challenge {
 
 	public int getPoints() {
 		return points;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }
