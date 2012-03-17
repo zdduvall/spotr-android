@@ -3,27 +3,15 @@ package com.csun.spotr;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.csun.spotr.singleton.CurrentDateTime;
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IAsyncTask;
+import com.csun.spotr.asynctask.FinderFoundTask;
 import com.csun.spotr.util.Base64;
 import com.csun.spotr.util.FineLocation;
-import com.csun.spotr.util.UploadFileHelper;
 import com.csun.spotr.util.FineLocation.LocationResult;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,7 +21,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -49,7 +36,6 @@ import android.widget.Toast;
 
 public class FinderFoundActivity extends Activity {
 	private static final String TAG = "(FinderFoundActivity)";
-	private static final String FINDER_FOUND_URL = "http://107.22.209.62/android/do_found_finder.php";
 	private static final int CAMERA_REQUEST_CODE = 0;
 	private static final int GALLERY_REQUEST_CODE = 1;
 	
@@ -65,8 +51,6 @@ public class FinderFoundActivity extends Activity {
 	private TextView textViewCount;
 	private static ImageView imageViewImage;
 	
-	private FinderFoundTask finderFoundTask;
-	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.finder_found);
@@ -80,7 +64,6 @@ public class FinderFoundActivity extends Activity {
 		textViewCount = (TextView) findViewById(R.id.finder_found_xml_textview_character_count);
 		imageViewImage = (ImageView) findViewById(R.id.finder_found_xml_imageview_image);
 		
-		finderFoundTask = new FinderFoundTask(this);
 		buttonSubmit.setEnabled(false);
 		
 		LocationResult locationResult = (new LocationResult() {
@@ -138,11 +121,24 @@ public class FinderFoundActivity extends Activity {
 		buttonSubmit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if(hasImage)
-					finderFoundTask.execute();
+					new FinderFoundTask(FinderFoundActivity.this, 
+										finderId, getImageBytecode(), 
+										editTextMessage.getText().toString(), 
+										lastKnownLocation.getLatitude(), 
+										lastKnownLocation.getLongitude()).execute();
 				else
 					Toast.makeText(getApplicationContext(), "Please add a picture", Toast.LENGTH_SHORT);
 			}
 		});
+	}
+	
+	private String getImageBytecode() {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+		byte[] src = stream.toByteArray();
+		String result = Base64.encodeBytes(src);
+		
+		return result;
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -150,136 +146,50 @@ public class FinderFoundActivity extends Activity {
 		
 		if (requestCode == CAMERA_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				imageBitmap = (Bitmap) intent.getExtras().get("data");
-				imageViewImage.setImageBitmap(imageBitmap);
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-				imageViewImage.setImageBitmap(imageBitmap);
+				getImageBitmap(intent);
 				hasImage = true;
 			}
 		}
 		
 		else if (requestCode == GALLERY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				Uri selectedImageUri = intent.getData();
-				String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-				Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
-				cursor.moveToFirst();
-
-				ContentResolver cr = getContentResolver();
-				InputStream in = null;
-				try {
-					in = cr.openInputStream(selectedImageUri);
-				}
-				catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				Options options = new Options();
-				options.inSampleSize = 8;
-				imageBitmap = BitmapFactory.decodeStream(in, null, options);
+				imageBitmap = BitmapFactory.decodeStream(getInputStream(intent), null, getOptions());
 				imageViewImage.setImageBitmap(imageBitmap);
 				hasImage = true;
 			}
 		}
 	}
 	
-	private static class FinderFoundTask extends AsyncTask<String, Integer, String> 
-	implements IAsyncTask<FinderFoundActivity> {
-	
-		private List<NameValuePair> finderData = new ArrayList<NameValuePair>();
-		private WeakReference<FinderFoundActivity> ref;
-		private ProgressDialog progressDialog = null;
-		
-		public FinderFoundTask(FinderFoundActivity a) {
-			attach(a);
-		}
-	
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(ref.get());
-			progressDialog.setMessage("Loading...");
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
-		}
-	
-		protected String doInBackground(String... params) {
-			// Prepare bitmap for Base-64 encoding
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-			byte[] src = stream.toByteArray();
-			
-			// Add values to array list
-			finderData.add(new BasicNameValuePair("finder_id", Integer.toString(finderId)));
-			finderData.add(new BasicNameValuePair("filename", CurrentUser.getCurrentUser().getUsername() + 
-					CurrentDateTime.getUTCDateTime().trim() + ".png"));
-			finderData.add(new BasicNameValuePair("image", Base64.encodeBytes(src)));
-			finderData.add(new BasicNameValuePair("user_id", Integer.toString(CurrentUser.getCurrentUser().getId())));
-			finderData.add(new BasicNameValuePair("comment", ref.get().editTextMessage.getText().toString()));
-			finderData.add(new BasicNameValuePair("lat", Double.toString(lastKnownLocation.getLatitude())));
-			finderData.add(new BasicNameValuePair("long", Double.toString(lastKnownLocation.getLongitude())));
-			
-			JSONObject json = UploadFileHelper.uploadFileToServer(FINDER_FOUND_URL, finderData);
-			
-			String result = "";
-			try {
-				result = json.getString("result");
-			}
-			catch (JSONException e) {
-				Log.e(TAG + ".FinderFoundActivity", "JSONFailception", e );
-			}
-	
-			return result;
-		}
-	
-		@Override
-		protected void onPostExecute(String result) {
-			progressDialog.dismiss();
-			if (result.equals("success")) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
-				dialogMessage.setTitle("Item marked as found!");
-				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() 
-						+ ", the item's owner has been notified that it was found!");
-				
-				dialogMessage.setButton("Okay", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Intent intent = new Intent();
-						ref.get().setResult(RESULT_OK, intent);
-						ref.get().finish();
-					}
-				});
-				
-				dialogMessage.show();
-			}
-			else {
-				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
-				dialogMessage.setTitle("Submission error");
-				dialogMessage.setMessage("Hey " + CurrentUser.getCurrentUser().getUsername() 
-						+ ", there was an error processing.");
-				
-				dialogMessage.setButton("Okay", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Intent intent = new Intent();
-						ref.get().setResult(RESULT_OK, intent);
-						ref.get().finish();
-					}
-				});
-				
-				dialogMessage.show();
-				Log.d(TAG, "Result = FAIL");
-			}
-		}
-	
-		public void detach() {
-			ref.clear();
-		}
-
-		public void attach(FinderFoundActivity a) {
-			ref = new WeakReference<FinderFoundActivity>(a);			
-		}
-	
+	private void getImageBitmap(Intent intent) {
+		imageBitmap = (Bitmap) intent.getExtras().get("data");
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		imageBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+		imageViewImage.setImageBitmap(imageBitmap);
 	}
+	
+	private InputStream getInputStream(Intent intent) {
+		Uri selectedImageUri = intent.getData();
+		String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+		Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
+		cursor.moveToFirst();
+
+		ContentResolver cr = getContentResolver();
+		InputStream in = null;
+		try {
+			in = cr.openInputStream(selectedImageUri);
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return in;
+	}
+	
+	private Options getOptions() {
+		Options options = new Options();
+		options.inSampleSize = 8;
+		return options;
+	}
+	
 }
