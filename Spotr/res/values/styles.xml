@@ -446,7 +446,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginTop">-5dp</item>
-<!--         <item name="android:text">Name</item> -->
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/black</item>
@@ -465,8 +464,9 @@
     
     <style name="Button.ProfileEdit">
         <item name="android:layout_width">wrap_content</item>
+<!--         <item name="android:layout_height"></item> -->
         <item name="android:background">@drawable/button_blue</item>
-        <item name="android:text">Edit Profile</item>
+        <item name="android:text">@string/profile_xml_edit_profile_btn</item>
         <item name="android:textSize">12sp</item>
     </style>
     
@@ -474,7 +474,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginTop">2dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rectangle_rounded_paren</item>
@@ -497,7 +496,6 @@
     <style name="ProfileStatsItemValue" parent="ProfileStatsItemLabel">
         <item name="android:textColor">@color/aluminum6</item>
         <item name="android:textSize">18sp</item>
-<!--         <item name="android:text">9999</item> -->
     </style>
     
     <style name="ProfileStatsItemContainer.Points">

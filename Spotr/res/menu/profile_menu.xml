@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/profile_menu_xml_edit_profile"
+        android:icon="@drawable/ic_launcher"
+        android:title="Edit profile"/>
+</menu>

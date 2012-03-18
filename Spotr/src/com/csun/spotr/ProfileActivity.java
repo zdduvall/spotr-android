@@ -16,6 +16,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
@@ -56,15 +59,15 @@ public class ProfileActivity
 	private Bitmap 					bitmapUserPicture = null;
 	private	GetUserDetailTask		task;
 	private int 					userId = -1;
-	
-	private	Button					editButton;
-	
+		
 	private	String					imageLocation;
 	
 	private String realname = "n/a";
 	private String education = "n/a";
 	private String hometown = "n/a";
 	private String hobbies = "n/a";
+	
+	private boolean canEditProfile;
 				
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,9 +76,7 @@ public class ProfileActivity
 		
 		Bundle extrasBundle = getIntent().getExtras();
 		userId = extrasBundle.getInt("user_id");
-		
-		editButton = (Button) findViewById(R.id.profile_xml_button_edit);
-		
+				
 		feedList = new ArrayList<FriendFeedItem>();
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
 		
@@ -86,11 +87,7 @@ public class ProfileActivity
 			adapter = new FriendFeedItemAdapter(this, feedList, false);
 		listview.setAdapter(adapter);
 		listview.setOnScrollListener(new FeedOnScrollListener());
-		
-		//hide edit button if not their profile
-		if(userId != CurrentUser.getCurrentUser().getId())
-			editButton.setVisibility(View.GONE);
-		
+				
 		// get user detail task for top portion
 		if (userId != -1) {
 			task = new GetUserDetailTask(this, userId);
@@ -106,25 +103,7 @@ public class ProfileActivity
 			imageViewUserPicture.setClickable(false);
 	
 		// wait for user's data available 
-		editButton.setEnabled(false);
-		
-		editButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				Intent intent;
-				Bundle extras = new Bundle();
-				extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-				extras.putString("email", CurrentUser.getCurrentUser().getUsername());
-				extras.putString("password", CurrentUser.getCurrentUser().getPassword());
-				extras.putString("imageUrl", imageLocation);
-				extras.putString("name", realname);
-			    extras.putString("education", education);
-			    extras.putString("hometown", hometown);
-			    extras.putString("hobbies", hobbies);
-				intent = new Intent("com.csun.spotr.ProfileEditActivity");
-				intent.putExtras(extras);
-				startActivityForResult(intent, INTENT_RESULT_EDIT_PROFILE);
-			}
-		});
+		canEditProfile = false;
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -189,11 +168,57 @@ public class ProfileActivity
 		textViewPoints.setText(Integer.toString(u.getPoints()));
 				
 		// now user can edit his/her profile
-		editButton.setEnabled(true);
+		if(userId != CurrentUser.getCurrentUser().getId())
+			canEditProfile = false;
+		else
+			canEditProfile = true;
+
 		realname = u.getRealname();
 		education = u.getEducation();
 		hometown = u.getHometown();
 		hobbies = u.getHobbies();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.profile_menu, menu);
+		
+		// can't edit profile until user data has been retrieved
+		if (canEditProfile)
+			menu.getItem(0).setEnabled(false);
+		
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.profile_menu_xml_edit_profile:
+			Bundle extras = new Bundle();
+			extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
+			extras.putString("email", CurrentUser.getCurrentUser().getUsername());
+			extras.putString("password", CurrentUser.getCurrentUser().getPassword());
+			extras.putString("imageUrl", imageLocation);
+			extras.putString("name", realname);
+			extras.putString("education", education);
+			extras.putString("hometown", hometown);
+			extras.putString("hobbies", hobbies);
+			intent = new Intent("com.csun.spotr.ProfileEditActivity");
+			intent.putExtras(extras);
+			startActivityForResult(intent, INTENT_RESULT_EDIT_PROFILE);
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (canEditProfile)
+			menu.getItem(0).setEnabled(true);
+		else
+			menu.getItem(0).setEnabled(false);
+		return true;
 	}
 	
 	@Override 

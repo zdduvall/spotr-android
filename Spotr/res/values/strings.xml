@@ -99,4 +99,5 @@
     <string name="profile_xml_missions_done">Missions</string>
     <string name="profile_xml_total_points">Points</string>
     <string name="profile_xml_places_visited">Places</string>
+    <string name="profile_xml_edit_profile_btn">Edit profile</string>
 </resources>

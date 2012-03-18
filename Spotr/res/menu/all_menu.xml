@@ -4,14 +4,12 @@
     <item
         android:id="@+id/options_menu_xml_item_mainmenu_icon"
         android:icon="@drawable/friends"
-        android:title="Main Menu"
-        />
+        android:title="Main Menu"/>
     <item
         android:id="@+id/options_menu_xml_item_logout_icon"
         android:icon="@drawable/logout"
         android:title="Logout"/>
-    
-      <item
+    <item
         android:id="@+id/options_menu_xml_item_toolbar_icon"
         android:icon="@drawable/awards"
         android:title="Toolbar"/>
