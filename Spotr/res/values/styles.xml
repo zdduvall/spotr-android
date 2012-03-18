@@ -405,6 +405,116 @@
 
 
     <!-- Me -->
+    <!-- Me: Profile -->
+    <style name="SpotrGeneralBackground.Profile">
+        <item name="android:padding">0dp</item>
+    </style>
+    
+    <style name="ProfileInfoContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/light_grey</item>
+    </style>
+    
+    <style name="LinearLayoutShadow.Avatar">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingRight">3dp</item>
+    </style>
+    
+    <style name="ProfileName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:text">Name</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/aluminum6</item>
+    </style>
+    
+    <style name="ProfileAvatar">
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">75dp</item>
+        <item name="android:background">@drawable/rectangle_rounded_white</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:src">@drawable/user_default</item>
+    </style>
+    
+    <style name="Button.ProfileEdit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@drawable/button_blue</item>
+        <item name="android:text">Edit Profile</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="ProfileStatsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="ProfileStatsItemContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="ProfileStatsItemLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/aluminum5</item>
+    </style>
+    
+    <style name="ProfileStatsItemValue" parent="ProfileStatsItemLabel">
+        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:text">9999</item>
+    </style>
+    
+    <style name="ProfileStatsItemContainer.Points">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+    </style>
+    
+    <style name="ProfileStatsItemLabel.Points">
+        <item name="android:text">@string/profile_xml_total_points</item>
+    </style>
+    
+    <style name="ProfileStatsItemContainer.Missions">
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+    </style>
+    
+    <style name="ProfileStatsItemLabel.Missions">
+        <item name="android:text">@string/profile_xml_missions_done</item>
+    </style>
+    
+    <style name="ProfileStatsItemContainer.Places">
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+    
+    <style name="ProfileStatsItemLabel.Places">
+        <item name="android:text">@string/profile_xml_places_visited</item>
+    </style>
+    
+    <!-- End Me: Profile -->
+    
     <!-- Me: Leaderboard List -->
     <style name="RankListing">
         <item name="android:layout_width">match_parent</item>
@@ -1054,7 +1164,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">10dp</item>
-        <item name="android:background">@color/aluminum1</item>
+        <item name="android:background">@color/vimeo_grey</item>
     </style>
 
     <style name="LinearLayoutShadow">
@@ -1103,6 +1213,18 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:apiKey">0A6iKMJ5qzvkWp6ABvWwMrWtzZYf8vkqzMX3O0A</item>
         <item name="android:clickable">true</item>
+    </style>
+    
+    <style name="Button">
+        <item name="android:layout_width">130dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:shadowDx">-0.5</item>
+        <item name="android:shadowDy">-0.6</item>
     </style>
     <!-- End Misc -->
 

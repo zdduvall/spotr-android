@@ -1,240 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffc5ccd4"
-    android:orientation="vertical"
-    android:padding="10sp" >
+    style="@style/SpotrGeneralBackground.Profile" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_rounded_white"
-        android:orientation="vertical" >
+    <LinearLayout style="@style/ProfileInfoContainer" >
 
-        <TextView
-            android:id="@+id/profile_xml_textview_profilename"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="1sp"
-            android:padding="5dp"
-            android:text="Name"
-            android:textColor="@color/aluminum6"
-            android:textSize="16sp" />
-
+        <!-- Avatar and edit button -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rectangle_rounded_white"
-            android:orientation="horizontal" >
+            android:orientation="vertical"
+            android:gravity="center" >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
+            <LinearLayout style="@style/LinearLayoutShadow.Avatar" >
 
                 <ImageView
                     android:id="@+id/profile_xml_imageview_user_picture"
-                    android:layout_width="120sp"
-                    android:layout_height="120sp"
-                    android:adjustViewBounds="true"
-                    android:background="#FFFFFF"
-                    android:clickable="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/user_default" />
-
-                <Button
-                    android:id="@+id/profile_xml_button_edit"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5sp"
-                    android:layout_marginTop="5sp"
-                    android:background="@drawable/button_blue"
-                    android:text="Edit Profile"
-                    android:textSize="16sp" />
+                    style="@style/ProfileAvatar" />
             </LinearLayout>
 
-            <!-- Stats -->
+            <Button
+                android:id="@+id/profile_xml_button_edit"
+                style="@style/Button.ProfileEdit"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Stats -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/profile_xml_textview_profilename"
+                style="@style/ProfileName" />
+
+            <LinearLayout style="@style/ProfileStatsContainer" >
+
+                <LinearLayout style="@style/ProfileStatsItemContainer.Points" >
+
+                    <TextView style="@style/ProfileStatsItemLabel.Points" />
+                    
+                    <TextView
+                        android:id="@+id/profile_xml_textview_points"
+                        style="@style/ProfileStatsItemValue" />
+                    
+
+                </LinearLayout>
+
+                <LinearLayout style="@style/ProfileStatsItemContainer.Missions" >
+
+                    <TextView style="@style/ProfileStatsItemLabel.Missions" />
+
+                    <TextView
+                        android:id="@+id/profile_xml_textview_challenges_done"
+                        style="@style/ProfileStatsItemValue" />
+                    
+                </LinearLayout>
+
+                <LinearLayout style="@style/ProfileStatsItemContainer.Places" >
+                    
+                    <TextView style="@style/ProfileStatsItemLabel.Places" />
+
+                    <TextView
+                        android:id="@+id/profile_xml_textview_places_visited"
+                        style="@style/ProfileStatsItemValue" />
+                    
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Numbers of badges and friends -->
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:orientation="vertical" >
+                    android:id="@+id/profile_xml_badges_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:clickable="true"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp" >
 
                     <LinearLayout
+                        android:id="@+id/profile_xml_badges_2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp" >
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="1"
-                            android:layout_marginLeft="2dp"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="10dp"
-                            android:text="Points"
-                            android:textColor="@color/aluminum6"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/profile_xml_textview_points"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="90sp"
+                        <ImageView
+                            android:id="@+id/profile_xml_badges_3"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:background="#FFFFFF"
-                            android:gravity="right"
-                            android:text="000"
-                            android:textColor="@color/aluminum6"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                            android:clickable="true"
+                            android:gravity="bottom"
+                            android:src="@drawable/awards" />
 
                         <TextView
+                            android:id="@+id/profile_xml_textview_numrewards"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_column="1"
-                            android:layout_marginLeft="2sp"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="5dp"
-                            android:text="Challenges Done"
+                            android:text="00"
                             android:textColor="@color/aluminum6"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/profile_xml_textview_challenges_done"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25sp"
-                            android:gravity="right"
-                            android:text="000"
-                            android:textColor="@color/aluminum6"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="1"
-                            android:layout_marginLeft="2sp"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="5dp"
-                            android:text="Spots Visited"
-                            android:textColor="@color/aluminum6"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/profile_xml_textview_places_visited"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="50sp"
-                            android:gravity="right"
-                            android:text="000"
-                            android:textColor="@color/aluminum6"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textSize="25sp" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
+                    android:id="@+id/profile_xml_friends_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:clickable="true"
+                    android:gravity="bottom"
                     android:orientation="horizontal"
-                     >
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="20dp" >
 
                     <LinearLayout
-                        android:id="@+id/profile_xml_badges_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:clickable="true"
-                        android:gravity="bottom"
-                        android:orientation="horizontal"
-                        android:paddingLeft="5dp"
-                        android:paddingBottom="5dp">
+                        android:id="@+id/profile_xml_friends_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp" >
 
-                        <LinearLayout
-                            android:id="@+id/profile_xml_badges_2"
+                        <ImageView
+                            android:id="@+id/profile_xml_friends_3"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="#FFFFFF"
+                            android:clickable="true"
+                            android:src="@drawable/ic_main_menu_friends_default" >
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/profile_xml_textview_numfriends"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
-                            android:gravity="bottom" >
-
-                            <ImageView
-                                android:id="@+id/profile_xml_badges_3"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:background="#FFFFFF"
-                                android:clickable="true"
-                                android:src="@drawable/awards"
-                                android:gravity="bottom" />
-
-                            <TextView
-                                android:id="@+id/profile_xml_textview_numrewards"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="00"
-                                android:textColor="@color/aluminum6"
-                                android:textSize="25sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/profile_xml_friends_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:clickable="true"
-                        android:gravity="bottom"
-                        android:orientation="horizontal"
-                        android:paddingLeft="2dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="20dp"
-                        android:paddingBottom="5dp" >
-
-                        <LinearLayout
-                            android:id="@+id/profile_xml_friends_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="20dp" >
-
-                            <ImageView
-                                android:id="@+id/profile_xml_friends_3"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:background="#FFFFFF"
-                                android:clickable="true"
-                                android:src="@drawable/ic_main_menu_friends_default" >
-                            </ImageView>
-
-                            <TextView
-                                android:id="@+id/profile_xml_textview_numfriends"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="1dp"
-                                android:gravity="right"
-                                android:text="00"
-                                android:textColor="@color/aluminum6"
-                                android:textSize="25sp" />
-                        </LinearLayout>
+                            android:layout_marginLeft="1dp"
+                            android:gravity="right"
+                            android:text="00"
+                            android:textColor="@color/aluminum6"
+                            android:textSize="25sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -255,15 +172,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"  >
+        android:orientation="vertical" >
 
         <ListView
             android:id="@+id/profile_xml_listview_user_feeds"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/rectangle_rounded_white"
-            android:paddingTop="5sp"
-            android:paddingBottom="5sp" >
+            android:paddingBottom="5sp"
+            android:paddingTop="5sp" >
         </ListView>
     </LinearLayout>
 

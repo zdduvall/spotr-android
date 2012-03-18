@@ -100,7 +100,6 @@ public class ProfileActivity
 		if(userId != CurrentUser.getCurrentUser().getId())
 			editButton.setVisibility(View.GONE);
 		
-
 		// get user detail task for top portion
 		if (userId != -1) {
 			task = new GetUserDetailTask(this, userId);
