@@ -414,9 +414,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingRight">8dp</item>
         <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
         <item name="android:background">@color/light_grey</item>
     </style>
     
@@ -431,7 +433,7 @@
     <style name="ProfileName">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:text">Name</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
@@ -459,9 +461,11 @@
     <style name="ProfileStatsContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/rectangle_rounded_paren</item>
     </style>
     
     <style name="ProfileStatsItemContainer">
@@ -474,7 +478,6 @@
     <style name="ProfileStatsItemLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/aluminum5</item>
     </style>
@@ -487,32 +490,30 @@
     </style>
     
     <style name="ProfileStatsItemContainer.Points">
-        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_marginRight">30dp</item>
     </style>
     
     <style name="ProfileStatsItemLabel.Points">
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:text">@string/profile_xml_total_points</item>
     </style>
     
     <style name="ProfileStatsItemContainer.Missions">
-        <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginRight">30dp</item>
     </style>
     
     <style name="ProfileStatsItemLabel.Missions">
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:text">@string/profile_xml_missions_done</item>
     </style>
     
     <style name="ProfileStatsItemContainer.Places">
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:layout_marginRight">5dp</item>
     </style>
     
     <style name="ProfileStatsItemLabel.Places">
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:text">@string/profile_xml_places_visited</item>
     </style>
-    
     <!-- End Me: Profile -->
     
     <!-- Me: Leaderboard List -->
