@@ -8,6 +8,6 @@
         android:drawable="@color/darkTurquoise" 
         android:state_selected="true"/>
     <item 
-        android:drawable="@color/light_grey"/>
+        android:drawable="@android:color/white"/>
 
 </selector>
