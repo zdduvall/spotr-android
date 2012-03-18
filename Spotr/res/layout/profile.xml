@@ -5,11 +5,12 @@
     <LinearLayout style="@style/ProfileInfoContainer" >
 
         <!-- Avatar and edit button -->
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <LinearLayout style="@style/LinearLayoutShadow.Avatar" >
 
@@ -25,6 +26,7 @@
         </LinearLayout>
 
         <!-- Stats -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,12 +42,10 @@
                 <LinearLayout style="@style/ProfileStatsItemContainer.Points" >
 
                     <TextView style="@style/ProfileStatsItemLabel.Points" />
-                    
+
                     <TextView
                         android:id="@+id/profile_xml_textview_points"
                         style="@style/ProfileStatsItemValue" />
-                    
-
                 </LinearLayout>
 
                 <LinearLayout style="@style/ProfileStatsItemContainer.Missions" >
@@ -55,17 +55,15 @@
                     <TextView
                         android:id="@+id/profile_xml_textview_challenges_done"
                         style="@style/ProfileStatsItemValue" />
-                    
                 </LinearLayout>
 
-                <LinearLayout style="@style/ProfileStatsItemContainer.Places" >
-                    
+                <LinearLayout style="@style/ProfileStatsItemContainer" >
+
                     <TextView style="@style/ProfileStatsItemLabel.Places" />
 
                     <TextView
                         android:id="@+id/profile_xml_textview_places_visited"
                         style="@style/ProfileStatsItemValue" />
-                    
                 </LinearLayout>
             </LinearLayout>
 
@@ -158,30 +156,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingTop="2dp"
-        android:text="Activity"
-        android:textColor="@color/watermelonRed"
-        android:textSize="10sp"
-        android:textStyle="bold" />
+    <View style="@style/ProfileInfoBorder" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/profile_xml_listview_user_feeds"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/rectangle_rounded_white"
-            android:paddingBottom="5sp"
-            android:paddingTop="5sp" >
-        </ListView>
-    </LinearLayout>
+    <ListView
+        android:id="@+id/profile_xml_listview_user_feeds"
+        style="@style/ProfileActivityFeed" />
 
 </LinearLayout>

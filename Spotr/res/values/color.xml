@@ -20,6 +20,10 @@
     
     <color name="blue2">#ffe2f4fb</color>
     
+    <color name="lightGreen">#ffbefe00</color>
+    <color name="green">#ff99CC00</color>
+    <color name="darkGreen">#ff669900</color>
+    
     <color name="red1">#ffffe4e4</color>
     <color name="red2">#ffffcaca</color>
     <color name="red5">#ffff7979</color>
