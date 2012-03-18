@@ -101,7 +101,7 @@ public class GetUserDetailTask
 	
 	@Override
 	protected void onPostExecute(final User u) {
-		if (u != null && !isActivityDone()) {
+		if (u != null && isActivityStillRunning()) {
 			ref.get().updateUserView(u);
 		}
 		detach();
@@ -115,7 +115,7 @@ public class GetUserDetailTask
 		ref.clear();
 	}
 	
-	private boolean isActivityDone() {
+	private boolean isActivityStillRunning() {
 		return (ref != null && ref.get() != null && !ref.get().isFinishing());
 	}
 }

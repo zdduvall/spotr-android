@@ -59,8 +59,6 @@ public class ProfileActivity
 	
 	private	Button					editButton;
 	
-	private	OnClickListener			friendsClick;
-	private	OnClickListener			badgeClick;
 	private	String					imageLocation;
 	
 	private String realname = "n/a";
@@ -78,16 +76,9 @@ public class ProfileActivity
 		
 		editButton = (Button) findViewById(R.id.profile_xml_button_edit);
 		
-		// views created to make entire area clickable
-		View friendsButton1 = (View) findViewById(R.id.profile_xml_friends_1);
-		View friendsButton2 = (View) findViewById(R.id.profile_xml_friends_2);
-		View friendsButton3 = (View) findViewById(R.id.profile_xml_friends_3);
-		View badgeButton1 = (View) findViewById(R.id.profile_xml_badges_1);
-		View badgeButton2 = (View) findViewById(R.id.profile_xml_badges_2);
-		View badgeButton3 = (View) findViewById(R.id.profile_xml_badges_3);
-		
 		feedList = new ArrayList<FriendFeedItem>();
 		listview = (ListView) findViewById(R.id.profile_xml_listview_user_feeds);
+		
 		//determine if like button can be clicked
 		if(userId == CurrentUser.getCurrentUser().getId())
 			adapter = new FriendFeedItemAdapter(this, feedList, true);
@@ -134,32 +125,6 @@ public class ProfileActivity
 				startActivityForResult(intent, INTENT_RESULT_EDIT_PROFILE);
 			}
 		});
-		
-
-		friendsClick = (new OnClickListener() {
-			public void onClick(View view) {
-				Intent intent;
-				intent = new Intent(getApplicationContext(), FriendListMainActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		friendsButton1.setOnClickListener(friendsClick);
-		friendsButton2.setOnClickListener(friendsClick);
-		friendsButton3.setOnClickListener(friendsClick);
-		
-		badgeClick = (new OnClickListener() {
-			public void onClick(View view) {
-				Intent intent;
-				intent = new Intent(getApplicationContext(), RewardActivity.class);
-				startActivity(intent);
-				//finish();
-			}
-		});
-		
-		badgeButton1.setOnClickListener(badgeClick);
-		badgeButton2.setOnClickListener(badgeClick);
-		badgeButton3.setOnClickListener(badgeClick);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -222,13 +187,7 @@ public class ProfileActivity
 		
 		TextView textViewPoints = (TextView) findViewById(R.id.profile_xml_textview_points);
 		textViewPoints.setText(Integer.toString(u.getPoints()));
-		
-		TextView textViewNumFriends = (TextView) findViewById(R.id.profile_xml_textview_numfriends);
-		textViewNumFriends.setText(Integer.toString(u.getNumFriends()));
-		
-		TextView textViewNumBadges = (TextView) findViewById(R.id.profile_xml_textview_numrewards);
-		textViewNumBadges.setText(Integer.toString(u.getNumBadges()));
-		
+				
 		// now user can edit his/her profile
 		editButton.setEnabled(true);
 		realname = u.getRealname();
