@@ -11,7 +11,6 @@
     <!-- Player listings -->
     <ListView
         android:id="@+id/leaderboard_xml_listview_users"
-        style="@style/RankListing">
-    </ListView>    
+        style="@style/RankListing" />
     
 </LinearLayout>
