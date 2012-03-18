@@ -462,14 +462,6 @@
         <item name="android:src">@drawable/user_default</item>
     </style>
     
-    <style name="Button.ProfileEdit">
-        <item name="android:layout_width">wrap_content</item>
-<!--         <item name="android:layout_height"></item> -->
-        <item name="android:background">@drawable/button_blue</item>
-        <item name="android:text">@string/profile_xml_edit_profile_btn</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-    
     <style name="ProfileStatsContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -773,6 +765,65 @@
     </style>
     <!-- End Friends: Find tab -->
 
+
+    <!-- Quests -->
+    <style name="SpotrGeneralBackground.QuestList">
+        <item name="android:background">@color/light_grey</item>
+    </style>
+    
+    <style name="QuestList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">20dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+    </style>
+    
+    <style name="LinearLayoutShadow.QuestItemRow">
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingRight">3dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+    
+    <style name="QuestItemRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:padding">7dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@drawable/rectangle_rounded_white</item>
+    </style>
+    
+    <style name="QuestItemPicture">
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">75dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:src">@drawable/ic_main_menu_quests_pressed_alt</item>
+    </style>
+    
+    <style name="QuestItemName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:text">TEST</item>
+    </style>
+    
+    <style name="QuestItemDescription">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/aluminum5</item>
+        <item name="android:text">TEST</item>
+    </style>
+    <!-- End Quests -->
+    
 
     <!-- Spots: list of nearby places -->
     <style name="TitleBarButton.SpotsRefresh">
@@ -1104,7 +1155,7 @@
     <!-- End Ping -->
 
 
-<!--  Comment Button  -->
+    <!--  Comment Button  -->
     <style name="CommentButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">20dp</item>

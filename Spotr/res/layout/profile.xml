@@ -18,11 +18,6 @@
                     android:id="@+id/profile_xml_imageview_user_picture"
                     style="@style/ProfileAvatar" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/profile_xml_button_edit"
-                style="@style/Button.ProfileEdit"
-                android:visibility="gone" />
         </LinearLayout>
 
         <!-- Stats -->
