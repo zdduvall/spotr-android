@@ -78,14 +78,14 @@ public class ProfileEditActivity extends Activity {
 
 	private void setupUserDetailInformation(Bundle extrasBundle) {
 		final Button saveButton = (Button) findViewById(R.id.profile_edit_xml_button_save);
-		final EditText edittextEmail = (EditText) findViewById(R.id.profile_edit_xml_edittext_email);
+		final EditText edittextUsername = (EditText) findViewById(R.id.profile_edit_xml_edittext_username);
 		final EditText edittextPassword = (EditText) findViewById(R.id.profile_edit_xml_edittext_password);
 		final EditText edittextName = (EditText) findViewById(R.id.profile_edit_xml_edittext_name);
 		final EditText edittextEducation = (EditText) findViewById(R.id.profile_edit_xml_edittext_education);
 		final EditText edittextHometown = (EditText) findViewById(R.id.profile_edit_xml_edittext_hometown);
 		final EditText edittextHobbies = (EditText) findViewById(R.id.profile_edit_xml_edittext_hobbies);
 
-		edittextEmail.setText(extrasBundle.getString("email"));
+		edittextUsername.setText(extrasBundle.getString("username"));
 		edittextPassword.setText(extrasBundle.getString("password"));
 		edittextName.setText(extrasBundle.getString("name"));
 		edittextEducation.setText(extrasBundle.getString("education"));
@@ -93,15 +93,15 @@ public class ProfileEditActivity extends Activity {
 		edittextHobbies.setText(extrasBundle.getString("hobbies"));
 
 		// set up save button
-		setupSaveButton(edittextEmail, edittextPassword, edittextName, edittextEducation, edittextHometown, edittextHobbies);
+		setupSaveButton(edittextUsername, edittextPassword, edittextName, edittextEducation, edittextHometown, edittextHobbies);
 	}
 
-	private void setupSaveButton(final EditText edittextEmail, final EditText edittextPassword, final EditText edittextName, final EditText edittextEducation, final EditText edittextHometown, final EditText edittextHobbies) {
+	private void setupSaveButton(final EditText edittextUsername, final EditText edittextPassword, final EditText edittextName, final EditText edittextEducation, final EditText edittextHometown, final EditText edittextHobbies) {
 
 		final Button saveButton = (Button) findViewById(R.id.profile_edit_xml_button_save);
 		saveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				ProfileEditTask task = new ProfileEditTask(ProfileEditActivity.this, userId, edittextEmail.getText().toString().trim(), edittextPassword.getText().toString().trim(), edittextName.getText().toString().trim(), edittextEducation.getText().toString().trim(), edittextHometown.getText().toString().trim(), edittextHobbies.getText().toString().trim());
+				ProfileEditTask task = new ProfileEditTask(ProfileEditActivity.this, userId, edittextUsername.getText().toString().trim(), edittextPassword.getText().toString().trim(), edittextName.getText().toString().trim(), edittextEducation.getText().toString().trim(), edittextHometown.getText().toString().trim(), edittextHobbies.getText().toString().trim());
 				task.execute();
 			}
 		});
@@ -122,9 +122,9 @@ public class ProfileEditActivity extends Activity {
 		private String hometown;
 		private String hobbies;
 
-		public ProfileEditTask(ProfileEditActivity a, int userId, String email, String password, String name, String education, String hometown, String hobbies) {
+		public ProfileEditTask(ProfileEditActivity a, int userId, String username, String password, String name, String education, String hometown, String hobbies) {
 			this.userId = userId;
-			this.username = email;
+			this.username = username;
 			this.password = password;
 			this.name = name;
 			this.education = education;
@@ -163,6 +163,7 @@ public class ProfileEditActivity extends Activity {
 		protected void onPostExecute(Boolean result) {
 			if (result == true) {
 				sendDataBack();
+				CurrentUser.setCurrentUser(userId, username, password);
 			}
 			else { 
 				Toast.makeText(ref.get().getApplicationContext(), "Update use info failed!", Toast.LENGTH_SHORT);

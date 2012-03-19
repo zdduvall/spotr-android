@@ -56,14 +56,14 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/profile_edit_xml_textview_email"
+                android:id="@+id/profile_edit_xml_textview_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"
+                android:text="Username"
                 android:textColor="@color/aluminum6" />
 
             <EditText
-                android:id="@+id/profile_edit_xml_edittext_email"
+                android:id="@+id/profile_edit_xml_edittext_username"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
