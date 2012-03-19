@@ -397,7 +397,7 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		if (requestCode == DO_SPOT_CHALLENGE) {
 			if (resultCode == RESULT_OK) {
 				spotId = data.getExtras().getInt("spot_id");
-
+				Toast.makeText(getApplicationContext(), Integer.toString(spotId), Toast.LENGTH_SHORT).show();
 				if (this.spotCompleted == numQuest - 1) {
 					this.showDialog(0);
 					new GiveQuestPointTask(this, userId, questId).execute();

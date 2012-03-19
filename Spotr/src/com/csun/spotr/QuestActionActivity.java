@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Description:
@@ -52,9 +53,11 @@ public class QuestActionActivity
 	public int currentquestSpotId;
 	
 	public int currentSpotPosition;
-	public int currentChosenItem;
+	public int currentChosenItem = -1;
 	public int currentUserId = -1;
 	
+	public int totalMission = 0;
+	public static int numberFinishedMission = 0;
 	
 	public ListView list = null;
 	private	QuestActionItemAdapter adapter = null;
@@ -210,6 +213,10 @@ public class QuestActionActivity
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			if (ref.get().currentChosenItem != -1)
+				{
+					Toast.makeText(ref.get().getApplicationContext(), "Updated completed mission", Toast.LENGTH_SHORT).show();
+				}
 			detach();
 		}
 
@@ -228,11 +235,17 @@ public class QuestActionActivity
 			if (resultCode == RESULT_OK) {
 				challengeList.clear();
 				adapter.notifyDataSetChanged();
+				if (numberFinishedMission == totalMission-1)
+				{
+					Intent i = new Intent();
+					i.putExtra("spot_id", currentPlaceId);
+					setResult(RESULT_OK, i);
+					finish();
+				}
+					numberFinishedMission = 0;
 				new GetChallengesTask(QuestActionActivity.this).execute();
-				/*Intent i = new Intent();
-				i.putExtra("spot_id", currentPlaceId);
-				setResult(RESULT_OK, i);
-				finish();*/
+				
+				
 			}
     	}
 	}
@@ -240,6 +253,11 @@ public class QuestActionActivity
 	public void updateAsyncTaskProgress(Challenge c) {
 		challengeList.add(c);
 		adapter.notifyDataSetChanged();
+		totalMission = challengeList.size();
+		if (c.getStatus().equalsIgnoreCase("done"))
+		{
+			numberFinishedMission ++;
+		}
 	}
 	
 	@Override
@@ -285,6 +303,22 @@ public class QuestActionActivity
 	
 	@Override
 	public void onDestroy() {
+		/*Intent i = new Intent();
+		i.putExtra("spot_id", currentPlaceId);
+		
+		if (totalMission == numberFinishedMission)
+			{
+				setResult(RESULT_OK, i);
+			//	Toast.makeText(getApplicationContext(), Integer.toString(currentPlaceId), Toast.LENGTH_SHORT).show();
+			}
+			
+		else
+		{
+			setResult(RESULT_CANCELED,i);
+			//Toast.makeText(getApplicationContext(), "CANCELED", Toast.LENGTH_SHORT).show();
+			
+		}
+		setResult(RESULT_OK, i);*/
 		Log.v(TAG, "I'm destroyed!");
 		super.onDestroy();
 	}
