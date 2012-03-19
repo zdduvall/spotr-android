@@ -765,22 +765,7 @@
     </style>
     
     <style name="FeedItemUsernameMission">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-    
-    <style name="FeedItemUserName">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-    
-    <style name="FeedItemMissionType">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/black</item>
@@ -837,7 +822,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">right</item>
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginTop">20dp</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/rectangle_rounded_tops_bottoms_blue_compact</item>
     </style>
@@ -859,6 +844,28 @@
     
     <style name="FeedButton.Like">
         <item name="android:text">Like</item> 
+    </style>
+    
+    <style name="FeedBackground.Comments">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    
+    <style name="FeedUsernameComments">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <style name="FeedContentComments">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/vimeo_dark_grey</item>
     </style>
     
     <style name="FeedNumberComments">
