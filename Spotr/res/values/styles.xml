@@ -738,6 +738,79 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@android:color/white</item>
     </style>
+    
+    <style name="FeedBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@android:color/white</item>        
+    </style>
+    
+    <style name="FeedUserAvatar">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="@android:src">@drawable/user_default</item>
+    </style>
+    
+    <style name="FeedItemUserName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <style name="FeedItemMissionType">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    
+    <style name="FeedItemPlaceName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/vimeo_dark_grey</item>
+    </style>
+    
+    <style name="FeedItemMissionDetails">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/vimeo_dark_grey</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    
+    <style name="FeedItemTime">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/vimeo_grey</item>
+    </style>
+    
+    <style name="FeedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/aluminum6</item>        
+    </style>
+    
+    <style name="FeedButton.Comment">
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:text">Comment</item>  
+        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms_red_compact</item>
+    </style>
+    
+    <style name="FeedButton.Like">
+        <item name="android:text">Like</item>  
+        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms_blue_compact</item>
+    </style>
     <!-- End Friends: Chatter tab -->
 
 
@@ -1162,8 +1235,8 @@
 
     <!--  Comment Button  -->
     <style name="CommentButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">0dp</item>

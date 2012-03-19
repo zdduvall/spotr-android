@@ -134,10 +134,10 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
 		
-		imageLoader.displayImage(items.get(position).getFriendPictureUrl(), holder.imageViewUserPicture);
-		holder.textViewUsername.setText(items.get(position).getFriendName());
-		holder.textViewPlaceName.setText("@ " + items.get(position).getPlaceName());
-		holder.textViewTime.setText("about " + items.get(position).getActivityTime());
+		imageLoader.displayImageRound(items.get(position).getFriendPictureUrl(), holder.imageViewUserPicture);
+		holder.textViewUsername.setText(items.get(position).getFriendName() + " ");
+		holder.textViewPlaceName.setText("@" + items.get(position).getPlaceName());
+		holder.textViewTime.setText(items.get(position).getActivityTime());
 		
 		/**
 		 *  Add share url from user
@@ -159,7 +159,8 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		
 		if (items.get(position).getChallengeType() == Challenge.Type.CHECK_IN) {
 			// required view
-			holder.textViewContent.setText("check-in");
+			holder.textViewContent.setText("checked in");
+			holder.textViewContent.setVisibility(View.VISIBLE);
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
@@ -169,7 +170,8 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE) {
 			// required view
-			holder.textViewContent.setText("snap-picture");
+			holder.textViewContent.setText("snapped a picture");
+			holder.textViewContent.setVisibility(View.VISIBLE); // added this because sometimes the text doesn't show
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.VISIBLE);
@@ -182,9 +184,10 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.WRITE_ON_WALL) {
 			// required view
-			holder.textViewContent.setText("write-on-wall");
+			holder.textViewContent.setText("wrote");
 			
 			// optional view
+			holder.textViewContent.setVisibility(View.VISIBLE);
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
@@ -195,7 +198,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.QUESTION_ANSWER) {
 			// required view
-			holder.textViewContent.setText("answer-question");
+			holder.textViewContent.setText("answered a question");
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
@@ -208,7 +211,8 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.FIND_TREASURE) {
 			// required view
-			holder.textViewContent.setText("found-treasure");
+			holder.textViewContent.setText("found treasure");
+			holder.textViewContent.setVisibility(View.VISIBLE); // set because sometimes it doesn't show
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
@@ -250,9 +254,15 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 				notifyDataSetChanged();
 			}
 		});
-		
 		holder.buttonLike.setText("Like + " + Integer.toString(items.get(position).getLikes()));
-		holder.textViewTotalComments.setText(Integer.toString(items.get(position).getNumberOfComments()) + " comments.");
+		int numComments = items.get(position).getNumberOfComments();
+		if (numComments > 0) {
+			String label = (numComments == 1) ? " comment" : " comments";
+			holder.textViewTotalComments.setText(Integer.toString(numComments) + label);
+			holder.textViewTotalComments.setVisibility(View.VISIBLE);
+		}
+		else
+			holder.textViewTotalComments.setVisibility(View.GONE);
 		
 		Comment c = items.get(position).getFirstComment(); 
 		if (c.getId() != -1) {

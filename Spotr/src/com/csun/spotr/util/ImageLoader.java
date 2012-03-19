@@ -19,7 +19,16 @@ import com.csun.spotr.R;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -45,6 +54,63 @@ public class ImageLoader {
 		}
 	}
 
+	// similar to the original displayImage method, except displays 
+	// the image with round corners (plus center- and square- cropped)
+	public void displayImageRound(String url, ImageView imageView) {
+		imageViews.put(imageView, url);
+		Bitmap bitmap = memoryCache.get(url);
+		if (bitmap != null)
+			imageView.setImageBitmap(getRoundedCornerBitmap(imageView.getContext(), bitmap, 7));
+		else {
+			queuePhoto(url, imageView);
+			imageView.setImageResource(stubId);
+		}
+	}
+	
+	/**
+	 * Crops the center of a bitmap and rounds out the corners.
+	 * @param context the context of the bitmap's ImageView
+	 * @param bitmap the original bitmap
+	 * @param pixels the amount of roundedness in the corners
+	 * @return a cropped, rounded bitmap
+	 */
+    public static Bitmap getRoundedCornerBitmap(Context context, Bitmap bitmap, int pixels) {
+    	int width = bitmap.getWidth();
+    	int height = bitmap.getHeight();
+    	
+    	// crop the center of the bitmap
+    	if (width <= height) {
+    		int yCoord = (height - width) / 2;
+    		bitmap = Bitmap.createBitmap(bitmap, 0, yCoord, width, width);
+    		height = width;
+    	}
+    	else {
+    		int xCoord = (width - height) / 2;
+    		bitmap = Bitmap.createBitmap(bitmap, xCoord, 0, height, height);
+    		width = height;
+    	}
+    	
+    	Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, width, height);
+        final RectF rectF = new RectF(rect);
+        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+        final float roundPx = pixels*densityMultiplier;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+	
 	private void queuePhoto(String url, ImageView imageView) {
 		PhotoToLoad p = new PhotoToLoad(url, imageView);
 		executorService.submit(new PhotosLoader(p));
