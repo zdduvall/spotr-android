@@ -103,11 +103,6 @@ public class ProfileActivity
 		// run another task to display user's feeds
 		new GetUserFeedTask(this, userId, 0).execute();
 		
-		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
-		imageViewUserPicture.setClickable(false);
-		if(imageViewUserPicture.isClickable())
-			imageViewUserPicture.setClickable(false);
-	
 		// wait for user's data available 
 		canEditProfile = false;
 	}
@@ -204,7 +199,7 @@ public class ProfileActivity
 		case R.id.profile_menu_xml_edit_profile:
 			Bundle extras = new Bundle();
 			extras.putInt("user_id", CurrentUser.getCurrentUser().getId());
-			extras.putString("email", CurrentUser.getCurrentUser().getUsername());
+			extras.putString("username", CurrentUser.getCurrentUser().getUsername());
 			extras.putString("password", CurrentUser.getCurrentUser().getPassword());
 			extras.putString("imageUrl", imageLocation);
 			extras.putString("name", realname);

@@ -48,12 +48,16 @@ public class RewardViewActivity extends Activity {
 	
 	private void displayBadgeInfo(Bundle extras) {
 		TextView textViewName = (TextView) findViewById(R.id.reward_view_xml_textview_name);
+		TextView textViewRewardedDate = (TextView)findViewById(R.id.reward_view_xml_textview_rewarddate);
+		TextView textViewPointLabel = (TextView)findViewById(R.id.reward_view_xml_textview_pointlabel);
 		TextView textViewDescription = (TextView) findViewById(R.id.reward_view_xml_textview_description);
 		TextView textViewPoints = (TextView) findViewById(R.id.reward_view_xml_textview_points);
 		TextView textViewDate = (TextView) findViewById(R.id.reward_view_xml_textview_date);
 		Button buttonConvert = (Button) findViewById(R.id.reward_view_xml_button_convert);
 		
 		if (extras.getInt("points") == -1) {
+			textViewRewardedDate.setVisibility(View.GONE);
+			textViewPointLabel.setVisibility(View.GONE);
 			buttonConvert.setVisibility(View.GONE);
 			textViewPoints.setVisibility(View.GONE);
 			textViewDate.setVisibility(View.GONE);
