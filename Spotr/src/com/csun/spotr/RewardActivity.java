@@ -42,12 +42,17 @@ public class RewardActivity
 	
 	private static final String TAG = "(RewardActivity)";
 	private static final String GET_BADGES_URL = "http://107.22.209.62/android/get_badges.php";
+	private static final String GET_MISSING_BADGES_URL = "http://107.22.209.62/android/get_missing_badges.php";
 	private static final int INTENT_RESULT_REMOVE_BADGE = 0;
 	
-	private GridView gridview;
+	private GridView gridviewbadges;
+	private GridView gridviewmissingbadges;
 	private BadgeAdapter adapter;
+	private BadgeAdapter adapter2;
 	private List<Badge> badgeList;
+	private List<Badge> missingBadgeList;
 	private GetBadgesTask task;
+	private GetMissingBadgesTask task2;
 	private int removePosition = 0;
 
 	@Override
@@ -57,14 +62,19 @@ public class RewardActivity
 		setupBadgeGridView();
 		task = new GetBadgesTask(this);
 		task.execute();
+		task2 = new GetMissingBadgesTask(this);
+		task2.execute();
 	}
 	
 	private void setupBadgeGridView() {
 		badgeList = new ArrayList<Badge>();
-		gridview = (GridView) findViewById(R.id.badge_xml_gridview_userbadges);
+		missingBadgeList = new ArrayList<Badge>();
+		gridviewbadges = (GridView) findViewById(R.id.badge_xml_gridview_userbadges);
+		gridviewmissingbadges = (GridView)findViewById(R.id.badge_xml_gridview_missingbadges);
 		adapter = new BadgeAdapter(this, badgeList);
-		gridview.setAdapter(adapter);
-		gridview.setOnItemClickListener(new OnItemClickListener() {
+		adapter2 = new BadgeAdapter(this, missingBadgeList);
+		gridviewbadges.setAdapter(adapter);
+		gridviewbadges.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Intent intent = new Intent(getApplicationContext(), RewardViewActivity.class);
 				intent.putExtra("id", badgeList.get(position).getId());
@@ -73,6 +83,20 @@ public class RewardActivity
 				intent.putExtra("date", badgeList.get(position).getDate());
 				intent.putExtra("url", badgeList.get(position).getUrl());
 				intent.putExtra("points", badgeList.get(position).getPoints());
+				startActivityForResult(intent, INTENT_RESULT_REMOVE_BADGE);
+				removePosition = position;
+			}
+		});
+		gridviewmissingbadges.setAdapter(adapter2);
+		gridviewmissingbadges.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				Intent intent = new Intent(getApplicationContext(), RewardViewActivity.class);
+				intent.putExtra("id", missingBadgeList.get(position).getId());
+				intent.putExtra("name", missingBadgeList.get(position).getName());
+				intent.putExtra("description", missingBadgeList.get(position).getDescription());
+				intent.putExtra("date", missingBadgeList.get(position).getDate());
+				intent.putExtra("url", missingBadgeList.get(position).getUrl());
+				intent.putExtra("points", -1);
 				startActivityForResult(intent, INTENT_RESULT_REMOVE_BADGE);
 				removePosition = position;
 			}
@@ -149,6 +173,77 @@ public class RewardActivity
 			ref.clear();
 		}
 	}
+	
+	private static class GetMissingBadgesTask 
+	extends AsyncTask<Integer, Badge, Boolean> 
+		implements IAsyncTask<RewardActivity> {
+
+	private static final String TAG = "[AsyncTask].GetBadgesTask";
+	private WeakReference<RewardActivity> ref;
+	private ProgressDialog progressDialog = null;
+
+	public GetMissingBadgesTask(RewardActivity a) {
+		attach(a);
+	}
+
+	@Override
+	protected void onPreExecute() {
+		progressDialog = new ProgressDialog(ref.get());
+		progressDialog.setMessage("Loading items...");
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+	}
+
+	@Override
+	protected void onProgressUpdate(Badge... b) {
+		ref.get().updateAsyncTask2Progress(b[0]);
+	}
+
+	@Override
+	protected Boolean doInBackground(Integer... offsets) {
+		List<NameValuePair> data = new ArrayList<NameValuePair>();
+		data.add(new BasicNameValuePair("id", Integer.toString(CurrentUser.getCurrentUser().getId())));
+		JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_MISSING_BADGES_URL, data);
+		
+		if (array != null) {
+			try {
+				for (int i = 0; i < array.length(); ++i) {
+					publishProgress(
+						new Badge(
+							array.getJSONObject(i).getInt("badges_tbl_id"), 
+							array.getJSONObject(i).getString("badges_tbl_name"),
+							array.getJSONObject(i).getString("badges_tbl_description"),
+							array.getJSONObject(i).getString("badges_tbl_img"),
+							array.getJSONObject(i).getString("badges_tbl_created"),
+							array.getJSONObject(i).getInt("badges_tbl_points")));
+				}
+			}
+			catch (JSONException e) {
+				Log.e(TAG + "GetMissingBadgesTask.doInBackGround(Integer... offsets) : ", "JSON error parsing data", e );
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected void onPostExecute(Boolean result) {
+		progressDialog.dismiss();
+		if (result == false) {
+			Toast.makeText(ref.get().getApplicationContext(), "No items", Toast.LENGTH_LONG);
+		}
+		detach();
+	}
+
+	public void attach(RewardActivity a) {
+		ref = new WeakReference<RewardActivity>(a);
+	}
+
+	public void detach() {
+		ref.clear();
+	}
+}
 
 	
 	@Override
@@ -158,31 +253,6 @@ public class RewardActivity
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon:
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_logout_icon:
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_mainmenu_icon:
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			finish();
-			break;
-		}
-		return true;
-	}
 
 	@Override
 	public void onPause() {
@@ -199,6 +269,11 @@ public class RewardActivity
 	public void updateAsyncTaskProgress(Badge b) {
 		badgeList.add(b);
 		adapter.notifyDataSetChanged();
+	}
+	
+	public void updateAsyncTask2Progress(Badge b) {
+		missingBadgeList.add(b);
+		adapter2.notifyDataSetChanged();
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
