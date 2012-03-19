@@ -1,174 +1,164 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/FeedBackground" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
-
-        <ImageView
-            android:id="@+id/friend_list_feed_item_xml_imageview_user_picture"
-            style="@style/FeedUserAvatar" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/friend_list_feed_item_xml_textview_time"
+        style="@style/FeedItemTime" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:orientation="vertical" >
-
-        <!-- Name and mission -->
+        android:orientation="horizontal" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/friend_list_feed_item_xml_textview_username"
-                style="@style/FeedItemUserName" />
-
-            <TextView
-                android:id="@+id/friend_list_feed_item_xml_textview_content"
-                style="@style/FeedItemMissionType" />
-
-            <TextView
-                android:id="@+id/friend_list_feed_item_xml_textview_time"
-                style="@style/FeedItemTime" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom" >
-
-            <TextView
-                android:id="@+id/friend_list_feed_item_xml_textview_placename"
-                style="@style/FeedItemPlaceName" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/friend_list_feed_item_xml_textview_detail"
-            style="@style/FeedItemMissionDetails" />
-
-        <ImageView
-            android:id="@+id/friend_list_feed_item_xml_imageview_snap_picture"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/friend_list_feed_item_xml_linearlayout_treasure_section"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#f7f7f7"
-            android:orientation="horizontal" >
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
 
             <ImageView
-                android:id="@+id/friend_list_feed_item_xml_imageview_treausre_icon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:adjustViewBounds="true"
-                android:paddingBottom="20dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="20dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/friend_list_feed_item_xml_textview_treausre_company"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="from"
-                android:visibility="gone" />
+                android:id="@+id/friend_list_feed_item_xml_imageview_user_picture"
+                style="@style/FeedUserAvatar" />
         </LinearLayout>
-
-        <WebView
-            android:id="@+id/friend_list_feed_item_xml_webview"
-            android:layout_width="230dp"
-            android:layout_height="280dp"
-            android:visibility="gone" />
-
-        <!-- Comment/like buttons -->
-
-        <LinearLayout style="@style/FeedButtonsContainer" >
-
-            <Button
-                android:id="@+id/friend_list_feed_item_xml_button_comment"
-                style="@style/FeedButton.Comment" />
-
-            <Button
-                android:id="@+id/friend_list_feed_item_xml_button_like"
-                style="@style/FeedButton.Like" />
-        </LinearLayout>
-
-        <!-- 1st comment -->
 
         <LinearLayout
-            android:id="@+id/friend_list_feed_item_xml_linearlayout_1st_comment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/light_grey"
-            android:orientation="vertical"
-            android:visibility="gone" >
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical" >
+
+            <!-- Name and mission -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/friend_list_feed_item_xml_textview_username_content"
+                    style="@style/FeedItemUsernameMission" />
+
+                <TextView
+                    android:id="@+id/friend_list_feed_item_xml_textview_username"
+                    style="@style/FeedItemUserName"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/friend_list_feed_item_xml_textview_content"
+                    style="@style/FeedItemMissionType"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" >
+
+                <TextView
+                    android:id="@+id/friend_list_feed_item_xml_textview_placename"
+                    style="@style/FeedItemPlaceName" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/friend_list_feed_item_xml_textview_detail"
+                style="@style/FeedItemMissionDetails" />
+
+            <ImageView
+                android:id="@+id/friend_list_feed_item_xml_imageview_snap_picture"
+                style="@style/FeedItemSnappedPicture" />
+
+            <LinearLayout
+                android:id="@+id/friend_list_feed_item_xml_linearlayout_treasure_section"
+                style="@style/FeedItemTreasureContainer" >
 
                 <ImageView
-                    android:id="@+id/friend_list_feed_item_xml_textview_1st_picture"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="6dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/user_default" />
+                    android:id="@+id/friend_list_feed_item_xml_imageview_treausre_icon"
+                    style="@style/FeedItemTreasureImage" />
 
                 <TextView
-                    android:id="@+id/friend_list_feed_item_xml_textview_1st_username"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#3B5998"
-                    android:textSize="10dp"
-                    android:textStyle="bold" />
+                    android:id="@+id/friend_list_feed_item_xml_textview_treausre_company"
+                    style="@style/FeedItemTreasureFrom" />
             </LinearLayout>
+
+            <WebView
+                android:id="@+id/friend_list_feed_item_xml_webview"
+                android:layout_width="230dp"
+                android:layout_height="280dp"
+                android:visibility="gone" />
+
+            <!-- Comment/like buttons -->
+
+            <LinearLayout style="@style/FeedButtonsContainer" >
+
+                <Button
+                    android:id="@+id/friend_list_feed_item_xml_button_comment"
+                    style="@style/FeedButton.Comment" />
+
+                <Button
+                    android:id="@+id/friend_list_feed_item_xml_button_like"
+                    style="@style/FeedButton.Like" />
+            </LinearLayout>
+
+            <!-- 1st comment -->
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:id="@+id/friend_list_feed_item_xml_linearlayout_1st_comment"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:background="@color/light_grey"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
-                <TextView
-                    android:id="@+id/friend_list_feed_item_xml_textview_1st_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#9E9E9E"
-                    android:textSize="10dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:id="@+id/friend_list_feed_item_xml_textview_1st_content"
+                <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:textSize="10dp" />
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/friend_list_feed_item_xml_textview_1st_picture"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="6dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user_default" />
+
+                    <TextView
+                        android:id="@+id/friend_list_feed_item_xml_textview_1st_username"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#3B5998"
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/friend_list_feed_item_xml_textview_1st_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#9E9E9E"
+                        android:textSize="10dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/friend_list_feed_item_xml_textview_1st_content"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textSize="10dp" />
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/friend_list_feed_item_xml_textview_number_of_comments"
+                style="@style/FeedNumberComments" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/friend_list_feed_item_xml_textview_number_of_comments"
-            style="@style/FeedNumberComments" />
     </LinearLayout>
-
 </LinearLayout>

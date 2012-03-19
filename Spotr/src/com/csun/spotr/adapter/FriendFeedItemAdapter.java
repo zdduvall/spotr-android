@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 
 	public static class ItemViewHolder {
 		ImageView imageViewUserPicture;
+		TextView textViewUsernameAndContent;
 		TextView textViewUsername;
 		TextView textViewPlaceName;
 		TextView textViewTime;
@@ -100,6 +102,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.friend_list_feed_item, null);
 			holder = new ItemViewHolder();
+			holder.textViewUsernameAndContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_username_content);
 			holder.textViewUsername = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_username);
 			holder.imageViewUserPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_user_picture);
 			holder.textViewPlaceName = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_placename);
@@ -170,7 +173,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE) {
 			// required view
-			holder.textViewContent.setText("shot a picture");
+			holder.textViewContent.setText("took a picture");
 			holder.textViewContent.setVisibility(View.VISIBLE); // added this because sometimes the text doesn't show
 			
 			// optional view
@@ -216,7 +219,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
-			holder.textViewDetail.setVisibility(View.VISIBLE);
+			holder.textViewDetail.setVisibility(View.GONE); // no need for additional commentary for this type
 			holder.textViewTreasureCompany.setVisibility(View.VISIBLE);
 			holder.imageViewTreasureIcon.setVisibility(View.VISIBLE);
 			
@@ -235,6 +238,10 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
 		}
+		
+		String username = items.get(position).getFriendName();
+		String mission = holder.textViewContent.getText().toString();
+		holder.textViewUsernameAndContent.setText(Html.fromHtml("<b>" + username + "</b>" + " " + mission));
 		
 		holder.buttonComment.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -288,6 +295,9 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		if (me) {
 			holder.buttonLike.setClickable(false);
 		}
+		
+		holder.textViewUsername.setVisibility(View.GONE);
+		holder.textViewContent.setVisibility(View.GONE);
 		
 		return convertView;
 	}

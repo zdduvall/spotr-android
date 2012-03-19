@@ -742,15 +742,33 @@
     <style name="FeedBackground">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">8dp</item>
         <item name="android:background">@android:color/white</item>        
+    </style>
+
+    <style name="FeedItemTime">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">12sp</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/vimeo_grey</item>
     </style>
     
     <style name="FeedUserAvatar">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="@android:src">@drawable/user_default</item>
+    </style>
+    
+    <style name="FeedItemUsernameMission">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
     
     <style name="FeedItemUserName">
@@ -784,14 +802,37 @@
         <item name="android:visibility">gone</item>
     </style>
     
-    <style name="FeedItemTime">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">right</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/vimeo_grey</item>
+    <style name="FeedItemSnappedPicture">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/ic_launcher</item>
+        <item name="android:visibility">gone</item>
     </style>
     
+    <style name="FeedItemTreasureContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    
+    <style name="FeedItemTreasureImage">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/ic_launcher</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    
+    <style name="FeedItemTreasureFrom">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">from</item>
+        <item name="android:visibility">gone</item>
+    </style>
+        
     <style name="FeedButtonsContainer">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
