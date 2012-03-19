@@ -170,7 +170,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE) {
 			// required view
-			holder.textViewContent.setText("snapped a picture");
+			holder.textViewContent.setText("shot a picture");
 			holder.textViewContent.setVisibility(View.VISIBLE); // added this because sometimes the text doesn't show
 			
 			// optional view
@@ -254,7 +254,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 				notifyDataSetChanged();
 			}
 		});
-		holder.buttonLike.setText("Like + " + Integer.toString(items.get(position).getLikes()));
+		holder.buttonLike.setText("Like +" + Integer.toString(items.get(position).getLikes()));
 		int numComments = items.get(position).getNumberOfComments();
 		if (numComments > 0) {
 			String label = (numComments == 1) ? " comment" : " comments";

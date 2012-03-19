@@ -756,15 +756,15 @@
     <style name="FeedItemUserName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
     
     <style name="FeedItemMissionType">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
     
@@ -785,11 +785,20 @@
     </style>
     
     <style name="FeedItemTime">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:gravity">bottom</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">right</item>
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/vimeo_grey</item>
+    </style>
+    
+    <style name="FeedButtonsContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms_blue_compact</item>
     </style>
     
     <style name="FeedButton">
@@ -798,18 +807,24 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">10sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/aluminum6</item>        
+        <item name="android:textColor">@color/aluminum6</item>
+        <item name="android:background">@null</item>       
     </style>
     
     <style name="FeedButton.Comment">
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginRight">15dp</item>
         <item name="android:text">Comment</item>  
-        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms_red_compact</item>
     </style>
     
     <style name="FeedButton.Like">
-        <item name="android:text">Like</item>  
-        <item name="android:background">@drawable/rectangle_rounded_tops_bottoms_blue_compact</item>
+        <item name="android:text">Like</item> 
+    </style>
+    
+    <style name="FeedNumberComments">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/vimeo_grey</item>
     </style>
     <!-- End Friends: Chatter tab -->
 

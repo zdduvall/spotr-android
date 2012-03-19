@@ -27,15 +27,24 @@
                 android:id="@+id/friend_list_feed_item_xml_textview_username"
                 style="@style/FeedItemUserName" />
 
-	        <TextView
-	            android:id="@+id/friend_list_feed_item_xml_textview_content"
-	            style="@style/FeedItemMissionType" />
+            <TextView
+                android:id="@+id/friend_list_feed_item_xml_textview_content"
+                style="@style/FeedItemMissionType" />
+
+            <TextView
+                android:id="@+id/friend_list_feed_item_xml_textview_time"
+                style="@style/FeedItemTime" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" >
 
             <TextView
                 android:id="@+id/friend_list_feed_item_xml_textview_placename"
                 style="@style/FeedItemPlaceName" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/friend_list_feed_item_xml_textview_detail"
@@ -47,7 +56,6 @@
             android:layout_height="150dp"
             android:adjustViewBounds="true"
             android:paddingBottom="20dp"
-            android:paddingLeft="10dp"
             android:paddingTop="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher"
@@ -86,33 +94,17 @@
             android:layout_height="280dp"
             android:visibility="gone" />
 
-        <!-- Time and comment/like buttons -->
+        <!-- Comment/like buttons -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal" >
+        <LinearLayout style="@style/FeedButtonsContainer" >
 
-            <TextView
-                android:id="@+id/friend_list_feed_item_xml_textview_time"
-                style="@style/FeedItemTime" />
+            <Button
+                android:id="@+id/friend_list_feed_item_xml_button_comment"
+                style="@style/FeedButton.Comment" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:orientation="horizontal" >
-
-                <Button
-                    android:id="@+id/friend_list_feed_item_xml_button_comment"
-                    style="@style/FeedButton.Comment" />
-
-                <Button
-                    android:id="@+id/friend_list_feed_item_xml_button_like"
-                    style="@style/FeedButton.Like" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/friend_list_feed_item_xml_button_like"
+                style="@style/FeedButton.Like" />
         </LinearLayout>
 
         <!-- 1st comment -->
@@ -121,7 +113,7 @@
             android:id="@+id/friend_list_feed_item_xml_linearlayout_1st_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ECEFF5"
+            android:background="@color/light_grey"
             android:orientation="vertical"
             android:visibility="gone" >
 
@@ -176,10 +168,7 @@
 
         <TextView
             android:id="@+id/friend_list_feed_item_xml_textview_number_of_comments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#7A7A7A"
-            android:textSize="10dp" />
+            style="@style/FeedNumberComments" />
     </LinearLayout>
 
 </LinearLayout>
