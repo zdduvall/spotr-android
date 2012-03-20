@@ -30,6 +30,7 @@ public class WebviewActivity extends Activity {
 	
 	private void setupWebView() {
 		WebView wv = (WebView) findViewById(R.id.webview_xml_place_webview);
+		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebViewClient(new WebCallBack());
 		WebSettings settings = wv.getSettings();
 		settings.setBuiltInZoomControls(true);
