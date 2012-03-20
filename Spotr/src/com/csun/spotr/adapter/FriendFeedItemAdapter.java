@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,16 +68,17 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 
 	public static class ItemViewHolder {
 		ImageView imageViewUserPicture;
-		TextView textViewUsername;
+		TextView textViewUsernameAndContent;
 		TextView textViewPlaceName;
 		TextView textViewTime;
-		TextView textViewContent;
 		TextView textViewDetail;
 		ImageView imageViewSnapPicture;
 		Button buttonComment;
 		Button buttonLike;
 		TextView textViewTotalComments;
 		WebView webview;
+		
+		String missionDescription;
 		
 		/**
 		 * Treasure section
@@ -100,11 +102,10 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.friend_list_feed_item, null);
 			holder = new ItemViewHolder();
-			holder.textViewUsername = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_username);
+			holder.textViewUsernameAndContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_username_content);
 			holder.imageViewUserPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_user_picture);
 			holder.textViewPlaceName = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_placename);
 			holder.textViewTime = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_time);
-			holder.textViewContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_content);
 			holder.textViewDetail = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_detail);
 			holder.imageViewSnapPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_snap_picture);
 			holder.webview = (WebView) convertView.findViewById(R.id.friend_list_feed_item_xml_webview);
@@ -135,7 +136,6 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		
 		imageLoader.displayImageRound(items.get(position).getFriendPictureUrl(), holder.imageViewUserPicture);
-		holder.textViewUsername.setText(items.get(position).getFriendName() + " ");
 		holder.textViewPlaceName.setText("@" + items.get(position).getPlaceName());
 		holder.textViewTime.setText(items.get(position).getActivityTime());
 		
@@ -159,8 +159,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		
 		if (items.get(position).getChallengeType() == Challenge.Type.CHECK_IN) {
 			// required view
-			holder.textViewContent.setText("checked in");
-			holder.textViewContent.setVisibility(View.VISIBLE);
+			holder.missionDescription = "checked in";
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
@@ -170,8 +169,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE) {
 			// required view
-			holder.textViewContent.setText("shot a picture");
-			holder.textViewContent.setVisibility(View.VISIBLE); // added this because sometimes the text doesn't show
+			holder.missionDescription = "took a picture";
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.VISIBLE);
@@ -184,10 +182,9 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.WRITE_ON_WALL) {
 			// required view
-			holder.textViewContent.setText("wrote");
+			holder.missionDescription = "wrote";
 			
 			// optional view
-			holder.textViewContent.setVisibility(View.VISIBLE);
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
@@ -198,7 +195,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.QUESTION_ANSWER) {
 			// required view
-			holder.textViewContent.setText("answered a question");
+			holder.missionDescription = "answered a question";
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
@@ -211,12 +208,11 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.FIND_TREASURE) {
 			// required view
-			holder.textViewContent.setText("found treasure");
-			holder.textViewContent.setVisibility(View.VISIBLE); // set because sometimes it doesn't show
+			holder.missionDescription = "found treasure";
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
-			holder.textViewDetail.setVisibility(View.VISIBLE);
+			holder.textViewDetail.setVisibility(View.GONE); // no need for additional commentary for this type
 			holder.textViewTreasureCompany.setVisibility(View.VISIBLE);
 			holder.imageViewTreasureIcon.setVisibility(View.VISIBLE);
 			
@@ -227,7 +223,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else {
 			// required view
-			holder.textViewContent.setText("other");
+			holder.missionDescription = "other";
 			
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
@@ -235,6 +231,10 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
 		}
+		
+		String username = items.get(position).getFriendName();
+		holder.textViewUsernameAndContent.setText(
+				Html.fromHtml("<b>" + username + "</b>" + " " + holder.missionDescription));
 		
 		holder.buttonComment.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -272,7 +272,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.firstTextViewTime.setVisibility(View.VISIBLE);
 			holder.firstTextViewContent.setVisibility(View.VISIBLE);
 			
-			imageLoader.displayImage(c.getPictureUrl(), holder.firstImageViewUserPicture);
+			imageLoader.displayImageRound(c.getPictureUrl(), holder.firstImageViewUserPicture);
 			holder.firstTextViewUsername.setText(c.getUsername());
 			holder.firstTextViewTime.setText(c.getTime());
 			holder.firstTextViewContent.setText(c.getContent());

@@ -5,6 +5,7 @@
     android:background="#181818"
     android:orientation="vertical">
     <TextView 
+        android:id="@+id/badge_xml_textview_unlockedbadges"
 	    android:text="Badges Earned"
 	    android:textSize="16dp"
 	    android:gravity="center"
@@ -19,6 +20,7 @@
         android:numColumns="4">
     </GridView>
     <TextView 
+        android:id="@+id/badge_xml_textview_lockedbadges"
 	    android:text="Locked Badges"
 	    android:background="#000000"
 	    android:textSize="16dp"

@@ -103,11 +103,6 @@ public class ProfileActivity
 		// run another task to display user's feeds
 		new GetUserFeedTask(this, userId, 0).execute();
 		
-		ImageView imageViewUserPicture = (ImageView) findViewById(R.id.profile_xml_imageview_user_picture);
-		imageViewUserPicture.setClickable(false);
-		if(imageViewUserPicture.isClickable())
-			imageViewUserPicture.setClickable(false);
-	
 		// wait for user's data available 
 		canEditProfile = false;
 	}
