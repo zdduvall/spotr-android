@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -61,12 +62,15 @@ public class PlaceInfoActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.place_info);
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 		setupMapGraphics();
 		setupMapOverlays();
 		new GetPlaceDetailTask(this).execute();
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
+		((TextView) findViewById(R.id.title_bar_title)).setText("pot Info");
 	}
 	
 	private void setupMapGraphics() {
@@ -241,17 +245,22 @@ public class PlaceInfoActivity
 		name.setText(p.getName());
 
 		TextView description = (TextView) findViewById(R.id.place_info_xml_textview_description);
-		description.setText(p.getAddress());
+		description.setText(p.getAddress().length() > 0 ? p.getAddress() : 
+			"Coordinates: (" + p.getLatitude() + ", " + p.getLongitude() + ")");
 
 		TextView url = (TextView) findViewById(R.id.place_info_xml_textview_url);
-		url.setText(p.getWebsiteUrl());
-
+		String URL = p.getWebsiteUrl();
+		if (p.getWebsiteUrl().equals("null")) 
+			URL = "http://maps.google.com/maps?q=" + p.getLatitude() + "+" + p.getLongitude();
+		
+		url.setText( URL );
+		final String url2 = URL;
 		url.setClickable(true);
 		url.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Bundle extras = new Bundle();
-				extras.putString("place_web_url", p.getWebsiteUrl());
-				Intent intent = new Intent(getApplicationContext(), WebviewActivity.class);
+				extras.putString("place_web_url", url2);
+				Intent intent = new Intent(v.getContext(), WebviewActivity.class);
 				intent.putExtras(extras);
 				startActivity(intent);
 			}
@@ -260,14 +269,20 @@ public class PlaceInfoActivity
 	
 	private void formatPhoneButton(final Place p) {
 		Button phoneButton = (Button) findViewById(R.id.place_info_xml_button_phone_number);
-		phoneButton.setText(p.getPhoneNumber());
-		final String phoneUrl = "tel:" + p.getPhoneNumber().replaceAll("-", "").replace("(", "").replace(")", "").replace(" ", "");
-		phoneButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
-				startActivity(intent);
-			}
-		});
+		if (!p.getPhoneNumber().equals("null")) {
+			phoneButton.setText(p.getPhoneNumber());
+			final String phoneUrl = "tel:"
+					+ p.getPhoneNumber().replaceAll("-", "").replace("(", "")
+							.replace(")", "").replace(" ", "");
+			phoneButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_CALL, Uri
+							.parse(phoneUrl));
+					startActivity(intent);
+				}
+			});
+		}
+		else phoneButton.setVisibility(View.GONE);
 	}
 	
 	private void displayOverlayOnMap(final Place p) {
