@@ -158,11 +158,12 @@ public class LocalMapViewActivity extends MapActivity {
 		});
 	}
 	
-	private double getDistance(double lat1, double lon1, double lat2, double lon2) {
+	// Not sure if we're gonna use this in the future (Zach - 3/21/2012)
+/*	private double getDistance(double lat1, double lon1, double lat2, double lon2) {
 		double x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
 		double y = (lat2 - lat1);
 		return Math.sqrt(x * x + y * y) * 6371.00;
-	}
+	} */
 
 	private void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
@@ -195,7 +196,6 @@ public class LocalMapViewActivity extends MapActivity {
 			public void gotLocation(final Location location) {
 				lastKnownLocation = location;
 				activateLocateButton();
-				activatePlacesButton();
 				activatePingButton();
 				activateFriendDistanceButton();
 				activatePlaceDistanceButton();
@@ -247,22 +247,6 @@ public class LocalMapViewActivity extends MapActivity {
 				getCurrentLocation();
 				mapController.animateTo(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapController.setZoom(19);
-			}
-		});
-	}
-
-	/**
-	 * Set up the places button to be clickable, to have a new image, and to
-	 * handle its click event.
-	 */
-	private void activatePlacesButton() {
-		final ImageButton placesButton = (ImageButton) findViewById(R.id.title_bar_map_btn_places);
-		placesButton.setClickable(true);
-		placesButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_places_enabled));
-		placesButton.setScaleType(ScaleType.FIT_XY);
-		placesButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				placesButton.setEnabled(false);
 				new GetMapSpotsTask(LocalMapViewActivity.this).execute(lastKnownLocation);
 			}
 		});
@@ -406,7 +390,6 @@ public class LocalMapViewActivity extends MapActivity {
 	public void updatePlaceTaskProgress(Place p) {
 		placeOverlay.addOverlay(createOverlayItemByType(p), p);
 		places.add(p);
-		mapController.animateTo(new GeoPoint((int) (p.getLatitude() * 1E6), (int) (p.getLongitude() * 1E6)));
 		mapController.setZoom(19);
 		mapView.invalidate();
 	}
@@ -415,7 +398,6 @@ public class LocalMapViewActivity extends MapActivity {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getTime(), f.getPictureUrl());
 		friendLocations.add(f);
 		userOverlay.addOverlay(overlay, f);
-		mapController.animateTo(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)));
 		mapController.setZoom(19);
 		mapView.invalidate();
 	}

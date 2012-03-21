@@ -36,10 +36,6 @@
 
         <View style="@style/VerticalSpacer.TitleBar" />
 
-        <ImageButton
-            android:id="@+id/title_bar_map_btn_places"
-            style="@style/TitleBarButton.MapPlaces" />
-
         <View style="@style/VerticalSpacer.TitleBar" />
 
         <ImageButton
