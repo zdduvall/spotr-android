@@ -45,8 +45,9 @@ public class WeaponAdapter extends BaseAdapter {
 
 	public static class ItemViewHolder {
 		TextView textViewTitle;
-		TextView textViewPower;
-		TextView textViewTimesLeft;
+		TextView textViewDescription;
+		//TextView textViewPower;
+		//TextView textViewTimesLeft;
 		ImageView imageViewIcon;
 	}
 
@@ -55,8 +56,9 @@ public class WeaponAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.weapon_item, null);
 			holder = new ItemViewHolder();
 			holder.textViewTitle = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_title);
-			holder.textViewTimesLeft = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_times_left);
-			holder.textViewPower = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_power);
+			holder.textViewDescription = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_description);
+			//holder.textViewTimesLeft = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_times_left);
+			//holder.textViewPower = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_power);
 			holder.imageViewIcon = (ImageView) convertView.findViewById(R.id.weapon_item_xml_imageview_icon);
 			convertView.setTag(holder);
 		}
@@ -64,6 +66,7 @@ public class WeaponAdapter extends BaseAdapter {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
 
+		/*
 		switch (items.get(position).getId()) {
 		case PowerUp.BONUS :
 			holder.textViewTitle.setText("BONUS");
@@ -98,9 +101,14 @@ public class WeaponAdapter extends BaseAdapter {
 			holder.imageViewIcon.setImageResource(R.drawable.pu_loan);
 			break;
 		}
+		//*/
+		holder.textViewTitle.setText(items.get(position).getName());
+		holder.textViewDescription.setText(items.get(position).getDescription());
+		//holder.imageViewIcon.setImageResource(R.drawable.pu_shortcut);
+		imageLoader.displayImage(items.get(position).getImageUrl(), holder.imageViewIcon);
 
-		holder.textViewPower.setText(Double.toString(items.get(position).getPercent()));
-		holder.textViewTimesLeft.setText(Integer.toString(items.get(position).getNumUses()));
+		//holder.textViewPower.setText(Double.toString(items.get(position).getPercent()));
+		//holder.textViewTimesLeft.setText(Integer.toString(items.get(position).getNumUses()));
 		return convertView;
 	}
 

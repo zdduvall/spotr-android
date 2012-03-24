@@ -53,6 +53,7 @@ public class WeaponActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.weapon);
 		setupListView();
+		/*
 		EditText search = (EditText) findViewById(R.id.weapon_xml_edittext_search);
 		search.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -67,6 +68,7 @@ public class WeaponActivity
 				adapter.getFilter().filter(s.toString());
 			}
 		});
+		//*/
 		new GetWeaponTask(this).execute();
 	}
 	
@@ -75,11 +77,13 @@ public class WeaponActivity
 		adapter = new WeaponAdapter(this, weaponList);
 		listview.setAdapter(adapter);
 		
+		/*
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				showDialog(0);
 			}
 		});
+		//*/
 	}
 	
 	private static class GetWeaponTask 
@@ -116,7 +120,10 @@ public class WeaponActivity
 							new Weapon(
 								array.getJSONObject(i).getInt("users_weapon_tbl_weapon_id"), 
 								array.getJSONObject(i).getDouble("users_weapon_tbl_percent"), 
-								array.getJSONObject(i).getInt("users_weapon_tbl_times_left")));
+								array.getJSONObject(i).getInt("users_weapon_tbl_times_left"),
+								array.getJSONObject(i).getString("weapon_tbl_name"),
+								array.getJSONObject(i).getString("weapon_tbl_description"),
+								array.getJSONObject(i).getString("weapon_tbl_url")));
 					}
 				}
 				catch (JSONException e) {
@@ -145,6 +152,7 @@ public class WeaponActivity
 		adapter.notifyDataSetChanged();
 	}
 
+	/*
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -159,6 +167,7 @@ public class WeaponActivity
 		});
 		return builder.create();
 	}
+	//*/
 	
 	@Override
 	public void onPause() {

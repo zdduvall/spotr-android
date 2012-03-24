@@ -4,11 +4,17 @@ public class Weapon {
 	private int id;
 	private int numUses;
 	private double percent;
+	private String name;
+	private String description;
+	private String imageUrl;
 
-	public Weapon(int id, double percent, int numUses) {
+	public Weapon(int id, double percent, int numUses, String name, String description, String imageUrl) {
 		this.id = id;
 		this.percent = percent;
 		this.numUses = numUses;
+		this.name = name;
+		this.description = description;
+		this.imageUrl = imageUrl;
 	}
 
 	public int getId() {
@@ -33,6 +39,18 @@ public class Weapon {
 
 	public void setPercent(double percent) {
 		this.percent = percent;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
 	@Override
@@ -67,7 +85,7 @@ public class Weapon {
 
 	@Override
 	public String toString() {
-		return "Weapon [id=" + id + ", numUses=" + numUses + ", percent=" + percent + "]";
+		return "Weapon [id=" + id + ", numUses=" + numUses + ", percent=" + percent + ", name=" + name + ", description=" + description + "]";
 	}
 
 }

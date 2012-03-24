@@ -8,6 +8,7 @@ public class Challenge {
 		QUESTION_ANSWER,
 		SNAP_PICTURE_CHALLENGE,
 		FIND_TREASURE,
+		DROP_ITEM,
 		OTHER
 	};
 	
@@ -24,6 +25,8 @@ public class Challenge {
 			return Type.SNAP_PICTURE_CHALLENGE;
 		else if (typeStr.equals("TREASURE")) 
 			return Type.FIND_TREASURE;
+		else if (typeStr.equals("DROP_ITEM"))
+			return Type.DROP_ITEM;
 		else // (typeStr.equals("OTHER")) 
 			return Type.OTHER;
 	}

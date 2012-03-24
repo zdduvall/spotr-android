@@ -47,7 +47,7 @@ import com.csun.spotr.util.JsonHelper;
 public class PlaceActionActivity 
 	extends Activity 
 		implements IActivityProgressUpdate<Challenge> {
-	
+
 	private static final String TAG = "(PlaceActionActivity)";
 	private static final String GET_CHALLENGES_URL = "http://107.22.209.62/android/get_challenges_from_place.php";
 	private static final String GET_SPOT_DETAIL_URL = "http://107.22.209.62/android/get_spot_detail.php";
@@ -57,7 +57,7 @@ public class PlaceActionActivity
 	public ListView list = null;
 	private	PlaceActionItemAdapter adapter = null;
 	private List<Challenge> challengeList = new ArrayList<Challenge>();
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,15 +65,33 @@ public class PlaceActionActivity
 		// get place id
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
-		
+
 		setupInfoButton();
 		setupTreasureButton();
+		setupLootButton();
 		setupListView();
 		// run GetPlaceDetailTask
 		new GetPlaceDetailTask(PlaceActionActivity.this).execute();
 		// run GetChallengeTask
 		new GetChallengesTask(PlaceActionActivity.this).execute();
 	}
+
+	
+	
+	private void setupLootButton() {
+		Button buttonLoot = (Button) findViewById(R.id.place_action_xml_button_loot);
+		buttonLoot.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				Bundle extras = new Bundle();
+				extras.putInt("place_id", currentPlaceId);
+				Intent intent = new Intent(PlaceActionActivity.this.getApplicationContext(), PlaceLootActivity.class);
+				intent.putExtras(extras);
+				startActivity(intent);
+				
+			}
+		});
+	}
+	
 	
 	private void setupInfoButton() {
 		Button buttonMoreInfo = (Button) findViewById(R.id.place_info_xml_button_moreinfo);
@@ -87,7 +105,7 @@ public class PlaceActionActivity
 			}
 		});
 	}
-	
+
 	private void setupTreasureButton() {
 		/**
 		 * Description
@@ -112,7 +130,7 @@ public class PlaceActionActivity
 				        	public void onClick(DialogInterface dialog, int id) {
 				        		// create a random generator
 				        		Random random = new Random();
-				        		
+
 				        		// only run GenerateTreasureActivity if 
 				        		// the random number return is greater than 0.5
 				            	if (random.nextDouble() > 0.5) {
@@ -133,7 +151,7 @@ public class PlaceActionActivity
 				        		 dialog.cancel();
 				             }
 				           });
-				 
+
 				AlertDialog alert = builder.create();
 				alert.show();
 			}
@@ -150,7 +168,7 @@ public class PlaceActionActivity
 				Challenge c = (Challenge) challengeList.get(position);
 				// set current item chosen so that later we can make some side effects
 				currentChosenItem = position;
-								
+
 				if (c.getType() == Challenge.Type.CHECK_IN) {
 					Intent intent = new Intent("com.csun.spotr.CheckInActivity");
 					Bundle extras = new Bundle();
@@ -198,29 +216,39 @@ public class PlaceActionActivity
 					intent.putExtras(extras);
 					startActivity(intent);
 				}
+				else if (c.getType() == Challenge.Type.DROP_ITEM) {
+					Intent intent = new Intent("com.csun.spotr.DropItemActivity");
+					Bundle extras = new Bundle();
+					extras.putString("users_id", Integer.toString(CurrentUser.getCurrentUser().getId()));
+					extras.putString("spots_id", Integer.toString(currentPlaceId));
+					extras.putString("challenges_id", Integer.toString(c.getId()));
+					//extras.putString("question_description", c.getDescription());
+					intent.putExtras(extras);
+					startActivity(intent);
+				}
 				else { // c.getType == Challenge.Type.OTHER 
-					
+
 				}
 			}
 		});
 	}
-	
+
 	private static class GetChallengesTask 
 		extends AsyncTask<String, Challenge, Boolean> 
 			implements IAsyncTask<PlaceActionActivity> {
-		
+
 		private static final String TAG = "[AsyncTask].GetChallengeTask";
 		private WeakReference<PlaceActionActivity> ref;
-		
+
 		public GetChallengesTask(PlaceActionActivity a) {
 			attach(a);
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			
+
 		}
-		
+
 		@Override
 	    protected void onProgressUpdate(Challenge... c) {
 			ref.get().updateAsyncTaskProgress(c[0]);
@@ -231,7 +259,7 @@ public class PlaceActionActivity
 			List<NameValuePair> data = new ArrayList<NameValuePair>();
 			data.add(new BasicNameValuePair("place_id", Integer.toString(ref.get().currentPlaceId)));
 			JSONArray array = JsonHelper.getJsonArrayFromUrlWithData(GET_CHALLENGES_URL, data);
-			
+
 			if (array != null) { 
 				try {
 					for (int i = 0; i < array.length(); ++i) {
@@ -272,14 +300,14 @@ public class PlaceActionActivity
 			ref.clear();
 		}
 	}
-	
+
 	private static class GetPlaceDetailTask 
 		extends AsyncTask<Void, Integer, Place> 
 			implements IAsyncTask<PlaceActionActivity> {
-	
+
 		private static final String TAG = "[AsyncTask].GetPlaceDetailTask]";
 		private WeakReference<PlaceActionActivity> ref;
-	
+
 		public GetPlaceDetailTask(PlaceActionActivity a) {
 			attach(a);
 		}
@@ -327,19 +355,19 @@ public class PlaceActionActivity
 
 		@Override
 		protected void onPreExecute() {
-	
+
 		}
-	
+
 		@Override
 		protected void onPostExecute(final Place p) {
 			ref.get().updatePlaceDetailAsyncTaskProgress(p);
 			detach();
 		}
-	
+
 		public void attach(PlaceActionActivity a) {
 			ref = new WeakReference<PlaceActionActivity>(a);
 		}
-	
+
 		public void detach() {
 			ref.clear();
 		}
@@ -351,7 +379,7 @@ public class PlaceActionActivity
 		inflater.inflate(R.menu.all_menu, menu);
 		return true;
 	}
-	
+
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
@@ -376,7 +404,7 @@ public class PlaceActionActivity
 				startActivity(intent);
 				finish();
 				break;
-				
+
 			case R.id.options_menu_xml_item_toolbar_icon:
 				break;
 		}
@@ -387,18 +415,18 @@ public class PlaceActionActivity
 		challengeList.add(c);
 		adapter.notifyDataSetChanged();
 	}
-	
+
 
 	public void updatePlaceDetailAsyncTaskProgress(final Place p) {
 		TextView name = (TextView) findViewById(R.id.place_activity_xml_textview_name);
 		name.setText(p.getName());
-		
+
 		TextView description = (TextView) findViewById(R.id.place_activity_xml_textview_description);
 		String formattedAddress = formatAddress(p.getAddress());
-		
+
 		description.setText(formattedAddress);//p.getAddress());
 	}
-	
+
 	/**
 	 * NOTE: THIS IS A TEMPORARY IMPLEMENTATION
 	 * Formats an address string to have line breaks. 
@@ -407,7 +435,7 @@ public class PlaceActionActivity
 	 */
 	private String formatAddress(String address) {
 		String[] parts = address.split("\\, ");
-		
+
 		// Check that we get 4 substrings:
 		//	   1) street
 		//     2) city
@@ -423,7 +451,7 @@ public class PlaceActionActivity
 		return address;
 	}
 
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -435,10 +463,10 @@ public class PlaceActionActivity
 					.setMessage("You checked in recently. You can only check in once every 24 hours. :(!")
 					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							
+
 						}
 					}).create();
-		
+
 		case 1: 
 			return new 
 					AlertDialog.Builder(this)
@@ -449,17 +477,17 @@ public class PlaceActionActivity
 							public void onClick(DialogInterface dialog, int whichButton) {
 							}
 						}).create();
-		
+
 		}
 		return null;
 	}
-	
+
 	@Override 
 	public void onResume() {
 		Log.v(TAG, "I'm resumed");
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		Log.v(TAG, "I'm destroyed!");

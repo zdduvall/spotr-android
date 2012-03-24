@@ -700,6 +700,19 @@
             </intent-filter>
         </activity>
         
+        <!-- Drop Item Activity -->
+        <activity
+            android:name=".DropItemActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.DropItemActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
          <!-- No Treasure Activity -->
         <activity
             android:name=".EventActivity"
@@ -708,6 +721,19 @@
             android:theme="@style/CustomTheme" >
             <intent-filter>
                 <action android:name="com.csun.spotr.EventActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Place Loot Activity -->
+        <activity
+            android:name=".PlaceLootActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.PlaceLootActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
