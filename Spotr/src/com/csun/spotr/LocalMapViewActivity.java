@@ -57,16 +57,16 @@ import com.google.android.maps.Projection;
 public class LocalMapViewActivity extends MapActivity {
 
 	private static final String TAG = "(LocalMapViewActivity)";
-	
+
 	private static final int USER_MAP_RADIUS_10M = 10;
 	private static final int USER_MAP_RADIUS_20M = 20;
 	private static final int USER_MAP_RADIUS_50M = 50;
 	private static final int USER_MAP_RADIUS_100M = 100;
-	
+
 	private static final int PING_DURATION_ONE_DAY = 86400;
 	private static final int PING_DURATION_THREE_DAY = 259200;
 	private static final int PING_DURATION_SEVEN_DAY = 604800;
-	
+
 	private static final int ID_DIALOG_PING = 1;
 
 	private MapView mapView = null;
@@ -79,7 +79,7 @@ public class LocalMapViewActivity extends MapActivity {
 	public ImpactOverlay userLocationOverlay = null;
 	private List<FriendAndLocation> friendLocations = new ArrayList<FriendAndLocation>();
 	private List<Place> places = new ArrayList<Place>();
-	
+
 	private int indexFriend = 0;
 	private int indexPlace = 0;
 
@@ -93,7 +93,7 @@ public class LocalMapViewActivity extends MapActivity {
 		setupMapGraphics();     // 2. set up map
 		findLocation();         // 2. listen to new location
 	}
-	
+
 	private void activateFriendDistanceButton() {
 		Button btn = (Button) findViewById(R.id.mapview_xml_button_friend_distance);
 		btn.setEnabled(true);
@@ -104,16 +104,16 @@ public class LocalMapViewActivity extends MapActivity {
 					GeoPoint geoMe = new GeoPoint(
 						(int) (lastKnownLocation.getLatitude()* 1E6), 
 						(int) (lastKnownLocation.getLongitude()* 1E6));
-					
-					
+
+
 					GeoPoint geoFriend = new GeoPoint(
 						(int) (friendLocations.get(indexFriend).getLatitude()* 1E6), 
 						(int) (friendLocations.get(indexFriend).getLongitude()* 1E6));
-					
+
 					Location location = new Location("");
 					location.setLatitude(friendLocations.get(indexFriend).getLatitude());
 					location.setLongitude(friendLocations.get(indexFriend).getLongitude());
-					
+
 					float d = location.distanceTo(lastKnownLocation);
 					userOverlay.addTwoPoints(geoMe, geoFriend, d);
 					mapController.animateTo(geoFriend);
@@ -125,7 +125,7 @@ public class LocalMapViewActivity extends MapActivity {
 			}
 		});
 	}
-	
+
 	private void activatePlaceDistanceButton() {
 		Button btn = (Button) findViewById(R.id.mapview_xml_button_place_distance);
 		btn.setEnabled(true);
@@ -136,16 +136,16 @@ public class LocalMapViewActivity extends MapActivity {
 					GeoPoint geoMe = new GeoPoint(
 						(int) (lastKnownLocation.getLatitude()* 1E6), 
 						(int) (lastKnownLocation.getLongitude()* 1E6));
-					
-					
+
+
 					GeoPoint geoPlace = new GeoPoint(
 						(int) (places.get(indexPlace).getLatitude()* 1E6), 
 						(int) (places.get(indexPlace).getLongitude()* 1E6));
-					
+
 					Location location = new Location("");
 					location.setLatitude(places.get(indexPlace).getLatitude());
 					location.setLongitude(places.get(indexPlace).getLongitude());
-					
+
 					float d = location.distanceTo(lastKnownLocation);
 					placeOverlay.addTwoPoints(geoMe, geoPlace, d);
 					mapController.animateTo(geoPlace);
@@ -157,7 +157,7 @@ public class LocalMapViewActivity extends MapActivity {
 			}
 		});
 	}
-	
+
 	// Not sure if we're gonna use this in the future (Zach - 3/21/2012)
 /*	private double getDistance(double lat1, double lon1, double lat2, double lon2) {
 		double x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
@@ -199,9 +199,9 @@ public class LocalMapViewActivity extends MapActivity {
 				activatePingButton();
 				activateFriendDistanceButton();
 				activatePlaceDistanceButton();
-				
+
 				addUserOverlay();
-				
+
 				userLocationOverlay = new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M);
 				mapOverlays.add(userLocationOverlay);
 				mapView.invalidate();
@@ -209,7 +209,7 @@ public class LocalMapViewActivity extends MapActivity {
 		});
 		fineLocation.getLocation(this, locationResult);
 	}
-	
+
 	/*
 	 * Add user overlay for locate button; must call [mapview].invalidate() after
 	 */
@@ -219,7 +219,7 @@ public class LocalMapViewActivity extends MapActivity {
 		icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
 		ovl.setMarker(icon);
 	}
-	
+
 	// This is after initialization, when user wants to get new location
 	private void getCurrentLocation() {
 		LocationResult locationResult = (new LocationResult() {
@@ -232,7 +232,7 @@ public class LocalMapViewActivity extends MapActivity {
 		});
 		fineLocation.getLocation(this, locationResult);
 	}
-	
+
 	/**
 	 * Set up the locate button to be clickable, to have a new image, and to
 	 * handle its click event.
@@ -251,7 +251,7 @@ public class LocalMapViewActivity extends MapActivity {
 			}
 		});
 	}
-	
+
 	/**
 	 * Set up the ping button to be clickable, to have a new image, and 
 	 * to handle its click event.
@@ -267,7 +267,7 @@ public class LocalMapViewActivity extends MapActivity {
 			}
 		});
 	}
-	
+
 	private void setupFriendButton() {
 		final ImageButton friendsButton = (ImageButton) findViewById(R.id.title_bar_map_btn_friends);
 		friendsButton.setOnClickListener(new OnClickListener() {
@@ -343,7 +343,7 @@ public class LocalMapViewActivity extends MapActivity {
 				myAlertDialog.setView(input);
 				myAlertDialog.setTitle("Ping Options");
 				myAlertDialog.setMessage("Enter a message and how long your ping should stay on map");
-				
+
 				myAlertDialog.setPositiveButton("1 Day", new DialogInterface.OnClickListener() {
 					// do something when the button is clicked
 					public void onClick(DialogInterface arg0, int arg1) {
@@ -351,14 +351,14 @@ public class LocalMapViewActivity extends MapActivity {
 							LocalMapViewActivity.this, input.getText().toString(), lastKnownLocation, PING_DURATION_ONE_DAY).execute();
 					}
 				});
-		
+
 				myAlertDialog.setNeutralButton("3 Days", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface arg0, int arg1) {
 						new PingMeTask(
 							LocalMapViewActivity.this, input.getText().toString(), lastKnownLocation, PING_DURATION_THREE_DAY).execute();
 					}
 				});
-		
+
 				myAlertDialog.setNegativeButton("7 Days", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface arg0, int arg1) {
 						new PingMeTask(
@@ -393,7 +393,7 @@ public class LocalMapViewActivity extends MapActivity {
 		mapController.setZoom(19);
 		mapView.invalidate();
 	}
-	
+
 	public void updateFriendTaskProgress(FriendAndLocation f) {
 		OverlayItem overlay = new OverlayItem(new GeoPoint((int) (f.getLatitude() * 1E6), (int) (f.getLongitude() * 1E6)), f.getTime(), f.getPictureUrl());
 		friendLocations.add(f);
