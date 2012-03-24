@@ -29,6 +29,9 @@
                 <Button
                     android:id="@+id/place_action_xml_button_treasure"
                     style="@style/SpotsMissionsTreasureButton" />
+                <Button
+                    android:id="@+id/place_action_xml_button_loot"
+                    style="@style/SpotsMissionsTreasureButton" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
