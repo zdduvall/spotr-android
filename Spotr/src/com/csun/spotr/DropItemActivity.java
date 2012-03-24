@@ -75,9 +75,7 @@ public class DropItemActivity
 		initChallengeInfoFromBundle();
 		
 		setupListView();
-		//setupMessageBox();
 		
-		//setupLinkButton();
 		new GetWeaponTask(this).execute();
 	}
 	
@@ -86,14 +84,12 @@ public class DropItemActivity
 		adapter = new WeaponAdapter(this, weaponList);
 		listview.setAdapter(adapter);
 		
-		//*
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				itemId = Integer.toString(((Weapon)(adapter.getItem(position))).getId());
 				showDialog(0);
 			}
 		});
-		//*/
 	}
 	
 	private void initChallengeInfoFromBundle() {
@@ -119,74 +115,6 @@ public class DropItemActivity
 		return builder.create();
 	}
 	
-	/*
-	private void setupLinkButton() {
-		Button buttonLink = (Button) findViewById(R.id.write_on_wall_xml_button_choose_link);
-		buttonLink.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), AddWebLinkActivity.class);
-				startActivityForResult(intent, INTENT_RESULT_LINK);
-			}
-		});
-	}
-	//*/
-	
-	/*
-	private void setupMessageBox() {
-		final Button buttonPost = (Button) findViewById(R.id.write_on_wall_xml_button_submit);
-		final EditText editTextMessage = (EditText) findViewById(R.id.write_on_wall_xml_edittext_message_box);
-		final TextView textViewCount = (TextView) findViewById(R.id.write_on_wall_xml_textview_character_count);
-		
-		buttonPost.setEnabled(false);
-		
-		editTextMessage.addTextChangedListener(new TextWatcher() {
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				textViewCount.setText(String.valueOf(s.length()) + "/160");
-				if (s.length() > 0) {
-					buttonPost.setEnabled(true);
-				}
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			public void afterTextChanged(Editable s) {
-
-			}
-		});
-		
-		buttonPost.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				message = editTextMessage.getText().toString();
-				EditText editTextUrl = (EditText) findViewById(R.id.write_on_wall_xml_edittext_link);
-				link = editTextUrl.getText().toString();
-				if (message.length() > 0) {
-					WriteOnWallTask task = new WriteOnWallTask(WriteOnWallActivity.this, usersId, spotsId, challengesId, message, link);
-					task.execute();
-				}
-				else {
-					displayErrorMessage();
-				}
-			}
-		});
-	}
-	//*/
-	/*
-	private void displayErrorMessage() {
-		AlertDialog dialogMessage = new AlertDialog.Builder(WriteOnWallActivity.this).create();
-		dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
-		dialogMessage.setMessage("Message cannot be empty! Please try again.");
-		dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
-		dialogMessage.show();	
-	}
-	//*/
-	
-	//*
 	private static class DropItemTask 
 		extends AsyncTask<Void, Integer, String> 
 			implements IAsyncTask<DropItemActivity> {
@@ -248,19 +176,6 @@ public class DropItemActivity
 				ref.get().setResult(RESULT_OK, intent);
 				ref.get().finish();
 			}
-			/*
-			else if(result.equals("fail")) {
-				AlertDialog dialogMessage = new AlertDialog.Builder(ref.get()).create();
-				dialogMessage.setTitle("Hello " + CurrentUser.getCurrentUser().getUsername());
-				dialogMessage.setMessage("You can only Write On Wall once per day. Sorry.");
-				dialogMessage.setButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				dialogMessage.show();	
-			}
-			//*/
 			else {
 				Log.e(TAG, "unexpected error has occured!");
 			}
@@ -276,50 +191,6 @@ public class DropItemActivity
 		}
 	}
 	
-	/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			case R.id.options_menu_xml_item_setting_icon:
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				break;
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				break;
-		}
-		return true;
-	}
-	//*/
-	
-	/*
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 0) {
-			if (resultCode == RESULT_OK) {
-				Bundle b = data.getExtras();
-				String url = b.getString("link");
-				EditText editTextUrl = (EditText) findViewById(R.id.write_on_wall_xml_edittext_link);
-				editTextUrl.setText(url);
-			}
-		}
-	}
-	//*/
 	
 	private static class GetWeaponTask 
 		extends AsyncTask<Integer, Weapon, Boolean> 
