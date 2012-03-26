@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/aluminum2"
+    android:background="@color/light_grey"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -32,7 +32,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/aluminum6"
                 android:textStyle="bold"
-                android:text="" />
+                android:text="Test" />
             
             <ScrollView
                 android:layout_width="match_parent"
@@ -44,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dip"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#95a5c6" />
+                android:textColor="@color/aluminum6"
+                android:text="Test" />
             
             </ScrollView>
         </LinearLayout>
@@ -110,6 +111,7 @@
             android:layout_height="40sp"
             android:layout_gravity="center"
             android:text="Me"
+            android:enabled="false"
             android:textColor="@color/aluminum6" />
 
         <Button
@@ -119,6 +121,7 @@
             android:layout_height="40sp"
             android:layout_gravity="center"
             android:text="View Spots"
+            android:enabled="false"
             android:textColor="@color/aluminum6" />
     </LinearLayout>
 
