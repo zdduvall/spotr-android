@@ -91,7 +91,7 @@ public class DropItemActivity
 			}
 		});
 	}
-	
+
 	private void initChallengeInfoFromBundle() {
 		Bundle extras = getIntent().getExtras();
 		usersId = extras.getString("users_id");
