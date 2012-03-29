@@ -32,6 +32,7 @@ import com.csun.spotr.R;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
+import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.JsonHelper;
@@ -64,6 +65,11 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	
 	public long getItemId(int position) {
 		return position;
+	}
+
+	public void incrementLike(int position){
+		items.get(position).setLikes(items.get(position).getLikes() + 1);
+		notifyDataSetChanged();
 	}
 
 	public static class ItemViewHolder {
@@ -247,11 +253,11 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			}
 		});
 		
+		
 		holder.buttonLike.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new LikeActivityTask(FriendFeedItemAdapter.this).execute(items.get(position).getActivityId());
-				items.get(position).setLikes(items.get(position).getLikes() + 1);
-				notifyDataSetChanged();
+				new LikeActivityTask(FriendFeedItemAdapter.this, position).execute(items.get(position).getActivityId());
+			//	items.get(position).setLikes(items.get(position).getLikes() + 1);
 			}
 		});
 		holder.buttonLike.setText("Like +" + Integer.toString(items.get(position).getLikes()));
@@ -303,10 +309,13 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	private static class LikeActivityTask
 		extends AsyncTask<Integer, Void, Boolean> 
 			implements IAsyncTask<FriendFeedItemAdapter> {
+		
+		int position;
 	
 		private WeakReference<FriendFeedItemAdapter> ref;
 		
-		public LikeActivityTask(FriendFeedItemAdapter a) {
+		public LikeActivityTask(FriendFeedItemAdapter a, int p) {
+			position = p;
 			attach(a);
 		}
 	
@@ -317,23 +326,28 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		@Override
 		protected Boolean doInBackground(Integer... activity) {
 			List<NameValuePair> datas = new ArrayList<NameValuePair>();
+			System.out.println(activity[0]);
 			datas.add(new BasicNameValuePair("activityId", activity[0].toString() ));
+			datas.add(new BasicNameValuePair("usersId", Integer.toString(CurrentUser.getCurrentUser().getId()) ));
 			
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(LIKE_ACTIVITY_URL, datas);
 			String result = "";
 			try {
 				result = json.getString("result");
-				if (result.equals("success"))
+				if (result.equals("success")){
 					return true;
+				}
 			}
 			catch (Exception e) {
 				Log.e(TAG + "LikeActivityTask.doInBackground(Void... voids)", "JSON error parsing data", e );
 			}
-			return false;
+			return false;			
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			if(result)
+				ref.get().incrementLike(position);
 			detach();
 		}
 
