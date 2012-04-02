@@ -119,6 +119,10 @@ public class QuestDetailItem {
 	public String getDescription() {
 		return description;
 	}
+	
+	public String getTruncatedDescription() {
+		return description.substring(0, 50)+"...";
+	}
 
 	public void setDescription(String description) {
 		this.description = description;

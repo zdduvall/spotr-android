@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -67,14 +68,19 @@ public class QuestActionActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest_action);
+		initQuestSpotDataFromIntent();
+		setupListView();
+		new GetChallengesTask(QuestActionActivity.this).execute();
+	}
+	
+	private void initQuestSpotDataFromIntent() {
+		// Get data from super activity
 		Bundle extrasBundle = getIntent().getExtras();
 		currentPlaceId = extrasBundle.getInt("place_id");
 		currentSpotPosition = extrasBundle.getInt("position");
 		currentquestSpotId = extrasBundle.getInt("questSpotId");
 		currentUserId = CurrentUser.getCurrentUser().getId();
 		displayTitle(extrasBundle);
-		setupListView();
-		new GetChallengesTask(QuestActionActivity.this).execute();
 	}
 	
 	private void displayTitle(Bundle extrasBundle) {
@@ -82,6 +88,7 @@ public class QuestActionActivity
 		TextView descriptionTextView = (TextView) findViewById(R.id.quest_action_xml_description);
 		nameTextView.setText(extrasBundle.getString("name"));
 		descriptionTextView.setText(extrasBundle.getString("description"));
+		descriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 		ImageView imageViewQuestPicture = (ImageView) findViewById(R.id.quest_action_xml_image);
 		ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 		imageLoader.displayImage(extrasBundle.getString("imageUrl"), imageViewQuestPicture);

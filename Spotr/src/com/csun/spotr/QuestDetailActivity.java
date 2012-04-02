@@ -40,6 +40,7 @@ import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.ImageLoader;
 import com.csun.spotr.util.FineLocation.LocationResult;
 import com.csun.spotr.util.JsonHelper;
+import com.csun.spotr.util.PlaceIconUtil;
 
 import com.csun.spotr.adapter.QuestDetailItemAdapter;
 import com.google.android.maps.GeoPoint;
@@ -79,7 +80,7 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 	public	Location lastKnownLocation = null;
 
 	private static final int DO_SPOT_CHALLENGE = 1;  // code number to send to child activity
-	private static final int RANGE_LIMIT = 300000;      // range_limit of user, unit: meter
+	private static final int RANGE_LIMIT = 500;      // range_limit of user, unit: meter
 	private static boolean flagMeButton = false;
 
 	private CustomQuestItemizedOverlay itemizedGreenOverlay;
@@ -381,7 +382,11 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 			this.spotCompleted++;
 		}
 
-		OverlayItem overlay = new OverlayItem(new GeoPoint((int)(q.getLatitude()*1E6), (int)(q.getLongitude()*1E6)), q.getName(), q.getDescription());
+		OverlayItem overlay = new OverlayItem(new GeoPoint((int)(q.getLatitude()*1E6), (int)(q.getLongitude()*1E6)), q.getName(), q.getTruncatedDescription());
+		
+		// custom icon
+		overlay.setMarker(PlaceIconUtil.getMapIconByType(this, 0));
+		
 		//Place place = new Place.Builder(q.getLongitude(), q.getLatitude(), q.getId()).build();
 
 		if (q.getStatus().equalsIgnoreCase("done")) 
@@ -515,7 +520,7 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 					extras.putInt("questSpotId",places.get(index).getQuestSpotId());
 					intent.putExtras(extras);
 					startActivityForResult(intent, DO_SPOT_CHALLENGE);
-				}
+				}	
 				else {
 					Toast.makeText(getApplicationContext(), "Keep walking, dude", Toast.LENGTH_SHORT).show();
 				}
