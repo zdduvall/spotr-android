@@ -11,11 +11,13 @@ import org.json.JSONException;
 
 import com.csun.spotr.adapter.InboxItemAdapter;
 import com.csun.spotr.asynctask.GetInboxTask;
+import com.csun.spotr.asynctask.GetMapSpotsTask;
 import com.csun.spotr.core.Inbox;
 import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
+import com.google.android.maps.GeoPoint;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -30,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView.ScaleType;
 
 
 /**
