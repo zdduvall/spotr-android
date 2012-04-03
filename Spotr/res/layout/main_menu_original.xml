@@ -33,6 +33,10 @@
         
         <Button
             android:id="@+id/main_menu_btn_inbox"
+            style="@style/MainMenuButton.Inbox" /> 
+            
+        <Button
+            android:id="@+id/main_menu_btn_friend_request"
             style="@style/MainMenuButton.Inbox" />
         
     </com.csun.spotr.custom_gui.DashboardLayout>
