@@ -28,14 +28,6 @@
             style="@style/MainMenuButton.Spots" />
         
         <Button
-            android:id="@+id/main_menu_btn_ping"
-            style="@style/MainMenuButton.Ping" />
-        
-        <Button
-            android:id="@+id/main_menu_btn_spot_it"
-            style="@style/MainMenuButton.SpotIt" />
-        
-        <Button
             android:id="@+id/main_menu_btn_inventory"
             style="@style/MainMenuButton.Inventory" />
         

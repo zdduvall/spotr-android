@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -29,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.csun.spotr.CommentActivity;
 import com.csun.spotr.R;
+import com.csun.spotr.WebviewActivity;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
 import com.csun.spotr.core.adapter_item.FriendFeedItem;
@@ -82,7 +84,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		Button buttonComment;
 		Button buttonLike;
 		TextView textViewTotalComments;
-		WebView webview;
+		TextView textViewWebLink;
 		
 		String missionDescription;
 		
@@ -114,7 +116,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewTime = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_time);
 			holder.textViewDetail = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_detail);
 			holder.imageViewSnapPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_snap_picture);
-			holder.webview = (WebView) convertView.findViewById(R.id.friend_list_feed_item_xml_webview);
+			holder.textViewWebLink = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_weblink);
 			holder.buttonComment = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_comment);
 			holder.buttonLike = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_like);
 			holder.textViewTotalComments = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_number_of_comments);
@@ -149,17 +151,19 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		 *  Add share url from user
 		 **/
 		if (items.get(position).getShareUrl().equals("")) {
-			holder.webview.setVisibility(View.GONE);
+			holder.textViewWebLink.setVisibility(View.GONE);
 		}
 		else {
-			holder.webview.setVisibility(View.VISIBLE);
-			WebSettings webSettings = holder.webview.getSettings();
-			webSettings.setJavaScriptEnabled(true);
-			webSettings.setPluginsEnabled(true);
-			webSettings.setDefaultZoom(ZoomDensity.FAR);
-			webSettings.setBuiltInZoomControls(true);
-			holder.webview.setWebViewClient(new Helper());
-			holder.webview.loadUrl(items.get(position).getShareUrl());
+			holder.textViewWebLink.setVisibility(View.VISIBLE);
+			holder.textViewWebLink.setText(items.get(position).getShareUrl());
+			holder.textViewWebLink.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Uri uriUrl = Uri.parse(items.get(position).getShareUrl());
+					Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);  
+					launchBrowser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(launchBrowser);
+				}
+			});
 		}
 		// end 
 		

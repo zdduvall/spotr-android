@@ -80,7 +80,16 @@ public class PlaceActivity
 		showDialog(DIALOG_ID_LOADING);
 		setupTitleBar();
 		setupListView();
-		setupPowerupToolbar();
+		
+		/**
+		 * Run out of time to implement 
+		 * this feature, so temporarily remove
+		 *	
+		 * @author chan 
+		 * @date 04/02/2012
+		 */
+		// setupPowerupToolbar();
+		
 		findLocation(); 
 	}
 	
