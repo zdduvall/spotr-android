@@ -70,7 +70,7 @@ public class DropItemActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.weapon);
+		setContentView(R.layout.drop_off);
 		
 		initChallengeInfoFromBundle();
 		

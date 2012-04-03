@@ -80,7 +80,7 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 	public	Location lastKnownLocation = null;
 
 	private static final int DO_SPOT_CHALLENGE = 1;  // code number to send to child activity
-	private static final int RANGE_LIMIT = 500;      // range_limit of user, unit: meter
+	private static final int RANGE_LIMIT = 600;      // range_limit of user, unit: meter
 	private static boolean flagMeButton = false;
 
 	private CustomQuestItemizedOverlay itemizedGreenOverlay;

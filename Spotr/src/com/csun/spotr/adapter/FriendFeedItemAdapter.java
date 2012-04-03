@@ -53,7 +53,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		this.context = context.getApplicationContext();
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = new ImageLoader(context.getApplicationContext());
+		imageLoader = new ImageLoader(context);
 		this.me = me;
 	}
 
@@ -230,6 +230,20 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 			holder.textViewTreasureCompany.setText(items.get(position).getTreasureCompany());
 			imageLoader.displayImage(items.get(position).getTreasureIconUrl(), holder.imageViewTreasureIcon);
+		}
+		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE_CHALLENGE) {
+			// required view
+			holder.missionDescription = "snap picture challenge";
+			
+			// optional view
+			holder.imageViewSnapPicture.setVisibility(View.VISIBLE);
+			holder.textViewDetail.setVisibility(View.VISIBLE);
+			holder.textViewTreasureCompany.setVisibility(View.GONE);
+			holder.imageViewTreasureIcon.setVisibility(View.GONE);
+			
+			// populate data into optional view
+			holder.textViewDetail.setText(items.get(position).getActivityComment());
+			imageLoader.displayImage(items.get(position).getActivitySnapPictureUrl(), holder.imageViewSnapPicture);
 		}
 		else {
 			// required view

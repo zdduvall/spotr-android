@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SpotrGeneralBackground.FriendList" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingTop="15dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/drop_off_activity_points_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:text="Spot Points:" />
+
+            <TextView
+                android:id="@+id/drop_off_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/drop_off_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Choose one of the your items to feed to mama gopher" />
+
+    </LinearLayout>
+    
+    <ListView
+        android:id="@+id/weapon_xml_listview_weapons"
+        style="@style/FriendList" />
+
+</LinearLayout>
