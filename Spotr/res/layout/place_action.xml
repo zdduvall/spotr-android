@@ -28,7 +28,9 @@
 
                 <Button
                     android:id="@+id/place_action_xml_button_treasure"
-                    style="@style/SpotsMissionsTreasureButton" />
+                    style="@style/SpotsMissionsTreasureButton"
+                    android:visibility="gone" />
+                
                 <Button
                     android:id="@+id/place_action_xml_button_loot"
                     style="@style/SpotsMissionsTreasureButton" />
