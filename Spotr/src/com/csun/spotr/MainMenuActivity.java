@@ -114,11 +114,18 @@ public class MainMenuActivity
 			intent = new Intent(getApplicationContext(), LocalMapViewActivity.class);
 			startActivity(intent);
 		}
-		else if (id == R.id.main_menu_btn_spot_it) {
-			intent = new Intent(getApplicationContext(), FinderMainActivity.class);
-			intent.putExtra("user_id", CurrentUser.getCurrentUser().getId());
-			startActivity(intent);
-		}
+		/**
+		 * NOTE: Due to deadline, and uploading image issue, 
+		 * we decided to temporarily remove this feature
+		 *  
+		 * @author chan
+		 * @date 04/02/2012
+		 */
+		// else if (id == R.id.main_menu_btn_spot_it) {
+		//	intent = new Intent(getApplicationContext(), FinderMainActivity.class);
+		//	intent.putExtra("user_id", CurrentUser.getCurrentUser().getId());
+		//	startActivity(intent);
+		// }
 		else if (id == R.id.main_menu_btn_spots) {
 			intent = new Intent(getApplicationContext(), PlaceActivity.class);
 			startActivity(intent);
@@ -130,9 +137,6 @@ public class MainMenuActivity
 		else if (id == R.id.main_menu_btn_quests) {
 			intent = new Intent(getApplicationContext(), QuestActivity.class);
 			startActivity(intent);
-		}
-		else if (id == R.id.main_menu_btn_ping) {
-		 	// remove ping map activity
 		}
 		else if (id == R.id.main_menu_btn_inventory) {
 			intent = new Intent(getApplicationContext(), InventoryActivity.class);

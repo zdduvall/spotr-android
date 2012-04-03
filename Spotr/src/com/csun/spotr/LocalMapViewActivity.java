@@ -158,13 +158,6 @@ public class LocalMapViewActivity extends MapActivity {
 		});
 	}
 
-	// Not sure if we're gonna use this in the future (Zach - 3/21/2012)
-/*	private double getDistance(double lat1, double lon1, double lat2, double lon2) {
-		double x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
-		double y = (lat2 - lat1);
-		return Math.sqrt(x * x + y * y) * 6371.00;
-	} */
-
 	private void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
