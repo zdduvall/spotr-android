@@ -1259,7 +1259,7 @@
     <!-- Ping -->
     <!-- Note: style of clickable version defined programatically -->
     <style name="TitleBarButton.ComposeMail">
-        <item name="android:src">@drawable/ic_map_locate_disabled</item>
+        <item name="android:src">@drawable/ic_inbox</item>
         <item name="android:clickable">true</item>
     </style>
 
