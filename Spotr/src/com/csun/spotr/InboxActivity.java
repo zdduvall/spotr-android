@@ -20,6 +20,7 @@ import com.csun.spotr.util.JsonHelper;
 import com.google.android.maps.GeoPoint;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,6 +50,7 @@ public class InboxActivity
 		implements IActivityProgressUpdate<Inbox> {
 
 	private static final String TAG = "(InboxActivity)";
+	private static final int INTENT_RESULT_VIEW_MESSAGE = 1;
 
 	private ListView listview = null;
 	private InboxItemAdapter adapter = null;
@@ -80,14 +83,29 @@ public class InboxActivity
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(InboxActivity.this.getApplicationContext(), inboxList.get(position).getMessage(), Toast.LENGTH_LONG).show();
+				Bundle extras = new Bundle();
+				extras.putString("sender_name", inboxList.get(position).getUsername());
+				extras.putString("sender_time", inboxList.get(position).getTime());
+				extras.putString("sender_message", inboxList.get(position).getMessage());
+				extras.putString("sender_picture_url", inboxList.get(position).getUserPictureUrl());
+				Intent intent = new Intent("com.csun.spotr.InboxViewMessageActivity");
+				intent.putExtras(extras);
+				startActivityForResult(intent, INTENT_RESULT_VIEW_MESSAGE);
 			}
 		});	
 	}
 	
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == INTENT_RESULT_VIEW_MESSAGE) {
+			if (resultCode == RESULT_OK) {
+				
+			}
+		}
+	}
+	
+	@Override
 	protected void setupTitleBar() {	
-		// Custom title bar [Zach 3/10/2012]
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_inbox);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
 		title.setText("potr Inbox");
