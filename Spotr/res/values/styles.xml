@@ -394,6 +394,12 @@
         <item name="android:text">@string/main_menu_btn_inbox</item>
         <item name="android:onClick">getActivity</item>
     </style>
+    
+    <style name="MainMenuButton.FriendRequest">
+        <item name="android:drawableTop">@drawable/ic_main_menu_friend_request</item>
+        <item name="android:text">@string/main_menu_btn_friend_request</item>
+        <item name="android:onClick">getActivity</item>
+    </style>
 
     <style name="NotificationHandle">
         <item name="android:layout_width">match_parent</item>

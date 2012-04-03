@@ -37,7 +37,7 @@
             
         <Button
             android:id="@+id/main_menu_btn_friend_request"
-            style="@style/MainMenuButton.Inbox" />
+            style="@style/MainMenuButton.FriendRequest" />
         
     </com.csun.spotr.custom_gui.DashboardLayout>
     
