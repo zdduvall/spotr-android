@@ -45,7 +45,6 @@ public class WeaponAdapter extends BaseAdapter {
 
 	public static class ItemViewHolder {
 		TextView textViewTitle;
-		TextView textViewDescription;
 		//TextView textViewPower;
 		//TextView textViewTimesLeft;
 		ImageView imageViewIcon;
@@ -56,7 +55,6 @@ public class WeaponAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.weapon_item, null);
 			holder = new ItemViewHolder();
 			holder.textViewTitle = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_title);
-			holder.textViewDescription = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_description);
 			//holder.textViewTimesLeft = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_times_left);
 			//holder.textViewPower = (TextView) convertView.findViewById(R.id.weapon_item_xml_textview_power);
 			holder.imageViewIcon = (ImageView) convertView.findViewById(R.id.weapon_item_xml_imageview_icon);
@@ -65,7 +63,9 @@ public class WeaponAdapter extends BaseAdapter {
 		else {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
-
+		
+		//LOL why so much commented code?
+		
 		/*
 		switch (items.get(position).getId()) {
 		case PowerUp.BONUS :
@@ -103,7 +103,6 @@ public class WeaponAdapter extends BaseAdapter {
 		}
 		//*/
 		holder.textViewTitle.setText(items.get(position).getName());
-		holder.textViewDescription.setText(items.get(position).getDescription());
 		//holder.imageViewIcon.setImageResource(R.drawable.pu_shortcut);
 		imageLoader.displayImage(items.get(position).getImageUrl(), holder.imageViewIcon);
 

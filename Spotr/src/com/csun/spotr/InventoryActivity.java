@@ -41,7 +41,7 @@ public class InventoryActivity
 		intent = new Intent().setClass(getApplicationContext(), WeaponActivity.class); 
 	    View customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
 	    TextView tv = (TextView) customTabView.findViewById(R.id.tabText);
-	    tv.setText("Loots");
+	    tv.setText("Loot");
 		spec = tabHost
 				.newTabSpec("Loots")
 				.setIndicator(customTabView)
