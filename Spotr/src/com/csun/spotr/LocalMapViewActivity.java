@@ -119,7 +119,7 @@ public class LocalMapViewActivity extends MapActivity {
 					mapController.animateTo(geoFriend);
 					mapController.setZoom(19);
 					mapView.invalidate();
-					Toast.makeText(LocalMapViewActivity.this, (int) d + " m", Toast.LENGTH_SHORT).show();
+					// Toast.makeText(LocalMapViewActivity.this, (int) d + " m", Toast.LENGTH_SHORT).show();
 					indexFriend++;
 				}
 			}
@@ -151,7 +151,7 @@ public class LocalMapViewActivity extends MapActivity {
 					mapController.animateTo(geoPlace);
 					mapController.setZoom(19);
 					mapView.invalidate();
-					Toast.makeText(LocalMapViewActivity.this, (int) d + " m", Toast.LENGTH_SHORT).show();
+					// Toast.makeText(LocalMapViewActivity.this, (int) d + " m", Toast.LENGTH_SHORT).show();
 					indexPlace++;
 				}
 			}
