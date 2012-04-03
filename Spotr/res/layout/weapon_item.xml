@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/UserItemRow" >"
+    style="@style/UserItemRow"
+    android:background="@android:color/white" >"
 
     <ImageView
         android:id="@+id/weapon_item_xml_imageview_icon"
@@ -9,6 +10,7 @@
 
     <TextView
         android:id="@+id/weapon_item_xml_textview_title"
-        style="@style/UserItemName" />
+        style="@style/UserItemName"
+        android:textColor="@color/aluminum6" />
 
 </LinearLayout>

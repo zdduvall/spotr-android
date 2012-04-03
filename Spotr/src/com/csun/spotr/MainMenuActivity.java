@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -53,12 +54,7 @@ public class MainMenuActivity
 	
 	@Override
 	protected void setupTitleBar() {
-		super.setupTitleBar();
-		ImageView homeBeacon = (ImageView) findViewById(R.id.title_bar_home_beacon);
-		homeBeacon.setVisibility(View.INVISIBLE);
-		
-		LinearLayout homeContainer = (LinearLayout) findViewById(R.id.title_bar_home_container);
-		homeContainer.setClickable(false);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_main_menu);
 	}
 		
 	public void getActivity(View mainMenuButton) {

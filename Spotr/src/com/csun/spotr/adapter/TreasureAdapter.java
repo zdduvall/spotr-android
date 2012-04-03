@@ -67,7 +67,7 @@ public class TreasureAdapter extends BaseAdapter {
 
 		holder.name.setText(items.get(position).getName());
 		imageLoader.displayImage(items.get(position).getIconUrl(), holder.icon);
-		holder.company.setText(items.get(position).getCompany());
+		holder.company.setText(items.get(position).getCompany() + ": ");
 		holder.expirationDate.setText(items.get(position).getExpirationDate());
 		holder.barcode.setText(items.get(position).getCode());
 			
