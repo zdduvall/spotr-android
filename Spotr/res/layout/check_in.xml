@@ -9,15 +9,6 @@
         android:layout_marginBottom="15dp" >
 
         <LinearLayout style="@style/LinearLayoutRounded.CheckIn" >
-
-            <TextView
-                android:id="@+id/textView1"
-                style="@style/SpotName.CheckIn" />
-
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/SpotAddress.CheckIn" />
-
             <Button
                 android:id="@+id/check_in_xml_button_checkin"
                 style="@style/MainCheckInButton" />
