@@ -58,19 +58,7 @@ public class InventoryActivity
 				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
-		
-		// Do the same for the other tabs
-		intent = new Intent().setClass(getApplicationContext(), WeaponActivity.class);
-		customTabView = LayoutInflater.from(tabHost.getContext()).inflate(R.layout.tab_custom, null);
-	    tv = (TextView) customTabView.findViewById(R.id.tabText);
-	    tv.setText("Others");
-		spec = tabHost
-				.newTabSpec("Others")
-				.setIndicator(customTabView)
-				.setContent(intent);
-		tabHost.addTab(spec);
-
-		
+			
 		tabHost.setCurrentTab(0);
 	}
 	
