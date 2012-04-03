@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.csun.spotr.singleton.CurrentUser;
 import com.csun.spotr.util.FineLocation;
 import com.csun.spotr.util.PlaceIconUtil;
 import com.csun.spotr.util.FineLocation.LocationResult;
@@ -36,9 +37,11 @@ import com.csun.spotr.asynctask.GetMapSpotsTask;
 import com.csun.spotr.asynctask.PingMeTask;
 import com.csun.spotr.core.FriendAndLocation;
 import com.csun.spotr.core.Place;
+import com.csun.spotr.custom_gui.BalloonItemizedOverlay;
 import com.csun.spotr.custom_gui.PlaceCustomItemizedOverlay;
 import com.csun.spotr.custom_gui.ImpactOverlay;
 import com.csun.spotr.custom_gui.UserCustomItemizedOverlay;
+import com.csun.spotr.custom_gui.UserWithRadiusItemizedOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -47,40 +50,89 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
-/**
- * NOTE: Refactoring by Chan Nguyen: 03/11/2012
- **/
 
 /**
  * Description: Display map view of places
- **/
+ */
 public class LocalMapViewActivity extends MapActivity {
-
+	/**
+	 * Tag for debug
+	 */
 	private static final String TAG = "(LocalMapViewActivity)";
-
-	private static final int USER_MAP_RADIUS_10M = 10;
-	private static final int USER_MAP_RADIUS_20M = 20;
-	private static final int USER_MAP_RADIUS_50M = 50;
-	private static final int USER_MAP_RADIUS_100M = 100;
-
+	
+	/**
+	 * Ping constants
+	 */
 	private static final int PING_DURATION_ONE_DAY = 86400;
 	private static final int PING_DURATION_THREE_DAY = 259200;
 	private static final int PING_DURATION_SEVEN_DAY = 604800;
 
+	/**
+	 * Dialog constant
+	 */
 	private static final int ID_DIALOG_PING = 1;
 
+	/**
+	 * The map
+	 */
 	private MapView mapView = null;
+	
+	/**
+	 * The list of all overalys
+	 */
 	private List<Overlay> mapOverlays = null;
+	
+	/**
+	 * The map controller
+	 */
 	private MapController mapController = null;
+	
+	/**
+	 * The location listener used to retrieve
+	 * newest location
+	 */
 	private FineLocation fineLocation = new FineLocation();
+	
+	/**
+	 * The last known location
+	 */
 	public Location lastKnownLocation = null;
+	
+	/**
+	 * Overlay for places
+	 */
 	public PlaceCustomItemizedOverlay placeOverlay = null;
+	
+	/**
+	 * Overlay for friends 
+	 */
 	public UserCustomItemizedOverlay userOverlay = null;
-	public ImpactOverlay userLocationOverlay = null;
+	
+	/**
+	 * Overlay for current user
+	 */
+	public UserWithRadiusItemizedOverlay currentUserOverlay = null;
+	
+	/**
+	 * List of friend data
+	 */
 	private List<FriendAndLocation> friendLocations = new ArrayList<FriendAndLocation>();
+	
+	/**
+	 * List of place data
+	 */
 	private List<Place> places = new ArrayList<Place>();
 
+	/**
+	 * Indexes to navigate between friends
+	 * on map
+	 */
 	private int indexFriend = 0;
+	
+	/**
+	 * Indexes to navigate between places 
+	 * on map
+	 */
 	private int indexPlace = 0;
 
 	@Override
@@ -94,6 +146,10 @@ public class LocalMapViewActivity extends MapActivity {
 		findLocation();         // 2. listen to new location
 	}
 
+	/**
+	 * Activate the friend button so it can
+	 * populate all friends on map
+	 */
 	private void activateFriendDistanceButton() {
 		Button btn = (Button) findViewById(R.id.mapview_xml_button_friend_distance);
 		btn.setEnabled(true);
@@ -126,6 +182,10 @@ public class LocalMapViewActivity extends MapActivity {
 		});
 	}
 
+	/**
+	 * Activate place button so it can populate
+	 * all places on map
+	 */
 	private void activatePlaceDistanceButton() {
 		Button btn = (Button) findViewById(R.id.mapview_xml_button_place_distance);
 		btn.setEnabled(true);
@@ -133,31 +193,48 @@ public class LocalMapViewActivity extends MapActivity {
 			public void onClick(View v) {
 				if (lastKnownLocation != null && places.size() > 0) {
 					indexPlace = indexPlace % places.size();
+					
+					// construct a geo point of current user
 					GeoPoint geoMe = new GeoPoint(
 						(int) (lastKnownLocation.getLatitude()* 1E6), 
 						(int) (lastKnownLocation.getLongitude()* 1E6));
 
-
+					// construct a geo point of a place
 					GeoPoint geoPlace = new GeoPoint(
 						(int) (places.get(indexPlace).getLatitude()* 1E6), 
 						(int) (places.get(indexPlace).getLongitude()* 1E6));
 
+					// create a dummy location
 					Location location = new Location("");
 					location.setLatitude(places.get(indexPlace).getLatitude());
 					location.setLongitude(places.get(indexPlace).getLongitude());
 
+					// get the distance between current location 
+					// and that place location
 					float d = location.distanceTo(lastKnownLocation);
+					
+					// add these two points and its distance to overlay
 					placeOverlay.addTwoPoints(geoMe, geoPlace, d);
+					
+					// move to that place
 					mapController.animateTo(geoPlace);
 					mapController.setZoom(19);
+					
+					// redraw 
 					mapView.invalidate();
-					// Toast.makeText(LocalMapViewActivity.this, (int) d + " m", Toast.LENGTH_SHORT).show();
+					
+					// update the index to move to 
+					// the next place next time user hit
+					// the button
 					indexPlace++;
 				}
 			}
 		});
 	}
 
+	/**
+	 * Set up the title bar
+	 */
 	private void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_map);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
@@ -171,17 +248,23 @@ public class LocalMapViewActivity extends MapActivity {
 		mapView = (MapView) findViewById(R.id.mapview_xml_map); 					  // get map view
 		mapController = mapView.getController(); 									  // get map controller
 		mapView.setBuiltInZoomControls(true); 										  // set zoom button
+		
 		mapOverlays = mapView.getOverlays(); 										  // get overlays
 		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_red);     // get default icon
+		
 		placeOverlay = new PlaceCustomItemizedOverlay(drawable, mapView); 			  // initialize place overlay
 		mapOverlays.add(placeOverlay); 												  // add them to the map
+		
 		userOverlay = new UserCustomItemizedOverlay(drawable, mapView); 			  // initialize user overlay
 		mapOverlays.add(userOverlay); 												  // add them to the map
+		
+		currentUserOverlay = new UserWithRadiusItemizedOverlay(drawable, mapView);	  // initialize current user overlay
+		mapOverlays.add(currentUserOverlay);										  // add them to the map
 	}
 
 	/**
-	 * Retrieve current location. Upon finding the current location, set up the
-	 * locate and places buttons.
+	 * Retrieve current location. Upon finding the current location, 
+	 * set up the locate and places buttons.
 	 */
 	private void findLocation() {
 		LocationResult locationResult = (new LocationResult() {
@@ -192,34 +275,41 @@ public class LocalMapViewActivity extends MapActivity {
 				activatePingButton();
 				activateFriendDistanceButton();
 				activatePlaceDistanceButton();
-
-				addUserOverlay();
-
-				userLocationOverlay = new ImpactOverlay(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), USER_MAP_RADIUS_100M);
-				mapOverlays.add(userLocationOverlay);
-				mapView.invalidate();
+				addUserOverlay(location);
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
 	}
 
-	/*
+	/**
 	 * Add user overlay for locate button; must call [mapview].invalidate() after
 	 */
-	private void addUserOverlay() {
-		OverlayItem ovl = new OverlayItem(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)), "You're here!", "radius: 100m");
-		Drawable icon = getResources().getDrawable(R.drawable.map_maker_red);
-		icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-		ovl.setMarker(icon);
+	private void addUserOverlay(Location location) {
+		OverlayItem overlay = new OverlayItem(
+			new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6)), 
+			"Now", 
+			CurrentUser.getCurrentUser().getImageUrl());
+		
+		GeoPoint geoCurrent = new GeoPoint(
+				(int) (location.getLatitude()* 1E6), 
+				(int) (location.getLongitude()* 1E6));
+		
+		currentUserOverlay.addOverlay(overlay, CurrentUser.getCurrentUser());
+		currentUserOverlay.changePoint(geoCurrent);
+		mapController.setZoom(19);
+		mapView.invalidate();
 	}
 
-	// This is after initialization, when user wants to get new location
+	/**
+	 *  This is after initialization, when user wants 
+	 *  to get new location
+	 */
 	private void getCurrentLocation() {
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
 				lastKnownLocation = location;		
-				userLocationOverlay.changePoint(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
+				currentUserOverlay.changePoint(new GeoPoint((int) (lastKnownLocation.getLatitude() * 1E6), (int) (lastKnownLocation.getLongitude() * 1E6)));
 				mapView.invalidate();
 			}
 		});
@@ -227,8 +317,8 @@ public class LocalMapViewActivity extends MapActivity {
 	}
 
 	/**
-	 * Set up the locate button to be clickable, to have a new image, and to
-	 * handle its click event.
+	 * Set up the locate button to be clickable, to 
+	 * have a new image, and to handle its click event.
 	 */
 	private void activateLocateButton() {
 		ImageButton locateButton = (ImageButton) findViewById(R.id.title_bar_map_btn_locate);

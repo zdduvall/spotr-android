@@ -32,8 +32,8 @@ import com.csun.spotr.util.JsonHelper;
 
 /**
  * Description: 
- * Display user's treasures
- **/
+ * 		Display user's treasures
+ */
 public class TreasureActivity 
 	extends Activity
 		implements IActivityProgressUpdate<Treasure> {
