@@ -103,6 +103,11 @@ public class GetFriendFeedTask
 						treasureIconUrl = array.getJSONObject(i).getString("activity_tbl_treasure_icon_url");
 						company = array.getJSONObject(i).getString("activity_tbl_treasure_company");
 					}
+					
+					if (Challenge.returnType(array.getJSONObject(i).getString("challenges_tbl_type")) == Challenge.Type.SNAP_PICTURE_CHALLENGE) {
+						Log.v(TAG, "going here?");
+						snapPictureUrl = array.getJSONObject(i).getString("activity_tbl_snap_picture_url");
+					}
 
 					if (array.getJSONObject(i).getString("users_tbl_user_image_url").equals("") == false) {
 						userPictureUrl = array.getJSONObject(i).getString("users_tbl_user_image_url");

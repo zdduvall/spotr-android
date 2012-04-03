@@ -58,7 +58,6 @@ public class InventoryActivity
 				.setIndicator(customTabView)
 				.setContent(intent);
 		tabHost.addTab(spec);
-		
 		tabHost.setCurrentTab(0);
 	}
 	

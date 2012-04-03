@@ -121,6 +121,8 @@ public class QuestDetailItem {
 	}
 	
 	public String getTruncatedDescription() {
+		if (description.length() < 50)
+			return description;
 		return description.substring(0, 50)+"...";
 	}
 
