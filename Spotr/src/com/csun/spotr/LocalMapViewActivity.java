@@ -134,6 +134,8 @@ public class LocalMapViewActivity extends MapActivity {
 	 * on map
 	 */
 	private int indexPlace = 0;
+	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -144,6 +146,7 @@ public class LocalMapViewActivity extends MapActivity {
 		setupFriendButton();    // 2. set up friend button 
 		setupMapGraphics();     // 2. set up map
 		findLocation();         // 2. listen to new location
+		
 	}
 
 	/**
@@ -267,15 +270,28 @@ public class LocalMapViewActivity extends MapActivity {
 	 * set up the locate and places buttons.
 	 */
 	private void findLocation() {
+		final Toast noLocation = Toast.makeText(LocalMapViewActivity.this, "Unable to find location", Toast.LENGTH_LONG);
+
 		LocationResult locationResult = (new LocationResult() {
 			@Override
 			public void gotLocation(final Location location) {
-				lastKnownLocation = location;
-				activateLocateButton();
-				activatePingButton();
-				activateFriendDistanceButton();
-				activatePlaceDistanceButton();
-				addUserOverlay(location);
+				if(location != null)
+				{
+					lastKnownLocation = location;
+					activateLocateButton();
+					activatePingButton();
+					activateFriendDistanceButton();
+					activatePlaceDistanceButton();
+					addUserOverlay(location);
+				}
+				else
+				{
+					/**
+					 * Display that location cannot be found and finish LocalMapViewActivity
+					 */
+					noLocation.show();
+					finish();
+				}
 			}
 		});
 		fineLocation.getLocation(this, locationResult);
