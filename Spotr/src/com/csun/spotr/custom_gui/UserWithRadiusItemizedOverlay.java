@@ -111,6 +111,7 @@ public class UserWithRadiusItemizedOverlay extends BalloonItemizedOverlay<Overla
 	 * The total number of overlays added
 	 * 
 	 * @return the size
+	 *
 	 */
 	@Override
 	public int size() {

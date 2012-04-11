@@ -28,7 +28,7 @@
     <string name="main_menu_xml_button_leader_board_str">Leaderboards</string>
     <string name="main_menu_xml_button_friend_str">Friends</string>
     <string name="main_menu_xml_button_challenge_str">Challenges</string>
-    <string name="main_menu_xml_button_spot_str">Spots</string>    
+    <string name="main_menu_xml_button_spot_str">Nearby</string>    
     <string name="main_menu_xml_slider_notification_str">Notifications</string>
     
     <!-- options_menu.xml -->
@@ -91,11 +91,11 @@
     <string name="main_menu_btn_spot_it">Spot It</string>
     <string name="main_menu_btn_inventory">Inventory</string>
     <string name="main_menu_btn_inbox">Inbox</string>
-    <string name="title_bar_default_title">Spotr</string>
-    <string name="login_xml_textview_tagline_str">Welcome to the world reimagined. Explore it, share it with friends, and dare to change it.</string>
-    <string name="login_xml_ask_signup_str">New to Spotr?</string>
+    <string name="title_bar_default_title">Gopher</string>
+    <string name="login_xml_textview_tagline_str">Welcome to Gopher. Go play, explore, and share. It\'s your world right in your phone.</string>
+    <string name="login_xml_ask_signup_str">New to Gopher?</string>
     
-    <string name="google_api_key">0kqsfxjLdh6hBSw6P1O21ednBAHof_q1GuRuffg</string>
+    <string name="google_api_key">07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw</string>
     <string name="profile_xml_missions_done">Missions</string>
     <string name="profile_xml_total_points">Points</string>
     <string name="profile_xml_places_visited">Places</string>

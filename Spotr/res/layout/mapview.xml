@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:text="Friend distance"
+            android:visibility="gone"
             android:textSize="10dp" />
 
         <Button
@@ -28,6 +29,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:text="Place distance"
+            android:visibility="gone"
             android:textSize="10dp" />
     </LinearLayout>
 

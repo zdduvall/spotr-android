@@ -67,6 +67,10 @@ public class MainMenuActivity
 			intent.putExtras(extras);
 			startActivity(intent);
 		}
+		else if (id == R.id.main_menu_btn_friends) {
+			intent = new Intent(getApplicationContext(), FriendListMainActivity.class);
+			startActivity(intent);
+		}
 		else if (id == R.id.main_menu_btn_map) {
 			intent = new Intent(getApplicationContext(), LocalMapViewActivity.class);
 			startActivity(intent);
@@ -85,10 +89,6 @@ public class MainMenuActivity
 		// }
 		else if (id == R.id.main_menu_btn_spots) {
 			intent = new Intent(getApplicationContext(), PlaceActivity.class);
-			startActivity(intent);
-		}
-		else if (id == R.id.main_menu_btn_friends) {
-			intent = new Intent(getApplicationContext(), FriendListMainActivity.class);
 			startActivity(intent);
 		}
 		else if (id == R.id.main_menu_btn_quests) {

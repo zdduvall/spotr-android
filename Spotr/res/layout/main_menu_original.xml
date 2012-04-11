@@ -10,22 +10,22 @@
         <Button
             android:id="@+id/main_menu_btn_me"
             style="@style/MainMenuButton.Me" />
+
+        <Button
+            android:id="@+id/main_menu_btn_friends"
+            style="@style/MainMenuButton.Friends" />        
         
         <Button
             android:id="@+id/main_menu_btn_map"
             style="@style/MainMenuButton.Map" />
-        
+
         <Button
-            android:id="@+id/main_menu_btn_friends"
-            style="@style/MainMenuButton.Friends" />
+            android:id="@+id/main_menu_btn_spots"
+            style="@style/MainMenuButton.Spots" />        
         
         <Button
             android:id="@+id/main_menu_btn_quests"
             style="@style/MainMenuButton.Quests" />
-        
-        <Button
-            android:id="@+id/main_menu_btn_spots"
-            style="@style/MainMenuButton.Spots" />
         
         <Button
             android:id="@+id/main_menu_btn_inventory"
