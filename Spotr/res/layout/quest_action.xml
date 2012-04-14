@@ -49,6 +49,7 @@
     <!-- Challenge List -->
 
     <ListView
+   		android:paddingTop="5dp"
         android:id="@+id/quest_action_xml_listview_actions"
         style="@style/RoundedRectListView.MissionsList" >
     </ListView>
