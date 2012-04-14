@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Spotr</string>
+    <string name="app_name">Gopher</string>
     <!-- login.xml -->
     <string name="login_xml_textview_email_str">Email</string>
     <string name="login_xml_textview_password_str">Password</string>

@@ -253,7 +253,7 @@ public class LocalMapViewActivity extends MapActivity {
 		mapView.setBuiltInZoomControls(true); 										  // set zoom button
 		
 		mapOverlays = mapView.getOverlays(); 										  // get overlays
-		Drawable drawable = getResources().getDrawable(R.drawable.map_maker_red);     // get default icon
+		Drawable drawable = getResources().getDrawable(R.drawable.ic_map_person);     // get default icon
 		
 		placeOverlay = new PlaceCustomItemizedOverlay(drawable, mapView); 			  // initialize place overlay
 		mapOverlays.add(placeOverlay); 												  // add them to the map

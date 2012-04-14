@@ -164,7 +164,7 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 									"My Current Location",
 							"Hello");
 
-					Drawable icon = getResources().getDrawable(R.drawable.map_circle_marker_red);
+					Drawable icon = getResources().getDrawable(R.drawable.ic_map_person);
 					icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
 					overlay.setMarker(icon);
 

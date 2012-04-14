@@ -536,6 +536,15 @@
         <item name="android:background">@color/light_grey</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
     </style>
+    
+    <!-- Profile Edit -->
+    <style name="ProfileEditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>        
+    </style>
+    
     <!-- End Me: Profile -->
     
     <!-- Me: Leaderboard List -->
@@ -921,7 +930,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:divider">@android:color/transparent</item>
-        <item name="android:dividerHeight">20dp</item>
+        <item name="android:dividerHeight">7dp</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:listSelector">@android:color/transparent</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
