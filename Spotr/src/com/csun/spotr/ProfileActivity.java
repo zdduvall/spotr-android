@@ -76,9 +76,9 @@ public class ProfileActivity
 		if (getParent() == null) // use custom title bar only if not in a tabhost
 			requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);	
 		setContentView(R.layout.profile);
-		if (getParent() == null)
-			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
-		
+		if (getParent() == null) {
+			setupTitleBar();
+		}
 		
 		Bundle extrasBundle = getIntent().getExtras();
 		userId = extrasBundle.getInt("user_id");
@@ -105,6 +105,12 @@ public class ProfileActivity
 		
 		// wait for user's data available 
 		canEditProfile = false;
+	}
+	
+	private void setupTitleBar() {
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
+		TextView title = (TextView) findViewById(R.id.title_bar_title);
+		title.setText("");
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

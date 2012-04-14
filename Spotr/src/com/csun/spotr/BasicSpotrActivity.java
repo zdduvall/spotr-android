@@ -36,20 +36,6 @@ public class BasicSpotrActivity extends Activity {
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 	}
 	
-	/**
-	 * Open the Main Menu activity (dashboard). If that activity is already
-	 * running, a new instance of that activity will not be launched--instead,
-	 * all activities on top of the old instance are removed as the old 
-	 * instance is brought to the top.
-	 * @param button the button clicked
-	 */
-	public void goToMainMenu(View button) {
-		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.title_bar_btn_highlight));
-	    final Intent intent = new Intent(this, MainMenuActivity.class);
-	    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    startActivity(intent);
-	}
-	
 	@Override
 	public void onPause() {
 		Log.v(TAG,"I'm paused");
