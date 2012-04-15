@@ -6,19 +6,19 @@
 
         <!-- Avatar and edit button -->
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical" >
+<!--         <LinearLayout -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:gravity="center" -->
+<!--             android:orientation="vertical" > -->
 
-            <LinearLayout style="@style/LinearLayoutShadow.Avatar" >
+<!--             <LinearLayout style="@style/LinearLayoutShadow.Avatar" > -->
 
                 <ImageView
                     android:id="@+id/profile_xml_imageview_user_picture"
                     style="@style/ProfileAvatar" />
-            </LinearLayout>
-        </LinearLayout>
+<!--             </LinearLayout> -->
+<!--         </LinearLayout> -->
 
         <!-- Stats -->
 

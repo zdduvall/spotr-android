@@ -459,11 +459,8 @@
     <style name="ProfileAvatar">
         <item name="android:layout_width">75dp</item>
         <item name="android:layout_height">75dp</item>
-        <item name="android:background">@drawable/rectangle_rounded_white</item>
+        <item name="android:scaleType">centerCrop</item>
         <item name="android:padding">5dp</item>
-        <item name="android:adjustViewBounds">true</item>
-        <item name="android:clickable">true</item>
-        <item name="android:scaleType">fitXY</item>
         <item name="android:src">@drawable/user_default</item>
     </style>
     
@@ -474,7 +471,7 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rectangle_rounded_paren</item>
-    </style>
+    </style>    
     
     <style name="ProfileStatsItemContainer">
         <item name="android:layout_width">wrap_content</item>
