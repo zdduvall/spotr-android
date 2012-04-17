@@ -1,39 +1,17 @@
 package com.csun.spotr;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import com.csun.spotr.singleton.CurrentUser;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import com.csun.spotr.adapter.FriendRequestItemAdapter;
-import com.csun.spotr.core.adapter_item.FriendRequestItem;
-import com.csun.spotr.singleton.CurrentUser;
-import com.csun.spotr.skeleton.IActivityProgressUpdate;
-import com.csun.spotr.skeleton.IAsyncTask;
-import com.csun.spotr.util.JsonHelper;
 
 /**
  * Description:
@@ -124,17 +102,13 @@ public class MainMenuActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon :
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			break;
-		case R.id.options_menu_xml_item_logout_icon :
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			break;
+			case R.id.options_menu_xml_item_logout_icon :
+				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
+				editor.clear();
+				intent = new Intent("com.csun.spotr.LoginActivity");
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				break;
 		}
 		return true;
 	}

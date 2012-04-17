@@ -1083,6 +1083,23 @@
         <item name="android:textColor">@color/aluminum4</item>
         <item name="android:textSize">10sp</item>
     </style>
+    
+     <style name="SpotsInfoMissionsName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/aluminum5</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SpotsInfoMissionsAddress">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:textColor">@color/aluminum4</item>
+        <item name="android:textSize">13sp</item>
+    </style>
 
     <style name="SpotsMissionsInfoButton">
         <item name="android:layout_width">wrap_content</item>

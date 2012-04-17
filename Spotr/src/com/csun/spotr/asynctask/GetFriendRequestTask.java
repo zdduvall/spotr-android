@@ -11,6 +11,7 @@ import org.json.JSONException;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.csun.spotr.FriendRequestActivity;
 import com.csun.spotr.core.adapter_item.FriendRequestItem;
@@ -67,8 +68,8 @@ public class GetFriendRequestTask
     
     @Override
     protected void onPostExecute(Boolean result) {
-    	if (result == true) {
-    
+    	if (!result) {
+    		Toast.makeText(ref.get(), "You have no friend request", Toast.LENGTH_SHORT).show();
     	}
     	detach();
     }

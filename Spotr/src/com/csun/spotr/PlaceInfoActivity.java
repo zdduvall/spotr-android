@@ -14,6 +14,7 @@ import com.csun.spotr.custom_gui.BalloonItemizedOverlay;
 import com.csun.spotr.skeleton.IActivityProgressUpdate;
 import com.csun.spotr.skeleton.IAsyncTask;
 import com.csun.spotr.util.JsonHelper;
+import com.csun.spotr.util.PlaceIconUtil;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -83,7 +84,7 @@ public class PlaceInfoActivity
 
 	private void setupMapOverlays() {
 		mapOverlays = mapView.getOverlays();
-		mapMarker = getResources().getDrawable(R.drawable.map_maker_red);
+		mapMarker = PlaceIconUtil.getMapIconByType(this, PlaceIconUtil.IC_MAP_DEFAULT);
 		itemizedOverlay = new MyItemizedOverlay(mapMarker, mapView);
 		mapOverlays.add(itemizedOverlay);
 	}
@@ -205,32 +206,6 @@ public class PlaceInfoActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case R.id.options_menu_xml_item_setting_icon :
-			intent = new Intent("com.csun.spotr.SettingsActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_logout_icon :
-			SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-			editor.clear();
-			editor.commit();
-			intent = new Intent("com.csun.spotr.LoginActivity");
-			startActivity(intent);
-			finish();
-			break;
-		case R.id.options_menu_xml_item_mainmenu_icon :
-			intent = new Intent("com.csun.spotr.MainMenuActivity");
-			startActivity(intent);
-			finish();
-			break;
-		}
 		return true;
 	}
 

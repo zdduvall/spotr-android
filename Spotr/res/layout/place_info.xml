@@ -2,39 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#C0C0C0"
+    android:background="@drawable/rectangle_rounded_white"
     android:orientation="vertical" >
 
     <!-- Title of the Location -->
-
     <TextView
         android:id="@+id/place_info_xml_textview_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#2e3436"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        style="@style/SpotsInfoMissionsName" 
+        />
 
     <!-- Text for the description of the Location -->
-
     <TextView
         android:id="@+id/place_info_xml_textview_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:textColor="#2e3436" />
+        style="@style/SpotsInfoMissionsAddress"
+        />
 
     <!-- Link for Google Map View -->
-
     <TextView
         android:id="@+id/place_info_xml_textview_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#124CFC"
         android:textStyle="italic" />
-
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="#FFFFFF" />
+ 
     <!-- Phone number button -->
-
     <Button
         android:id="@+id/place_info_xml_button_phone_number"
         android:layout_width="wrap_content"
@@ -42,17 +39,16 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/phone_button"
         android:paddingLeft="10dp"
-        android:textSize="25sp" />
+        android:textSize="18sp" />
 
     <!-- Border -->
-
     <View
         android:layout_width="fill_parent"
         android:layout_height="4dp"
         android:layout_marginTop="4dp"
         android:background="#eeeeec" />
+    
     <!-- Map View -->
-
     <com.google.android.maps.MapView
         android:id="@+id/place_info_xml_mapview"
         style="@style/MapView"

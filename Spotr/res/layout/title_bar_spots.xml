@@ -3,7 +3,6 @@
     style="@style/TitleBarBackground" >
 
     <!-- Navigation/Title -->
-
     <LinearLayout style="@style/TitleBarNav" >
 
         <LinearLayout
@@ -23,7 +22,6 @@
     </LinearLayout>
 
     <!-- Buttons -->
-
     <LinearLayout
         android:id="@+id/title_bar_actions"
         style="@style/TitleBarActions" >

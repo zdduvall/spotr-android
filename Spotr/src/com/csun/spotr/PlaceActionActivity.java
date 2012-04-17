@@ -380,37 +380,6 @@ public class PlaceActionActivity
 		return true;
 	}
 
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-			// There is no settings activity right now
-/*			case R.id.options_menu_xml_item_setting_icon:
-				// There is no settings activity.  Perhaps we should remove this button.
-				intent = new Intent("com.csun.spotr.SettingsActivity");
-				startActivity(intent);
-				finish();
-				break; */
-			case R.id.options_menu_xml_item_logout_icon:
-				SharedPreferences.Editor editor = getSharedPreferences("Spotr", MODE_PRIVATE).edit();
-				editor.clear();
-				editor.commit();
-				intent = new Intent("com.csun.spotr.LoginActivity");
-				startActivity(intent);
-				finish();
-				break;
-			case R.id.options_menu_xml_item_mainmenu_icon:
-				intent = new Intent("com.csun.spotr.MainMenuActivity");
-				startActivity(intent);
-				finish();
-				break;
-
-			case R.id.options_menu_xml_item_toolbar_icon:
-				break;
-		}
-		return true;
-	}
-    
 	public void updateAsyncTaskProgress(Challenge c) {
 		challengeList.add(c);
 		adapter.notifyDataSetChanged();

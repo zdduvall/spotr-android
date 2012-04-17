@@ -71,13 +71,6 @@ public class FriendListMainActivity extends TabActivity {
 		tabHost.setCurrentTab(0);
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-	
 	@Override 
 	public void onResume() {
 		Log.v(TAG, "I'm resumed");
