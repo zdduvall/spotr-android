@@ -174,7 +174,7 @@ public class PlaceActivity
 	protected void setupTitleBar() {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_spots);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("pots Nearby");		
+		title.setText(" Nearby");		
 	}
 	
 	/**

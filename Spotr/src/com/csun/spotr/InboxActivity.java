@@ -108,7 +108,7 @@ public class InboxActivity
 	protected void setupTitleBar() {	
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_inbox);
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("potr Inbox");
+		title.setText(" Inbox");
 	}
 
 	public void updateAsyncTaskProgress(Inbox i) {

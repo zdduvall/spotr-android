@@ -95,7 +95,7 @@
     <string name="login_xml_textview_tagline_str">Welcome to Gopher. Go play, explore, and share. It\'s your world right in your phone.</string>
     <string name="login_xml_ask_signup_str">New to Gopher?</string>
     
-    <string name="google_api_key">07cjTSHYWOs3fDQM6rpstLIEdcR4cM3-LJo07Vw</string>
+    <string name="google_api_key">07cjTSHYWOs05C4WkYr8FEHWpqqTEWMbT9WfrdA</string>
     <string name="profile_xml_missions_done">Missions</string>
     <string name="profile_xml_total_points">Points</string>
     <string name="profile_xml_places_visited">Places</string>
