@@ -85,7 +85,7 @@ public class QuestActivity
 	protected void setupTitleBar() {
 		super.setupTitleBar();
 		TextView title = (TextView) findViewById(R.id.title_bar_title);
-		title.setText("undial Quests");
+		title.setText(" Quests");
 	}
 	
 	private static class GetQuestTask 

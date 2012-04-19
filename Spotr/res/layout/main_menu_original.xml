@@ -43,7 +43,8 @@
     
     <LinearLayout
         android:id="@+id/spacer"
-        style="@style/NotificationHandle" >
+        style="@style/NotificationHandle"
+        android:visibility="gone" >
     </LinearLayout>
     
     <!-- NOTE: Add to styles.xml -->
@@ -53,7 +54,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:handle="@+id/main_menu_xml_slide_handle"
-        android:content="@+id/main_menu_xml_slide_content" >
+        android:content="@+id/main_menu_xml_slide_content"
+        android:visibility="gone" >
            
         <ImageView
              android:id="@id/main_menu_xml_slide_handle"

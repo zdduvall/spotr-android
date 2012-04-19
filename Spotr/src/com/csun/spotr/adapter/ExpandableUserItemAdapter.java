@@ -3,6 +3,7 @@ package com.csun.spotr.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.csun.spotr.InboxActivity;
 import com.csun.spotr.ProfileActivity;
 import com.csun.spotr.R;
 import com.csun.spotr.core.adapter_item.UserItem;
@@ -90,7 +91,15 @@ public class ExpandableUserItemAdapter extends BaseExpandableListAdapter {
 		holderChild.btnSendMessage.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				// TODO Set up messaging friends
+				int groupPosition = (Integer) holderChild.btnSendMessage.getTag();
+				UserItem friend = items.get(groupPosition);
+				Bundle extras = new Bundle();
+				extras.putInt("user_id", friend.getId());
+				
+				Intent intent = new Intent(context, InboxActivity.class);
+				intent.putExtras(extras);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(intent);
 			}
 			
 		});

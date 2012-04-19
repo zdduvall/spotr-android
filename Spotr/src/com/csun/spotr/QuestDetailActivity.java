@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -92,9 +93,12 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quest_detail);
 
+		setupTitleBar();
+		
 		initQuestDataFromIntent();
 
 		setupMapView();
@@ -110,7 +114,12 @@ implements IActivityProgressUpdate<QuestDetailItem>{
 		findLocation();
 
 		new GetQuestDetailTask(this).execute();
-	} 
+	}
+	
+	private void setupTitleBar() {
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_basic);
+	}
+	
 	private void initQuestDataFromIntent() {
 		// Get data from super activity
 		questId = this.getIntent().getExtras().getInt("quest_id");

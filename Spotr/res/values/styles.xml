@@ -649,7 +649,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@android:color/white</item>
-        <item name="android:groupIndicator">@null</item>
+        <item name="android:groupIndicator">@drawable/ic_expander</item>
         <item name="android:divider">@color/vimeo_light_grey</item>
         <item name="android:dividerHeight">1px</item>
         <item name="android:childDivider">@android:color/transparent</item>
