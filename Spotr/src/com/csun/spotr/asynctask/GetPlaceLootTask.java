@@ -29,7 +29,6 @@ public class GetPlaceLootTask
 	private int spotId;
 	
 	private WeakReference<PlaceLootActivity> ref;
-	private ProgressDialog progressDialog = null;
 	
 	public GetPlaceLootTask(PlaceLootActivity a, int id) {
 		attach(a);
@@ -38,11 +37,6 @@ public class GetPlaceLootTask
 	
 	@Override
 	protected void onPreExecute() {
-		progressDialog = new ProgressDialog(ref.get());
-		progressDialog.setMessage("Loading items...");
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(false);
-		progressDialog.show();
 	}
 	
 	@Override
@@ -82,7 +76,6 @@ public class GetPlaceLootTask
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		progressDialog.dismiss();
 		if (result == false) {
 			Toast.makeText(ref.get().getApplicationContext(), "No items", Toast.LENGTH_LONG);
 		}

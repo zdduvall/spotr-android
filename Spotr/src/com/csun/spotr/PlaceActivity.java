@@ -77,7 +77,7 @@ public class PlaceActivity
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
-		showDialog(DIALOG_ID_LOADING);
+		// showDialog(DIALOG_ID_LOADING);
 		setupTitleBar();
 		setupListView();
 		
@@ -294,7 +294,6 @@ public class PlaceActivity
 		@Override
 		protected void onProgressUpdate(PlaceItem... p) {
 			if (ref != null && ref.get() != null && !ref.get().isFinishing()) {
-				ref.get().dismissDialog(DIALOG_ID_LOADING);
 				ref.get().updateAsyncTaskProgress(p[0]);
 			}
 		}

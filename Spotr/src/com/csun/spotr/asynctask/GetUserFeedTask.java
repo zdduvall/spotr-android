@@ -79,8 +79,7 @@ public class GetUserFeedTask
 	
 	@Override 
 	protected void onPreExecute() {
-		if (isActivityStillRunning())
-			ref.get().showDialog(DialogId.ID_LOADING);
+		
 	}
 	
 	@Override
@@ -178,9 +177,6 @@ public class GetUserFeedTask
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		if (isActivityStillRunning()) {
-			ref.get().dismissDialog(DialogId.ID_LOADING);
-		}
 		detach();
 	}
 

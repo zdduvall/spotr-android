@@ -40,8 +40,6 @@ public class GetFriendFeedTask
 	
 	@Override 
 	protected void onPreExecute() {
-		if (isActivityStillRunning())
-			ref.get().showDialog(DialogId.ID_LOADING);
 	}
 
 	private List<NameValuePair> prepareUploadData() {
@@ -157,9 +155,6 @@ public class GetFriendFeedTask
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		if (isActivityStillRunning()) {
-			ref.get().dismissDialog(DialogId.ID_LOADING);
-		}
 		detach();
 	}
 

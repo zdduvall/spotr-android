@@ -202,13 +202,6 @@ public class PlaceInfoActivity
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.all_menu, menu);
-		return true;
-	}
-
 	public void updateAsyncTaskProgress(final Place p) {
 		displayGeneralInfo(p);
 		formatPhoneButton(p);
