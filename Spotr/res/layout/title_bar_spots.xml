@@ -30,7 +30,7 @@
 
         <ImageButton
             android:id="@+id/title_bar_btn_spots_tool"
-            style="@style/TitleBarButton.Ping" />
+            style="@style/TitleBarButton.MapLocate" />
         
         <View style="@style/VerticalSpacer.TitleBar" />
 

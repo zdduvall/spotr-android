@@ -77,18 +77,9 @@ public class PlaceActivity
 		// make sure keyboard of edit text do not populate
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
-		// showDialog(DIALOG_ID_LOADING);
 		setupTitleBar();
 		setupListView();
-		
-		/**
-		 * Run out of time to implement 
-		 * this feature, so temporarily remove
-		 *	
-		 * @author chan 
-		 * @date 04/02/2012
-		 */
-		// setupPowerupToolbar();
+		setupPowerupToolbar();
 		
 		findLocation(); 
 	}
@@ -146,6 +137,8 @@ public class PlaceActivity
         quickAction.addActionItem(itemTelescope);
         
         ImageButton tool = (ImageButton) findViewById(R.id.title_bar_btn_spots_tool);
+		tool.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_locate_enabled));
+        tool.setEnabled(true);
         tool.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				quickAction.show(v);
