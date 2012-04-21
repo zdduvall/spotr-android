@@ -242,6 +242,10 @@ public class PlaceActivity
 			
 			try {
 				JSONArray originalGoogleDataArray = json.getJSONArray("results");
+				if (originalGoogleDataArray.length() == 0) {
+					Log.v("DEBUG man!", "WTF?");
+					Log.v("url = ", GooglePlaceHelper.buildGooglePlacesUrl(location, GooglePlaceHelper.GOOGLE_RADIUS_IN_METER));
+				}
 				for (int i = 0; i < originalGoogleDataArray.length(); i++) {
 					// id: is used to verify place existence 
 					JSONObject e = new JSONObject();
