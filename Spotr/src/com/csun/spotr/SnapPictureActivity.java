@@ -108,7 +108,7 @@ public class SnapPictureActivity
 		}
 		else if (requestCode == INTENT_RESULT_TAKE_PICTURE) {
 			if (resultCode == RESULT_OK) {
-				// get bitmap from the take picture actvity
+				// get bitmap from the take picture activity
 				takenPictureBitmap = (Bitmap) data.getExtras().get("data");
 				// display it
 				displayNewTakenImage(takenPictureBitmap);
@@ -124,7 +124,7 @@ public class SnapPictureActivity
 	private String getByteCodeFromBitmap(Bitmap bitmap) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		// compress picture and add to stream (PNG)
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 		// create raw data src
 		byte[] src = stream.toByteArray();
 		// encode it

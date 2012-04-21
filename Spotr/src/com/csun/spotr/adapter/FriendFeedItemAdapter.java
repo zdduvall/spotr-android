@@ -53,7 +53,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		this.context = context.getApplicationContext();
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = new ImageLoader(context);
+		imageLoader = new ImageLoader(this.context);
 		this.me = me;
 	}
 

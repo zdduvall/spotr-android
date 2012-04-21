@@ -53,7 +53,7 @@ public class PlaceActivityActivity
     
     private void setupListView() {
     	listview = (ListView) findViewById(R.id.friend_list_feed_xml_listview);
-		adapter = new FriendFeedItemAdapter(getApplicationContext(), placeFeedList, false);
+		adapter = new FriendFeedItemAdapter(this, placeFeedList, false);
 		listview.setAdapter(adapter);
 		
 		listview.setOnItemClickListener(new OnItemClickListener() {

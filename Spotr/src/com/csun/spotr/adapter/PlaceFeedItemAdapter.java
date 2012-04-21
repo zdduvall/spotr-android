@@ -24,7 +24,7 @@ public class PlaceFeedItemAdapter extends BaseAdapter {
 		this.context = context.getApplicationContext();
 		this.items = items;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = new ImageLoader(context.getApplicationContext());
+		imageLoader = new ImageLoader(context);
 	}
 
 	public int getCount() {

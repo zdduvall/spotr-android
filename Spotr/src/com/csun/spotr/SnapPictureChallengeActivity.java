@@ -102,7 +102,7 @@ public class SnapPictureChallengeActivity
 						// start upload picture to server
 						ByteArrayOutputStream stream = new ByteArrayOutputStream();
 						// compress picture and add to stream (PNG)
-						takenPictureBitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+						takenPictureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 						// create raw data src
 						byte[] src = stream.toByteArray();
 						// encode it
