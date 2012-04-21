@@ -49,7 +49,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	private Context context;
 	private ItemViewHolder holder;
 	private boolean me;
-	
+
 	public FriendFeedItemAdapter(Context context, List<FriendFeedItem> items, boolean me) {
 		this.context = context.getApplicationContext();
 		this.items = items;
@@ -61,16 +61,16 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 	public int getCount() {
 		return items.size();
 	}
-	
+
 	public Object getItem(int position) {
 		return items.get(position);
 	}
-	
+
 	public long getItemId(int position) {
 		return position;
 	}
 
-	public void incrementLike(int position){
+	public void incrementLike(int position) {
 		items.get(position).setLikes(items.get(position).getLikes() + 1);
 		notifyDataSetChanged();
 	}
@@ -86,17 +86,16 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		Button buttonLike;
 		TextView textViewTotalComments;
 		TextView textViewWebLink;
-		
+
 		String missionDescription;
-		
+
 		/**
 		 * Treasure section
 		 **/
 		LinearLayout treasureLayout;
 		ImageView imageViewTreasureIcon;
 		TextView textViewTreasureCompany;
-		
-		
+
 		/**
 		 * 1st comment
 		 **/
@@ -106,7 +105,7 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		TextView firstTextViewTime;
 		TextView firstTextViewContent;
 	}
-	
+
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.friend_list_feed_item, null);
@@ -121,35 +120,35 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.buttonComment = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_comment);
 			holder.buttonLike = (Button) convertView.findViewById(R.id.friend_list_feed_item_xml_button_like);
 			holder.textViewTotalComments = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_number_of_comments);
-			
+
 			/**
 			 * Treasure section
 			 **/
 			holder.treasureLayout = (LinearLayout) convertView.findViewById(R.id.friend_list_feed_item_xml_linearlayout_treasure_section);
 			holder.imageViewTreasureIcon = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_imageview_treausre_icon);
 			holder.textViewTreasureCompany = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_treausre_company);
-			
+
 			/**
 			 * 1st comment
 			 **/
 			holder.firstImageViewUserPicture = (ImageView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_picture);
 			holder.firstTextViewUsername = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_username);
-    		holder.firstTextViewTime = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_time);
-    		holder.firstTextViewContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_content);
-    		holder.firstLayout = (LinearLayout) convertView.findViewById(R.id.friend_list_feed_item_xml_linearlayout_1st_comment);
-    		
+			holder.firstTextViewTime = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_time);
+			holder.firstTextViewContent = (TextView) convertView.findViewById(R.id.friend_list_feed_item_xml_textview_1st_content);
+			holder.firstLayout = (LinearLayout) convertView.findViewById(R.id.friend_list_feed_item_xml_linearlayout_1st_comment);
+
 			convertView.setTag(holder);
 		}
 		else {
 			holder = (ItemViewHolder) convertView.getTag();
 		}
-		
+
 		imageLoader.displayImageRound(items.get(position).getFriendPictureUrl(), holder.imageViewUserPicture);
 		holder.textViewPlaceName.setText("@" + items.get(position).getPlaceName());
 		holder.textViewTime.setText(items.get(position).getActivityTime());
-		
+
 		/**
-		 *  Add share url from user
+		 * Add share url from user
 		 **/
 		if (items.get(position).getShareUrl().equals("")) {
 			holder.textViewWebLink.setVisibility(View.GONE);
@@ -160,18 +159,18 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.textViewWebLink.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					Uri uriUrl = Uri.parse(items.get(position).getShareUrl());
-					Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);  
+					Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
 					launchBrowser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					context.startActivity(launchBrowser);
 				}
 			});
 		}
-		// end 
-		
+		// end
+
 		if (items.get(position).getChallengeType() == Challenge.Type.CHECK_IN) {
 			// required view
 			holder.missionDescription = "checked in";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.GONE);
@@ -181,13 +180,13 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE) {
 			// required view
 			holder.missionDescription = "took a picture";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.VISIBLE);
 			holder.textViewDetail.setVisibility(View.GONE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
-			
+
 			// populate data into optional view
 			imageLoader.displayImage(items.get(position).getActivitySnapPictureUrl(), holder.imageViewSnapPicture);
 			holder.imageViewSnapPicture.setOnClickListener(new OnClickListener() {
@@ -202,39 +201,42 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		else if (items.get(position).getChallengeType() == Challenge.Type.WRITE_ON_WALL) {
 			// required view
 			holder.missionDescription = "wrote";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
-			
+
 			// populate data into optional view
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.QUESTION_ANSWER) {
 			// required view
 			holder.missionDescription = "answered a question";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
-			
+
 			// populate data into optional view
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.FIND_TREASURE) {
 			// required view
 			holder.missionDescription = "found treasure";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
-			holder.textViewDetail.setVisibility(View.GONE); // no need for additional commentary for this type
+			holder.textViewDetail.setVisibility(View.GONE); // no need for
+															// additional
+															// commentary for
+															// this type
 			holder.textViewTreasureCompany.setVisibility(View.VISIBLE);
 			holder.imageViewTreasureIcon.setVisibility(View.VISIBLE);
-			
+
 			// populate data into optional view
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 			holder.textViewTreasureCompany.setText(items.get(position).getTreasureCompany());
@@ -243,13 +245,13 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		else if (items.get(position).getChallengeType() == Challenge.Type.SNAP_PICTURE_CHALLENGE) {
 			// required view
 			holder.missionDescription = "snap picture challenge";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.VISIBLE);
 			holder.textViewDetail.setVisibility(View.VISIBLE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
-			
+
 			// populate data into optional view
 			holder.textViewDetail.setText(items.get(position).getActivityComment());
 			imageLoader.displayImage(items.get(position).getActivitySnapPictureUrl(), holder.imageViewSnapPicture);
@@ -257,18 +259,17 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		else {
 			// required view
 			holder.missionDescription = "other";
-			
+
 			// optional view
 			holder.imageViewSnapPicture.setVisibility(View.GONE);
 			holder.textViewDetail.setVisibility(View.GONE);
 			holder.textViewTreasureCompany.setVisibility(View.GONE);
 			holder.imageViewTreasureIcon.setVisibility(View.GONE);
 		}
-		
+
 		String username = items.get(position).getFriendName();
-		holder.textViewUsernameAndContent.setText(
-				Html.fromHtml("<b>" + username + "</b>" + " " + holder.missionDescription));
-		
+		holder.textViewUsernameAndContent.setText(Html.fromHtml("<b>" + username + "</b>" + " " + holder.missionDescription));
+
 		holder.buttonComment.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Bundle extras = new Bundle();
@@ -279,12 +280,12 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 				context.startActivity(intent);
 			}
 		});
-		
-		
+
 		holder.buttonLike.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				new LikeActivityTask(FriendFeedItemAdapter.this, position).execute(items.get(position).getActivityId());
-			//	items.get(position).setLikes(items.get(position).getLikes() + 1);
+				// items.get(position).setLikes(items.get(position).getLikes() +
+				// 1);
 			}
 		});
 		holder.buttonLike.setText("Like +" + Integer.toString(items.get(position).getLikes()));
@@ -296,19 +297,30 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 		}
 		else
 			holder.textViewTotalComments.setVisibility(View.GONE);
-		
-		Comment c = items.get(position).getFirstComment(); 
+
+		Comment c = items.get(position).getFirstComment();
 		if (c.getId() != -1) {
 			holder.firstLayout.setVisibility(View.VISIBLE);
 			holder.firstImageViewUserPicture.setVisibility(View.VISIBLE);
 			holder.firstTextViewUsername.setVisibility(View.VISIBLE);
 			holder.firstTextViewTime.setVisibility(View.VISIBLE);
 			holder.firstTextViewContent.setVisibility(View.VISIBLE);
-			
+
 			imageLoader.displayImageRound(c.getPictureUrl(), holder.firstImageViewUserPicture);
 			holder.firstTextViewUsername.setText(c.getUsername());
 			holder.firstTextViewTime.setText(c.getTime());
 			holder.firstTextViewContent.setText(c.getContent());
+
+			holder.firstLayout.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Bundle extras = new Bundle();
+					extras.putInt("activity_id", items.get(position).getActivityId());
+					Intent intent = new Intent(context.getApplicationContext(), CommentActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.putExtras(extras);
+					context.startActivity(intent);
+				}
+			});
 		}
 		else {
 			holder.firstLayout.setVisibility(View.GONE);
@@ -317,63 +329,61 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			holder.firstTextViewTime.setVisibility(View.GONE);
 			holder.firstTextViewContent.setVisibility(View.GONE);
 		}
-		
+
 		if (me) {
 			holder.buttonLike.setClickable(false);
 		}
-		
+
 		return convertView;
 	}
-	
+
 	private class Helper extends WebViewClient {
 		@Override
-	    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	        view.loadUrl(url);
-	        return true;
-	    }
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
 	}
-	
-	private static class LikeActivityTask
-		extends AsyncTask<Integer, Void, Boolean> 
-			implements IAsyncTask<FriendFeedItemAdapter> {
-		
+
+	private static class LikeActivityTask extends AsyncTask<Integer, Void, Boolean> implements IAsyncTask<FriendFeedItemAdapter> {
+
 		int position;
-	
+
 		private WeakReference<FriendFeedItemAdapter> ref;
-		
+
 		public LikeActivityTask(FriendFeedItemAdapter a, int p) {
 			position = p;
 			attach(a);
 		}
-	
+
 		@Override
 		protected void onPreExecute() {
 		}
-	
+
 		@Override
 		protected Boolean doInBackground(Integer... activity) {
 			List<NameValuePair> datas = new ArrayList<NameValuePair>();
 			System.out.println(activity[0]);
-			datas.add(new BasicNameValuePair("activityId", activity[0].toString() ));
-			datas.add(new BasicNameValuePair("usersId", Integer.toString(CurrentUser.getCurrentUser().getId()) ));
-			
+			datas.add(new BasicNameValuePair("activityId", activity[0].toString()));
+			datas.add(new BasicNameValuePair("usersId", Integer.toString(CurrentUser.getCurrentUser().getId())));
+
 			JSONObject json = JsonHelper.getJsonObjectFromUrlWithData(LIKE_ACTIVITY_URL, datas);
 			String result = "";
 			try {
 				result = json.getString("result");
-				if (result.equals("success")){
+				if (result.equals("success")) {
 					return true;
 				}
 			}
 			catch (Exception e) {
-				Log.e(TAG + "LikeActivityTask.doInBackground(Void... voids)", "JSON error parsing data", e );
+				Log.e(TAG + "LikeActivityTask.doInBackground(Void... voids)", "JSON error parsing data", e);
 			}
-			return false;			
+			return false;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result)
+			if (result)
 				ref.get().incrementLike(position);
 			detach();
 		}
