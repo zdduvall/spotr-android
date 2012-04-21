@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.csun.spotr.CommentActivity;
 import com.csun.spotr.R;
+import com.csun.spotr.ViewImageFullScreenActivity;
 import com.csun.spotr.WebviewActivity;
 import com.csun.spotr.core.Challenge;
 import com.csun.spotr.core.Comment;
@@ -189,6 +190,14 @@ public class FriendFeedItemAdapter extends BaseAdapter {
 			
 			// populate data into optional view
 			imageLoader.displayImage(items.get(position).getActivitySnapPictureUrl(), holder.imageViewSnapPicture);
+			holder.imageViewSnapPicture.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Intent intent = new Intent(context.getApplicationContext(), ViewImageFullScreenActivity.class);
+					intent.putExtra("image_url", items.get(position).getActivitySnapPictureUrl());
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(intent);
+				}
+			});
 		}
 		else if (items.get(position).getChallengeType() == Challenge.Type.WRITE_ON_WALL) {
 			// required view

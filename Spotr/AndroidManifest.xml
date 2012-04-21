@@ -764,6 +764,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+        <!-- Friend Request Activity -->
+        <activity
+            android:name=".ViewImageFullScreenActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomTheme" >
+            <intent-filter>
+                <action android:name="com.csun.spotr.ViewImageFullScreenActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- Google Map API -->
         <uses-library android:name="com.google.android.maps" />
