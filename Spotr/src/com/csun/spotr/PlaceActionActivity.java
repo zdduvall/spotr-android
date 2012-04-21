@@ -87,7 +87,6 @@ public class PlaceActionActivity
 				Intent intent = new Intent(PlaceActionActivity.this.getApplicationContext(), PlaceLootActivity.class);
 				intent.putExtras(extras);
 				startActivity(intent);
-				
 			}
 		});
 	}
@@ -133,7 +132,7 @@ public class PlaceActionActivity
 
 				        		// only run GenerateTreasureActivity if 
 				        		// the random number return is greater than 0.5
-				            	if (random.nextDouble() > 0.5) {
+				            	if (random.nextDouble() > 0.8) {
 				            		Bundle extras = new Bundle();
 				            		extras.putInt("place_id", currentPlaceId);
 				            		Intent intent = new Intent(getApplicationContext(), GenerateTreasureActivity.class);
