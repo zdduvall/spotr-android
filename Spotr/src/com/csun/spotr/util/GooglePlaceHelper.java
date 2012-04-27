@@ -5,7 +5,7 @@ import android.location.Location;
 public class GooglePlaceHelper {
 	public static final String GOOGLE_PLACE_API_KEY = "AIzaSyAf-PgwYiXsX0cPFPQOP9p85QPui9L9d18";
 	public static final String GOOGLE_RADIUS_IN_METER = "200";
-	public static final String RADIUS_IN_KM = "200";
+	public static final String RADIUS_IN_KM = "0.2";
 	
 	public static String buildGooglePlacesUrl(Location location, String radius) {
 		StringBuilder url = new StringBuilder();
