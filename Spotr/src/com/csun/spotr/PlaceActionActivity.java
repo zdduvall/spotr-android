@@ -390,8 +390,7 @@ public class PlaceActionActivity
 		name.setText(p.getName());
 
 		TextView description = (TextView) findViewById(R.id.place_activity_xml_textview_description);
-		String formattedAddress = formatAddress(p.getAddress());
-
+		String formattedAddress = p.getAddress();
 		description.setText(formattedAddress);//p.getAddress());
 	}
 
